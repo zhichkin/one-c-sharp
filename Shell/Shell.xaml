@@ -1,0 +1,32 @@
+﻿<Window x:Class="Zhichkin.Shell.Shell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://www.codeplex.com/prism"
+        Title="Zhichkin © 2016" Height="400" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MinWidth="200" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="3*" MinWidth="200" />
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Row="1" Grid.Column="1" Width="3" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
+        <ItemsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                      x:Name="TopRegion" prism:RegionManager.RegionName="TopRegion">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <ContentControl Grid.Row="1" Grid.Column="0"
+                        x:Name="LeftRegion" prism:RegionManager.RegionName="LeftRegion"
+                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+        <ContentControl Grid.Row="1" Grid.Column="2"
+                        x:Name="RightRegion" prism:RegionManager.RegionName="RightRegion"
+                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+    </Grid>
+</Window>

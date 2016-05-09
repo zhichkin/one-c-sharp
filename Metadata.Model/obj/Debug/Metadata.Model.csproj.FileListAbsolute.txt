@@ -1,0 +1,7 @@
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.ORM.dll
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.ORM.pdb
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\obj\Debug\Metadata.Model.csprojResolveAssemblyReference.cache
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.Metadata.Model.pdb
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.pdb

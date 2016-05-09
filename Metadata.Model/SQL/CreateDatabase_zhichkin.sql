@@ -1,0 +1,13 @@
+USE [master];
+GO
+
+CREATE DATABASE [zhichkin]
+CONTAINMENT = NONE
+ON  PRIMARY 
+(NAME = N'zhichkin', FILENAME = N'C:\Zhichkin\zhichkin.mdf', SIZE = 5120KB, MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB)
+LOG ON 
+(NAME = N'zhichkin_log', FILENAME = N'C:\Zhichkin\zhichkin_log.ldf', SIZE = 1024KB, MAXSIZE = 1024GB, FILEGROWTH = 10%)
+GO
+
+ALTER DATABASE [zhichkin] SET COMPATIBILITY_LEVEL = 120
+GO
