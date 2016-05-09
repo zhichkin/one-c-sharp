@@ -47,5 +47,6 @@ namespace Zhichkin.ORM
         IReferenceObject New(Type type); // New
         IReferenceObject New(Type type, Guid identity); // New
         IReferenceObject New(int typeCode, Guid identity); // Virtual
+        T New<T>(Guid identity) where T : IReferenceObject; // Virtual
     }
 }

@@ -22,6 +22,7 @@ namespace Zhichkin.Metadata.Model
         {
             typeCodes.Add(1, typeof(InfoBase));
             typeCodes.Add(2, typeof(Namespace));
+            typeCodes.Add(3, typeof(Entity));
         }
 
         public static string ConnectionString { get { return connectionString; } }

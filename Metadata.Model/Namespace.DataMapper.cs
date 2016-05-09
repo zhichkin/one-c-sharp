@@ -36,9 +36,15 @@ namespace Zhichkin.Metadata.Model
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
 
-            private readonly ReferenceObjectFactory factory = new ReferenceObjectFactory(PersistentContext.TypeCodes);
+            private readonly string ConnectionString;
+            private readonly IReferenceObjectFactory Factory;
 
-            public DataMapper() { }
+            private DataMapper() { }
+            public DataMapper(string connectionString, IReferenceObjectFactory factory)
+            {
+                ConnectionString = connectionString;
+                Factory = factory;
+            }
 
             void IDataMapper.Select(IPersistent entity)
             {
@@ -46,7 +52,7 @@ namespace Zhichkin.Metadata.Model
 
                 bool ok = false;
 
-                using (SqlConnection connection = new SqlConnection(PersistentContext.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
                     connection.Open();
 
@@ -65,7 +71,7 @@ namespace Zhichkin.Metadata.Model
 
                     if (reader.Read())
                     {
-                        e.owner = (EntityBase)factory.New((int)reader[0], (Guid)reader[1]);
+                        e.owner = (EntityBase)Factory.New((int)reader[0], (Guid)reader[1]);
                         e.name = (string)reader[2];
                         e.version = (byte[])reader[3];
 
@@ -84,7 +90,7 @@ namespace Zhichkin.Metadata.Model
 
                 bool ok = false;
 
-                using (SqlConnection connection = new SqlConnection(PersistentContext.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
                     connection.Open();
 
@@ -133,7 +139,7 @@ namespace Zhichkin.Metadata.Model
 
                 bool ok = false; int rows_affected = 0;
 
-                using (SqlConnection connection = new SqlConnection(PersistentContext.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
                     connection.Open();
 
@@ -199,7 +205,7 @@ namespace Zhichkin.Metadata.Model
 
                 bool ok = false;
 
-                using (SqlConnection connection = new SqlConnection(PersistentContext.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
                     connection.Open();
 

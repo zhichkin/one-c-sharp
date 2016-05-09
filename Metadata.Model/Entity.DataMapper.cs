@@ -10,27 +10,29 @@ using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public partial class InfoBase
+    public partial class Entity
     {
         public sealed class DataMapper : IDataMapper
         {
-            private const string SelectCommandText = @"SELECT [name], [server], [database], [version] FROM [infobases] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [namespace], [owner], [parent], [name], [code], [version] FROM [entities] WHERE [key] = @key";
             private const string InsertCommandText =
-                @"INSERT [infobases] ([key], [name], [server], [database]) VALUES (@key, @name, @server, @database); " +
-                @"IF @@ROWCOUNT > 0 SELECT [version] FROM [infobases] WHERE [key] = @key;";
+                @"INSERT [entities] ([key], [namespace], [owner], [parent], [name], [code]) " +
+                @"VALUES (@key, @namespace, @owner, @parent, @name, @code); " +
+                @"IF @@ROWCOUNT > 0 SELECT [version] FROM [entities] WHERE [key] = @key;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [infobases] SET [name] = @name, [server] = @server, [database] = @database " +
+                @"UPDATE [entities] SET [namespace] = @namespace, [owner] = @owner, [parent] = @parent, " +
+                @"[name] = @name, [code] = @code " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
                 @"IF (@rows_affected = 0) " +
                 @"BEGIN " +
-                @"  INSERT @result ([version]) SELECT [version] FROM [infobases] WHERE [key] = @key; " +
+                @"  INSERT @result ([version]) SELECT [version] FROM [entities] WHERE [key] = @key; " +
                 @"END " +
                 @"SELECT @rows_affected, [version] FROM @result;";
             private const string DeleteCommandText =
-                @"DELETE [infobases] WHERE [key] = @key " +
+                @"DELETE [entities] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
 
@@ -46,7 +48,7 @@ namespace Zhichkin.Metadata.Model
 
             void IDataMapper.Select(IPersistent entity)
             {
-                InfoBase e = (InfoBase)entity;
+                Entity e = (Entity)entity;
 
                 bool ok = false;
 
@@ -58,21 +60,27 @@ namespace Zhichkin.Metadata.Model
                     command.CommandType = CommandType.Text;
                     command.CommandText = SelectCommandText;
 
-                    SqlParameter parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier)
-                    {
-                        Direction = ParameterDirection.Input,
-                        Value     = e.identity
-                    };
+                    SqlParameter parameter = null;
+
+                    parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        e.name     = (string)reader[0];
-                        e.server   = (string)reader[1];
-                        e.database = (string)reader[2];
-                        e.version  = (byte[])reader[3];
+                        Guid guid;
+                        e._namespace = Factory.New<Namespace>((Guid)reader[0]);
+                        guid = (Guid)reader[1];
+                        e.owner = (guid == Guid.Empty) ? null : Factory.New<Entity>(guid);
+                        guid = (Guid)reader[2];
+                        e.parent = (guid == Guid.Empty) ? null : Factory.New<Entity>(guid);
+                        e.name = (string)reader[3];
+                        e.code = (int)reader[4];
+                        e.version = (byte[])reader[5];
+
                         ok = true;
                     }
 
@@ -84,7 +92,7 @@ namespace Zhichkin.Metadata.Model
 
             void IDataMapper.Insert(IPersistent entity)
             {
-                InfoBase e = (InfoBase)entity;
+                Entity e = (Entity)entity;
 
                 bool ok = false;
 
@@ -103,19 +111,29 @@ namespace Zhichkin.Metadata.Model
                     parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
 
+                    parameter = new SqlParameter("namespace", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e._namespace == null) ? Guid.Empty : e._namespace.Identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("owner", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.owner == null) ? Guid.Empty : e.owner.identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("parent", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.parent == null) ? Guid.Empty : e.parent.identity;
+                    command.Parameters.Add(parameter);
+
                     parameter = new SqlParameter("name", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.name;
+                    parameter.Value = (e.name == null) ? string.Empty : e.name;
                     command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter("server", SqlDbType.NVarChar);
+                    parameter = new SqlParameter("code", SqlDbType.Int);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.server;
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter("database", SqlDbType.NVarChar);
-                    parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.database;
+                    parameter.Value = e.code;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -133,7 +151,7 @@ namespace Zhichkin.Metadata.Model
 
             void IDataMapper.Update(IPersistent entity)
             {
-                InfoBase e = (InfoBase)entity;
+                Entity e = (Entity)entity;
 
                 bool ok = false; int rows_affected = 0;
 
@@ -141,7 +159,7 @@ namespace Zhichkin.Metadata.Model
                 {
                     connection.Open();
 
-                    SqlCommand command  = connection.CreateCommand();
+                    SqlCommand command = connection.CreateCommand();
                     command.CommandType = CommandType.Text;
                     command.CommandText = UpdateCommandText;
 
@@ -157,19 +175,29 @@ namespace Zhichkin.Metadata.Model
                     parameter.Value = e.version;
                     command.Parameters.Add(parameter);
 
+                    parameter = new SqlParameter("namespace", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e._namespace == null) ? Guid.Empty : e._namespace.Identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("owner", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.owner == null) ? Guid.Empty : e.owner.identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("parent", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.parent == null) ? Guid.Empty : e.parent.identity;
+                    command.Parameters.Add(parameter);
+
                     parameter = new SqlParameter("name", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.name;
+                    parameter.Value = (e.name == null) ? string.Empty : e.name;
                     command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter("server", SqlDbType.NVarChar);
+                    parameter = new SqlParameter("code", SqlDbType.Int);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.server;
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter("database", SqlDbType.NVarChar);
-                    parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.database;
+                    parameter.Value = e.code;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -199,7 +227,7 @@ namespace Zhichkin.Metadata.Model
 
             void IDataMapper.Delete(IPersistent entity)
             {
-                InfoBase e = (InfoBase)entity;
+                Entity e = (Entity)entity;
 
                 bool ok = false;
 
@@ -207,7 +235,7 @@ namespace Zhichkin.Metadata.Model
                 {
                     connection.Open();
 
-                    SqlCommand command = connection.CreateCommand();
+                    SqlCommand command  = connection.CreateCommand();
                     command.CommandType = CommandType.Text;
                     command.CommandText = DeleteCommandText;
 

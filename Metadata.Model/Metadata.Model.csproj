@@ -39,6 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity.cs" />
+    <Compile Include="Entity.DataMapper.cs" />
+    <Compile Include="Entity.SystemTypes.cs" />
     <Compile Include="EntityBase.cs" />
     <Compile Include="InfoBase.cs" />
     <Compile Include="InfoBase.DataMapper.cs" />
@@ -58,6 +61,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="SQL\CreateDatabase_zhichkin.sql" />
+    <Content Include="SQL\CreateTable_entities.sql" />
     <Content Include="SQL\CreateTable_infobases.sql" />
     <Content Include="SQL\CreateTable_namespaces.sql" />
   </ItemGroup>

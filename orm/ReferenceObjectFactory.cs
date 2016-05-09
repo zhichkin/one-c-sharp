@@ -104,6 +104,11 @@ namespace Zhichkin.ORM
             return CreateReferenceObject(GetConstructor(typeCodes[typeCode]), identity, PersistentState.Virtual);
         }
 
+        public T New<T>(Guid identity) where T : IReferenceObject
+        {
+            return (T)CreateReferenceObject(GetConstructor(typeof(T)), identity, PersistentState.Virtual);
+        }
+
         private IReferenceObject CreateReferenceObject(ReferenceObjectConstructor ctor, Guid identity, PersistentState state)
         {
             if (map == null)

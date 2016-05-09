@@ -11,7 +11,9 @@ namespace Zhichkin.Metadata.Model
 {
     public sealed partial class Namespace : EntityBase
     {
-        private static readonly IDataMapper _mapper = new Namespace.DataMapper();
+        private static readonly IDataMapper _mapper = new Namespace.DataMapper(
+            PersistentContext.ConnectionString,
+            new ReferenceObjectFactory(PersistentContext.TypeCodes));
 
         public Namespace() : base(_mapper) { }
         public Namespace(Guid identity) : base(_mapper, identity) { }

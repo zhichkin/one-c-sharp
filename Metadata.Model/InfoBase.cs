@@ -5,7 +5,9 @@ namespace Zhichkin.Metadata.Model
 {
     public sealed partial class InfoBase : EntityBase
     {
-        private static readonly IDataMapper _mapper = new InfoBase.DataMapper();
+        private static readonly IDataMapper _mapper = new InfoBase.DataMapper(
+            PersistentContext.ConnectionString,
+            new ReferenceObjectFactory(PersistentContext.TypeCodes));
 
         public InfoBase() : base(_mapper) { }
         public InfoBase(Guid identity) : base(_mapper, identity) { }
