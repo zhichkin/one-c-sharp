@@ -16,8 +16,11 @@ namespace Zhichkin.Metadata.Model
         {
             private const string SelectCommandText = @"SELECT [name], [server], [database], [version] FROM [infobases] WHERE [key] = @key";
             private const string InsertCommandText =
-                @"INSERT [infobases] ([key], [name], [server], [database]) VALUES (@key, @name, @server, @database); " +
-                @"IF @@ROWCOUNT > 0 SELECT [version] FROM [infobases] WHERE [key] = @key;";
+                @"DECLARE @result table([version] binary(8)); " +
+                @"INSERT [infobases] ([key], [name], [server], [database]) " +
+                @"OUTPUT inserted.[version] INTO @result " +
+                @"VALUES (@key, @name, @server, @database); " +
+                @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
                 @"UPDATE [infobases] SET [name] = @name, [server] = @server, [database] = @database " +

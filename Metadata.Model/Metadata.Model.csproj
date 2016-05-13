@@ -51,6 +51,14 @@
     <Compile Include="Namespace.TypeSystem.cs" />
     <Compile Include="PersistentContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Property.cs" />
+    <Compile Include="Property.DataMapper.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="PropertyType.cs" />
+    <Compile Include="PropertyType.DataMapper.cs" />
+    <Compile Include="Table.cs" />
+    <Compile Include="Field.DataMapper.cs" />
+    <Compile Include="Table.DataMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\orm\ORM.csproj">
@@ -62,8 +70,12 @@
   <ItemGroup>
     <Content Include="SQL\CreateDatabase_zhichkin.sql" />
     <Content Include="SQL\CreateTable_entities.sql" />
+    <Content Include="SQL\CreateTable_fields.sql" />
     <Content Include="SQL\CreateTable_infobases.sql" />
     <Content Include="SQL\CreateTable_namespaces.sql" />
+    <Content Include="SQL\CreateTable_properties.sql" />
+    <Content Include="SQL\CreateTable_properties_types.sql" />
+    <Content Include="SQL\CreateTable_tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

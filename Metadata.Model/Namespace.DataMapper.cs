@@ -16,9 +16,11 @@ namespace Zhichkin.Metadata.Model
         {
             private const string SelectCommandText = @"SELECT [owner_], [owner], [name], [version] FROM [namespaces] WHERE [key] = @key";
             private const string InsertCommandText =
+                @"DECLARE @result table([version] binary(8)); " +
                 @"INSERT [namespaces] ([key], [owner_], [owner], [name]) " +
+                @"OUTPUT inserted.[version] INTO @result " +
                 @"VALUES (@key, @owner_, @owner, @name); " +
-                @"IF @@ROWCOUNT > 0 SELECT [version] FROM [namespaces] WHERE [key] = @key;";
+                @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
                 @"UPDATE [namespaces]" +
