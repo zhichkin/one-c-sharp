@@ -35,6 +35,12 @@
     <Reference Include="Microsoft.Practices.Prism.Composition">
       <HintPath>..\packages\Prism.Composition.5.0.0\lib\NET45\Microsoft.Practices.Prism.Composition.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Mvvm">
+      <HintPath>..\packages\Prism.Mvvm.1.0.0\lib\net45\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces">
+      <HintPath>..\packages\Prism.Mvvm.1.0.0\lib\net45\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -49,7 +55,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\MetadataTreeView1.xaml">
+    <Page Include="Views\MetadataMainMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -57,9 +63,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Commands\MetadataMainMenu.cs" />
     <Compile Include="ModuleInit.cs" />
-    <Compile Include="Views\MetadataTreeView1.xaml.cs">
-      <DependentUpon>MetadataTreeView1.xaml</DependentUpon>
+    <Compile Include="ViewModel\MetadataMainMenu.cs" />
+    <Compile Include="Views\MetadataMainMenu.xaml.cs">
+      <DependentUpon>MetadataMainMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MetadataTreeView.xaml.cs">
       <DependentUpon>MetadataTreeView.xaml</DependentUpon>
@@ -104,8 +112,22 @@
       <Name>Shell</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Model\" />
+    <Resource Include="Images\26 Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Accept Database.png" />
+    <Resource Include="Images\26 Add Database.png" />
+    <Resource Include="Images\26 Add.png" />
+    <Resource Include="Images\26 Cancel.png" />
+    <Resource Include="Images\26 Data Configuration.png" />
+    <Resource Include="Images\26 Delete Database.png" />
+    <Resource Include="Images\26 Export.png" />
+    <Resource Include="Images\26 Import.png" />
+    <Resource Include="Images\26 Ok.png" />
+    <Resource Include="Images\26 Refresh.png" />
+    <Resource Include="Images\26 Synchronize.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

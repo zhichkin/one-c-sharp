@@ -21,7 +21,7 @@ namespace Zhichkin.Metadata.Model
             get
             {
                 if (typeCode > 0) return typeCode;
-                typeCode = PersistentContext.TypeCodes[this.GetType()];
+                typeCode = MetadataPersistentContext.Current.TypeCodes[this.GetType()];
                 return typeCode;
             }
         }

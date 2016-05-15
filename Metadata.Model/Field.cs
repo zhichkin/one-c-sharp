@@ -33,9 +33,7 @@ namespace Zhichkin.Metadata.Model
 
     public sealed partial class Field : EntityBase
     {
-        private static readonly IDataMapper _mapper = new Field.DataMapper(
-            PersistentContext.ConnectionString,
-            new ReferenceObjectFactory(PersistentContext.TypeCodes));
+        private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Field));
 
         public Field() : base(_mapper) { }
         public Field(Guid identity) : base(_mapper, identity) { }

@@ -1,21 +1,33 @@
 ﻿using System;
 using Zhichkin.ORM;
 using System.Configuration;
+using System.Collections.Generic;
 
 namespace Zhichkin.Metadata.Model
 {
-    public static class PersistentContext
+    public sealed class MetadataPersistentContext : IPersistentContext
     {
-        public const string ModuleName = "Zhichkin.Metadata";
+        private static readonly IPersistentContext singelton;
 
-        private static string connectionString = string.Empty;
+        private const string name = "Zhichkin.Metadata";
+        private static readonly string connectionString = string.Empty;
         private static readonly BiDictionary<int, Type> typeCodes = new BiDictionary<int, Type>();
+        private static readonly IReferenceObjectFactory factory = new ReferenceObjectFactory(typeCodes);
+        private static readonly Dictionary<Type, IDataMapper> mappers = new Dictionary<Type, IDataMapper>();
 
-        static PersistentContext()
+        static MetadataPersistentContext()
         {
-            //ConfigurationSection section = (ConfigurationSection)ConfigurationManager.GetSection(ModuleSettings.ModuleName);
-            connectionString = ConfigurationManager.ConnectionStrings[PersistentContext.ModuleName].ConnectionString;
+            connectionString = ConfigurationManager.ConnectionStrings[name].ConnectionString;
             InitializeTypeCodes();
+            InitializeDataMappers();
+            singelton = new MetadataPersistentContext();
+        }
+
+        public MetadataPersistentContext() { }
+
+        public static IPersistentContext Current
+        {
+            get { return singelton; }
         }
 
         private static void InitializeTypeCodes()
@@ -29,7 +41,21 @@ namespace Zhichkin.Metadata.Model
             typeCodes.Add(7, typeof(PropertyType));
         }
 
-        public static string ConnectionString { get { return connectionString; } }
-        public static BiDictionary<int, Type> TypeCodes { get { return typeCodes; } }
+        private static void InitializeDataMappers()
+        {
+            mappers.Add(typeof(InfoBase), new InfoBase.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Namespace), new Namespace.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Entity), new Entity.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Property), new Property.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Table), new Table.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Field), new Field.DataMapper(connectionString, factory));
+            mappers.Add(typeof(PropertyType), new PropertyType.DataMapper(connectionString, factory));
+        }
+
+        public string Name { get { return name; } }
+        public string ConnectionString { get { return connectionString; } }
+        public IDataMapper GetDataMapper(Type type) { return mappers[type]; }
+        public BiDictionary<int, Type> TypeCodes { get { return typeCodes; } }
+        public IReferenceObjectFactory ReferenceObjectFactory { get { return factory; } }
     }
 }

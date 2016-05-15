@@ -6,7 +6,6 @@ using Zhichkin.Metadata.Views;
 
 namespace Zhichkin.Metadata
 {
-    [Module(ModuleName = PersistentContext.ModuleName)]
     public class ModuleInit : IModule
     {
         private readonly IRegionViewRegistry regions;
@@ -19,7 +18,7 @@ namespace Zhichkin.Metadata
         public void Initialize()
         {
             regions.RegisterViewWithRegion(RegionNames.TopRegion, typeof(MetadataTreeView));
-            regions.RegisterViewWithRegion(RegionNames.TopRegion, typeof(MetadataTreeView1));
+            regions.RegisterViewWithRegion(RegionNames.TopRegion, typeof(MetadataMainMenu));
             regions.RegisterViewWithRegion(RegionNames.LeftRegion, typeof(MetadataTreeView));
         }
     }

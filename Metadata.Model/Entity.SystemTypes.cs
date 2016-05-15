@@ -140,7 +140,7 @@ namespace Zhichkin.Metadata.Model
 
         static Entity()
         {
-            QueryService service = new QueryService(PersistentContext.ConnectionString);
+            QueryService service = new QueryService(MetadataPersistentContext.Current.ConnectionString);
             string sql = "SELECT [key], [name] FROM [entities] WHERE [namespace] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
 
             List<dynamic> list = service.Execute(sql);

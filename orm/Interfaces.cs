@@ -49,4 +49,14 @@ namespace Zhichkin.ORM
         IReferenceObject New(int typeCode, Guid identity); // Virtual
         T New<T>(Guid identity) where T : IReferenceObject; // Virtual
     }
+
+    public interface IPersistentContext
+    {
+        string Name { get; }
+        string ConnectionString { get; }
+        IDataMapper GetDataMapper(Type type);
+        BiDictionary<int, Type> TypeCodes { get; }
+        IReferenceObjectFactory ReferenceObjectFactory { get; }
+        
+    }
 }

@@ -11,9 +11,7 @@ namespace Zhichkin.Metadata.Model
 {
     public sealed partial class PropertyType : ValueObject
     {
-        private static readonly IDataMapper _mapper = new PropertyType.DataMapper(
-            PersistentContext.ConnectionString,
-            new ReferenceObjectFactory(PersistentContext.TypeCodes));
+        private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(PropertyType));
 
         public PropertyType() : base(_mapper) { }
         public PropertyType(PersistentState state) : base(_mapper, state) { }

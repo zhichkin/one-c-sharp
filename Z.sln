@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shell", "Shell\Shell.csproj", "{EABA3F61-1655-4431-912E-1380FDC7CBD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetadataModule", "MetadataModule\MetadataModule.csproj", "{FCEB9D4B-9347-429C-B781-541ABAC58F8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata.Module", "Metadata.Module\Metadata.Module.csproj", "{FCEB9D4B-9347-429C-B781-541ABAC58F8C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM", "orm\ORM.csproj", "{431D3F9F-2134-4E49-BFA3-66A629492389}"
 EndProject

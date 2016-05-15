@@ -23,9 +23,7 @@ namespace Zhichkin.Metadata.Model
 
     public sealed partial class Table : EntityBase
     {
-        private static readonly IDataMapper _mapper = new Table.DataMapper(
-            PersistentContext.ConnectionString,
-            new ReferenceObjectFactory(PersistentContext.TypeCodes));
+        private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Table));
 
         public Table() : base(_mapper) { }
         public Table(Guid identity) : base(_mapper, identity) { }
