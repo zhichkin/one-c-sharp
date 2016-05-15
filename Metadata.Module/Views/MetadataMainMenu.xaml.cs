@@ -12,14 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Zhichkin.Metadata.ViewModels;
 
 namespace Zhichkin.Metadata.Views
 {
     public partial class MetadataMainMenu : UserControl
     {
-        public MetadataMainMenu()
+        public MetadataMainMenu(MainMenuViewModel viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
         }
     }
 }

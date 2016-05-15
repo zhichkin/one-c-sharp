@@ -6,14 +6,23 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.PubSubEvents;
+using Zhichkin.Metadata.Controllers;
+
 using Zhichkin.Metadata.Commands;
 
-namespace Zhichkin.Metadata.ViewModel
+namespace Zhichkin.Metadata.ViewModels
 {
-    public class MetadataMainMenu : BindableBase
+    public class MainMenuViewModel : BindableBase
     {
-        public MetadataMainMenu()
+        private readonly IEventAggregator eventAggregator;
+
+        public MainMenuViewModel(IEventAggregator eventAggregator)
         {
+            if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
+
+            this.eventAggregator = eventAggregator;
+
             OpenMetadataCommand = new OpenMetadataCommand<object>(this.OnOpenMetadata, this.CanExecuteCommand);
             SaveMetadataCommand = new SaveMetadataCommand<object>(this.OnSaveMetadata, this.CanExecuteCommand);
             KillMetadataCommand = new KillMetadataCommand<object>(this.OnKillMetadata, this.CanExecuteCommand);
@@ -26,18 +35,29 @@ namespace Zhichkin.Metadata.ViewModel
         public ICommand KillMetadataCommand { get; private set; }
         public ICommand UpdateMetadataCommand { get; private set; }
         public ICommand ShowSettingsCommand { get; private set; }
+
         private bool CanExecuteCommand(object args) { return true; }
 
         private void OnOpenMetadata(object args)
         {
-            MessageBox.Show("Open");
-            //see Prism's the UI Composition Desktop example !!!
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
         }
-
-
-        private void OnSaveMetadata(object args) { MessageBox.Show("Save"); }
-        private void OnKillMetadata(object args) { MessageBox.Show("Kill"); }
-        private void OnUpdateMetadata(object args) { MessageBox.Show("Update"); }
-        private void OnShowSettings(object args) { MessageBox.Show("Settings"); }
+        private void OnSaveMetadata(object args)
+        {
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+        }
+        private void OnKillMetadata(object args)
+        {
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+        }
+        private void OnUpdateMetadata(object args)
+        {
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+        }
+        private void OnShowSettings(object args)
+        {
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+            MessageBox.Show("Settings");
+        }
     }
 }

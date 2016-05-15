@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBlock Text="Hello, World!" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Calibri" FontSize="24" FontWeight="Bold"></TextBlock>
+        <TextBlock x:Name="TextInfo" Text="Hello, World!" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Verdana" FontSize="24" FontWeight="Bold"></TextBlock>
     </Grid>
 </UserControl>

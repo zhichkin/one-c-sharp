@@ -3,13 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ViewModel="clr-namespace:Zhichkin.Metadata.ViewModel"
+             xmlns:ViewModel="clr-namespace:Zhichkin.Metadata.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="100">
-    
-    <UserControl.DataContext>
-        <ViewModel:MetadataMainMenu/>
-    </UserControl.DataContext>
     
     <UserControl.Resources>
         <ResourceDictionary>
@@ -24,23 +20,23 @@
     <Grid>
         <Menu VerticalAlignment="Center" HorizontalAlignment="Center">
             <MenuItem Header="Метаданные">
-                <MenuItem Header="Открыть ..." Command="{Binding OpenMetadataCommand}">
+                <MenuItem Header="Открыть ..." Command="{Binding OpenMetadataCommand}" CommandParameter="Open">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Add}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Сохранить" Command="{Binding SaveMetadataCommand}">
+                <MenuItem Header="Сохранить" Command="{Binding SaveMetadataCommand}" CommandParameter="Save">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Save}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Удалить" Command="{Binding KillMetadataCommand}">
+                <MenuItem Header="Удалить" Command="{Binding KillMetadataCommand}" CommandParameter="Kill">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Kill}" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Синхронизировать" Command="{Binding UpdateMetadataCommand}">
+                <MenuItem Header="Синхронизировать" Command="{Binding UpdateMetadataCommand}" CommandParameter="Update">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Synchronize}" />
                     </MenuItem.Icon>
