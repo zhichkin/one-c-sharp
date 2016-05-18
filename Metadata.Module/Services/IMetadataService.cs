@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Metadata.Services
 {
     public interface IMetadataService
     {
-        object GetInfoBases(object item);
+        InfoBase GetMetadata(string connectionString);
+        List<InfoBase> GetInfoBases();
     }
 }

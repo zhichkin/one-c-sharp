@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM", "orm\ORM.csproj", "{4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata.Model", "Metadata.Model\Metadata.Model.csproj", "{810EE1AA-BDDE-4657-9029-EB00A061D3F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComConnector", "ComConnector\ComConnector.csproj", "{8D3DFA86-C8A2-430E-875D-93BDD72EFCBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{810EE1AA-BDDE-4657-9029-EB00A061D3F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{810EE1AA-BDDE-4657-9029-EB00A061D3F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{810EE1AA-BDDE-4657-9029-EB00A061D3F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D3DFA86-C8A2-430E-875D-93BDD72EFCBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3DFA86-C8A2-430E-875D-93BDD72EFCBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D3DFA86-C8A2-430E-875D-93BDD72EFCBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3DFA86-C8A2-430E-875D-93BDD72EFCBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

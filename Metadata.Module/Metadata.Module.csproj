@@ -111,6 +111,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ComConnector\ComConnector.csproj">
+      <Project>{8d3dfa86-c8a2-430e-875d-93bdd72efcbd}</Project>
+      <Name>ComConnector</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
       <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
       <Name>Metadata.Model</Name>

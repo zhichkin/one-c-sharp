@@ -41,7 +41,7 @@ namespace Zhichkin.Metadata.Controllers
         /// </summary>
         private void MetadataObjectSelected(object item)
         {
-            this.dataService.GetInfoBases(item);
+            //this.dataService.GetInfoBases(item);
 
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;

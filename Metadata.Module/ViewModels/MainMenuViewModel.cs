@@ -40,6 +40,7 @@ namespace Zhichkin.Metadata.ViewModels
 
         private void OnOpenMetadata(object args)
         {
+
             this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
         }
         private void OnSaveMetadata(object args)
