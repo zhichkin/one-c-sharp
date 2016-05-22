@@ -67,6 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\MetadataObjectView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MetadataTreeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -76,10 +80,15 @@
     <Compile Include="Controllers\MetadataTreeViewItemSelected.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Services\IMetadataService.cs" />
+    <Compile Include="Services\MetadataAdapter.cs" />
     <Compile Include="Services\MetadataService.cs" />
+    <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="Views\MetadataMainMenu.xaml.cs">
       <DependentUpon>MetadataMainMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MetadataObjectView.xaml.cs">
+      <DependentUpon>MetadataObjectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MetadataTreeView.xaml.cs">
       <DependentUpon>MetadataTreeView.xaml</DependentUpon>
@@ -128,7 +137,39 @@
       <Name>Shell</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\26 SQL.png" />
+    <Resource Include="Images\database.png" />
+    <Resource Include="Images\datetime.png" />
+    <Resource Include="Images\number.png" />
+    <Resource Include="Images\БизнесПроцесс.png" />
+    <Resource Include="Images\ВинниПух.png" />
+    <Resource Include="Images\ВложеннаяТаблица.png" />
+    <Resource Include="Images\ВнешнийИсточникДанных.png" />
+    <Resource Include="Images\Документ.png" />
+    <Resource Include="Images\ЖурналДокументов.png" />
+    <Resource Include="Images\Задача.png" />
+    <Resource Include="Images\Записать.png" />
+    <Resource Include="Images\Измерение.png" />
+    <Resource Include="Images\Константа.png" />
+    <Resource Include="Images\Остановить.png" />
+    <Resource Include="Images\Перечисление.png" />
+    <Resource Include="Images\ПланВидовРасчета.png" />
+    <Resource Include="Images\ПланВидовХарактеристик.png" />
+    <Resource Include="Images\ПланОбмена.png" />
+    <Resource Include="Images\ПланСчетов.png" />
+    <Resource Include="Images\ПрочиеПользовательскиеНастройки.png" />
+    <Resource Include="Images\РегистрБухгалтерии.png" />
+    <Resource Include="Images\РегистрНакопления.png" />
+    <Resource Include="Images\РегистрРасчета.png" />
+    <Resource Include="Images\РегистрСведений.png" />
+    <Resource Include="Images\РегламентноеЗадание.png" />
+    <Resource Include="Images\Реквизит.png" />
+    <Resource Include="Images\Ресурс.png" />
+    <Resource Include="Images\СоздатьЭлементСписка.png" />
+    <Resource Include="Images\Справочник.png" />
+    <Resource Include="Images\УстановитьИнтервал.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\26 Settings.png" />
   </ItemGroup>

@@ -32,5 +32,7 @@ namespace Zhichkin.Metadata.Model
                 return (InfoBase)currentNamespace.Owner;
             }
         }
+
+        public List<Entity> Entities { set; get; }
     }
 }

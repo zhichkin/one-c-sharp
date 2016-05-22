@@ -45,7 +45,7 @@ namespace Zhichkin.Metadata.Controllers
 
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;
-            MetadataTreeView view = rightRegion.GetView("MetadataTreeView") as MetadataTreeView;
+            MetadataObjectView view = rightRegion.GetView("MetadataObjectView") as MetadataObjectView;
 
             if (view != null && item == null)
             {
@@ -55,8 +55,8 @@ namespace Zhichkin.Metadata.Controllers
 
             if (view == null)
             {
-                view = this.container.Resolve<MetadataTreeView>();
-                rightRegion.Add(view, "MetadataTreeView");
+                view = this.container.Resolve<MetadataObjectView>();
+                rightRegion.Add(view, "MetadataObjectView");
             }
             else
             {

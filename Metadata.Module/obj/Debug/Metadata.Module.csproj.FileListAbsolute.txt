@@ -34,3 +34,5 @@ C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata_MarkupCompile.lref
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.ComConnector.dll
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.ComConnector.pdb
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataObjectView.baml
+C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataObjectView.g.cs

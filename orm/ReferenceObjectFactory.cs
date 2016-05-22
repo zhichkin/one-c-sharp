@@ -16,13 +16,13 @@ namespace Zhichkin.ORM
         private delegate IReferenceObject ReferenceObjectConstructor(Guid identity, PersistentState state);
 
         private readonly IIdentityMap map;
-        private readonly BiDictionary<int, Type> typeCodes = new BiDictionary<int, Type>();
+        private readonly BiDictionary<int, Type> typeCodes;
         private readonly Dictionary<Type, ReferenceObjectConstructor> constructors = new Dictionary<Type, ReferenceObjectConstructor>();
 
         public ReferenceObjectFactory(BiDictionary<int, Type> typeCodes, bool useIdentityMap = true)
         {
             if (typeCodes == null) throw new ArgumentNullException("typeCodes");
-
+            this.typeCodes = typeCodes;
             this.map = (useIdentityMap) ? new IdentityMap() : null;
         }
 

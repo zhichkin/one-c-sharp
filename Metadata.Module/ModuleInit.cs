@@ -30,8 +30,7 @@ namespace Zhichkin.Metadata
             mainMenuController = unity.Resolve<MainMenuController>();
 
             regions.RegisterViewWithRegion(RegionNames.TopRegion, ()=> this.unity.Resolve<MetadataMainMenu>());
-
-            regions.RegisterViewWithRegion(RegionNames.LeftRegion, typeof(MetadataTreeView));
+            regions.RegisterViewWithRegion(RegionNames.LeftRegion, () => this.unity.Resolve<MetadataTreeView>());
         }
     }
 }

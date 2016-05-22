@@ -29,5 +29,8 @@ namespace Zhichkin.Metadata.Model
         public Entity Parent { set { Set<Entity>(value, ref parent); } get { return Get<Entity>(ref parent); } }
         
         public string FullName { get { return string.Format("{0}.{1}", this.Namespace.Name, this.Name); } }
+
+        public List<Property> Properties { set; get; }
+        public List<Table> Tables { set; get; }
     }
 }

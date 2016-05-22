@@ -12,8 +12,8 @@ namespace Zhichkin.Metadata.Model
         private const string name = "Zhichkin.Metadata";
         private static readonly string connectionString = string.Empty;
         private static readonly BiDictionary<int, Type> typeCodes = new BiDictionary<int, Type>();
-        private static readonly IReferenceObjectFactory factory = new ReferenceObjectFactory(typeCodes);
         private static readonly Dictionary<Type, IDataMapper> mappers = new Dictionary<Type, IDataMapper>();
+        private static readonly IReferenceObjectFactory factory = new ReferenceObjectFactory(typeCodes);
 
         static MetadataPersistentContext()
         {

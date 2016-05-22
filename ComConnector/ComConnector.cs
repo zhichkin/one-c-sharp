@@ -61,7 +61,7 @@ namespace Zhichkin
             using (IComWrapper array = this.NewObject("Массив"))
             {
                 array.Call("Добавить", metadata_object.ComObject);
-                table = new ComWrapper(com_type, Call(CONST_GetDBNames, array, true));
+                table = new ComWrapper(com_type, Call(CONST_GetDBNames, array.ComObject, true));
             }
             return table;
         }

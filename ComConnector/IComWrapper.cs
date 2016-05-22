@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Zhichkin
 {
@@ -13,5 +14,7 @@ namespace Zhichkin
         IComWrapper GetAndWrap(string property_name);
         IComWrapper CallAndWrap(string method_name);
         IComWrapper CallAndWrap(string method_name, params object[] args);
+        void Release(ref object com_object);
+        void Release(ref IEnumerable com_object);
     }
 }

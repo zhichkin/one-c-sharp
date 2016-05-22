@@ -34,5 +34,7 @@ namespace Zhichkin.Metadata.Model
 
         public Entity Entity { set { Set<Entity>(value, ref entity); } get { return Get<Entity>(ref entity); } }
         public PropertyPurpose Purpose { set { Set<PropertyPurpose>(value, ref purpose); } get { return Get<PropertyPurpose>(ref purpose); } }
+
+        public List<Field> Fields { set; get; }
     }
 }

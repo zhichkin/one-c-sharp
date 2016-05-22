@@ -18,7 +18,11 @@ namespace Zhichkin.Metadata.Model
         /// <summary>The totals table.</summary>
         Totals,
         /// <summary>The settings of the entity.</summary>
-        Settings
+        Settings,
+        /// <summary>The table for tracking changes.</summary>
+        Changes,
+        /// <summary>Таблица проинициализированных предопределенных данных справочника.</summary>
+        InitializedPredefinedDataInCatalog
     }
 
     public sealed partial class Table : EntityBase
@@ -36,5 +40,7 @@ namespace Zhichkin.Metadata.Model
         public string Schema { set { Set<string>(value, ref schema); } get { return Get<string>(ref schema); } }
         public Entity Entity { set { Set<Entity>(value, ref entity); } get { return Get<Entity>(ref entity); } }
         public TablePurpose Purpose { set { Set<TablePurpose>(value, ref purpose); } get { return Get<TablePurpose>(ref purpose); } }
+
+        public List<Field> Fields { set; get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -14,6 +15,20 @@ namespace Zhichkin
             obj = com_object;
         }
         public object ComObject { get { return obj; } }
+        public IComWrapper Wrap(object com_object)
+        {
+            return new ComWrapper(type, com_object);
+        }
+        public void Release(ref object com_object)
+        {
+            Marshal.ReleaseComObject(com_object);
+            com_object = null;
+        }
+        public void Release(ref IEnumerable com_object)
+        {
+            Marshal.ReleaseComObject(com_object);
+            com_object = null;
+        }
         public void Dispose()
         {
             Marshal.ReleaseComObject(obj);
@@ -33,10 +48,6 @@ namespace Zhichkin
         public object Call(string method_name, params object[] args)
         {
             return type.InvokeMember(method_name, BindingFlags.Public | BindingFlags.InvokeMethod, null, obj, args);
-        }
-        public IComWrapper Wrap(object com_object)
-        {
-            return new ComWrapper(type, com_object);
         }
         public IComWrapper GetAndWrap(string property_name)
         {

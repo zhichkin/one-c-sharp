@@ -1,5 +1,6 @@
 ﻿using System;
 using Zhichkin.ORM;
+using System.Collections.Generic;
 
 namespace Zhichkin.Metadata.Model
 {
@@ -16,5 +17,7 @@ namespace Zhichkin.Metadata.Model
 
         public string Server { set { Set<string>(value, ref server); } get { return Get<string>(ref server); } }
         public string Database { set { Set<string>(value, ref database); } get { return Get<string>(ref database); } }
+
+        public List<Namespace> Namespaces { set; get; }
     }
 }

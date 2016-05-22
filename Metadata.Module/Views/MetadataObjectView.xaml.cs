@@ -13,16 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Zhichkin.Metadata.ViewModels;
-
 namespace Zhichkin.Metadata.Views
 {
-    public partial class MetadataTreeView : UserControl
+    public partial class MetadataObjectView : UserControl
     {
-        public MetadataTreeView(MetadataTreeViewModel viewModel)
+        public MetadataObjectView()
         {
             InitializeComponent();
-            this.DataContext = viewModel;
         }
     }
 }

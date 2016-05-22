@@ -2,10 +2,129 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="Icon_26_Refresh" UriSource="..\Images\26 Refresh.png"/>
+            <BitmapImage x:Key="Icon_Namespace" UriSource="..\Images\УстановитьИнтервал.png"/>
+            <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
+            <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
+            <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
+            <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
+            <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
+            <BitmapImage x:Key="Icon_Property" UriSource="..\Images\Реквизит.png"/>
+            <BitmapImage x:Key="Icon_Dimension" UriSource="..\Images\Измерение.png"/>
+            <BitmapImage x:Key="Icon_Measure" UriSource="..\Images\Ресурс.png"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid>
-        <TextBlock x:Name="TextInfo" Text="Hello, World!" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Verdana" FontSize="24" FontWeight="Bold"></TextBlock>
+        <TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=InfoBases}"
+              HorizontalAlignment="Stretch" Margin="10" VerticalAlignment="Stretch">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State}" Value="New">
+                                            <Setter Property="Source" Value="{StaticResource AddDatabaseIcon}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="Exist">
+                                            <Setter Property="Source" Value="{StaticResource AcceptDatabaseIcon}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>-->
+                        <TextBlock Text="{Binding Path=Name}" Margin="2" VerticalAlignment="Center"/>
+                        <!--<StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Обновить" Command="{Binding RefreshViewModel}">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_26_Refresh}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>-->
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type Model:Namespace}" ItemsSource="{Binding Path=Entities}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Icon_Namespace}" Margin="2"/>
+                        <TextBlock Text="{Binding Path=Name}" Margin="2"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type Model:Entity}" ItemsSource="{Binding Path=Properties}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="Справочник">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="Документ">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="РегистрСведений">
+                                            <Setter Property="Source" Value="{StaticResource InfoRegisterIcon}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="РегистрНакопления">
+                                            <Setter Property="Source" Value="{StaticResource AccumRegisterIcon}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="ТабличнаяЧасть">
+                                            <Setter Property="Source" Value="{StaticResource NestedClassIcon}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>-->
+                        <TextBlock Text="{Binding Path=Name}" Margin="2"/>
+                        <!--<StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Открыть список" Command="{Binding OpenClassListCommand}"/>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>-->
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type Model:Property}" ItemsSource="{Binding Path=Fields}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="System">
+                                            <Setter Property="Source" Value="{StaticResource SetupIcon}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="Property">
+                                            <Setter Property="Source" Value="{StaticResource PropertyIcon}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="Dimension">
+                                            <Setter Property="Source" Value="{StaticResource DimensionIcon}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Purpose}" Value="Measure">
+                                            <Setter Property="Source" Value="{StaticResource MeasureIcon}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>-->
+                        <TextBlock Text="{Binding Path=Name}" Margin="2"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type Model:Field}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Icon_Property}" Margin="2"/>
+                        <TextBlock Text="{Binding Path=Name}" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
     </Grid>
 </UserControl>
