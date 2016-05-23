@@ -39,11 +39,6 @@ namespace Zhichkin.Metadata.Services
                     infoBase.Name = (string)metadata.Get("Имя");
                 }
                 LoadCatalogs(connector);
-                infoBase.Namespaces = new List<Namespace>();
-                foreach (KeyValuePair<string, Namespace> item in Namespaces)
-                {
-                    infoBase.Namespaces.Add(item.Value);
-                }
             }
         }
         private Namespace GetNamespace(string name)
@@ -54,6 +49,7 @@ namespace Zhichkin.Metadata.Services
                 return ns;
             }
             ns = new Namespace() { Owner = infoBase, Name = name };
+            infoBase.Namespaces.Add(ns);
             Namespaces.Add(ns.Name, ns);
             return ns;
         }
@@ -109,6 +105,7 @@ namespace Zhichkin.Metadata.Services
                             Name = (string)attribute.Get("Имя"),
                             Purpose = purpose
                         };
+                        entity.Properties.Add(property);
                     }
                 }
             }
@@ -128,7 +125,7 @@ namespace Zhichkin.Metadata.Services
                             Name = (string)attribute.Get("Имя"),
                             Purpose = PropertyPurpose.System
                         };
-                        //entity.Properties.Add()
+                        entity.Properties.Add(property);
                     }
                 }
                 attributes.Release(ref iterator);
@@ -140,6 +137,7 @@ namespace Zhichkin.Metadata.Services
 
             Catalogs.Add(entity.Name, entity);
             entity.Namespace = GetNamespace("Справочники");
+            entity.Namespace.Entities.Add(entity);
 
             LoadStandardAttributes(catalog, entity);
             LoadAttributes(catalog, entity, PropertyPurpose.Property);
@@ -161,6 +159,7 @@ namespace Zhichkin.Metadata.Services
                     {
                         entity.Code = GetTypeCode(table.Name);
                     }
+                    entity.Tables.Add(table);
                 }
             }
         }

@@ -30,7 +30,10 @@ namespace Zhichkin.Metadata.Model
         
         public string FullName { get { return string.Format("{0}.{1}", this.Namespace.Name, this.Name); } }
 
-        public List<Property> Properties { set; get; }
-        public List<Table> Tables { set; get; }
+        private List<Property> properties = new List<Property>();
+        public IList<Property> Properties { get { return properties; } }
+
+        private List<Table> tables = new List<Table>();
+        public IList<Table> Tables { get { return tables; } }
     }
 }

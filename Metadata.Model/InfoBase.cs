@@ -18,6 +18,7 @@ namespace Zhichkin.Metadata.Model
         public string Server { set { Set<string>(value, ref server); } get { return Get<string>(ref server); } }
         public string Database { set { Set<string>(value, ref database); } get { return Get<string>(ref database); } }
 
-        public List<Namespace> Namespaces { set; get; }
+        private List<Namespace> namespaces = new List<Namespace>();
+        public IList<Namespace> Namespaces { get { return namespaces; } }
     }
 }

@@ -33,6 +33,10 @@ namespace Zhichkin.Metadata.Model
             }
         }
 
-        public List<Entity> Entities { set; get; }
+        private List<Namespace> namespaces = new List<Namespace>();
+        public IList<Namespace> Namespaces { get { return namespaces; } }
+
+        private List<Entity> entities = new List<Entity>();
+        public IList<Entity> Entities { get { return entities; } }
     }
 }

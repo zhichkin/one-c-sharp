@@ -10,12 +10,14 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BitmapImage x:Key="Icon_26_Refresh" UriSource="..\Images\26 Refresh.png"/>
-            <BitmapImage x:Key="Icon_Namespace" UriSource="..\Images\УстановитьИнтервал.png"/>
+            <BitmapImage x:Key="Icon_Add_Database" UriSource="..\Images\26 Add Database.png"/>
+            <BitmapImage x:Key="Icon_Exist_Database" UriSource="..\Images\26 Accept Database.png"/>
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
             <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
             <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
             <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
             <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
+            <BitmapImage x:Key="Icon_System" UriSource="..\Images\ПрочиеПользовательскиеНастройки.png"/>
             <BitmapImage x:Key="Icon_Property" UriSource="..\Images\Реквизит.png"/>
             <BitmapImage x:Key="Icon_Dimension" UriSource="..\Images\Измерение.png"/>
             <BitmapImage x:Key="Icon_Measure" UriSource="..\Images\Ресурс.png"/>
@@ -28,20 +30,20 @@
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">
                     <StackPanel Orientation="Horizontal">
-                        <!--<Image Margin="2">
+                        <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding State}" Value="New">
-                                            <Setter Property="Source" Value="{StaticResource AddDatabaseIcon}"/>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Add_Database}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding State}" Value="Exist">
-                                            <Setter Property="Source" Value="{StaticResource AcceptDatabaseIcon}"/>
+                                        <DataTrigger Binding="{Binding State}" Value="Original">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Exist_Database}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>
-                        </Image>-->
+                        </Image>
                         <TextBlock Text="{Binding Path=Name}" Margin="2" VerticalAlignment="Center"/>
                         <!--<StackPanel.ContextMenu>
                             <ContextMenu>
@@ -56,35 +58,54 @@
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Namespace}" ItemsSource="{Binding Path=Entities}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource Icon_Namespace}" Margin="2"/>
+                        <Image Margin="2">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Name}" Value="Справочники">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="Документы">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="РегистрыСведений">
+                                            <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="РегистрыНакопления">
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
                         <TextBlock Text="{Binding Path=Name}" Margin="2"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Entity}" ItemsSource="{Binding Path=Properties}">
                     <StackPanel Orientation="Horizontal">
-                        <!--<Image Margin="2">
+                        <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Purpose}" Value="Справочник">
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Справочники">
                                             <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Purpose}" Value="Документ">
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Документы">
                                             <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Purpose}" Value="РегистрСведений">
-                                            <Setter Property="Source" Value="{StaticResource InfoRegisterIcon}"/>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрыСведений">
+                                            <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Purpose}" Value="РегистрНакопления">
-                                            <Setter Property="Source" Value="{StaticResource AccumRegisterIcon}"/>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрыНакопления">
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Purpose}" Value="ТабличнаяЧасть">
-                                            <Setter Property="Source" Value="{StaticResource NestedClassIcon}"/>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="ТабличнаяЧасть">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>
-                        </Image>-->
+                        </Image>
                         <TextBlock Text="{Binding Path=Name}" Margin="2"/>
                         <!--<StackPanel.ContextMenu>
                             <ContextMenu>
@@ -95,26 +116,26 @@
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Property}" ItemsSource="{Binding Path=Fields}">
                     <StackPanel Orientation="Horizontal">
-                        <!--<Image Margin="2">
+                        <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Purpose}" Value="System">
-                                            <Setter Property="Source" Value="{StaticResource SetupIcon}"/>
+                                            <Setter Property="Source" Value="{StaticResource Icon_System}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Purpose}" Value="Property">
-                                            <Setter Property="Source" Value="{StaticResource PropertyIcon}"/>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Property}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Purpose}" Value="Dimension">
-                                            <Setter Property="Source" Value="{StaticResource DimensionIcon}"/>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Dimension}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Purpose}" Value="Measure">
-                                            <Setter Property="Source" Value="{StaticResource MeasureIcon}"/>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Measure}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>
-                        </Image>-->
+                        </Image>
                         <TextBlock Text="{Binding Path=Name}" Margin="2"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
@@ -127,4 +148,5 @@
             </TreeView.Resources>
         </TreeView>
     </Grid>
+    
 </UserControl>
