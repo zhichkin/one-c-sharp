@@ -43,3 +43,4 @@ C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.Properties.Resources
 C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Shell.csproj.GenerateResource.Cache
 C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.exe
 C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.pdb
+C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Shell.csprojResolveAssemblyReference.cache

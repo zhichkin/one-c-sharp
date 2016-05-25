@@ -23,15 +23,21 @@ namespace Zhichkin.Metadata.Model
         private Entity owner = null; // Nesting, aggregation
         private Entity parent = null; // Inheritance
 
+        ///<summary>Type code of the entity</summary>
         public int Code { set { Set<int>(value, ref code); } get { return Get<int>(ref code); } }
         public Namespace Namespace { set { Set<Namespace>(value, ref _namespace); } get { return Get<Namespace>(ref _namespace); } }
+        ///<summary>Nesting entity reference</summary>
         public Entity Owner { set { Set<Entity>(value, ref owner); } get { return Get<Entity>(ref owner); } }
+        ///<summary>Inheritance: base entity reference</summary>
         public Entity Parent { set { Set<Entity>(value, ref parent); } get { return Get<Entity>(ref parent); } }
         
         public string FullName { get { return string.Format("{0}.{1}", this.Namespace.Name, this.Name); } }
 
         private List<Property> properties = new List<Property>();
         public IList<Property> Properties { get { return properties; } }
+
+        private List<Entity> nestedEntities = new List<Entity>();
+        public IList<Entity> NestedEntities { get { return nestedEntities; } }
 
         private List<Table> tables = new List<Table>();
         public IList<Table> Tables { get { return tables; } }

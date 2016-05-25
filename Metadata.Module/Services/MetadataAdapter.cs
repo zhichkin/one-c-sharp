@@ -69,7 +69,7 @@ namespace Zhichkin.Metadata.Services
                     {
                         using (IComWrapper names = connector.GetDBNames(catalog))
                         {
-                            LoadCatalog(connector, catalog, names);
+                            LoadCatalog(catalog, names);
                         }
                     }
                 }
@@ -90,9 +90,9 @@ namespace Zhichkin.Metadata.Services
             }
             return 0;
         }
-        private void LoadAttributes(IComWrapper catalog, Entity entity, PropertyPurpose purpose)
+        private void LoadAttributes(IComWrapper metaObject, Entity entity, PropertyPurpose purpose)
         {
-            using (IComWrapper attributes = catalog.GetAndWrap("Реквизиты"))
+            using (IComWrapper attributes = metaObject.GetAndWrap("Реквизиты"))
             {
                 int count = (int)attributes.Call("Количество");
                 for (int i = 0; i < count; i++)
@@ -110,9 +110,9 @@ namespace Zhichkin.Metadata.Services
                 }
             }
         }
-        private void LoadStandardAttributes(IComWrapper catalog, Entity entity)
+        private void LoadStandardAttributes(IComWrapper metaObject, Entity entity)
         {
-            using (IComWrapper attributes = catalog.GetAndWrap("СтандартныеРеквизиты"))
+            using (IComWrapper attributes = metaObject.GetAndWrap("СтандартныеРеквизиты"))
             {
                 IEnumerable iterator = (IEnumerable)attributes.ComObject;
                 foreach (object item in iterator)
@@ -131,7 +131,7 @@ namespace Zhichkin.Metadata.Services
                 attributes.Release(ref iterator);
             }
         }
-        private void LoadCatalog(ComConnector connector, IComWrapper catalog, IComWrapper names)
+        private void LoadCatalog(IComWrapper catalog, IComWrapper names)
         {
             Entity entity = new Entity() { Name = (string)catalog.Get("Имя") };
 
@@ -141,6 +141,7 @@ namespace Zhichkin.Metadata.Services
 
             LoadStandardAttributes(catalog, entity);
             LoadAttributes(catalog, entity, PropertyPurpose.Property);
+            LoadTableParts(catalog, entity);
 
             Table table;
             int count = (int)names.Call("Количество");
@@ -160,6 +161,27 @@ namespace Zhichkin.Metadata.Services
                         entity.Code = GetTypeCode(table.Name);
                     }
                     entity.Tables.Add(table);
+                }
+            }
+        }
+        private void LoadTableParts(IComWrapper metaObject, Entity entity)
+        {
+            using (IComWrapper tableParts = metaObject.GetAndWrap("ТабличныеЧасти"))
+            {
+                int count = (int)tableParts.Call("Количество");
+                for (int i = 0; i < count; i++)
+                {
+                    using (IComWrapper tablePart = tableParts.CallAndWrap("Получить", i))
+                    {
+                        Entity newEntity = new Entity()
+                        {
+                            Name = (string)tablePart.Get("Имя"),
+                            Owner = entity
+                        };
+                        LoadStandardAttributes(tablePart, newEntity);
+                        LoadAttributes(tablePart, newEntity, PropertyPurpose.Property);
+                        entity.NestedEntities.Add(newEntity);
+                    }
                 }
             }
         }

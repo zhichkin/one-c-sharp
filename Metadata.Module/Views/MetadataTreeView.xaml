@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
+             xmlns:ViewModel="clr-namespace:Zhichkin.Metadata.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
@@ -25,9 +26,9 @@
     </UserControl.Resources>
     
     <Grid>
-        <TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=InfoBases}"
-              HorizontalAlignment="Stretch" Margin="10" VerticalAlignment="Stretch">
+        <TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=InfoBases}" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TreeView.Resources>
+                <ViewModel:EntityChildrenConverter x:Key="EntityChildrenConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">
                     <StackPanel Orientation="Horizontal">
                         <Image Margin="2">
@@ -81,7 +82,13 @@
                         <TextBlock Text="{Binding Path=Name}" Margin="2"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type Model:Entity}" ItemsSource="{Binding Path=Properties}">
+                <HierarchicalDataTemplate DataType="{x:Type Model:Entity}">
+                    <HierarchicalDataTemplate.ItemsSource>
+                        <MultiBinding Converter="{StaticResource EntityChildrenConverter}">
+                            <Binding Path="Properties" />
+                            <Binding Path="NestedEntities" />
+                        </MultiBinding>
+                    </HierarchicalDataTemplate.ItemsSource>
                     <StackPanel Orientation="Horizontal">
                         <Image Margin="2">
                             <Image.Style>
@@ -99,7 +106,7 @@
                                         <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрыНакопления">
                                             <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="ТабличнаяЧасть">
+                                        <DataTrigger Binding="{Binding Namespace}" Value="{x:Null}">
                                             <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
