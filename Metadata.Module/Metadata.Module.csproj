@@ -84,7 +84,7 @@
     <Compile Include="Services\MetadataService.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
-    <Compile Include="Views\EntityChildrenConverter.cs" />
+    <Compile Include="Views\CompositeCollectionConverter.cs" />
     <Compile Include="Views\MetadataMainMenu.xaml.cs">
       <DependentUpon>MetadataMainMenu.xaml</DependentUpon>
     </Compile>

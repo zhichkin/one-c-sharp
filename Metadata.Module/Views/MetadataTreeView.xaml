@@ -15,6 +15,8 @@
             <BitmapImage x:Key="Icon_Exist_Database" UriSource="..\Images\26 Accept Database.png"/>
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
             <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
+            <BitmapImage x:Key="Icon_Characteristic" UriSource="..\Images\ПланВидовХарактеристик.png"/>
+            <BitmapImage x:Key="Icon_ExchangePlan" UriSource="..\Images\ПланОбмена.png"/>
             <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
             <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
             <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
@@ -28,7 +30,7 @@
     <Grid>
         <TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=InfoBases}" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TreeView.Resources>
-                <ViewModel:EntityChildrenConverter x:Key="EntityChildrenConverter" />
+                <ViewModel:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">
                     <StackPanel Orientation="Horizontal">
                         <Image Margin="2">
@@ -69,6 +71,12 @@
                                         <DataTrigger Binding="{Binding Name}" Value="Документы">
                                             <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="ПланыВидовХарактеристик">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Characteristic}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="ПланыОбмена">
+                                            <Setter Property="Source" Value="{StaticResource Icon_ExchangePlan}"/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Name}" Value="РегистрыСведений">
                                             <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
                                         </DataTrigger>
@@ -84,7 +92,7 @@
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Entity}">
                     <HierarchicalDataTemplate.ItemsSource>
-                        <MultiBinding Converter="{StaticResource EntityChildrenConverter}">
+                        <MultiBinding Converter="{StaticResource CompositeCollectionConverter}">
                             <Binding Path="Properties" />
                             <Binding Path="NestedEntities" />
                         </MultiBinding>
@@ -99,6 +107,12 @@
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Namespace.Name}" Value="Документы">
                                             <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="ПланыВидовХарактеристик">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Characteristic}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="ПланыОбмена">
+                                            <Setter Property="Source" Value="{StaticResource Icon_ExchangePlan}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрыСведений">
                                             <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>

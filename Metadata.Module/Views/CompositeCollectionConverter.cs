@@ -9,23 +9,28 @@ using System.Collections;
 
 namespace Zhichkin.Metadata.Views
 {
-    public sealed class EntityChildrenConverter : IMultiValueConverter
+    public sealed class CompositeCollectionConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            List<object> items = new List<object>();
+            var list = new CompositeCollection();
 
-            for (int i = 0; i < values.Length; i++)
+            foreach (var item in values)
             {
-                IEnumerable children = (IEnumerable)values[i];
-
-                foreach (var child in children)
+                if (item is IEnumerable)
                 {
-                    items.Add(child);
+                    list.Add(new CollectionContainer()
+                        {
+                            Collection = (IEnumerable)item
+                        });
+                }
+                else
+                {
+                    list.Add(item);
                 }
             }
 
-            return items;
+            return list;
         }
 
 

@@ -13,10 +13,15 @@ namespace Zhichkin.Metadata.Model
     {
         /// <summary>The main table to store data.</summary>
         Main,
+        Constants,
+        Totals,
+        Turnovers,
+        TotalsByAccounts,
+        TotalsByAccountsWithExtDim,
+        TotalsBetweenAccounts,
+
         /// <summary>The table part of entity.</summary>
         TablePart,
-        /// <summary>The totals table.</summary>
-        Totals,
         /// <summary>The settings of the entity.</summary>
         Settings,
         /// <summary>The table for tracking changes.</summary>
