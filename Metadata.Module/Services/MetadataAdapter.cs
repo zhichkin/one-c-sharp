@@ -23,64 +23,6 @@ namespace Zhichkin.Metadata.Services
             { PropertyPurpose.Measure,   "Ресурсы" },
             { PropertyPurpose.System,    "СтандартныеРеквизиты" }
         };
-        private Dictionary<string, TablePurpose> TablePurposes = new Dictionary<string, TablePurpose>()
-        {
-            { "Основная", TablePurpose.Main }, //основная
-            { "Константы", TablePurpose.Constants }, //константы
-            { "Итоги", TablePurpose.Totals }, //итоги
-            { "Обороты", TablePurpose.Turnovers }, //обороты
-            { "ИтогиПоСчетам", TablePurpose.TotalsByAccounts }, //итоги по счетам
-            { "ИтогиПоСчетамССубконто", TablePurpose.TotalsByAccountsWithExtDim }, //итоги по счетам с субконто
-            { "ИтогиМеждуСчетами", TablePurpose.TotalsBetweenAccounts }, //итоги между счетами
-            { "ТабличнаяЧасть", TablePurpose.TablePart },
-            { "РегистрацияИзменений", TablePurpose.Changes },
-            { "ИнициализированныеПредопределенныеДанныеСправочника", TablePurpose.InitializedPredefinedDataInCatalog }
-        //ИтогиМеждуСчетами(TotalsBetweenAccounts) – итоги между счетами; 
-        //ИтогиСрезПервых(TotalsSliceFirst) – итоги срез первых регистра сведений; 
-        //ИтогиСрезПоследних(TotalsSliceLast) – итоги срез последних регистра сведений; 
-        //ВидыСубконто(ExtDimensionTypes) – виды субконто; 
-        //ЗначенияСубконто(ExtDimensionsValues) – значения субконто; 
-        //ВытесняющиеВидыРасчета(DisplacingCalculationTypes) – вытесняющие виды расчета; 
-        //ПорядокВытеснения(DisplacementOrder) – порядок вытеснения; 
-        //ВедущиеВидыРасчета(LeadingCalculationTypes) – ведущие виды расчета; 
-        //БазовыеВидыРасчета(BaseCalculationTypes) – базовые виды расчета; 
-        //ПериодыДействия(ActionPeriods) – периоды действия; 
-        //ГраницыПоследовательности(SequenceBoundaries) – границы последовательности; 
-        //ТочкиМаршрута(RoutePoints) – точки маршрута бизнес–процесса; 
-        //ТабличнаяЧасть(TabularSection) – табличная часть; 
-        //РегистрацияИзменений(ChangeRecord) – регистрация изменений; 
-        //РегистрацияИзмененийКонстант(ConstantsChangeRecord) – регистрация изменений констант; 
-        //РегистрацияИзмененийКонфигурации(ConfigChangeRecord) – регистрация изменений конфигурации; 
-        //РегистрацияИзмененийВнешнихСвойствКонфигурации(ConfigExtPropertiesChangeRecord) – регистрация изменений внешних свойств конфигурации; 
-        //CтатистикаЗапросов(AccumRgSt) – таблица статистики запросов; 
-        //НовыеОбороты(AccumRgDl) – таблица новых оборотов по регистру; 
-        //БуферОборотов (AccumRgBf) – таблица буфера оборотов по регистру; 
-        //НастройкиРежимаАгрегатовРегистровНакопления(AccumRgAggOpt) – таблица настроек режима агрегатов регистра накопления; 
-        //КодыИзмеренийАгрегатовРегистровНакопления(AccumRgAggDims) – таблица кодов измерений регистра накопления в агрегатах; 
-        //СписокАгрегатовРегистровНакопления (AccumRgAggGrid) – таблица списка агрегатов регистра накопления; 
-        //ХранилищеСистемныхНастроек(SystemSettings) – хранилище системных настроек; 
-        //ХранилищеОбщихНастроек(CommonSettings) – хранилище общих настроек; 
-        //ХранилищеПользовательскихНастроекОтчетов (ReportsSettings) – хранилище пользовательских настроек отчетов; 
-        //ХранилищеВариантовОтчетов(ReportVariants) – хранилище вариантов отчета; 
-        //ХранилищеНастроекДанныхФорм(FrmDtSettings) – хранилище настоек данных форм; 
-        //АгрегатРегистраНакопления(AccumRegAgg) – таблица агрегата регистра накопления; 
-        //ИсторияРаботыПользователей (UsersHistoryStorage) – история работы пользователей; 
-        //Задача(Task) – таблица задач бизнесс процесса; 
-        //НастройкиХраненияИтоговРегистровБухгалтерии(AccountRegistersOptionsTable) – таблица настроек хранения итогов регистров бухгалтерии; 
-        //НастройкиХраненияИтоговРегистровНакопления(AccumulationRegistersOptionsTable) – таблица настроек хранения итогов регистров накопления; 
-        //НастройкиХраненияИтоговРегистраБухгалтерии(AccountRegisterTotalsOptions) – таблица настроек хранения итогов регистра бухгалтерии; 
-        //НастройкиХраненияИтоговРегистраНакопления(AccumulationRegisterOptionsTable) – таблица настроек хранения итогов регистра накопления; 
-        //НастройкиХраненияИтоговРегистраСведений(InformationRegisterTotalsOptions) – таблица настроек использования итогов среза первых и среза последних регистра сведений; 
-        //НастройкиПлановСчетов(ChartsOfAccountsOptions) – настройки планов счетов; 
-        //НастройкиПлановВидовХарактеристик(ChartsOfCharacteristicTypesOptions) – настройки планов видов характеристик; 
-        //НастройкиПлановВидовРасчетов(ChartsOfCalculationTypesOptions) – настройки планов видов расчета; 
-        //НастройкиСпискаАгрегатов(AccumRgAggOptions) – настройки списка агрегатов; 
-        //НастройкиСправочников(ReferenceOptions) – настройки справочников; 
-        //ИнициализированныеПредопределенныеДанныеПланаВидовХарактеристик(InitializedPredefinedDataInChartOfCharacteristicTypes) – таблица проинициализированных предопределенных данных плана видов характеристик; 
-        //ИнициализированныеПредопределенныеДанныеПланаСчетов(InitializedPredefinedDataInChartOfAccounts) – таблица инициализированных предопределенных данных плана счетов; 
-        //ИнициализированныеПредопределенныеДанныеПланаВидовРасчета(InitializedPredefinedDataInChartOfCalculationTypes) – таблица проинициализированных элементов плана расчетов; 
-        //ИнициализированныеПредопределенныеДанныеСправочника(InitializedPredefinedDataInCatalog)
-        };
         private Dictionary<string, Table> Tables = new Dictionary<string, Table>();
 
         public void Load(string connectionString, InfoBase infoBase)
@@ -268,8 +210,11 @@ namespace Zhichkin.Metadata.Services
                             Entity = entity,
                             Schema = "dbo",
                             Name = (string)row.Get("ИмяТаблицыХранения"),
-                            Purpose = TablePurposes[(string)row.Get("Назначение")]
+                            Purpose = TablePurposes.Lookup[(string)row.Get("Назначение")]
                         };
+                        //row.GetAndWrap("Поля")
+                        //ИмяПоляХранения(StorageFieldName)
+                        //ИмяПоля(FieldName) 
                         if (table.Purpose == TablePurpose.Main)
                         {
                             entity.Code = GetTypeCode(table.Name);

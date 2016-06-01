@@ -9,27 +9,6 @@ using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public enum TablePurpose
-    {
-        /// <summary>The main table to store data.</summary>
-        Main,
-        Constants,
-        Totals,
-        Turnovers,
-        TotalsByAccounts,
-        TotalsByAccountsWithExtDim,
-        TotalsBetweenAccounts,
-
-        /// <summary>The table part of entity.</summary>
-        TablePart,
-        /// <summary>The settings of the entity.</summary>
-        Settings,
-        /// <summary>The table for tracking changes.</summary>
-        Changes,
-        /// <summary>Таблица проинициализированных предопределенных данных справочника.</summary>
-        InitializedPredefinedDataInCatalog
-    }
-
     public sealed partial class Table : EntityBase
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Table));
