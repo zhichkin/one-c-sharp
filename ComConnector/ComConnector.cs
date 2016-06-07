@@ -65,6 +65,15 @@ namespace Zhichkin
             }
             return table;
         }
+        public string GetTypeName(object typeObject)
+        {
+            string typeName = string.Empty;
+            using (IComWrapper typeInfo = new ComWrapper(com_type, Call("XMLТип", typeObject)))
+            {
+                typeName = (string)typeInfo.Get("ИмяТипа");
+            }
+            return typeName;
+        }
         public string ToString(object value)
         {
             return (string)Call(CONST_String, value);

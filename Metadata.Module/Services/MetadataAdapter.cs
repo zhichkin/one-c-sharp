@@ -15,6 +15,7 @@ namespace Zhichkin.Metadata.Services
     public sealed class COMMetadataAdapter : IMetadataAdapter
     {
         private Dictionary<string, Namespace> ReferenceObjectsNamespaces = new Dictionary<string, Namespace>();
+        private Dictionary<string, Namespace> ReferenceNamespacesLookup = new Dictionary<string, Namespace>();
         private Dictionary<string, Namespace> ValueObjectsNamespaces = new Dictionary<string, Namespace>();
         private Dictionary<PropertyPurpose, string> PropertyPurposes = new Dictionary<PropertyPurpose, string>()
         {
@@ -36,6 +37,7 @@ namespace Zhichkin.Metadata.Services
                 }
 
                 InitializeDictionaries(infoBase);
+
                 foreach (var item in ReferenceObjectsNamespaces)
                 {
                     LoadReferenceMetaObjects(connector, item.Key);
@@ -44,21 +46,32 @@ namespace Zhichkin.Metadata.Services
                 {
                     LoadValueMetaObjects(connector, item.Key);
                 }
+                LoadPropertiesTypes(connector);
             }
+            GC.Collect(); // !? COM-соединение подвисает в 1С
         }
 
         private void InitializeDictionaries(InfoBase infoBase)
         {
             Namespace ns = new Namespace() { Owner = infoBase, Name = "Справочники" };
             ReferenceObjectsNamespaces.Add(ns.Name, ns); infoBase.Namespaces.Add(ns);
+            ReferenceNamespacesLookup.Add("CatalogRef", ns);
+
             ns = new Namespace() { Owner = infoBase, Name = "Документы" };
             ReferenceObjectsNamespaces.Add(ns.Name, ns); infoBase.Namespaces.Add(ns);
+            ReferenceNamespacesLookup.Add("DocumentRef", ns);
+
             ns = new Namespace() { Owner = infoBase, Name = "ПланыВидовХарактеристик" };
             ReferenceObjectsNamespaces.Add(ns.Name, ns); infoBase.Namespaces.Add(ns);
+            ReferenceNamespacesLookup.Add("ChartOfCharacteristicTypesRef", ns);
+
             ns = new Namespace() { Owner = infoBase, Name = "ПланыОбмена" };
             ReferenceObjectsNamespaces.Add(ns.Name, ns); infoBase.Namespaces.Add(ns);
+            ReferenceNamespacesLookup.Add("ExchangePlanRef", ns);
+
             ns = new Namespace() { Owner = infoBase, Name = "РегистрыСведений" };
             ValueObjectsNamespaces.Add(ns.Name, ns); infoBase.Namespaces.Add(ns);
+
             ns = new Namespace() { Owner = infoBase, Name = "РегистрыНакопления" };
             ValueObjectsNamespaces.Add(ns.Name, ns); infoBase.Namespaces.Add(ns);
         }
@@ -76,6 +89,64 @@ namespace Zhichkin.Metadata.Services
                 return result;
             }
             return 0;
+        }
+        private Entity GetEntityByMetaTypeName(string typeName)
+        {
+            string[] names = typeName.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+
+            Namespace ns;
+            if (ReferenceNamespacesLookup.TryGetValue(names[0], out ns))
+            {
+                return GetEntityByName(ns, names[1]);
+            }
+            return Entity.Empty;
+        }
+        private Entity GetEntityByName(Namespace _namespace, string name)
+        {
+            foreach (Entity entity in _namespace.Entities)
+            {
+                if (entity.Name == name)
+                {
+                    return entity;
+                }
+            }
+            return Entity.Empty;
+        }
+        private Property GetPropertyByName(Entity entity, string name)
+        {
+            foreach (Property property in entity.Properties)
+            {
+                if (property.Name == name)
+                {
+                    return property;
+                }
+            }
+            return null;
+        }
+        private Entity GetNestedEntityByName(Entity entity, string name)
+        {
+            foreach (Entity nested in entity.NestedEntities)
+            {
+                if (nested.Name == name)
+                {
+                    return nested;
+                }
+            }
+            return null;
+        }
+        private bool IsReferenceEntity(string tableName)
+        {
+            StringComparison option = StringComparison.InvariantCultureIgnoreCase;
+            return tableName.StartsWith("_Reference", option)
+                || tableName.StartsWith("_Document", option)
+                || tableName.StartsWith("_Node", option)
+                || tableName.StartsWith("_Task", option)
+                || tableName.StartsWith("_Chrc", option)
+                || tableName.StartsWith("_Acc", option);
+        }
+        private bool IsReferenceEntity(Entity entity)
+        {
+            return ReferenceObjectsNamespaces.ContainsKey(entity.Namespace.Name);
         }
         private void LoadStandardAttributes(IComWrapper metaObject, Entity entity)
         {
@@ -114,6 +185,180 @@ namespace Zhichkin.Metadata.Services
                             Purpose = purpose
                         };
                         entity.Properties.Add(property);
+                    }
+                }
+            }
+        }
+        private void LoadPropertiesTypes(ComConnector connector)
+        {
+            foreach (var item in ReferenceObjectsNamespaces)
+            {
+                LoadEntityProperties(connector, item.Value,
+                    new PropertyPurpose[]
+                    {
+                        PropertyPurpose.Property
+                    });
+            }
+            foreach (var item in ValueObjectsNamespaces)
+            {
+                LoadEntityProperties(connector, item.Value,
+                    new PropertyPurpose[]
+                    {
+                        PropertyPurpose.Dimension,
+                        PropertyPurpose.Measure,
+                        PropertyPurpose.Property
+                    });
+            }
+        }
+        private void LoadEntityProperties(ComConnector connector, Namespace _namespace, PropertyPurpose[] purposes)
+        {
+            using (IComWrapper metadata = connector.Metadata)
+            using (IComWrapper metaObjects = metadata.GetAndWrap(_namespace.Name))
+            {
+                int count = (int)metaObjects.Call("Количество");
+                for (int i = 0; i < count; i++)
+                {
+                    using (IComWrapper metaObject = metaObjects.CallAndWrap("Получить", i))
+                    {
+                        Entity entity = GetEntityByName(_namespace, (string)metaObject.Get("Имя"));
+                        if (entity == Entity.Empty) continue;
+                        LoadAttributesTypeInfo(connector, metaObject, entity, purposes);
+                        if (IsReferenceEntity(entity))
+                        {
+                            LoadAttributesTypesForTableParts(connector, metaObject, entity);
+                        }
+                    }
+                }
+            }
+        }
+        private void LoadAttributesTypesForTableParts(ComConnector connector, IComWrapper metaObject, Entity entity)
+        {
+            using (IComWrapper tableParts = metaObject.GetAndWrap("ТабличныеЧасти"))
+            {
+                int count = (int)tableParts.Call("Количество");
+                for (int i = 0; i < count; i++)
+                {
+                    using (IComWrapper tablePart = tableParts.CallAndWrap("Получить", i))
+                    {
+                        Entity nested = GetNestedEntityByName(entity, (string)tablePart.Get("Имя"));
+                        if (nested == null) continue;
+                        LoadAttributesTypeInfo(connector, tablePart, nested, new PropertyPurpose[] { PropertyPurpose.Property });
+                    }
+                }
+            }
+        }
+        private void LoadAttributesTypeInfo(ComConnector connector, IComWrapper metaObject, Entity entity, PropertyPurpose[] purposes)
+        {
+            using (IComWrapper attributes = metaObject.GetAndWrap("СтандартныеРеквизиты"))
+            {
+                IEnumerable iterator = (IEnumerable)attributes.ComObject;
+                foreach (object item in iterator)
+                {
+                    using (IComWrapper attribute = attributes.Wrap(item))
+                    {
+                        Property property = GetPropertyByName(entity, (string)attribute.Get("Имя"));
+                        if (property == null) continue;
+                        LoadAttributeTypeInfo(connector, attribute, property);
+                    }
+                }
+                attributes.Release(ref iterator);
+            }
+            foreach(PropertyPurpose purpose in purposes)
+            {
+                using (IComWrapper attributes = metaObject.GetAndWrap(PropertyPurposes[purpose]))
+                {
+                    int count = (int)attributes.Call("Количество");
+                    for (int i = 0; i < count; i++)
+                    {
+                        using (IComWrapper attribute = attributes.CallAndWrap("Получить", i))
+                        {
+                            Property property = GetPropertyByName(entity, (string)attribute.Get("Имя"));
+                            if (property == null) continue;
+                            LoadAttributeTypeInfo(connector, attribute, property);
+                        }
+                    }
+                }
+            }
+        }
+        private void LoadAttributeTypeInfo(ComConnector connector, IComWrapper metaProperty, Property property)
+        {
+            using (IComWrapper typeInfo = metaProperty.GetAndWrap("Тип"))
+            using (IComWrapper types = typeInfo.CallAndWrap("Типы"))
+            {
+                int count = (int)types.Call("Количество");
+                for (int i = 0; i < count; i++)
+                {
+                    using (IComWrapper type = types.CallAndWrap("Получить", i))
+                    {
+                        string typeName = connector.GetTypeName(type.ComObject);
+                        if ("boolean" == typeName)
+                        {
+                            property.Types.Add(Entity.Boolean);
+                        }
+                        else if ("decimal" == typeName)
+                        {
+                            property.Types.Add(Entity.Decimal);
+                        }
+                        else if ("numeric" == typeName)
+                        {
+                            LoadNumberType(connector, typeInfo, property);
+                        }
+                        else if ("string" == typeName)
+                        {
+                            property.Types.Add(Entity.String);
+                        }
+                        else if ("dateTime" == typeName)
+                        {
+                            property.Types.Add(Entity.DateTime);
+                        }
+                        else if ("ValueStorage" == typeName)
+                        {
+                            property.Types.Add(Entity.Binary);
+                        }
+                        else if ("Уникальный идентификатор" == typeName)
+                        {
+                            property.Types.Add(Entity.GUID);
+                        }
+                        else if ("ВидДвиженияНакопления" == typeName)
+                        {
+                            property.Types.Add(Entity.Byte);
+                        }
+                        else
+                        {
+                            Entity entity = GetEntityByMetaTypeName(typeName);
+                            if (entity != Entity.Empty)
+                            {
+                                property.Types.Add(entity);
+                            }
+                            else
+                            {
+                                // TODO: ошибка определения типа !
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private void LoadNumberType(ComConnector connector, IComWrapper metaObject, Property property)
+        {
+            using (IComWrapper numberInfo = metaObject.GetAndWrap("КвалификаторыЧисла"))
+            {
+                if ((int)numberInfo.Get("РазрядностьДробнойЧасти") > 0)
+                {
+                    property.Types.Add(Entity.Decimal);
+                }
+                else
+                {
+                    using (IComWrapper sign = numberInfo.GetAndWrap("ДопустимыйЗнак"))
+                    {
+                        if (connector.ToString(sign) == "Любой")
+                        {
+                            property.Types.Add(Entity.Int32);
+                        }
+                        else
+                        {
+                            property.Types.Add(Entity.UInt32);
+                        }
                     }
                 }
             }
@@ -212,62 +457,77 @@ namespace Zhichkin.Metadata.Services
                             Name = (string)row.Get("ИмяТаблицыХранения"),
                             Purpose = TablePurposes.Lookup[(string)row.Get("Назначение")]
                         };
-                        //row.GetAndWrap("Поля")
-                        //ИмяПоляХранения(StorageFieldName)
-                        //ИмяПоля(FieldName) 
-                        if (table.Purpose == TablePurpose.Main)
+                        if (table.Purpose == TablePurpose.Main && IsReferenceEntity(table.Name))
                         {
                             entity.Code = GetTypeCode(table.Name);
+                        }
+                        using (IComWrapper fields = row.GetAndWrap("Поля"))
+                        {
+                            LoadTableFields(connector, fields, table);
                         }
                         entity.Tables.Add(table);
                     }
                 }
             }
         }
-        private void LoadAttributesTypeInfo()
+        private void LoadTableFields(ComConnector connector, IComWrapper fields, Table table)
         {
-            //    Процедура ОпределитьТипыСвойства(ОбъектМетаданных, Свойство, КодыТипов)
+            int count = (int)fields.Call("Количество");
+            for (int i = 0; i < count; i++)
+            {
+                using (IComWrapper item = fields.CallAndWrap("Получить", i))
+                {
+                    Field field = new Field()
+                    {
+                        Table = table,
+                        Name = (string)item.Get("ИмяПоляХранения")
+                    };
+                    MapFieldToProperty(table.Entity, (string)item.Get("ИмяПоля"), field);
+                    // TODO: определить тип данных и другие свойства поля таблицы СУБД
+                    table.Fields.Add(field);
+                }
+            }
+        }
+        private void MapFieldToProperty(Entity entity, string propertyName, Field field)
+        {
+            Property property;
 
-            //    ОписаниеТипов = ОбъектМетаданных.Тип;
-            //    Типы = ОписаниеТипов.Типы();
+            // имя поля объекта 1С не указано - системное поле, недоступное в языке запросов 1С
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                property = new Property()
+                {
+                    Entity = entity,
+                    Name = field.Name,
+                    Purpose = PropertyPurpose.System
+                };
+                entity.Properties.Add(property);
+                field.Property = property;
+                return;
+            }
+            
+            // поле объекта, доступное в языке запросов 1С
+            for (int i = 0; i < entity.Properties.Count; i++)
+            {
+                property = entity.Properties[i];
+                if (property.Name == propertyName)
+                {
+                    field.Property = property;
+                    return;
+                }
+            }
 
-            //    Для Каждого Тип Из Типы Цикл
-
-            //        ИмяТипа = "unknown";
-
-            //        Если Строка(Тип) = "Булево" Тогда
-            //            ИмяТипа = "bit";
-            //        ИначеЕсли Строка(Тип) = "Число" Тогда
-            //            ИмяТипа = ПолучитьОписаниеЧисла(ОписаниеТипов);
-            //        ИначеЕсли Строка(Тип) = "Строка" Тогда
-            //            ИмяТипа = ПолучитьОписаниеСтроки(ОписаниеТипов);
-            //        ИначеЕсли Строка(Тип) = "Дата" Тогда
-            //            ИмяТипа = ПолучитьОписаниеДаты(ОписаниеТипов);
-            //        ИначеЕсли Строка(Тип) = "Хранилище значения" Тогда
-            //            ИмяТипа = ПолучитьОписаниеДвоичныхДанных(ОписаниеТипов);
-            //        ИначеЕсли Строка(Тип) = "Уникальный идентификатор" Тогда
-            //            ИмяТипа = "uniqueidentifier";
-            //        ИначеЕсли Строка(Тип) = "ВидДвиженияНакопления" Тогда
-            //            ИмяТипа = "uint(1)";
-            //        Иначе
-            //            Попытка
-            //                Ссылка = Новый(Тип);
-            //                ИмяТипа = Ссылка.Метаданные().ПолноеИмя();
-            //                Поиск = КодыТипов.Найти(ИмяТипа, "Имя");
-            //                Если Поиск <> Неопределено Тогда
-            //                    ИмяТипа = Формат(Поиск.Код, "ЧН=; ЧГ=0");
-            //                КонецЕсли;
-            //            Исключение
-            //                // unknown
-            //                Сообщить("Не удалось определить тип: " + Строка(Тип));
-            //            КонецПопытки;
-            //        КонецЕсли;
-
-            //        Свойство.Типы.Добавить(ИмяТипа);
-
-            //    КонецЦикла;
-
-            //КонецПроцедуры
+            // такого не должно быть ...
+            // поле объекта 1С указано на уровне сопоставлнеия полей таблиц СУБД и свойств объекта,
+            // но его нет среди доступных свойств объекта метаданных ...
+            property = new Property()
+            {
+                Entity = entity,
+                Name = propertyName,
+                Purpose = PropertyPurpose.System
+            };
+            entity.Properties.Add(property);
+            field.Property = property;
         }
     }
 }

@@ -59,7 +59,8 @@ namespace Zhichkin.Metadata.Model
         InitializedPredefinedDataInChartOfAccounts,
         InitializedPredefinedDataInChartOfCalculationTypes,
         /// <summary>Таблица проинициализированных предопределенных данных справочника.</summary>
-        InitializedPredefinedDataInCatalog
+        InitializedPredefinedDataInCatalog,
+        AccumulationRegisterMeasureDictionary
     }
     public sealed class TablePurposes
     {
@@ -126,7 +127,8 @@ namespace Zhichkin.Metadata.Model
             { "ИнициализированныеПредопределенныеДанныеПланаВидовХарактеристик", TablePurpose.InitializedPredefinedDataInChartOfCharacteristicTypes }, //таблица проинициализированных предопределенных данных плана видов характеристик
             { "ИнициализированныеПредопределенныеДанныеПланаСчетов", TablePurpose.InitializedPredefinedDataInChartOfAccounts }, //таблица инициализированных предопределенных данных плана счетов
             { "ИнициализированныеПредопределенныеДанныеПланаВидовРасчета", TablePurpose.InitializedPredefinedDataInChartOfCalculationTypes }, //таблица проинициализированных элементов плана расчетов
-            { "ИнициализированныеПредопределенныеДанныеСправочника", TablePurpose.InitializedPredefinedDataInCatalog } //таблица проинициализированных предопределенных данных справочника
+            { "ИнициализированныеПредопределенныеДанныеСправочника", TablePurpose.InitializedPredefinedDataInCatalog }, //таблица проинициализированных предопределенных данных справочника
+            { "СловарьИзмеренияРегистраНакопления", TablePurpose.AccumulationRegisterMeasureDictionary }
         };
     }
 }
