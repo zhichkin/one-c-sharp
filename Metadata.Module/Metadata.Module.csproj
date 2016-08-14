@@ -80,6 +80,7 @@
     <Compile Include="Controllers\MetadataTreeViewItemSelected.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Services\IMetadataService.cs" />
+    <Compile Include="Services\XMLMetadataAdapter.cs" />
     <Compile Include="Services\MetadataAdapter.cs" />
     <Compile Include="Services\MetadataService.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
@@ -114,6 +115,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

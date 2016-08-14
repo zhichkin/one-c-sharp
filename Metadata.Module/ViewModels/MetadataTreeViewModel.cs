@@ -32,7 +32,7 @@ namespace Zhichkin.Metadata.ViewModels
                 if (infoBases == null)
                 {
                     infoBases = new ObservableCollection<InfoBase>();
-                    infoBases.Add(service.GetMetadata(@"Srvr=""WINGYACE-HP"";Ref=""TRADE"";"));
+                    infoBases.Add(service.GetMetadata(@"Srvr=""Zhichkin"";Ref=""trade_demo"";Usr=""Администратор (ОрловАВ)"";"));
                 }
                 return infoBases;
             }

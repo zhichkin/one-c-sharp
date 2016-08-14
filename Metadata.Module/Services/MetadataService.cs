@@ -10,7 +10,8 @@ namespace Zhichkin.Metadata.Services
         {
             InfoBase infoBase = new InfoBase();
 
-            IMetadataAdapter adapter = new COMMetadataAdapter();
+            //IMetadataAdapter adapter = new COMMetadataAdapter();
+            IMetadataAdapter adapter = new XMLMetadataAdapter();
             adapter.Load(connectionString, infoBase);
 
             return infoBase;

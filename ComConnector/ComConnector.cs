@@ -19,6 +19,7 @@ namespace Zhichkin
         private const string CONST_NewObject = "NewObject";
         private const string CONST_String = "String";
         private const string CONST_Metadata = "Metadata";
+        private const string CONST_ExternalDataProcessors = "ExternalDataProcessors";
         private const string CONST_GetDBNames = "ПолучитьСтруктуруХраненияБазыДанных";
 
         public ComConnector(string connectionString)
@@ -54,6 +55,15 @@ namespace Zhichkin
         public IComWrapper NewObject(string name)
         {
             return new ComWrapper(com_type, Call(CONST_NewObject, name));
+        }
+        public IComWrapper CreateComponent(string fileName)
+        {
+            IComWrapper component = null;
+            using (IComWrapper wrapper = new ComWrapper(com_type, Get(CONST_ExternalDataProcessors)))
+            {
+                component = new ComWrapper(com_type, wrapper.Call("Create", fileName));
+            }
+            return component;
         }
         public IComWrapper GetDBNames(IComWrapper metadata_object)
         {

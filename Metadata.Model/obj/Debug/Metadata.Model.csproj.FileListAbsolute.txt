@@ -5,3 +5,10 @@ C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.Metadata.Model.dl
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.Metadata.Model.pdb
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.dll
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.pdb
+C:\Users\User\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\User\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.Metadata.Model.pdb
+C:\Users\User\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.ORM.dll
+C:\Users\User\Desktop\Z\Metadata.Model\bin\Debug\Zhichkin.ORM.pdb
+C:\Users\User\Desktop\Z\Metadata.Model\obj\Debug\Metadata.Model.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\User\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.pdb
