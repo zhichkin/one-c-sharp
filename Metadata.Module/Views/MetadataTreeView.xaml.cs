@@ -24,5 +24,12 @@ namespace Zhichkin.Metadata.Views
             InitializeComponent();
             this.DataContext = viewModel;
         }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            viewModel.SelectedItemChanged(e.NewValue);
+        }
     }
 }

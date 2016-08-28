@@ -16,6 +16,8 @@ namespace Zhichkin.Metadata
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private MainMenuController mainMenuController;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        private MetadataTreeViewController metadataTreeViewController;
 
         public ModuleInit(IUnityContainer container, IRegionViewRegistry registry)
         {
@@ -28,6 +30,7 @@ namespace Zhichkin.Metadata
             unity.RegisterType<IMetadataService, MetadataService>();
 
             mainMenuController = unity.Resolve<MainMenuController>();
+            metadataTreeViewController = unity.Resolve<MetadataTreeViewController>();
 
             regions.RegisterViewWithRegion(RegionNames.TopRegion, ()=> this.unity.Resolve<MetadataMainMenu>());
             regions.RegisterViewWithRegion(RegionNames.LeftRegion, () => this.unity.Resolve<MetadataTreeView>());

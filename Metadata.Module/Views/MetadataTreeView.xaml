@@ -15,12 +15,11 @@
             <BitmapImage x:Key="Icon_Exist_Database" UriSource="..\Images\26 Accept Database.png"/>
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
             <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
-            <BitmapImage x:Key="Icon_Characteristic" UriSource="..\Images\ПланВидовХарактеристик.png"/>
-            <BitmapImage x:Key="Icon_ExchangePlan" UriSource="..\Images\ПланОбмена.png"/>
+            <BitmapImage x:Key="Icon_Enumeration" UriSource="..\Images\Перечисление.png"/>
             <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
             <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
             <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
-            <BitmapImage x:Key="Icon_System" UriSource="..\Images\ПрочиеПользовательскиеНастройки.png"/>
+            <BitmapImage x:Key="Icon_System" UriSource="..\Images\СтандартныйРеквизит.png"/>
             <BitmapImage x:Key="Icon_Property" UriSource="..\Images\Реквизит.png"/>
             <BitmapImage x:Key="Icon_Dimension" UriSource="..\Images\Измерение.png"/>
             <BitmapImage x:Key="Icon_Measure" UriSource="..\Images\Ресурс.png"/>
@@ -28,7 +27,8 @@
     </UserControl.Resources>
     
     <Grid>
-        <TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=InfoBases}" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=InfoBases}" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  SelectedItemChanged="TreeView_SelectedItemChanged">
             <TreeView.Resources>
                 <ViewModel:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">
@@ -65,22 +65,19 @@
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Name}" Value="Справочники">
+                                        <DataTrigger Binding="{Binding Name}" Value="Перечисление">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="Справочник">
                                             <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Name}" Value="Документы">
+                                        <DataTrigger Binding="{Binding Name}" Value="Документ">
                                             <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Name}" Value="ПланыВидовХарактеристик">
-                                            <Setter Property="Source" Value="{StaticResource Icon_Characteristic}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Name}" Value="ПланыОбмена">
-                                            <Setter Property="Source" Value="{StaticResource Icon_ExchangePlan}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Name}" Value="РегистрыСведений">
+                                        <DataTrigger Binding="{Binding Name}" Value="РегистрСведений">
                                             <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Name}" Value="РегистрыНакопления">
+                                        <DataTrigger Binding="{Binding Name}" Value="РегистрНакопления">
                                             <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -102,26 +99,26 @@
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Справочники">
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Перечисление">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Справочник">
                                             <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Документы">
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Документ">
                                             <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="ПланыВидовХарактеристик">
-                                            <Setter Property="Source" Value="{StaticResource Icon_Characteristic}"/>
+                                        <DataTrigger Binding="{Binding Owner.Namespace.Name}" Value="Справочник">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="ПланыОбмена">
-                                            <Setter Property="Source" Value="{StaticResource Icon_ExchangePlan}"/>
+                                        <DataTrigger Binding="{Binding Owner.Namespace.Name}" Value="Документ">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрыСведений">
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрСведений">
                                             <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрыНакопления">
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрНакопления">
                                             <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Namespace}" Value="{x:Null}">
-                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

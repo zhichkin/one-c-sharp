@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Practices.Prism.PubSubEvents;
+﻿using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace Zhichkin.Metadata.Controllers
 {

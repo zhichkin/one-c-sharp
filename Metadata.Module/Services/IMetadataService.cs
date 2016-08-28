@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Metadata.Services
@@ -8,5 +7,10 @@ namespace Zhichkin.Metadata.Services
     {
         InfoBase GetMetadata(string connectionString);
         List<InfoBase> GetInfoBases();
+    }
+
+    public interface IMetadataAdapter
+    {
+        void Load(string connectionString, InfoBase infoBase);
     }
 }

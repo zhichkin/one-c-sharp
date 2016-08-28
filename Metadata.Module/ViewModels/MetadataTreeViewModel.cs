@@ -17,25 +17,29 @@ namespace Zhichkin.Metadata.ViewModels
 {
     public class MetadataTreeViewModel : BindableBase
     {
-        private IMetadataService service;
+        private readonly IMetadataService dataService;
+        private readonly IEventAggregator eventAggregator;
 
-        private ObservableCollection<InfoBase> infoBases = null;
+        private ObservableCollection<InfoBase> infoBases = new ObservableCollection<InfoBase>();
         
-        public MetadataTreeViewModel(IMetadataService service)
+        public MetadataTreeViewModel(IMetadataService dataService, IEventAggregator eventAggregator)
         {
-            this.service = service;
+            if (dataService == null) throw new ArgumentNullException("dataService");
+            if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
+
+            this.dataService = dataService;
+            this.eventAggregator = eventAggregator;
         }
         public ObservableCollection<InfoBase> InfoBases
         {
             get
             {
-                if (infoBases == null)
-                {
-                    infoBases = new ObservableCollection<InfoBase>();
-                    infoBases.Add(service.GetMetadata(@"Srvr=""Zhichkin"";Ref=""trade_demo"";Usr=""Администратор (ОрловАВ)"";"));
-                }
                 return infoBases;
             }
+        }
+        public void SelectedItemChanged(object item)
+        {
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(item);
         }
     }
 }

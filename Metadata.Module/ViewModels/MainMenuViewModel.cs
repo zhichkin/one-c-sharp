@@ -40,24 +40,23 @@ namespace Zhichkin.Metadata.ViewModels
 
         private void OnOpenMetadata(object args)
         {
-
-            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+            this.eventAggregator.GetEvent<OpenMetadataClicked>().Publish(args);
         }
         private void OnSaveMetadata(object args)
         {
-            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Publish(args);
         }
         private void OnKillMetadata(object args)
         {
-            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Publish(args);
         }
         private void OnUpdateMetadata(object args)
         {
-            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Publish(args);
         }
         private void OnShowSettings(object args)
         {
-            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(args);
+            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Publish(args);
             MessageBox.Show("Settings");
         }
     }

@@ -13,14 +13,14 @@ using Zhichkin.Shell;
 
 namespace Zhichkin.Metadata.Controllers
 {
-    public class MainMenuController
+    public class MetadataTreeViewController
     {
         private readonly IUnityContainer container;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IMetadataService dataService;
 
-        public MainMenuController(IUnityContainer container,
+        public MetadataTreeViewController(IUnityContainer container,
                                   IRegionManager regionManager,
                                   IEventAggregator eventAggregator,
                                   IMetadataService dataService)
@@ -35,37 +35,10 @@ namespace Zhichkin.Metadata.Controllers
             this.eventAggregator = eventAggregator;
             this.dataService = dataService;
 
-            this.eventAggregator.GetEvent<OpenMetadataClicked>().Subscribe(this.OpenMetadataClicked, true);
-            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Subscribe(this.MainMenuCommandClicked, true);
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(this.MetadataObjectSelected, true);
         }
 
-        private void OpenMetadataClicked(object item)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Файлы XML(*.xml)|*.xml" + "|Все файлы (*.*)|*.* ";
-            dialog.CheckFileExists = true;
-            dialog.Multiselect = false;
-            if (dialog.ShowDialog() != true) return;
-
-            IRegion leftRegion = this.regionManager.Regions[RegionNames.LeftRegion];
-            if (leftRegion == null) return;
-            MetadataTreeView view = leftRegion.Views.FirstOrDefault() as MetadataTreeView;
-            if (view == null) return;
-            MetadataTreeViewModel model = view.DataContext as MetadataTreeViewModel;
-            if (model == null) return;
-
-            try
-            {
-                InfoBase infoBase = this.dataService.GetMetadata(dialog.FileName);
-                model.InfoBases.Add(infoBase);
-            }
-            catch (Exception ex)
-            {
-                MessageBoxResult result = MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void MainMenuCommandClicked(object item)
+        private void MetadataObjectSelected(object item)
         {
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;
@@ -87,7 +60,7 @@ namespace Zhichkin.Metadata.Controllers
                 rightRegion.Activate(view);
             }
 
-            view.TextInfo.Text = (string)item;
+            view.TextInfo.Text = item.ToString();
         }
     }
 }

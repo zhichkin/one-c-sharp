@@ -7,11 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace Zhichkin.Metadata.Services
 {
-    public interface IMetadataAdapter
-    {
-        void Load(string connectionString, InfoBase infoBase);
-    }
-
     public sealed class COMMetadataAdapter : IMetadataAdapter
     {
         private Dictionary<string, Namespace> ReferenceObjectsNamespaces = new Dictionary<string, Namespace>();

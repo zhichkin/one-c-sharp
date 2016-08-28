@@ -76,12 +76,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Commands\MetadataMainMenu.cs" />
+    <Compile Include="Controllers\MetadataTreeViewController.cs" />
     <Compile Include="Controllers\MainMenuController.cs" />
-    <Compile Include="Controllers\MetadataTreeViewItemSelected.cs" />
+    <Compile Include="Controllers\MetadataTreeViewEvents.cs" />
+    <Compile Include="Controllers\MainMenuEvents.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Services\IMetadataService.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
-    <Compile Include="Services\MetadataAdapter.cs" />
+    <Compile Include="Services\COMMetadataAdapter.cs" />
     <Compile Include="Services\MetadataService.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -188,6 +190,9 @@
     <Resource Include="Images\26 Ok.png" />
     <Resource Include="Images\26 Refresh.png" />
     <Resource Include="Images\26 Synchronize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\СтандартныйРеквизит.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
