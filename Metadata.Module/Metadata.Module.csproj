@@ -35,6 +35,9 @@
     <Reference Include="Microsoft.Practices.Prism.Composition">
       <HintPath>..\packages\Prism.Composition.5.0.0\lib\NET45\Microsoft.Practices.Prism.Composition.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\packages\Prism.Interactivity.5.0.0\lib\NET45\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism.Mvvm">
       <HintPath>..\packages\Prism.Mvvm.1.0.0\lib\net45\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
     </Reference>
@@ -52,6 +55,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,6 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\MetadataMainMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SQLServerConnectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -81,15 +89,20 @@
     <Compile Include="Controllers\MetadataTreeViewEvents.cs" />
     <Compile Include="Controllers\MainMenuEvents.cs" />
     <Compile Include="ModuleInit.cs" />
+    <Compile Include="Notifications\SQLConnectionDialogNotification.cs" />
     <Compile Include="Services\IMetadataService.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
     <Compile Include="Services\COMMetadataAdapter.cs" />
     <Compile Include="Services\MetadataService.cs" />
+    <Compile Include="ViewModels\SQLConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="Views\CompositeCollectionConverter.cs" />
     <Compile Include="Views\MetadataMainMenu.xaml.cs">
       <DependentUpon>MetadataMainMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SQLServerConnectionView.xaml.cs">
+      <DependentUpon>SQLServerConnectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MetadataObjectView.xaml.cs">
       <DependentUpon>MetadataObjectView.xaml</DependentUpon>

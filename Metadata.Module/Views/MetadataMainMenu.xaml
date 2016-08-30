@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ViewModel="clr-namespace:Zhichkin.Metadata.ViewModels"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+             xmlns:interactivity="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
+             xmlns:views="clr-namespace:Zhichkin.Metadata.Views"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="100">
     
@@ -12,11 +15,22 @@
             <BitmapImage x:Key="Icon_26_Add" UriSource="..\Images\26 Add.png"/>
             <BitmapImage x:Key="Icon_26_Save" UriSource="..\Images\26 Ok.png"/>
             <BitmapImage x:Key="Icon_26_Kill" UriSource="..\Images\26 Cancel.png"/>
+            <BitmapImage x:Key="Icon_26_SQL" UriSource="..\Images\26 SQL.png"/>
             <BitmapImage x:Key="Icon_26_Synchronize" UriSource="..\Images\26 Synchronize.png"/>
             <BitmapImage x:Key="Icon_26_Settings" UriSource="..\Images\26 Settings.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding SQLConnectionPopupRequest, Mode=OneWay}">
+            <interactivity:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True">
+                <interactivity:PopupWindowAction.WindowContent>
+                    <views:SQLServerConnectionView />
+                </interactivity:PopupWindowAction.WindowContent>
+            </interactivity:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Menu VerticalAlignment="Center" HorizontalAlignment="Center">
             <MenuItem Header="Метаданные">
@@ -36,6 +50,11 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Импортировать метаданные SQL Server" Command="{Binding ImportSQLMetadataCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource Icon_26_SQL}" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Синхронизировать" Command="{Binding UpdateMetadataCommand}" CommandParameter="Update">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Synchronize}" />
