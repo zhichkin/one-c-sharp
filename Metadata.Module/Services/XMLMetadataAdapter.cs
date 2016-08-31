@@ -169,7 +169,11 @@ namespace Zhichkin.Metadata.Services
             
             if (context.Namespace == null)
             {
-                context.Namespace = new Namespace() { Name = _namespace };
+                context.Namespace = new Namespace()
+                {
+                    Name = _namespace,
+                    Owner = context.InfoBase
+                };
                 context.InfoBase.Namespaces.Add(context.Namespace);
             }
 
@@ -317,6 +321,7 @@ namespace Zhichkin.Metadata.Services
                 context.Entity.Properties.Add(property);
             }
 
+            context.Field.Property = property;
             property.Fields.Add(context.Field);
         }
     }

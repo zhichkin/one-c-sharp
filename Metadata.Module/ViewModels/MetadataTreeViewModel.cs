@@ -37,8 +37,52 @@ namespace Zhichkin.Metadata.ViewModels
                 return infoBases;
             }
         }
+        public object SelectedItem { get; private set; }
+        public InfoBase CurrentInfoBase { get; private set; }
+        private void SetCurrentInfoBase(object model)
+        {
+            if (model is InfoBase)
+            {
+                CurrentInfoBase = (InfoBase)model;
+                return;
+            }
+            if (model is Namespace)
+            {
+                CurrentInfoBase = GetInfoBase((Namespace)model);
+                return;
+            }
+            if (model is Entity)
+            {
+                CurrentInfoBase = GetInfoBase(((Entity)model).Namespace);
+                return;
+            }
+            if (model is Property)
+            {
+                CurrentInfoBase = GetInfoBase(((Property)model).Entity.Namespace);
+                return;
+            }
+            if (model is Field)
+            {
+                CurrentInfoBase = GetInfoBase(((Field)model).Property.Entity.Namespace);
+                return;
+            }
+            CurrentInfoBase = null;
+        }
+        private InfoBase GetInfoBase(Namespace _namespace)
+        {
+            if (_namespace == null) return null;
+
+            Namespace currentNamespace = _namespace;
+            while (currentNamespace.Owner.GetType() != typeof(InfoBase))
+            {
+                currentNamespace = (Namespace)currentNamespace.Owner;
+            }
+            return (InfoBase)currentNamespace.Owner;
+        }
         public void SelectedItemChanged(object item)
         {
+            SelectedItem = item;
+            SetCurrentInfoBase(item);
             this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(item);
         }
     }

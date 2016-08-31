@@ -91,6 +91,7 @@
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Notifications\SQLConnectionDialogNotification.cs" />
     <Compile Include="Services\IMetadataService.cs" />
+    <Compile Include="Services\SQLMetadataAdapter.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
     <Compile Include="Services\COMMetadataAdapter.cs" />
     <Compile Include="Services\MetadataService.cs" />

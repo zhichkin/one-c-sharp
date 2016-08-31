@@ -11,6 +11,10 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Zhichkin.Metadata.Controllers;
 using Zhichkin.Metadata.Notifications;
+using Zhichkin.Metadata.Views;
+using Zhichkin.Shell;
+
+using Microsoft.Practices.Prism.Regions;
 
 using Zhichkin.Metadata.Commands;
 
@@ -18,12 +22,15 @@ namespace Zhichkin.Metadata.ViewModels
 {
     public class MainMenuViewModel : BindableBase
     {
+        private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
 
-        public MainMenuViewModel(IEventAggregator eventAggregator)
+        public MainMenuViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
+            if (regionManager == null) throw new ArgumentNullException("regionManager");
             if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
 
+            this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
 
             this.SQLConnectionPopupRequest = new InteractionRequest<SQLConnectionDialogNotification>();
@@ -34,6 +41,18 @@ namespace Zhichkin.Metadata.ViewModels
             ImportSQLMetadataCommand = new DelegateCommand(this.OpenSQLConnectionPopup);
             UpdateMetadataCommand = new UpdateMetadataCommand<object>(this.OnUpdateMetadata, this.CanExecuteCommand);
             ShowSettingsCommand = new ShowSettingsCommand<object>(this.OnShowSettings, this.CanExecuteCommand);
+        }
+
+        private MetadataTreeViewModel MetadataTreeViewModel
+        {
+            get
+            {
+                IRegion leftRegion = this.regionManager.Regions[RegionNames.LeftRegion];
+                if (leftRegion == null) return null;
+                MetadataTreeView view = leftRegion.Views.FirstOrDefault() as MetadataTreeView;
+                if (view == null) return null;
+                return view.DataContext as MetadataTreeViewModel; ;
+            }
         }
 
         public ICommand OpenMetadataCommand { get; private set; }
@@ -72,18 +91,23 @@ namespace Zhichkin.Metadata.ViewModels
         {
             SQLConnectionDialogNotification notification = new SQLConnectionDialogNotification()
             {
-                Title = "Import SQL Server metadata",
+                Title = "Импортировать метаданные SQL Server",
                 Server = "server",
                 Database = "database",
-                UserName = "user name",
-                Password = "password"
+                UserName = "",
+                Password = ""
             };
+            if (this.MetadataTreeViewModel.CurrentInfoBase != null)
+            {
+                notification.Server   = MetadataTreeViewModel.CurrentInfoBase.Server;
+                notification.Database = MetadataTreeViewModel.CurrentInfoBase.Database;
+            }
             this.SQLConnectionPopupRequest.Raise(notification, response => { this.ImportSQLMetadata(response); });
         }
         private void ImportSQLMetadata(SQLConnectionDialogNotification notification)
         {
             if (!notification.Confirmed) return;
-            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Publish(notification.Server);
+            this.eventAggregator.GetEvent<ImportSQLMetadataClicked>().Publish(notification);
         }
     }
 }

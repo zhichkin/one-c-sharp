@@ -41,5 +41,20 @@ namespace Zhichkin.Metadata.Model
 
         private List<Table> tables = new List<Table>();
         public IList<Table> Tables { get { return tables; } }
+
+        public Table MainTable
+        {
+            get
+            {
+                foreach (Table table in tables)
+                {
+                    if (table.Purpose == TablePurpose.Main)
+                    {
+                        return table;
+                    }
+                }
+                return null;
+            }
+        }
     }
 }
