@@ -1,29 +1,25 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using System.Data;
 using System.Data.SqlClient;
-using System.Transactions;
-using System.Collections.Generic;
 
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public partial class PropertyType
+    public partial class Relation
     {
         public sealed class DataMapper : IDataMapper
         {
             //private const string SelectCommandText = string.Empty;
             private const string InsertCommandText =
-                @"INSERT [properties_types] ([property], [entity]) VALUES (@property, @entity); SELECT @@ROWCOUNT;";
+                @"INSERT [relations] ([property], [entity]) VALUES (@property, @entity); SELECT @@ROWCOUNT;";
             private const string UpdateCommandText =
-                @"UPDATE [properties_types]" +
+                @"UPDATE [relations]" +
                 @" SET [property] = @new_property, [entity] = @new_entity" +
                 @" WHERE [property] = @old_property AND [entity] = @old_entity; " +
                 @"SELECT @@ROWCOUNT;";
             private const string DeleteCommandText =
-                @"DELETE [properties_types] WHERE [property] = @old_property AND [entity] = @old_entity; SELECT @@ROWCOUNT;";
+                @"DELETE [relations] WHERE [property] = @old_property AND [entity] = @old_entity; SELECT @@ROWCOUNT;";
 
             private readonly string ConnectionString;
             private readonly IReferenceObjectFactory Factory;
@@ -42,7 +38,7 @@ namespace Zhichkin.Metadata.Model
 
             void IDataMapper.Insert(IPersistent entity)
             {
-                PropertyType e = (PropertyType)entity;
+                Relation e = (Relation)entity;
 
                 bool ok = false;
 
@@ -78,7 +74,7 @@ namespace Zhichkin.Metadata.Model
 
             void IDataMapper.Update(IPersistent entity)
             {
-                PropertyType e = (PropertyType)entity;
+                Relation e = (Relation)entity;
 
                 bool ok = false;
 
@@ -124,7 +120,7 @@ namespace Zhichkin.Metadata.Model
 
             void IDataMapper.Delete(IPersistent entity)
             {
-                PropertyType e = (PropertyType)entity;
+                Relation e = (Relation)entity;
 
                 bool ok = false;
 

@@ -35,8 +35,6 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity.cs" />
@@ -54,8 +52,8 @@
     <Compile Include="Property.cs" />
     <Compile Include="Property.DataMapper.cs" />
     <Compile Include="Field.cs" />
-    <Compile Include="PropertyType.cs" />
-    <Compile Include="PropertyType.DataMapper.cs" />
+    <Compile Include="Relation.cs" />
+    <Compile Include="Relation.DataMapper.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Field.DataMapper.cs" />
     <Compile Include="Table.DataMapper.cs" />

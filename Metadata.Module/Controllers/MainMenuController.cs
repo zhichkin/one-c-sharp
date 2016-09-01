@@ -38,6 +38,7 @@ namespace Zhichkin.Metadata.Controllers
             this.dataService = dataService;
 
             this.eventAggregator.GetEvent<OpenMetadataClicked>().Subscribe(this.OpenMetadataClicked, true);
+            this.eventAggregator.GetEvent<MainMenuSaveClicked>().Subscribe(this.MainMenuSaveClicked, true);
             this.eventAggregator.GetEvent<ImportSQLMetadataClicked>().Subscribe(this.ImportSQLMetadataClicked, true);
             this.eventAggregator.GetEvent<MainMenuCommandClicked>().Subscribe(this.MainMenuCommandClicked, true);
         }
@@ -127,6 +128,13 @@ namespace Zhichkin.Metadata.Controllers
             }
 
             view.TextInfo.Text = (string)item;
+        }
+
+        private void MainMenuSaveClicked(MetadataTreeViewModel viewModel)
+        {
+            if (viewModel == null) return;
+
+
         }
     }
 }

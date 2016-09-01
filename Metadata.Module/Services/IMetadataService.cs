@@ -7,6 +7,7 @@ namespace Zhichkin.Metadata.Services
     {
         InfoBase GetMetadata(string connectionString);
         List<InfoBase> GetInfoBases();
+        void Save(InfoBase infoBase);
     }
 
     public interface IMetadataAdapter

@@ -9,12 +9,12 @@ using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class PropertyType : ValueObject
+    public sealed partial class Relation : ValueObject
     {
-        private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(PropertyType));
+        private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Relation));
 
-        public PropertyType() : base(_mapper) { }
-        public PropertyType(PersistentState state) : base(_mapper, state) { }
+        public Relation() : base(_mapper) { }
+        public Relation(PersistentState state) : base(_mapper, state) { }
 
         private Property old_property = null;
         private Entity old_type = null;
@@ -38,7 +38,7 @@ namespace Zhichkin.Metadata.Model
                 this.Type == null ? string.Empty : this.Type.FullName);
         }
 
-        public int CompareTo(PropertyType other)
+        public int CompareTo(Relation other)
         {
             if (other == null) return 1;
             if (this.Type == null) return -1;

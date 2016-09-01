@@ -7,10 +7,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[properties_types](
+CREATE TABLE [dbo].[relations](
 	[property] [uniqueidentifier] NOT NULL,
 	[entity] [uniqueidentifier] NOT NULL,
- CONSTRAINT [PK_properties_types] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_relations] PRIMARY KEY CLUSTERED 
 (
 	[property] ASC,
 	[entity] ASC

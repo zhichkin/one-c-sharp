@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Transactions;
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
@@ -33,24 +32,6 @@ namespace Zhichkin.Metadata.Model
             if (other == null) return 1;
             if (this.GetType() != other.GetType()) throw new InvalidOperationException();
             return this.Name.CompareTo(other.Name);
-        }
-
-        public override void Save()
-        {
-            using (TransactionScope scope = new TransactionScope())
-            {
-                base.Save();
-                scope.Complete();
-            }
-        }
-
-        public override void Kill()
-        {
-            using (TransactionScope scope = new TransactionScope())
-            {
-                base.Kill();
-                scope.Complete();
-            }
         }
     }
 }

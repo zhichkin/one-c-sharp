@@ -38,7 +38,7 @@ namespace Zhichkin.Metadata.Model
             typeCodes.Add(4, typeof(Property));
             typeCodes.Add(5, typeof(Table));
             typeCodes.Add(6, typeof(Field));
-            typeCodes.Add(7, typeof(PropertyType));
+            typeCodes.Add(7, typeof(Relation));
         }
 
         private static void InitializeDataMappers()
@@ -49,7 +49,7 @@ namespace Zhichkin.Metadata.Model
             mappers.Add(typeof(Property), new Property.DataMapper(connectionString, factory));
             mappers.Add(typeof(Table), new Table.DataMapper(connectionString, factory));
             mappers.Add(typeof(Field), new Field.DataMapper(connectionString, factory));
-            mappers.Add(typeof(PropertyType), new PropertyType.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Relation), new Relation.DataMapper(connectionString, factory));
         }
 
         public string Name { get { return name; } }
