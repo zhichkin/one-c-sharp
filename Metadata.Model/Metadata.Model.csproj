@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.Prism.PubSubEvents">
+      <HintPath>..\packages\Prism.PubSubEvents.1.0.0\lib\portable-sl4+wp7+windows8+net40\Microsoft.Practices.Prism.PubSubEvents.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -57,6 +60,7 @@
     <Compile Include="Field.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="Relation.DataMapper.cs" />
+    <Compile Include="SharedEvents\MetadataTreeViewItemSelected.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Field.DataMapper.cs" />
     <Compile Include="Table.DataMapper.cs" />

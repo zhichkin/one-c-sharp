@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using Zhichkin.Metadata.Commands;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
+using Zhichkin.Metadata.SharedEvents;
 
 namespace Zhichkin.Metadata.ViewModels
 {

@@ -8,7 +8,7 @@ namespace Zhichkin.ORM
 {
     public interface IPersistent
     {
-        PersistentState State { get; }
+        PersistentState State { get; set; }
         event StateChangingEventHandler StateChanging;
         event StateChangedEventHandler StateChanged;
         void Save();

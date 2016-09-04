@@ -26,7 +26,11 @@ namespace Zhichkin.ORM
             get { return state; }
             set
             {
-                if (state == PersistentState.Loading && value == PersistentState.Original)
+                if (state == PersistentState.New && value == PersistentState.Loading)
+                {
+                    state = value;
+                }
+                else if (state == PersistentState.Loading && value == PersistentState.Original)
                 {
                     state = value;
                     UpdateKeyValues();

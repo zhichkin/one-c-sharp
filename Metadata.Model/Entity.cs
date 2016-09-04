@@ -34,7 +34,7 @@ namespace Zhichkin.Metadata.Model
         {
             get
             {
-                foreach (Table table in tables)
+                foreach (Table table in Tables)
                 {
                     if (table.Purpose == TablePurpose.Main)
                     {

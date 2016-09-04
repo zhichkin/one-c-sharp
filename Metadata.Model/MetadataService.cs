@@ -317,7 +317,9 @@ namespace Zhichkin.Metadata.Services
                 while (reader.Read())
                 {
                     TChild child = new TChild();
+                    child.State = PersistentState.Loading;
                     mapper(reader, child);
+                    child.State = PersistentState.Original;
                     list.Add(child);
                 }
             }

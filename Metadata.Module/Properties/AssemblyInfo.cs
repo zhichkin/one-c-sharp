@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Zhichkin.Metadata")]
-[assembly: AssemblyDescription("Metadata module for Zhichkin")]
+[assembly: AssemblyDescription("Metadata module for Z")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Zhichkin")]
 [assembly: AssemblyProduct("Zhichkin.Metadata")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

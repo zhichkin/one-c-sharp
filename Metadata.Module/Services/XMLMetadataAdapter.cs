@@ -291,6 +291,7 @@ namespace Zhichkin.Metadata.Services
 
             context.Table = new Table()
             {
+                Entity = context.Entity,
                 Name = name,
                 Purpose = (TablePurpose)Enum.Parse(typeof(TablePurpose), purpose)
             };
@@ -304,6 +305,7 @@ namespace Zhichkin.Metadata.Services
 
             context.Field = new Field()
             {
+                Table = context.Table,
                 Name = name,
                 Purpose = (FieldPurpose)Enum.Parse(typeof(FieldPurpose), purpose)
             };

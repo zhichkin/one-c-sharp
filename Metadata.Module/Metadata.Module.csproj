@@ -87,7 +87,6 @@
     <Compile Include="Commands\MetadataMainMenu.cs" />
     <Compile Include="Controllers\MetadataTreeViewController.cs" />
     <Compile Include="Controllers\MainMenuController.cs" />
-    <Compile Include="Controllers\MetadataTreeViewEvents.cs" />
     <Compile Include="Controllers\MainMenuEvents.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Notifications\SQLConnectionDialogNotification.cs" />
@@ -131,7 +130,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

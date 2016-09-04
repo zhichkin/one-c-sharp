@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using Zhichkin.ORM;
 using Zhichkin.Metadata.Services;
 using System.Collections.Generic;
@@ -29,6 +30,20 @@ namespace Zhichkin.Metadata.Model
                 if (this.state == PersistentState.New) return namespaces;
                 if (namespaces.Count > 0) return namespaces;
                 return service.GetChildren<InfoBase, Namespace>(this, "owner");
+            }
+        }
+
+        public string ConnectionString
+        {
+            get
+            {
+                SqlConnectionStringBuilder helper = new SqlConnectionStringBuilder()
+                {
+                    DataSource = this.Server,
+                    InitialCatalog = this.Database,
+                    IntegratedSecurity = true
+                };
+                return helper.ToString();
             }
         }
     }

@@ -45,7 +45,6 @@ C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataTreeView.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata_MarkupCompile.cache
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata_MarkupCompile.lref
-C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.dll.config
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.Composition.dll

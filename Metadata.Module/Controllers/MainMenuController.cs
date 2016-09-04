@@ -41,7 +41,6 @@ namespace Zhichkin.Metadata.Controllers
             this.eventAggregator.GetEvent<MainMenuSaveClicked>().Subscribe(this.MainMenuSaveClicked, true);
             this.eventAggregator.GetEvent<MainMenuKillClicked>().Subscribe(this.MainMenuKillClicked, true);
             this.eventAggregator.GetEvent<ImportSQLMetadataClicked>().Subscribe(this.ImportSQLMetadataClicked, true);
-            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Subscribe(this.MainMenuCommandClicked, true);
         }
         private MetadataTreeViewModel MetadataTreeViewModel
         {
@@ -105,31 +104,6 @@ namespace Zhichkin.Metadata.Controllers
             }
 
             (new SQLMetadataAdapter()).Load(helper.ToString(), infoBase);
-        }
-
-        private void MainMenuCommandClicked(object item)
-        {
-            IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
-            if (rightRegion == null) return;
-            MetadataObjectView view = rightRegion.GetView("MetadataObjectView") as MetadataObjectView;
-
-            if (view != null && item == null)
-            {
-                rightRegion.Remove(view);
-                return;
-            }
-
-            if (view == null)
-            {
-                view = this.container.Resolve<MetadataObjectView>();
-                rightRegion.Add(view, "MetadataObjectView");
-            }
-            else
-            {
-                rightRegion.Activate(view);
-            }
-
-            view.TextInfo.Text = (string)item;
         }
 
         private void MainMenuSaveClicked(MetadataTreeViewModel viewModel)

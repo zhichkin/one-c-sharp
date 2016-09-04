@@ -1,15 +1,9 @@
 using System;
-using System.Linq;
-using System.Windows;
-using Microsoft.Win32;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
-using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
-using Zhichkin.Metadata.ViewModels;
-using Zhichkin.Metadata.Views;
-using Zhichkin.Shell;
+using Zhichkin.Metadata.SharedEvents;
 
 namespace Zhichkin.Metadata.Controllers
 {
@@ -40,27 +34,7 @@ namespace Zhichkin.Metadata.Controllers
 
         private void MetadataObjectSelected(object item)
         {
-            IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
-            if (rightRegion == null) return;
-            MetadataObjectView view = rightRegion.GetView("MetadataObjectView") as MetadataObjectView;
-
-            if (view != null && item == null)
-            {
-                rightRegion.Remove(view);
-                return;
-            }
-
-            if (view == null)
-            {
-                view = this.container.Resolve<MetadataObjectView>();
-                rightRegion.Add(view, "MetadataObjectView");
-            }
-            else
-            {
-                rightRegion.Activate(view);
-            }
-
-            view.TextInfo.Text = item.ToString();
+            // ???
         }
     }
 }
