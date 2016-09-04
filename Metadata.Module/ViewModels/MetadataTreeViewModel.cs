@@ -29,6 +29,16 @@ namespace Zhichkin.Metadata.ViewModels
 
             this.dataService = dataService;
             this.eventAggregator = eventAggregator;
+
+            RefreshInfoBases();
+        }
+        private void RefreshInfoBases()
+        {
+            this.infoBases.Clear();
+            foreach (InfoBase infoBase in dataService.GetInfoBases())
+            {
+                this.infoBases.Add(infoBase);
+            }
         }
         public ObservableCollection<InfoBase> InfoBases
         {
@@ -38,7 +48,7 @@ namespace Zhichkin.Metadata.ViewModels
             }
         }
         public object SelectedItem { get; private set; }
-        public InfoBase CurrentInfoBase { get; private set; }
+        public InfoBase CurrentInfoBase { get; set; }
         private void SetCurrentInfoBase(object model)
         {
             if (model is InfoBase)

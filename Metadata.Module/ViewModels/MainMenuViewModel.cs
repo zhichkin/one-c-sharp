@@ -37,7 +37,7 @@ namespace Zhichkin.Metadata.ViewModels
 
             OpenMetadataCommand = new OpenMetadataCommand<object>(this.OnOpenMetadata, this.CanExecuteCommand);
             SaveMetadataCommand = new DelegateCommand(this.OnSaveMetadata);
-            KillMetadataCommand = new KillMetadataCommand<object>(this.OnKillMetadata, this.CanExecuteCommand);
+            KillMetadataCommand = new DelegateCommand(this.OnKillMetadata);
             ImportSQLMetadataCommand = new DelegateCommand(this.OpenSQLConnectionPopup);
             UpdateMetadataCommand = new UpdateMetadataCommand<object>(this.OnUpdateMetadata, this.CanExecuteCommand);
             ShowSettingsCommand = new ShowSettingsCommand<object>(this.OnShowSettings, this.CanExecuteCommand);
@@ -74,9 +74,9 @@ namespace Zhichkin.Metadata.ViewModels
         {
             this.eventAggregator.GetEvent<MainMenuSaveClicked>().Publish(this.MetadataTreeViewModel);
         }
-        private void OnKillMetadata(object args)
+        private void OnKillMetadata()
         {
-            this.eventAggregator.GetEvent<MainMenuCommandClicked>().Publish(args);
+            this.eventAggregator.GetEvent<MainMenuKillClicked>().Publish(this.MetadataTreeViewModel);
         }
         private void OnUpdateMetadata(object args)
         {

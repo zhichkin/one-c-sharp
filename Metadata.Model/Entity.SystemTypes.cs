@@ -130,6 +130,12 @@ namespace Zhichkin.Metadata.Model
         [Description("Binary data represented by array of bytes.")]
         public static readonly Entity Binary;
 
+        /// <summary>
+        /// List of elements.
+        /// </summary>
+        [Description("List of elements.")]
+        public static readonly Entity List;
+
         # endregion
 
         static Entity()

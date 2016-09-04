@@ -91,11 +91,10 @@
     <Compile Include="Controllers\MainMenuEvents.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Notifications\SQLConnectionDialogNotification.cs" />
-    <Compile Include="Services\IMetadataService.cs" />
+    <Compile Include="Services\IMetadataAdapter.cs" />
     <Compile Include="Services\SQLMetadataAdapter.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
     <Compile Include="Services\COMMetadataAdapter.cs" />
-    <Compile Include="Services\MetadataService.cs" />
     <Compile Include="ViewModels\SQLConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />

@@ -39,6 +39,7 @@ namespace Zhichkin.Metadata.Controllers
 
             this.eventAggregator.GetEvent<OpenMetadataClicked>().Subscribe(this.OpenMetadataClicked, true);
             this.eventAggregator.GetEvent<MainMenuSaveClicked>().Subscribe(this.MainMenuSaveClicked, true);
+            this.eventAggregator.GetEvent<MainMenuKillClicked>().Subscribe(this.MainMenuKillClicked, true);
             this.eventAggregator.GetEvent<ImportSQLMetadataClicked>().Subscribe(this.ImportSQLMetadataClicked, true);
             this.eventAggregator.GetEvent<MainMenuCommandClicked>().Subscribe(this.MainMenuCommandClicked, true);
         }
@@ -71,7 +72,8 @@ namespace Zhichkin.Metadata.Controllers
 
             try
             {
-                InfoBase infoBase = this.dataService.GetMetadata(dialog.FileName);
+                InfoBase infoBase = new InfoBase();
+                (new XMLMetadataAdapter()).Load(dialog.FileName, infoBase);
                 model.InfoBases.Add(infoBase);
             }
             catch (Exception ex)
@@ -132,9 +134,19 @@ namespace Zhichkin.Metadata.Controllers
 
         private void MainMenuSaveClicked(MetadataTreeViewModel viewModel)
         {
-            if (viewModel == null) return;
+            if (viewModel == null) throw new ArgumentNullException("viewModel");
+            if (viewModel.CurrentInfoBase == null) throw new ArgumentNullException("viewModel.CurrentInfoBase");
 
+            dataService.Save(viewModel.CurrentInfoBase);
+            viewModel.CurrentInfoBase.OnPropertyChanged("State");
+        }
+        private void MainMenuKillClicked(MetadataTreeViewModel viewModel)
+        {
+            if (viewModel == null) throw new ArgumentNullException("viewModel");
+            if (viewModel.CurrentInfoBase == null) throw new ArgumentNullException("viewModel.CurrentInfoBase");
 
+            dataService.Kill(viewModel.CurrentInfoBase);
+            viewModel.InfoBases.Remove(viewModel.CurrentInfoBase);
         }
     }
 }

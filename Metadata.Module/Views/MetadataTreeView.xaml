@@ -43,6 +43,9 @@
                                         <DataTrigger Binding="{Binding State}" Value="Original">
                                             <Setter Property="Source" Value="{StaticResource Icon_Exist_Database}"/>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="Virtual">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Exist_Database}"/>
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>

@@ -248,35 +248,39 @@ namespace Zhichkin.Metadata.Services
             {
                 if (type == "L")
                 {
-                    context.Property.Types.Add(Entity.Boolean);
+                    context.Property.Relations.Add(new Relation() { Entity = Entity.Boolean, Property = context.Property });
                 }
                 else if (type == "N")
                 {
-                    context.Property.Types.Add(Entity.Decimal);
+                    context.Property.Relations.Add(new Relation() { Entity = Entity.Decimal, Property = context.Property });
                 }
                 else if (type == "S")
                 {
-                    context.Property.Types.Add(Entity.String);
+                    context.Property.Relations.Add(new Relation() { Entity = Entity.String, Property = context.Property });
                 }
                 else if (type == "T")
                 {
-                    context.Property.Types.Add(Entity.DateTime);
+                    context.Property.Relations.Add(new Relation() { Entity = Entity.DateTime, Property = context.Property });
                 }
                 else if (type == "B")
                 {
-                    context.Property.Types.Add(Entity.Binary);
+                    context.Property.Relations.Add(new Relation() { Entity = Entity.Binary, Property = context.Property });
                 }
                 else if (type == "GUID")
                 {
-                    context.Property.Types.Add(Entity.GUID);
+                    context.Property.Relations.Add(new Relation() { Entity = Entity.GUID, Property = context.Property });
                 }
                 else if (type == "IO") // вид движения накопления: 0 - приход, 1 - расход
                 {
-                    context.Property.Types.Add(Entity.Int32);
+                    context.Property.Relations.Add(new Relation() { Entity = Entity.Int32, Property = context.Property });
                 }
                 else
                 {
-                    context.Property.Types.Add(context.TypeCodes[int.Parse(type)]);
+                    context.Property.Relations.Add(new Relation()
+                    {
+                        Entity = context.TypeCodes[int.Parse(type)],
+                        Property = context.Property
+                    });
                 }
             }
         }
@@ -317,7 +321,8 @@ namespace Zhichkin.Metadata.Services
                     Entity = context.Entity,
                     Purpose = PropertyPurpose.System
                 };
-                property.Types.Add(Entity.Binary); // ? надо бы разобраться ...
+                // ? надо бы разобраться какой тип данных назначать таким свойствам ...
+                property.Relations.Add(new Relation() { Entity = Entity.Binary, Property = property });
                 context.Entity.Properties.Add(property);
             }
 

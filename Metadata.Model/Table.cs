@@ -1,9 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Data;
-using System.Data.SqlClient;
 using System.Collections.Generic;
+using Zhichkin.Metadata.Services;
 
 using Zhichkin.ORM;
 
@@ -12,6 +9,7 @@ namespace Zhichkin.Metadata.Model
     public sealed partial class Table : EntityBase
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Table));
+        private static readonly IMetadataService service = new MetadataService();
 
         public Table() : base(_mapper) { }
         public Table(Guid identity) : base(_mapper, identity) { }
@@ -26,6 +24,14 @@ namespace Zhichkin.Metadata.Model
         public TablePurpose Purpose { set { Set<TablePurpose>(value, ref purpose); } get { return Get<TablePurpose>(ref purpose); } }
 
         private List<Field> fields = new List<Field>();
-        public IList<Field> Fields { get { return fields; } }
+        public IList<Field> Fields
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return fields;
+                if (fields.Count > 0) return fields;
+                return service.GetChildren<Table, Field>(this, "table");
+            }
+        }
     }
 }

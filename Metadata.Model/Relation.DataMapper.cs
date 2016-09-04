@@ -59,7 +59,7 @@ namespace Zhichkin.Metadata.Model
 
                     parameter = new SqlParameter("entity", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.type.Identity;
+                    parameter.Value = e.entity.Identity;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -95,17 +95,17 @@ namespace Zhichkin.Metadata.Model
 
                     parameter = new SqlParameter("new_entity", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.type.Identity;
+                    parameter.Value = e.entity.Identity;
                     command.Parameters.Add(parameter);
 
                     parameter = new SqlParameter("old_property", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.old_property;
+                    parameter.Value = e.old_property.Identity;
                     command.Parameters.Add(parameter);
 
                     parameter = new SqlParameter("old_entity", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.old_type;
+                    parameter.Value = e.old_entity.Identity;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -136,12 +136,12 @@ namespace Zhichkin.Metadata.Model
 
                     parameter = new SqlParameter("old_property", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.old_property;
+                    parameter.Value = e.old_property.Identity;
                     command.Parameters.Add(parameter);
 
                     parameter = new SqlParameter("old_entity", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.old_type;
+                    parameter.Value = e.old_entity.Identity;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();

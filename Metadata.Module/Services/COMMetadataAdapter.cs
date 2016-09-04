@@ -288,11 +288,11 @@ namespace Zhichkin.Metadata.Services
                         string typeName = connector.GetTypeName(type.ComObject);
                         if ("boolean" == typeName)
                         {
-                            property.Types.Add(Entity.Boolean);
+                            property.Relations.Add(new Relation() { Entity = Entity.Boolean, Property = property });
                         }
                         else if ("decimal" == typeName)
                         {
-                            property.Types.Add(Entity.Decimal);
+                            property.Relations.Add(new Relation() { Entity = Entity.Decimal, Property = property });
                         }
                         else if ("numeric" == typeName)
                         {
@@ -300,30 +300,30 @@ namespace Zhichkin.Metadata.Services
                         }
                         else if ("string" == typeName)
                         {
-                            property.Types.Add(Entity.String);
+                            property.Relations.Add(new Relation() { Entity = Entity.String, Property = property });
                         }
                         else if ("dateTime" == typeName)
                         {
-                            property.Types.Add(Entity.DateTime);
+                            property.Relations.Add(new Relation() { Entity = Entity.DateTime, Property = property });
                         }
                         else if ("ValueStorage" == typeName)
                         {
-                            property.Types.Add(Entity.Binary);
+                            property.Relations.Add(new Relation() { Entity = Entity.Binary, Property = property });
                         }
                         else if ("Уникальный идентификатор" == typeName)
                         {
-                            property.Types.Add(Entity.GUID);
+                            property.Relations.Add(new Relation() { Entity = Entity.GUID, Property = property });
                         }
                         else if ("ВидДвиженияНакопления" == typeName)
                         {
-                            property.Types.Add(Entity.Byte);
+                            property.Relations.Add(new Relation() { Entity = Entity.Byte, Property = property });
                         }
                         else
                         {
                             Entity entity = GetEntityByMetaTypeName(typeName);
                             if (entity != Entity.Empty)
                             {
-                                property.Types.Add(entity);
+                                property.Relations.Add(new Relation() { Entity = entity, Property = property });
                             }
                             else
                             {
@@ -340,7 +340,7 @@ namespace Zhichkin.Metadata.Services
             {
                 if ((int)numberInfo.Get("РазрядностьДробнойЧасти") > 0)
                 {
-                    property.Types.Add(Entity.Decimal);
+                    property.Relations.Add(new Relation() { Entity = Entity.Decimal, Property = property });
                 }
                 else
                 {
@@ -348,11 +348,11 @@ namespace Zhichkin.Metadata.Services
                     {
                         if (connector.ToString(sign) == "Любой")
                         {
-                            property.Types.Add(Entity.Int32);
+                            property.Relations.Add(new Relation() { Entity = Entity.Int32, Property = property });
                         }
                         else
                         {
-                            property.Types.Add(Entity.UInt32);
+                            property.Relations.Add(new Relation() { Entity = Entity.UInt32, Property = property });
                         }
                     }
                 }

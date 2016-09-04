@@ -231,6 +231,7 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new ApplicationException("Error executing delete command.");
             }
+            
         }
     }
 }

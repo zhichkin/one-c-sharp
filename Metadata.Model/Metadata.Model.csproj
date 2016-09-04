@@ -35,15 +35,18 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity.cs" />
     <Compile Include="Entity.DataMapper.cs" />
     <Compile Include="Entity.SystemTypes.cs" />
     <Compile Include="EntityBase.cs" />
+    <Compile Include="IMetadataService.cs" />
     <Compile Include="InfoBase.cs" />
     <Compile Include="InfoBase.DataMapper.cs" />
     <Compile Include="InfoBase.Metadata.cs" />
+    <Compile Include="MetadataService.cs" />
     <Compile Include="Namespace.cs" />
     <Compile Include="Namespace.DataMapper.cs" />
     <Compile Include="Namespace.TypeSystem.cs" />
@@ -73,7 +76,7 @@
     <Content Include="SQL\CreateTable_infobases.sql" />
     <Content Include="SQL\CreateTable_namespaces.sql" />
     <Content Include="SQL\CreateTable_properties.sql" />
-    <Content Include="SQL\CreateTable_properties_types.sql" />
+    <Content Include="SQL\CreateTable_relations.sql" />
     <Content Include="SQL\CreateTable_tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

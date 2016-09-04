@@ -97,9 +97,10 @@ namespace Zhichkin.ORM
             LazyLoad(); return storage;
         }
 
-        private void OnPropertyChanged(string propertyName)
+        public void OnPropertyChanged(string propertyName)
         {
-            if (propertyName == null) return;
+            if (propertyName == null) throw new ArgumentNullException("propertyName");
+            if(string.IsNullOrWhiteSpace(propertyName)) throw new ArgumentOutOfRangeException("propertyName");
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 

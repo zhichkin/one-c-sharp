@@ -1,10 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Data;
-using System.Data.SqlClient;
 using System.Collections.Generic;
-
+using Zhichkin.Metadata.Services;
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
@@ -12,6 +8,8 @@ namespace Zhichkin.Metadata.Model
     public sealed partial class Namespace : EntityBase
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Namespace));
+
+        private static readonly IMetadataService service = new MetadataService();
 
         public Namespace() : base(_mapper) { }
         public Namespace(Guid identity) : base(_mapper, identity) { }
@@ -34,9 +32,24 @@ namespace Zhichkin.Metadata.Model
         }
 
         private List<Namespace> namespaces = new List<Namespace>();
-        public IList<Namespace> Namespaces { get { return namespaces; } }
-
         private List<Entity> entities = new List<Entity>();
-        public IList<Entity> Entities { get { return entities; } }
+        public IList<Namespace> Namespaces
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return namespaces;
+                if (namespaces.Count > 0) return namespaces;
+                return service.GetChildren<Namespace, Namespace>(this, "owner");
+            }
+        }
+        public IList<Entity> Entities
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return entities;
+                if (entities.Count > 0) return entities;
+                return service.GetChildren<Namespace, Entity>(this, "namespace");
+            }
+        }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Data;
-using System.Data.SqlClient;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Zhichkin.Metadata.Services;
 
 using Zhichkin.ORM;
 
@@ -13,6 +9,7 @@ namespace Zhichkin.Metadata.Model
     public sealed partial class Entity : EntityBase
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Entity));
+        private static readonly IMetadataService service = new MetadataService();
 
         public Entity() : base(_mapper) { }
         public Entity(Guid identity) : base(_mapper, identity) { }
@@ -33,15 +30,6 @@ namespace Zhichkin.Metadata.Model
         
         public string FullName { get { return string.Format("{0}.{1}", this.Namespace.Name, this.Name); } }
 
-        private List<Property> properties = new List<Property>();
-        public IList<Property> Properties { get { return properties; } }
-
-        private List<Entity> nestedEntities = new List<Entity>();
-        public IList<Entity> NestedEntities { get { return nestedEntities; } }
-
-        private List<Table> tables = new List<Table>();
-        public IList<Table> Tables { get { return tables; } }
-
         public Table MainTable
         {
             get
@@ -54,6 +42,38 @@ namespace Zhichkin.Metadata.Model
                     }
                 }
                 return null;
+            }
+        }
+
+        private List<Property> properties = new List<Property>();
+        private List<Entity> nestedEntities = new List<Entity>();
+        private List<Table> tables = new List<Table>();
+
+        public IList<Property> Properties
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return properties;
+                if (properties.Count > 0) return properties;
+                return service.GetChildren<Entity, Property>(this, "entity");
+            }
+        }
+        public IList<Entity> NestedEntities
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return nestedEntities;
+                if (nestedEntities.Count > 0) return nestedEntities;
+                return service.GetChildren<Entity, Entity>(this, "owner");
+            }
+        }
+        public IList<Table> Tables
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return tables;
+                if (tables.Count > 0) return tables;
+                return service.GetChildren<Entity, Table>(this, "entity");
             }
         }
     }

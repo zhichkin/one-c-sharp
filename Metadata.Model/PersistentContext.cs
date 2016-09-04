@@ -56,6 +56,6 @@ namespace Zhichkin.Metadata.Model
         public string ConnectionString { get { return connectionString; } }
         public IDataMapper GetDataMapper(Type type) { return mappers[type]; }
         public BiDictionary<int, Type> TypeCodes { get { return typeCodes; } }
-        public IReferenceObjectFactory ReferenceObjectFactory { get { return factory; } }
+        public IReferenceObjectFactory Factory { get { return factory; } }
     }
 }

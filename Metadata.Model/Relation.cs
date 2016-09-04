@@ -17,33 +17,33 @@ namespace Zhichkin.Metadata.Model
         public Relation(PersistentState state) : base(_mapper, state) { }
 
         private Property old_property = null;
-        private Entity old_type = null;
+        private Entity old_entity = null;
 
         private Property property = null;
-        private Entity type = null;
+        private Entity entity = null;
 
         public Property Property { set { Set<Property>(value, ref property); } get { return Get<Property>(ref property); } }
-        public Entity Type { set { Set<Entity>(value, ref type); } get { return Get<Entity>(ref type); } }
+        public Entity Entity { set { Set<Entity>(value, ref entity); } get { return Get<Entity>(ref entity); } }
 
         protected override void UpdateKeyValues()
         {
             old_property = property;
-            old_type = type;
+            old_entity = entity;
         }
 
         public override string ToString()
         {
             return string.Format("{0} ({1})",
                 this.Property == null ? string.Empty : this.Property.Name,
-                this.Type == null ? string.Empty : this.Type.FullName);
+                this.Entity == null ? string.Empty : this.Entity.FullName);
         }
 
         public int CompareTo(Relation other)
         {
             if (other == null) return 1;
-            if (this.Type == null) return -1;
-            if (other.Type == null) return 1;
-            return this.Type.FullName.CompareTo(other.Type.FullName);
+            if (this.Entity == null) return -1;
+            if (other.Entity == null) return 1;
+            return this.Entity.FullName.CompareTo(other.Entity.FullName);
         }
     }
 }

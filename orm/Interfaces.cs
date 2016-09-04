@@ -56,7 +56,7 @@ namespace Zhichkin.ORM
         string ConnectionString { get; }
         IDataMapper GetDataMapper(Type type);
         BiDictionary<int, Type> TypeCodes { get; }
-        IReferenceObjectFactory ReferenceObjectFactory { get; }
+        IReferenceObjectFactory Factory { get; }
         
     }
 }

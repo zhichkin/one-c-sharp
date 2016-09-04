@@ -1,5 +1,6 @@
 ﻿using System;
 using Zhichkin.ORM;
+using Zhichkin.Metadata.Services;
 using System.Collections.Generic;
 
 namespace Zhichkin.Metadata.Model
@@ -7,6 +8,8 @@ namespace Zhichkin.Metadata.Model
     public sealed partial class InfoBase : EntityBase
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(InfoBase));
+
+        private static readonly IMetadataService service = new MetadataService();
 
         public InfoBase() : base(_mapper) { }
         public InfoBase(Guid identity) : base(_mapper, identity) { }
@@ -19,6 +22,14 @@ namespace Zhichkin.Metadata.Model
         public string Database { set { Set<string>(value, ref database); } get { return Get<string>(ref database); } }
 
         private List<Namespace> namespaces = new List<Namespace>();
-        public IList<Namespace> Namespaces { get { return namespaces; } }
+        public IList<Namespace> Namespaces
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return namespaces;
+                if (namespaces.Count > 0) return namespaces;
+                return service.GetChildren<InfoBase, Namespace>(this, "owner");
+            }
+        }
     }
 }
