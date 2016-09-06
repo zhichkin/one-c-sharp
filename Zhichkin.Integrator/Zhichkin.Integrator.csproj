@@ -159,6 +159,10 @@
       <Project>{a7e8bc5d-8c1d-4db8-9dee-9668ef714257}</Project>
       <Name>Zhichkin.ChangeTracking</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Zhichkin.Integrator.Model\Zhichkin.Integrator.Model.csproj">
+      <Project>{1241c202-f360-466c-a953-18f84be5c3e7}</Project>
+      <Name>Zhichkin.Integrator.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

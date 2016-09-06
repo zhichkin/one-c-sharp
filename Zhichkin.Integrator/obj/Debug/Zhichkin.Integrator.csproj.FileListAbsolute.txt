@@ -54,3 +54,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\EntityView.g.cs
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\EntityView.baml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.ChangeTracking.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.ChangeTracking.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Model.pdb

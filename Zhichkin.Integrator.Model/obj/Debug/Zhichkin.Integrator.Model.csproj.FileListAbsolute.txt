@@ -1,0 +1,12 @@
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.Integrator.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.Integrator.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.ORM.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Microsoft.Practices.Prism.PubSubEvents.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.Metadata.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.ORM.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.ChangeTracking.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.ChangeTracking.pdb

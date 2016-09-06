@@ -37,7 +37,9 @@ namespace Zhichkin.ORM
                 }
                 else
                 {
-                    throw new NotSupportedException("The transition from the current state to the new one is not allowed!");
+                    throw new NotSupportedException("The transition from the current state to the new one is not allowed!"
+                        + Environment.NewLine
+                        + string.Format("Current state: {0}. New state: {1}.", state.ToString(), value.ToString()));
                 }
             }
         }

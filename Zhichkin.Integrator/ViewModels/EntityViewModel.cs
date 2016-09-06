@@ -3,22 +3,23 @@ using System.Windows;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
-using Zhichkin.Metadata.Model;
 using Zhichkin.ChangeTracking;
+using M = Zhichkin.Metadata.Model;
+using I = Zhichkin.Integrator.Model;
 
 namespace Zhichkin.Integrator.ViewModels
 {
     public class EntityViewModel : BindableBase
     {
-        private readonly Entity entity;
-        private readonly InfoBase infoBase;
+        private readonly M.Entity entity;
+        private readonly M.InfoBase infoBase;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
 
         private ChangeTrackingDatabaseInfo _ChangeTrackingDatabaseInfo = null;
         private ChangeTrackingTableInfo _ChangeTrackingTableInfo = null;
 
-        public EntityViewModel(Entity data, IRegionManager regionManager, IEventAggregator eventAggregator)
+        public EntityViewModel(M.Entity data, IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             entity = data;
             infoBase = entity.Namespace.InfoBase;
@@ -62,20 +63,15 @@ namespace Zhichkin.Integrator.ViewModels
             get { return IsDatabaseChangeTrackingEnabled && _ChangeTrackingTableInfo != null; }
             set
             {
-                ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
                 try
                 {
                     if (IsChangeTrackingEnabled)
                     {
-                        service.SwitchTableChangeTracking(entity.MainTable, false);
+                        DisableChangeTracking();
                     }
                     else
                     {
-                        if (!IsDatabaseChangeTrackingEnabled)
-                        {
-                            service.EnableDatabaseChangeTracking(infoBase, null);
-                        }
-                        service.SwitchTableChangeTracking(entity.MainTable, true);
+                        EnableChangeTracking();
                     }
                     InitializeViewModel();
                     OnPropertyChanged("IsChangeTrackingEnabled");
@@ -96,6 +92,33 @@ namespace Zhichkin.Integrator.ViewModels
                     OnPropertyChanged("IsColumnsTrackingEnabled");
                 }
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
+            }
+        }
+
+        private void EnableChangeTracking()
+        {
+            ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
+            if (!IsDatabaseChangeTrackingEnabled)
+            {
+                service.EnableDatabaseChangeTracking(infoBase, null);
+            }
+            service.SwitchTableChangeTracking(entity.MainTable, true);
+
+            I.Entity e = I.Entity.Find(entity.Identity);
+            if (e == null)
+            {
+                e = (I.Entity)I.IntegratorPersistentContext.Current.Factory.New(typeof(I.Entity), entity.Identity);
+                e.Save();
+            }
+        }
+        private void DisableChangeTracking()
+        {
+            ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
+            service.SwitchTableChangeTracking(entity.MainTable, false);
+            I.Entity e = I.Entity.Find(entity.Identity);
+            if (e != null)
+            {
+                e.Kill();
             }
         }
     }
