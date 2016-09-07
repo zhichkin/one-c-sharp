@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using Zhichkin.ORM;
+using System.Collections.Generic;
 
 namespace Zhichkin.Integrator.Model
 {
@@ -58,15 +59,15 @@ namespace Zhichkin.Integrator.Model
                     SqlParameter parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier)
                     {
                         Direction = ParameterDirection.Input,
-                        Value     = e.identity
+                        Value = e.identity
                     };
                     command.Parameters.Add(parameter);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            e.version           = (byte[])reader[0];
-                            e.name              = reader.GetString(1);
+                            e.version = (byte[])reader[0];
+                            e.name = reader.GetString(1);
                             e.last_sync_version = reader.GetInt64(2);
                             e.msmq_target_queue = reader.GetString(3);
                             ok = true;
@@ -90,19 +91,19 @@ namespace Zhichkin.Integrator.Model
                     SqlParameter parameter = null;
                     parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.identity;
+                    parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("name", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.name;
+                    parameter.Value = e.name;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("last_sync_version", SqlDbType.BigInt);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.last_sync_version;
+                    parameter.Value = e.last_sync_version;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("msmq_target_queue", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.msmq_target_queue;
+                    parameter.Value = e.msmq_target_queue;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -131,23 +132,23 @@ namespace Zhichkin.Integrator.Model
                     SqlParameter parameter = null;
                     parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.identity;
+                    parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("version", SqlDbType.Timestamp);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.version;
+                    parameter.Value = e.version;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("name", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.name;
+                    parameter.Value = e.name;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("last_sync_version", SqlDbType.BigInt);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.last_sync_version;
+                    parameter.Value = e.last_sync_version;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("msmq_target_queue", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.msmq_target_queue;
+                    parameter.Value = e.msmq_target_queue;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -189,11 +190,11 @@ namespace Zhichkin.Integrator.Model
                     SqlParameter parameter = null;
                     parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.identity;
+                    parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
                     parameter = new SqlParameter("version", SqlDbType.Timestamp);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value     = e.version;
+                    parameter.Value = e.version;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -204,7 +205,37 @@ namespace Zhichkin.Integrator.Model
                 if (!ok) throw new ApplicationException("Error executing delete command.");
             }
 
-            public static Entity Find(Guid identity)
+            public static IList<Entity> Select()
+            {
+                IList<Entity> list = new List<Entity>();
+                IPersistentContext context = IntegratorPersistentContext.Current;
+                using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = @"SELECT [key], [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[entities];";
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Entity entity = (Entity)context.Factory.New(typeof(Entity), reader.GetGuid(0));
+                            if (entity.State == PersistentState.New)
+                            {
+                                entity.State = PersistentState.Loading;
+                                entity.version = (byte[])reader[1];
+                                entity.name = reader.GetString(2);
+                                entity.last_sync_version = reader.GetInt64(3);
+                                entity.msmq_target_queue = reader.GetString(4);
+                                entity.State = PersistentState.Original;
+                            }
+                            list.Add(entity);
+                        }
+                    }
+                }
+                return list;
+            }
+            public static Entity Select(Guid identity)
             {
                 Entity entity = null;
                 IPersistentContext context = IntegratorPersistentContext.Current;
@@ -216,7 +247,8 @@ namespace Zhichkin.Integrator.Model
                     command.CommandText = SelectCommandText;
                     SqlParameter parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier)
                     {
-                        Direction = ParameterDirection.Input, Value = identity
+                        Direction = ParameterDirection.Input,
+                        Value = identity
                     };
                     command.Parameters.Add(parameter);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -227,8 +259,8 @@ namespace Zhichkin.Integrator.Model
                             if (entity.State == PersistentState.New)
                             {
                                 entity.State = PersistentState.Loading;
-                                entity.version           = (byte[])reader[0];
-                                entity.name              = reader.GetString(1);
+                                entity.version = (byte[])reader[0];
+                                entity.name = reader.GetString(1);
                                 entity.last_sync_version = reader.GetInt64(2);
                                 entity.msmq_target_queue = reader.GetString(3);
                                 entity.State = PersistentState.Original;

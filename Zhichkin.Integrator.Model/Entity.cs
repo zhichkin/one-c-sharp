@@ -1,5 +1,6 @@
 ﻿using System;
 using Zhichkin.ORM;
+using System.Collections.Generic;
 using M = Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Integrator.Model
@@ -7,8 +8,9 @@ namespace Zhichkin.Integrator.Model
     public sealed partial class Entity : M.EntityBase
     {
         private static readonly IDataMapper _mapper = IntegratorPersistentContext.Current.GetDataMapper(typeof(Entity));
-        public static Entity Find(Guid identity) { return DataMapper.Find(identity); }
-
+        public static IList<Entity> Select() { return DataMapper.Select(); }
+        public static Entity Select(Guid identity) { return DataMapper.Select(identity); }
+        
         public Entity() : base(_mapper) { throw new NotSupportedException(); }
         public Entity(Guid identity) : this(identity, PersistentState.New) { }
         public Entity(Guid identity, PersistentState state) : base(_mapper, identity, state)

@@ -56,3 +56,4 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.ChangeTracking.dl
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.ChangeTracking.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Model.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\NetSerializer.dll

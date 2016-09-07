@@ -11,6 +11,7 @@ namespace Zhichkin.Integrator.ViewModels
 {
     public class EntityViewModel : BindableBase
     {
+        private I.Entity i_entity = null;
         private readonly M.Entity entity;
         private readonly M.InfoBase infoBase;
         private readonly IRegionManager regionManager;
@@ -23,6 +24,7 @@ namespace Zhichkin.Integrator.ViewModels
         {
             entity = data;
             infoBase = entity.Namespace.InfoBase;
+            i_entity = I.Entity.Select(entity.Identity);
             if (regionManager == null) throw new ArgumentNullException("regionManager");
             if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
             this.regionManager = regionManager;
@@ -41,7 +43,6 @@ namespace Zhichkin.Integrator.ViewModels
         public void InitializeViewModel()
         {
             ChangeTrackingService services = new ChangeTrackingService(infoBase.ConnectionString);
-
             try
             {
                 _ChangeTrackingDatabaseInfo = services.GetChangeTrackingDatabaseInfo(infoBase);
@@ -75,6 +76,8 @@ namespace Zhichkin.Integrator.ViewModels
                     }
                     InitializeViewModel();
                     OnPropertyChanged("IsChangeTrackingEnabled");
+                    OnPropertyChanged("LastSyncVersion");
+                    OnPropertyChanged("MSMQTargetQueue");
                 }
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
@@ -94,7 +97,6 @@ namespace Zhichkin.Integrator.ViewModels
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
-
         private void EnableChangeTracking()
         {
             ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
@@ -104,21 +106,46 @@ namespace Zhichkin.Integrator.ViewModels
             }
             service.SwitchTableChangeTracking(entity.MainTable, true);
 
-            I.Entity e = I.Entity.Find(entity.Identity);
-            if (e == null)
+            i_entity = I.Entity.Select(entity.Identity);
+            if (i_entity == null)
             {
-                e = (I.Entity)I.IntegratorPersistentContext.Current.Factory.New(typeof(I.Entity), entity.Identity);
-                e.Save();
+                i_entity = (I.Entity)I.IntegratorPersistentContext.Current.Factory.New(typeof(I.Entity), entity.Identity);
+                i_entity.Name = string.Format("{0} ({1})", entity.Name, entity.MainTable.Name);
+                i_entity.LastSyncVersion = 0;
+                i_entity.Save();
             }
         }
         private void DisableChangeTracking()
         {
             ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
             service.SwitchTableChangeTracking(entity.MainTable, false);
-            I.Entity e = I.Entity.Find(entity.Identity);
-            if (e != null)
+            if (i_entity != null)
             {
-                e.Kill();
+                i_entity.Kill();
+                i_entity = null;
+            }
+        }
+
+        public string LastSyncVersion
+        {
+            get { return (i_entity == null) ? string.Empty : i_entity.LastSyncVersion.ToString(); }
+            set
+            {
+                if (i_entity == null) return;
+                i_entity.LastSyncVersion = long.Parse(value);
+                i_entity.Save();
+                OnPropertyChanged("LastSyncVersion");
+            }
+        }
+        public string MSMQTargetQueue
+        {
+            get { return (i_entity == null) ? string.Empty : i_entity.MSMQTargetQueue; }
+            set
+            {
+                if (i_entity == null) return;
+                i_entity.MSMQTargetQueue = value;
+                i_entity.Save();
+                OnPropertyChanged("MSMQTargetQueue");
             }
         }
     }

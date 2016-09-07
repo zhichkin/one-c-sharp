@@ -21,6 +21,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Наименование:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
@@ -31,6 +33,14 @@
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Отслеживать изменения полей:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding IsColumnsTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Актуальная версия изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding LastSyncVersion, Mode=TwoWay}" Width="50" Margin="10" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Left"
+                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Очередь сообщений MSMQ:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding MSMQTargetQueue, Mode=TwoWay}" Width="150" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                   Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
 </UserControl>

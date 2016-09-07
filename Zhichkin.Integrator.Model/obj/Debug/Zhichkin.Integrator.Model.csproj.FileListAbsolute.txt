@@ -10,3 +10,4 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.ChangeTracking.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\Zhichkin.ChangeTracking.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\bin\Debug\NetSerializer.dll

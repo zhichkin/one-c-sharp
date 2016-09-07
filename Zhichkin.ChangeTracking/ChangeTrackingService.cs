@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 using System.Data;
 using System.Data.SqlClient;
+using System.Transactions;
 using Zhichkin.Metadata.Model;
+using System.Collections.Generic;
 
 namespace Zhichkin.ChangeTracking
 {
@@ -472,6 +475,126 @@ namespace Zhichkin.ChangeTracking
                 connection.Open();
                 command.ExecuteNonQuery();
             }
+        }
+
+        private string GetMinValidSyncVersionScript
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(@"SELECT CHANGE_TRACKING_MIN_VALID_VERSION(OBJECT_ID(@table));");
+                return sb.ToString();
+            }
+        }
+        private string GetCurrentSyncVersionScript
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(@"SELECT CHANGE_TRACKING_CURRENT_VERSION();");
+                return sb.ToString();
+            }
+        }
+        private string SelectChangesTemplate
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(@"SELECT");
+                sb.AppendLine(@"    c.SYS_CHANGE_OPERATION,");
+                sb.AppendLine(@"    {2}");
+                sb.AppendLine(@"FROM");
+                sb.AppendLine(@"    CHANGETABLE(CHANGES {0}, @last_sync_version) AS c");
+                sb.AppendLine(@"    LEFT JOIN {0} AS d");
+                sb.AppendLine(@"    ON {1}");
+                sb.AppendLine(@"WHERE");
+                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT IS NULL");
+                sb.AppendLine(@"    OR");
+                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT <> CAST(@target AS varbinary(128));");
+                return sb.ToString();
+            }
+        }
+        private string GetSelectChangesScript(Table table, SqlCommand command)
+        {
+            string sql = SelectChangesTemplate;
+            string tableName = GetFullTableName(table);
+            string keys = GetPrimaryKeysJoinScript(table, command);
+            string fields = GetSelectFieldsScript(table);
+            string.Format(sql, tableName, keys, fields);
+            return sql;
+        }
+        private string GetPrimaryKeysJoinScript(Table table, SqlCommand command)
+        {
+            ClusteredIndexInfo index = GetClusteredIndexInfo(table, command);
+            if (index == null) throw new InvalidOperationException();
+
+            string sql = string.Empty;
+            foreach (ClusteredIndexColumnInfo column in index.COLUMNS)
+            {
+                sql += (sql == string.Empty ? string.Empty : " AND ");
+                sql += string.Format("c.[{0}] = d.[{0}]", column.NAME);
+            }
+            return sql;
+        }
+        private string GetSelectFieldsScript(Table table)
+        {
+            string sql = string.Empty;
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                foreach (Field field in table.Fields)
+                {
+                    sql += (sql == string.Empty ? string.Empty : ", ");
+                    sql += string.Format("{0}.[{1}]", (field.IsPrimaryKey ? "c" : "d"), field.Name);
+                }
+                scope.Complete();
+            }
+            return sql;
+        }
+        public long GetMinValidSyncVersion(Table table, SqlCommand command)
+        {
+            command.CommandType = CommandType.Text;
+            command.CommandText = GetMinValidSyncVersionScript;
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("table", GetFullTableName(table));
+            return (long)command.ExecuteScalar();
+        }
+        public long GetCurrentSyncVersion(SqlCommand command)
+        {
+            command.CommandType = CommandType.Text;
+            command.CommandText = GetCurrentSyncVersionScript;
+            command.Parameters.Clear();
+            return (long)command.ExecuteScalar();
+        }
+        public List<ChangeTrackingRecord> SelectChanges(Table table, long last_sync_version, SqlCommand command)
+        {
+            command.CommandType = CommandType.Text;
+            command.CommandText = GetSelectChangesScript(table, command);
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("target", Guid.Empty);
+            command.Parameters.AddWithValue("last_sync_version", last_sync_version);
+
+            List<ChangeTrackingRecord> changes = new List<ChangeTrackingRecord>();
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    ChangeTrackingRecord record = new ChangeTrackingRecord();
+                    // 0 - SYS_CHANGE_OPERATION nchar(1) I, U, D
+                    record.SYS_CHANGE_OPERATION = reader.GetString(0);
+                    List<ChangeTrackingField> list = new List<ChangeTrackingField>();
+                    for (int i = 1; i < reader.FieldCount; i++)
+                    {
+                        ChangeTrackingField field = new ChangeTrackingField();
+                        field.Name = reader.GetName(i);
+                        field.Value = reader.IsDBNull(i) ? null : reader[i];
+                        field.IsKey = table.Fields.Where(f => f.Name == field.Name).FirstOrDefault().IsPrimaryKey;
+                        list.Add(field);
+                    }
+                    record.Fields = list.ToArray();
+                    changes.Add(record);
+                }
+            }
+            return changes;
         }
     }
 }
