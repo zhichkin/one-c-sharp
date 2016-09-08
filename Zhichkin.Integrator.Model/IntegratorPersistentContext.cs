@@ -36,11 +36,11 @@ namespace Zhichkin.Integrator.Model
 
         private static void InitializeTypeCodes()
         {
-            typeCodes.Add(1, typeof(Entity));
+            typeCodes.Add(1, typeof(Publisher));
         }
         private static void InitializeDataMappers()
         {
-            mappers.Add(typeof(Entity), new Entity.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Publisher), new Publisher.DataMapper(connectionString, factory));
         }
     }
 }

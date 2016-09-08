@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Zhichkin.Integrator.Views.EntityView"
+﻿<UserControl x:Class="Zhichkin.Integrator.Views.PublisherView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -23,6 +23,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Наименование:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
@@ -37,10 +38,25 @@
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Актуальная версия изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding LastSyncVersion, Mode=TwoWay}" Width="50" Margin="10" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Left"
-                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
         <TextBlock Grid.Row="5" Grid.Column="0" Text="Очередь сообщений MSMQ:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding MSMQTargetQueue, Mode=TwoWay}" Width="150" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
-                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+
+        <Button Grid.Row="6" Grid.Column="0" Content="Сформировать сообщения" Margin="10" Command="{Binding PublishChangesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <Button Grid.Row="6" Grid.Column="1" Content="Обработать сообщения" Margin="10" Command="{Binding ProcessMessagesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left" />
     </Grid>
 </UserControl>

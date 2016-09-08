@@ -1,36 +1,56 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Controls;
+using System.Collections.Generic;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.Prism.Commands;
 using Zhichkin.ChangeTracking;
-using M = Zhichkin.Metadata.Model;
-using I = Zhichkin.Integrator.Model;
+using Zhichkin.Metadata.Model;
+using Zhichkin.Integrator.Model;
 
 namespace Zhichkin.Integrator.ViewModels
 {
-    public class EntityViewModel : BindableBase
+    public class PublisherViewModel : BindableBase
     {
-        private I.Entity i_entity = null;
-        private readonly M.Entity entity;
-        private readonly M.InfoBase infoBase;
+        private Publisher publisher = null;
+        private readonly Entity entity;
+        private readonly InfoBase infoBase;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
 
         private ChangeTrackingDatabaseInfo _ChangeTrackingDatabaseInfo = null;
         private ChangeTrackingTableInfo _ChangeTrackingTableInfo = null;
-
-        public EntityViewModel(M.Entity data, IRegionManager regionManager, IEventAggregator eventAggregator)
+        
+        public PublisherViewModel(Entity data, IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             entity = data;
             infoBase = entity.Namespace.InfoBase;
-            i_entity = I.Entity.Select(entity.Identity);
+            publisher = Publisher.Select(entity.Identity);
             if (regionManager == null) throw new ArgumentNullException("regionManager");
             if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
+
+            this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+            this.PublishChangesCommand = new DelegateCommand(this.OnPublishChanges);
+            this.ProcessMessagesCommand = new DelegateCommand(this.OnProcessMessages);
             InitializeViewModel();
         }
+        public ICommand UpdateTextBoxSourceCommand { get; private set; }
+        private void OnUpdateTextBoxSource(object userControl)
+        {
+            TextBox textBox = userControl as TextBox;
+            if (textBox == null) return;
+            DependencyProperty property = TextBox.TextProperty;
+            BindingExpression binding = BindingOperations.GetBindingExpression(textBox, property);
+            if (binding == null) return;
+            binding.UpdateSource();
+        }
+
         public string Name
         {
             get { return (entity == null) ? string.Empty : entity.Name; }
@@ -106,47 +126,62 @@ namespace Zhichkin.Integrator.ViewModels
             }
             service.SwitchTableChangeTracking(entity.MainTable, true);
 
-            i_entity = I.Entity.Select(entity.Identity);
-            if (i_entity == null)
+            publisher = Publisher.Select(entity.Identity);
+            if (publisher == null)
             {
-                i_entity = (I.Entity)I.IntegratorPersistentContext.Current.Factory.New(typeof(I.Entity), entity.Identity);
-                i_entity.Name = string.Format("{0} ({1})", entity.Name, entity.MainTable.Name);
-                i_entity.LastSyncVersion = 0;
-                i_entity.Save();
+                publisher = (Publisher)IntegratorPersistentContext.Current.Factory.New(typeof(Publisher), entity.Identity);
+                publisher.Name = string.Format("{0} ({1})", entity.Name, entity.MainTable.Name);
+                publisher.LastSyncVersion = 0;
+                publisher.Save();
             }
         }
         private void DisableChangeTracking()
         {
             ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
             service.SwitchTableChangeTracking(entity.MainTable, false);
-            if (i_entity != null)
+            if (publisher != null)
             {
-                i_entity.Kill();
-                i_entity = null;
+                publisher.Kill();
+                publisher = null;
             }
         }
 
         public string LastSyncVersion
         {
-            get { return (i_entity == null) ? string.Empty : i_entity.LastSyncVersion.ToString(); }
+            get { return (publisher == null) ? string.Empty : publisher.LastSyncVersion.ToString(); }
             set
             {
-                if (i_entity == null) return;
-                i_entity.LastSyncVersion = long.Parse(value);
-                i_entity.Save();
+                if (publisher == null) return;
+                publisher.LastSyncVersion = long.Parse(value);
+                publisher.Save();
                 OnPropertyChanged("LastSyncVersion");
             }
         }
         public string MSMQTargetQueue
         {
-            get { return (i_entity == null) ? string.Empty : i_entity.MSMQTargetQueue; }
+            get { return (publisher == null) ? string.Empty : publisher.MSMQTargetQueue; }
             set
             {
-                if (i_entity == null) return;
-                i_entity.MSMQTargetQueue = value;
-                i_entity.Save();
+                if (publisher == null) return;
+                publisher.MSMQTargetQueue = value;
+                publisher.Save();
                 OnPropertyChanged("MSMQTargetQueue");
             }
+        }
+
+        public ICommand PublishChangesCommand { get; private set; }
+        private void OnPublishChanges()
+        {
+            if (publisher == null) return;
+            Integrator.Services.IntegratorService service = new Integrator.Services.IntegratorService();
+            service.PublishChanges(publisher);
+        }
+        public ICommand ProcessMessagesCommand { get; private set; }
+        private void OnProcessMessages()
+        {
+            if (publisher == null) return;
+            Integrator.Services.IntegratorService service = new Integrator.Services.IntegratorService();
+            service.ProcessMessages(publisher);
         }
     }
 }

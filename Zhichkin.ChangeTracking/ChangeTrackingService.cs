@@ -556,14 +556,18 @@ namespace Zhichkin.ChangeTracking
             command.CommandText = GetMinValidSyncVersionScript;
             command.Parameters.Clear();
             command.Parameters.AddWithValue("table", GetFullTableName(table));
-            return (long)command.ExecuteScalar();
+            object result = command.ExecuteScalar();
+            if (result == DBNull.Value) return 0;
+            return (long)result;
         }
         public long GetCurrentSyncVersion(SqlCommand command)
         {
             command.CommandType = CommandType.Text;
             command.CommandText = GetCurrentSyncVersionScript;
             command.Parameters.Clear();
-            return (long)command.ExecuteScalar();
+            object result = command.ExecuteScalar();
+            if (result == DBNull.Value) return 0;
+            return (long)result;
         }
         public List<ChangeTrackingRecord> SelectChanges(Table table, long last_sync_version, SqlCommand command)
         {

@@ -5,7 +5,7 @@ namespace Zhichkin.Integrator.Services
 {
     public interface IIntegratorService
     {
-        IList<Entity> GetPublishers();
-        void PublishChanges(Entity entity);
+        IList<Publisher> GetPublishers();
+        void PublishChanges(Publisher entity);
     }
 }

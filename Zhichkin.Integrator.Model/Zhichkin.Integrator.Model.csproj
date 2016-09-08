@@ -39,11 +39,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Messaging" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\IIntegratorService.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="Entity.DataMapper.cs" />
+    <Compile Include="Publisher.cs" />
+    <Compile Include="Publisher.DataMapper.cs" />
     <Compile Include="IntegratorPersistentContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IntegratorService.cs" />
@@ -63,7 +64,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SQL\Entity.sql" />
+    <Content Include="SQL\Publisher.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

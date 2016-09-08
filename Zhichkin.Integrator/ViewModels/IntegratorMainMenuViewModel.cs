@@ -42,12 +42,12 @@ namespace Zhichkin.Integrator.ViewModels
         private void SetupViewsLookup()
         {
             viewsLookup.Add(typeof(InfoBase), typeof(InfoBaseView));
-            viewsLookup.Add(typeof(Entity), typeof(EntityView));
+            viewsLookup.Add(typeof(Entity), typeof(PublisherView));
         }
         private void SetupModelsLookup()
         {
             modelsLookup.Add(typeof(InfoBase), typeof(InfoBaseViewModel));
-            modelsLookup.Add(typeof(Entity), typeof(EntityViewModel));
+            modelsLookup.Add(typeof(Entity), typeof(PublisherViewModel));
         }
         private object GetView(object item)
         {

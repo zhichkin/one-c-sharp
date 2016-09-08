@@ -105,11 +105,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ViewModels\EntityViewModel.cs" />
+    <Compile Include="ViewModels\PublisherViewModel.cs" />
     <Compile Include="ViewModels\InfoBaseViewModel.cs" />
     <Compile Include="ViewModels\IntegratorMainMenuViewModel.cs" />
-    <Compile Include="Views\EntityView.xaml.cs">
-      <DependentUpon>EntityView.xaml</DependentUpon>
+    <Compile Include="Views\PublisherView.xaml.cs">
+      <DependentUpon>PublisherView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InfoBaseView.xaml.cs">
       <DependentUpon>InfoBaseView.xaml</DependentUpon>
@@ -129,7 +129,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\EntityView.xaml">
+    <Page Include="Views\PublisherView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

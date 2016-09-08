@@ -6,32 +6,32 @@ using System.Collections.Generic;
 
 namespace Zhichkin.Integrator.Model
 {
-    public partial class Entity
+    public partial class Publisher
     {
         public sealed class DataMapper : IDataMapper
         {
             #region " SQL CRUD commands "
             private const string SelectCommandText =
-                @"SELECT [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[entities] WHERE [key] = @key";
+                @"SELECT [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[publishers] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result TABLE([version] binary(8)); " +
-                @"INSERT [integrator].[entities] ([key], [name], [last_sync_version], [msmq_target_queue]) " +
+                @"INSERT [integrator].[publishers] ([key], [name], [last_sync_version], [msmq_target_queue]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
                 @"VALUES (@key, @name, @last_sync_version, @msmq_target_queue); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result TABLE([version] binary(8)); " +
-                @"UPDATE [integrator].[entities] SET [name] = @name, [last_sync_version] = @last_sync_version, [msmq_target_queue] = @msmq_target_queue " +
+                @"UPDATE [integrator].[publishers] SET [name] = @name, [last_sync_version] = @last_sync_version, [msmq_target_queue] = @msmq_target_queue " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
                 @"IF (@rows_affected = 0) " +
                 @"BEGIN " +
-                @"  INSERT @result ([version]) SELECT [version] FROM [integrator].[entities] WHERE [key] = @key; " +
+                @"  INSERT @result ([version]) SELECT [version] FROM [integrator].[publishers] WHERE [key] = @key; " +
                 @"END " +
                 @"SELECT @rows_affected, [version] FROM @result;";
             private const string DeleteCommandText =
-                @"DELETE [integrator].[entities] WHERE [key] = @key " +
+                @"DELETE [integrator].[publishers] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
             #endregion
@@ -47,7 +47,7 @@ namespace Zhichkin.Integrator.Model
 
             void IDataMapper.Select(IPersistent entity)
             {
-                Entity e = (Entity)entity;
+                Publisher e = (Publisher)entity;
 
                 bool ok = false;
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -78,7 +78,7 @@ namespace Zhichkin.Integrator.Model
             }
             void IDataMapper.Insert(IPersistent entity)
             {
-                Entity e = (Entity)entity;
+                Publisher e = (Publisher)entity;
 
                 bool ok = false;
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -118,7 +118,7 @@ namespace Zhichkin.Integrator.Model
             }
             void IDataMapper.Update(IPersistent entity)
             {
-                Entity e = (Entity)entity;
+                Publisher e = (Publisher)entity;
 
                 bool ok = false; int rows_affected = 0;
 
@@ -176,7 +176,7 @@ namespace Zhichkin.Integrator.Model
             }
             void IDataMapper.Delete(IPersistent entity)
             {
-                Entity e = (Entity)entity;
+                Publisher e = (Publisher)entity;
 
                 bool ok = false;
 
@@ -205,21 +205,21 @@ namespace Zhichkin.Integrator.Model
                 if (!ok) throw new ApplicationException("Error executing delete command.");
             }
 
-            public static IList<Entity> Select()
+            public static IList<Publisher> Select()
             {
-                IList<Entity> list = new List<Entity>();
+                IList<Publisher> list = new List<Publisher>();
                 IPersistentContext context = IntegratorPersistentContext.Current;
                 using (SqlConnection connection = new SqlConnection(context.ConnectionString))
                 using (SqlCommand command = connection.CreateCommand())
                 {
                     connection.Open();
                     command.CommandType = CommandType.Text;
-                    command.CommandText = @"SELECT [key], [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[entities];";
+                    command.CommandText = @"SELECT [key], [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[publishers];";
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Entity entity = (Entity)context.Factory.New(typeof(Entity), reader.GetGuid(0));
+                            Publisher entity = (Publisher)context.Factory.New(typeof(Publisher), reader.GetGuid(0));
                             if (entity.State == PersistentState.New)
                             {
                                 entity.State = PersistentState.Loading;
@@ -235,9 +235,9 @@ namespace Zhichkin.Integrator.Model
                 }
                 return list;
             }
-            public static Entity Select(Guid identity)
+            public static Publisher Select(Guid identity)
             {
-                Entity entity = null;
+                Publisher entity = null;
                 IPersistentContext context = IntegratorPersistentContext.Current;
                 using (SqlConnection connection = new SqlConnection(context.ConnectionString))
                 using (SqlCommand command = connection.CreateCommand())
@@ -255,7 +255,7 @@ namespace Zhichkin.Integrator.Model
                     {
                         if (reader.Read())
                         {
-                            entity = (Entity)context.Factory.New(typeof(Entity), identity);
+                            entity = (Publisher)context.Factory.New(typeof(Publisher), identity);
                             if (entity.State == PersistentState.New)
                             {
                                 entity.State = PersistentState.Loading;

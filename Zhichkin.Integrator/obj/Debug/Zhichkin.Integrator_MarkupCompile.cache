@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-3-1003498650
+3-2067706646
 
-10-709612865
+10204329035
 76-86562417
-Views\EntityView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;
+Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;
 
 False
 

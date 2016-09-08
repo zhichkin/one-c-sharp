@@ -3,9 +3,9 @@ using Zhichkin.Integrator.ViewModels;
 
 namespace Zhichkin.Integrator.Views
 {
-    public partial class EntityView : UserControl
+    public partial class PublisherView : UserControl
     {
-        public EntityView(EntityViewModel viewModel)
+        public PublisherView(PublisherViewModel viewModel)
         {
             InitializeComponent();
             this.DataContext = viewModel;
