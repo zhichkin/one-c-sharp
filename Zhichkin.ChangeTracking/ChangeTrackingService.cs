@@ -520,8 +520,7 @@ namespace Zhichkin.ChangeTracking
             string tableName = GetFullTableName(table);
             string keys = GetPrimaryKeysJoinScript(table, command);
             string fields = GetSelectFieldsScript(table);
-            string.Format(sql, tableName, keys, fields);
-            return sql;
+            return string.Format(sql, tableName, keys, fields); ;
         }
         private string GetPrimaryKeysJoinScript(Table table, SqlCommand command)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Zhichkin.ORM;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Integrator.Model;
+using Zhichkin.Metadata.Model;
 using System.Messaging;
 using NetSerializer;
 using System.Transactions;
@@ -16,26 +17,35 @@ namespace Zhichkin.Integrator.Services
     {
         public string ConnectionString { get; private set; }
         public IReferenceObjectFactory Factory { get; private set; }
-        private readonly ChangeTrackingService ChangeTracking;
         public IntegratorService()
         {
             Factory = IntegratorPersistentContext.Current.Factory;
             ConnectionString = IntegratorPersistentContext.Current.ConnectionString;
-            ChangeTracking = new ChangeTrackingService(ConnectionString);
         }
-
+        private string GetConnectionString(Publisher publisher)
+        {
+            InfoBase infoBase = publisher.Owner.Namespace.InfoBase;
+            SqlConnectionStringBuilder helper = new SqlConnectionStringBuilder()
+            {
+                DataSource = infoBase.Server,
+                InitialCatalog = infoBase.Database,
+                IntegratedSecurity = true
+            };
+            return helper.ToString();
+        }
         public IList<Publisher> GetPublishers()
         {
             return Publisher.Select();
         }
 
-        public void PublishChanges(Publisher publisher)
+        public int PublishChanges(Publisher publisher)
         {
             if (publisher == null) throw new ArgumentNullException("publisher");
-            
+
+            int messagesSent = 0;
             List<ChangeTrackingRecord> changes = new List<ChangeTrackingRecord>();
             long current_sync_version = GetChangesToPublish(publisher, ref changes);
-            if (current_sync_version == 0) return; // there is no new changes available
+            if (current_sync_version == 0) return 0; // there is no new changes available
 
             TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
@@ -45,19 +55,23 @@ namespace Zhichkin.Integrator.Services
                 publisher.Save();
 
                 // send changes to the target queue
-                SendChanges(publisher, changes);
+                messagesSent = SendChanges(publisher, changes);
 
                 scope.Complete();
             }
+            return messagesSent;
         }
         private long GetChangesToPublish(Publisher publisher, ref List<ChangeTrackingRecord> changes)
         {
+            string connectionString = GetConnectionString(publisher);
+            ChangeTrackingService service = new ChangeTrackingService(connectionString);
+
             long current_sync_version = 0;
 
             //TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.Snapshot };
             TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -66,7 +80,7 @@ namespace Zhichkin.Integrator.Services
 
                 if (current_sync_version != 0)
                 {
-                    changes = ChangeTracking.SelectChanges(publisher.Owner.MainTable, publisher.LastSyncVersion, command);
+                    changes = service.SelectChanges(publisher.Owner.MainTable, publisher.LastSyncVersion, command);
                 }
 
                 scope.Complete();
@@ -75,8 +89,10 @@ namespace Zhichkin.Integrator.Services
         }
         private long ValidateLastSyncVersion(Publisher publisher, SqlCommand command)
         {
-            long min_valid_version = ChangeTracking.GetMinValidSyncVersion(publisher.Owner.MainTable, command);
-            long current_sync_version = ChangeTracking.GetCurrentSyncVersion(command);
+            ChangeTrackingService service = new ChangeTrackingService(GetConnectionString(publisher));
+
+            long min_valid_version = service.GetMinValidSyncVersion(publisher.Owner.MainTable, command);
+            long current_sync_version = service.GetCurrentSyncVersion(command);
 
             // this is the first synchronization time 
             if (publisher.LastSyncVersion == 0) return current_sync_version;
@@ -126,10 +142,17 @@ namespace Zhichkin.Integrator.Services
         }
         private MessageQueue GetPublisherQueue(Publisher publisher)
         {
-            return new MessageQueue(GetQueuePath(publisher));
+            if (string.IsNullOrWhiteSpace(publisher.MSMQTargetQueue))
+            {
+                publisher.MSMQTargetQueue = GetQueuePath(publisher);
+                publisher.Save();
+                CreateQueue(publisher);
+            }
+            return new MessageQueue(publisher.MSMQTargetQueue);
         }
-        private void SendChanges(Publisher publisher, List<ChangeTrackingRecord> changes)
+        private int SendChanges(Publisher publisher, List<ChangeTrackingRecord> changes)
         {
+            int messagesSent = 0;
             var serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingRecord) });
             MessageQueue queue = GetPublisherQueue(publisher);
             foreach (ChangeTrackingRecord item in changes)
@@ -138,13 +161,16 @@ namespace Zhichkin.Integrator.Services
                 serializer.Serialize(message.BodyStream, item);
                 message.Formatter = new BinaryMessageFormatter();
                 queue.Send(message, MessageQueueTransactionType.Automatic);
+                messagesSent++;
             }
             queue.Close();
+            return messagesSent;
         }
         #endregion
 
-        public void ProcessMessages(Publisher publisher) // operate by Subscription - process messages
+        public int ProcessMessages(Publisher publisher) // operate by Subscription - process messages
         {
+            int messagesProcessed = 0;
             MessageQueue queue = GetPublisherQueue(publisher);
             queue.Formatter = new BinaryMessageFormatter();
             var serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingRecord) });
@@ -157,6 +183,7 @@ namespace Zhichkin.Integrator.Services
                     Message message = queue.Peek(new TimeSpan(0, 0, 0));
                     ChangeTrackingRecord change = (ChangeTrackingRecord)serializer.Deserialize(message.BodyStream);
                     queue.Receive();
+                    messagesProcessed++;
                 }
                 catch (MessageQueueException msx)
                 {
@@ -164,6 +191,7 @@ namespace Zhichkin.Integrator.Services
                     queue_is_empty = true;
                 }
             }
+            return messagesProcessed;
         }
         //private void WriteChange(MessageTranslator translator, ChangeTrackingRecord record, SqlCommand command)
         //{
