@@ -12,6 +12,7 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
+using Zhichkin.Integrator.Services;
 
 namespace Zhichkin.Integrator.ViewModels
 {
@@ -177,7 +178,7 @@ namespace Zhichkin.Integrator.ViewModels
         private void OnPublishChanges()
         {
             if (publisher == null) return;
-            Integrator.Services.IntegratorService service = new Integrator.Services.IntegratorService();
+            IntegratorService service = new IntegratorService();
             int messagesSent = service.PublishChanges(publisher);
             this.NotificationRequest.Raise(new Notification
             {
@@ -189,13 +190,16 @@ namespace Zhichkin.Integrator.ViewModels
         private void OnProcessMessages()
         {
             if (publisher == null) return;
-            Integrator.Services.IntegratorService service = new Integrator.Services.IntegratorService();
-            int messagesProcessed = service.ProcessMessages(publisher);
-            this.NotificationRequest.Raise(new Notification
+            IntegratorService service = new IntegratorService();
+            foreach (Subscription subscription in service.GetSubscriptions())
             {
-                Content = string.Format("Чтение выполнено успешно.\nПрочитано {0} сообщений.", messagesProcessed),
-                Title = "Z-Integrator © 2016"
-            });
+                int messagesProcessed = service.ProcessMessages(subscription);
+                this.NotificationRequest.Raise(new Notification
+                {
+                    Content = string.Format("Чтение выполнено успешно.\nПрочитано {0} сообщений.", messagesProcessed),
+                    Title = "Z-Integrator © 2016"
+                });
+            }
         }
     }
 }

@@ -57,3 +57,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Model.
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\NetSerializer.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\PublisherView.g.cs
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\PublisherView.baml
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Services.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Services.pdb

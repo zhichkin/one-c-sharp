@@ -13,11 +13,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata.Model", "Metadata.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComConnector", "ComConnector\ComConnector.csproj", "{8D3DFA86-C8A2-430E-875D-93BDD72EFCBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Integrator", "Zhichkin.Integrator\Zhichkin.Integrator.csproj", "{F8247D7D-2AD4-4962-8F27-70AA328ADB16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Integrator.Module", "Zhichkin.Integrator\Zhichkin.Integrator.Module.csproj", "{F8247D7D-2AD4-4962-8F27-70AA328ADB16}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.ChangeTracking", "Zhichkin.ChangeTracking\Zhichkin.ChangeTracking.csproj", "{A7E8BC5D-8C1D-4DB8-9DEE-9668EF714257}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Integrator.Model", "Zhichkin.Integrator.Model\Zhichkin.Integrator.Model.csproj", "{1241C202-F360-466C-A953-18F84BE5C3E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Translator", "Zhichkin.Translator\Zhichkin.Translator.csproj", "{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Integrator.Services", "Zhichkin.Integrator.Services\Zhichkin.Integrator.Services.csproj", "{E7FED28C-D9A2-4044-A147-BA305FB235EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,14 @@ Global
 		{1241C202-F360-466C-A953-18F84BE5C3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1241C202-F360-466C-A953-18F84BE5C3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1241C202-F360-466C-A953-18F84BE5C3E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7FED28C-D9A2-4044-A147-BA305FB235EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7FED28C-D9A2-4044-A147-BA305FB235EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7FED28C-D9A2-4044-A147-BA305FB235EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7FED28C-D9A2-4044-A147-BA305FB235EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

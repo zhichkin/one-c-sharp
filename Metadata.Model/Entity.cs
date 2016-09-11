@@ -44,6 +44,13 @@ namespace Zhichkin.Metadata.Model
                 return null;
             }
         }
+        public InfoBase InfoBase
+        {
+            get
+            {
+                return this.Namespace.InfoBase;
+            }
+        }
 
         private List<Property> properties = new List<Property>();
         private List<Entity> nestedEntities = new List<Entity>();

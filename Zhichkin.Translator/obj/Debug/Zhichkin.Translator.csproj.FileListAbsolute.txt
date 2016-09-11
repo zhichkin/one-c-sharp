@@ -1,0 +1,14 @@
+C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Translator.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.Translator.dll
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.Translator.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.ChangeTracking.dll
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.Integrator.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.ORM.dll
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Microsoft.Practices.Prism.PubSubEvents.dll
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.Metadata.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.ORM.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.ChangeTracking.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.Integrator.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Translator.dll
+C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Translator.pdb

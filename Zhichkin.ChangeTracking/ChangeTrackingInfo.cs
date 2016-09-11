@@ -64,18 +64,4 @@ namespace Zhichkin.ChangeTracking
         public string NAME;
         public bool IS_NULLABLE;
     }
-
-    [Serializable]
-    public sealed class ChangeTrackingRecord
-    {
-        public string SYS_CHANGE_OPERATION = string.Empty;
-        public ChangeTrackingField[] Fields = null;
-    }
-    [Serializable]
-    public sealed class ChangeTrackingField
-    {
-        public bool IsKey = false;
-        public string Name = string.Empty;
-        public object Value = null;
-    }
 }

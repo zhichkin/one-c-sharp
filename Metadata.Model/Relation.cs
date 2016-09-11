@@ -1,11 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Data;
-using System.Data.SqlClient;
-using System.Collections.Generic;
-
-using Zhichkin.ORM;
+﻿using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {

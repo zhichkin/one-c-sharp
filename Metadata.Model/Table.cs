@@ -22,7 +22,6 @@ namespace Zhichkin.Metadata.Model
         public string Schema { set { Set<string>(value, ref schema); } get { return Get<string>(ref schema); } }
         public Entity Entity { set { Set<Entity>(value, ref entity); } get { return Get<Entity>(ref entity); } }
         public TablePurpose Purpose { set { Set<TablePurpose>(value, ref purpose); } get { return Get<TablePurpose>(ref purpose); } }
-
         private List<Field> fields = new List<Field>();
         public IList<Field> Fields
         {
@@ -31,6 +30,22 @@ namespace Zhichkin.Metadata.Model
                 if (this.state == PersistentState.New) return fields;
                 if (fields.Count > 0) return fields;
                 return service.GetChildren<Table, Field>(this, "table");
+            }
+        }
+        public string FullName
+        {
+            get
+            {
+                string tableName = string.Empty;
+                if (string.IsNullOrWhiteSpace(this.Schema))
+                {
+                    tableName = string.Format("[{0}]", this.Name);
+                }
+                else
+                {
+                    tableName = string.Format("[{0}].[{1}]", this.Schema, this.Name);
+                }
+                return tableName;
             }
         }
     }

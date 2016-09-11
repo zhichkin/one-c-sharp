@@ -17,19 +17,6 @@ namespace Zhichkin.ChangeTracking
             this.connectionString = connectionString;
         }
 
-        private string GetFullTableName(Table table)
-        {
-            string tableName = string.Empty;
-            if (string.IsNullOrWhiteSpace(table.Schema))
-            {
-                tableName = string.Format("[{0}]", table.Name);
-            }
-            else
-            {
-                tableName = string.Format("[{0}].[{1}]", table.Schema, table.Name);
-            }
-            return tableName;
-        }
         private string ClusteredIndexInfoScript
         {
             get
@@ -62,7 +49,7 @@ namespace Zhichkin.ChangeTracking
             {
                 connection.Open();
 
-                command.Parameters.AddWithValue("table", GetFullTableName(table));
+                command.Parameters.AddWithValue("table", table.FullName);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.Read())
@@ -99,7 +86,7 @@ namespace Zhichkin.ChangeTracking
             command.CommandType = CommandType.Text;
             command.CommandText = ClusteredIndexInfoScript;
             command.Parameters.Clear();
-            command.Parameters.AddWithValue("table", GetFullTableName(table));
+            command.Parameters.AddWithValue("table", table.FullName);
             using (SqlDataReader reader = command.ExecuteReader())
             {
                 if (reader.Read())
@@ -264,7 +251,7 @@ namespace Zhichkin.ChangeTracking
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue("table", GetFullTableName(table));
+                command.Parameters.AddWithValue("table", table.FullName);
 
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -428,7 +415,7 @@ namespace Zhichkin.ChangeTracking
         private void EnableTableChangeTracking(Table table)
         {
             string sql = EnableTableChangeTrackingTemplate;
-            sql = string.Format(sql, GetFullTableName(table));
+            sql = string.Format(sql, table.FullName);
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
@@ -444,7 +431,7 @@ namespace Zhichkin.ChangeTracking
             {
                 columns += (columns == string.Empty ? string.Empty : ", ") + string.Format("[{0}]", column.NAME);
             }
-            sql = string.Format(sql, GetFullTableName(table), info.NAME, columns);
+            sql = string.Format(sql, table.FullName, info.NAME, columns);
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
@@ -455,7 +442,7 @@ namespace Zhichkin.ChangeTracking
         private void DisableTableChangeTracking(Table table)
         {
             string sql = DisableTableChangeTrackingTemplate;
-            sql = string.Format(sql, GetFullTableName(table));
+            sql = string.Format(sql, table.FullName);
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(sql, connection))
@@ -468,7 +455,7 @@ namespace Zhichkin.ChangeTracking
         public void SwitchTableColumnsTracking(Table table, bool on)
         {
             string sql = SwitchTableColumnsTrackingScript;
-            sql = string.Format(sql, GetFullTableName(table), on ? "ON" : "OFF");
+            sql = string.Format(sql,table.FullName, on ? "ON" : "OFF");
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
@@ -517,7 +504,7 @@ namespace Zhichkin.ChangeTracking
         private string GetSelectChangesScript(Table table, SqlCommand command)
         {
             string sql = SelectChangesTemplate;
-            string tableName = GetFullTableName(table);
+            string tableName = table.FullName;
             string keys = GetPrimaryKeysJoinScript(table, command);
             string fields = GetSelectFieldsScript(table);
             return string.Format(sql, tableName, keys, fields); ;
@@ -554,7 +541,7 @@ namespace Zhichkin.ChangeTracking
             command.CommandType = CommandType.Text;
             command.CommandText = GetMinValidSyncVersionScript;
             command.Parameters.Clear();
-            command.Parameters.AddWithValue("table", GetFullTableName(table));
+            command.Parameters.AddWithValue("table", table.FullName);
             object result = command.ExecuteScalar();
             if (result == DBNull.Value) return 0;
             return (long)result;

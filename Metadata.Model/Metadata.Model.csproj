@@ -65,6 +65,7 @@
     <Compile Include="Field.DataMapper.cs" />
     <Compile Include="Table.DataMapper.cs" />
     <Compile Include="TablePurpose.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\orm\ORM.csproj">

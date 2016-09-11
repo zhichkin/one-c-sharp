@@ -164,6 +164,10 @@
       <Project>{1241c202-f360-466c-a953-18f84be5c3e7}</Project>
       <Name>Zhichkin.Integrator.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Zhichkin.Integrator.Services\Zhichkin.Integrator.Services.csproj">
+      <Project>{e7fed28c-d9a2-4044-a147-ba305fb235eb}</Project>
+      <Name>Zhichkin.Integrator.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

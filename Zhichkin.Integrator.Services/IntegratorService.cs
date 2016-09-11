@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Zhichkin.ORM;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Integrator.Model;
-using Zhichkin.Metadata.Model;
+using Zhichkin.Translator;
 using System.Messaging;
 using NetSerializer;
 using System.Transactions;
@@ -22,22 +22,10 @@ namespace Zhichkin.Integrator.Services
             Factory = IntegratorPersistentContext.Current.Factory;
             ConnectionString = IntegratorPersistentContext.Current.ConnectionString;
         }
-        private string GetConnectionString(Publisher publisher)
-        {
-            InfoBase infoBase = publisher.Owner.Namespace.InfoBase;
-            SqlConnectionStringBuilder helper = new SqlConnectionStringBuilder()
-            {
-                DataSource = infoBase.Server,
-                InitialCatalog = infoBase.Database,
-                IntegratedSecurity = true
-            };
-            return helper.ToString();
-        }
         public IList<Publisher> GetPublishers()
         {
             return Publisher.Select();
         }
-
         public int PublishChanges(Publisher publisher)
         {
             if (publisher == null) throw new ArgumentNullException("publisher");
@@ -63,7 +51,7 @@ namespace Zhichkin.Integrator.Services
         }
         private long GetChangesToPublish(Publisher publisher, ref List<ChangeTrackingRecord> changes)
         {
-            string connectionString = GetConnectionString(publisher);
+            string connectionString = publisher.Entity.InfoBase.ConnectionString;
             ChangeTrackingService service = new ChangeTrackingService(connectionString);
 
             long current_sync_version = 0;
@@ -80,7 +68,7 @@ namespace Zhichkin.Integrator.Services
 
                 if (current_sync_version != 0)
                 {
-                    changes = service.SelectChanges(publisher.Owner.MainTable, publisher.LastSyncVersion, command);
+                    changes = service.SelectChanges(publisher.Entity.MainTable, publisher.LastSyncVersion, command);
                 }
 
                 scope.Complete();
@@ -89,9 +77,9 @@ namespace Zhichkin.Integrator.Services
         }
         private long ValidateLastSyncVersion(Publisher publisher, SqlCommand command)
         {
-            ChangeTrackingService service = new ChangeTrackingService(GetConnectionString(publisher));
+            ChangeTrackingService service = new ChangeTrackingService(publisher.Entity.InfoBase.ConnectionString);
 
-            long min_valid_version = service.GetMinValidSyncVersion(publisher.Owner.MainTable, command);
+            long min_valid_version = service.GetMinValidSyncVersion(publisher.Entity.MainTable, command);
             long current_sync_version = service.GetCurrentSyncVersion(command);
 
             // this is the first synchronization time 
@@ -168,36 +156,47 @@ namespace Zhichkin.Integrator.Services
         }
         #endregion
 
-        public int ProcessMessages(Publisher publisher) // operate by Subscription - process messages
+        public IList<Subscription> GetSubscriptions()
         {
-            int messagesProcessed = 0;
-            MessageQueue queue = GetPublisherQueue(publisher);
-            queue.Formatter = new BinaryMessageFormatter();
+            return Subscription.Select();
+        }
+        public int ProcessMessages(Subscription subscription)
+        {
+            string connectionString = subscription.Subscriber.InfoBase.ConnectionString;
+            IMessageTranslator<ChangeTrackingRecord> translator = new MessageTranslator(subscription);
+            ChangeTrackingRecordToSqlCommandAdapter adapter = new ChangeTrackingRecordToSqlCommandAdapter();
+
+            MessageQueue source = GetPublisherQueue(subscription.Publisher);
+            source.Formatter = new BinaryMessageFormatter();
             var serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingRecord) });
-            
-            bool queue_is_empty = false;
-            while (!queue_is_empty)
+
+            int messagesProcessed = 0;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = connection.CreateCommand())
             {
-                try
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                bool queue_is_empty = false;
+                while (!queue_is_empty)
                 {
-                    Message message = queue.Peek(new TimeSpan(0, 0, 0));
-                    ChangeTrackingRecord change = (ChangeTrackingRecord)serializer.Deserialize(message.BodyStream);
-                    queue.Receive();
-                    messagesProcessed++;
-                }
-                catch (MessageQueueException msx)
-                {
-                    if (msx.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout) throw msx;
-                    queue_is_empty = true;
+                    try
+                    {
+                        Message message = source.Peek(new TimeSpan(0, 0, 0));
+                        ChangeTrackingRecord change = (ChangeTrackingRecord)serializer.Deserialize(message.BodyStream);
+                        ChangeTrackingRecord target = translator.Translate(change);
+                        adapter.Use(subscription).Input(target).Output(command);
+                        command.ExecuteNonQuery();
+                        source.Receive();
+                        messagesProcessed++;
+                    }
+                    catch (MessageQueueException msx)
+                    {
+                        if (msx.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout) throw msx;
+                        queue_is_empty = true;
+                    }
                 }
             }
             return messagesProcessed;
         }
-        //private void WriteChange(MessageTranslator translator, ChangeTrackingRecord record, SqlCommand command)
-        //{
-        //    command.Parameters.Clear();
-        //    translator.Translate(record, command);
-        //    command.ExecuteNonQuery();
-        //}
     }
 }

@@ -15,11 +15,11 @@ namespace Zhichkin.Integrator.Model
         public Publisher(Guid identity) : this(identity, PersistentState.New) { }
         public Publisher(Guid identity, PersistentState state) : base(_mapper, identity, state)
         {
-            owner = MetadataPersistentContext.Current.Factory.New<Entity>(identity);
+            entity = MetadataPersistentContext.Current.Factory.New<Entity>(identity);
         }
-        private readonly Entity owner;
+        private readonly Entity entity;
         ///<summary>Inheritance: one-to-one entity reference</summary>
-        public Entity Owner { get { return owner; } }
+        public Entity Entity { get { return entity; } }
 
         private long last_sync_version = 0;
         ///<summary>The last version number that was used to synchronize data</summary>
