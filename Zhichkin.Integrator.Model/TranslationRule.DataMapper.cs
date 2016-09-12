@@ -11,14 +11,14 @@ namespace Zhichkin.Integrator.Model
         {
             //private const string SelectCommandText = string.Empty;
             private const string InsertCommandText =
-                @"INSERT [relations] ([property], [entity]) VALUES (@property, @entity); SELECT @@ROWCOUNT;";
+                @"INSERT [integrator].[translation_rules] ([source], [target], [source_property], [target_property], [is_sync_key]) VALUES (@source, @target, @source_property, @target_property, @is_sync_key); SELECT @@ROWCOUNT;";
             private const string UpdateCommandText =
-                @"UPDATE [relations]" +
-                @" SET [property] = @new_property, [entity] = @new_entity" +
-                @" WHERE [property] = @old_property AND [entity] = @old_entity; " +
+                @"UPDATE [integrator].[translation_rules]" +
+                @" SET [source] = @new_source, [target] = @new_target, [source_property] = @new_source_property, [target_property] = @target_property, [is_sync_key] = @is_sync_key " +
+                @" WHERE [source] = @old_source AND [target] = @old_target AND [source_property] = @old_source_property; " +
                 @"SELECT @@ROWCOUNT;";
             private const string DeleteCommandText =
-                @"DELETE [relations] WHERE [property] = @old_property AND [entity] = @old_entity; SELECT @@ROWCOUNT;";
+                @"DELETE [integrator].[translation_rules] WHERE [source] = @old_source AND [target] = @old_target AND [source_property] = @old_source_property; SELECT @@ROWCOUNT;";
 
             private readonly string ConnectionString;
             private readonly IReferenceObjectFactory Factory;
@@ -55,10 +55,21 @@ namespace Zhichkin.Integrator.Model
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.source.Identity;
                     command.Parameters.Add(parameter);
-
                     parameter = new SqlParameter("target", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.target.Identity;
+                    command.Parameters.Add(parameter);
+                    parameter = new SqlParameter("source_property", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.source_property.Identity;
+                    command.Parameters.Add(parameter);
+                    parameter = new SqlParameter("target_property", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.target_property.Identity;
+                    command.Parameters.Add(parameter);
+                    parameter = new SqlParameter("is_sync_key", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.is_sync_key;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -107,6 +118,26 @@ namespace Zhichkin.Integrator.Model
                     parameter.Value = e.target_old.Identity;
                     command.Parameters.Add(parameter);
 
+                    parameter = new SqlParameter("new_source_property", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.source_property.Identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("old_source_property", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.source_property_old.Identity;
+                    command.Parameters.Add(parameter);
+                    
+                    parameter = new SqlParameter("target_property", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.target_property.Identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_sync_key", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.is_sync_key;
+                    command.Parameters.Add(parameter);
+
                     SqlDataReader reader = command.ExecuteReader();
 
                     if (reader.Read()) { ok = (int)reader[0] > 0; }
@@ -141,6 +172,11 @@ namespace Zhichkin.Integrator.Model
                     parameter = new SqlParameter("old_target", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.target_old.Identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("old_source_property", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.source_property_old.Identity;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();

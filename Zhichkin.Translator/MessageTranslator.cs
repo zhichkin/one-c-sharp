@@ -60,7 +60,7 @@ namespace Zhichkin.Translator
                 }
             }
         }
-        private Entity GetCorrespondingTargetClass(InfoBase source, InfoBase target, int typeCode)
+        private Entity GetCorrespondingTargetEntity(InfoBase source, InfoBase target, int typeCode)
         {
             Entity result = null;
             using (SqlConnection connection = new SqlConnection(IntegratorPersistentContext.Current.ConnectionString))
@@ -84,7 +84,7 @@ namespace Zhichkin.Translator
             }
             return result;
         }
-        private Entity GetCorrespondingSourceClass(InfoBase source, InfoBase target, int typeCode)
+        private Entity GetCorrespondingSourceEntity(InfoBase source, InfoBase target, int typeCode)
         {
             Entity result = null;
             using (SqlConnection connection = new SqlConnection(IntegratorPersistentContext.Current.ConnectionString))
@@ -93,8 +93,8 @@ namespace Zhichkin.Translator
                 {
                     command.CommandText = "[integrator].[get_corresponding_source_entity]";
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("source_domain", source.Identity);
-                    command.Parameters.AddWithValue("target_domain", target.Identity);
+                    command.Parameters.AddWithValue("source_infobase", source.Identity);
+                    command.Parameters.AddWithValue("target_infobase", target.Identity);
                     command.Parameters.AddWithValue("type_code",     typeCode);
                     connection.Open();
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -155,7 +155,7 @@ namespace Zhichkin.Translator
                 else if (field.Purpose == FieldPurpose.TypeCode)
                 {
                     new_rule.TypeCodeField = field.Name;
-                    Entity corresponding_type = GetCorrespondingTargetClass(
+                    Entity corresponding_type = GetCorrespondingTargetEntity(
                         rule.Source.Namespace.InfoBase,
                         rule.Target.Namespace.InfoBase,
                         rule.SourceProperty.Relations[0].Entity.Code);
@@ -191,7 +191,7 @@ namespace Zhichkin.Translator
                     new_rule.ObjectField = field.Name;
                 }
             }
-            Entity corresponding_type = GetCorrespondingSourceClass(
+            Entity corresponding_type = GetCorrespondingSourceEntity(
                 rule.Source.Namespace.InfoBase,
                 rule.Target.Namespace.InfoBase,
                 rule.TargetProperty.Relations[0].Entity.Code);

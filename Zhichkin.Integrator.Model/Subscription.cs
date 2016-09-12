@@ -32,5 +32,11 @@ namespace Zhichkin.Integrator.Model
                 return DataMapper.GetTranslationRules(this);
             }
         }
+        public override string ToString()
+        {
+            return string.Format("{0} -> {1}",
+                this.Publisher == null ? string.Empty : this.Publisher.Name,
+                this.Subscriber == null ? string.Empty : this.Subscriber.Name);
+        }
     }
 }

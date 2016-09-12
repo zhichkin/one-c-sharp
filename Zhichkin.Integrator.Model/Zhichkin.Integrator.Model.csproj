@@ -58,6 +58,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SQL\TranslationRule.sql" />
+    <Content Include="SQL\Subscription.sql" />
     <Content Include="SQL\Publisher.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
