@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Zhichkin.Integrator.Views"
+             xmlns:p="http://www.codeplex.com/CompositeWPF"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
              xmlns:interactivity="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
@@ -26,6 +27,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -65,9 +67,12 @@
             </TextBox.InputBindings>
         </TextBox>
 
-        <Button Grid.Row="6" Grid.Column="0" Content="Сформировать сообщения" Margin="10" Command="{Binding PublishChangesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <ContentControl Grid.Row="6" Grid.ColumnSpan="2" Content="{Binding Path=SubscriptionsListView}" Margin="10"
+                        Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <Button Grid.Row="7" Grid.Column="0" Content="Сформировать сообщения" Margin="10" Command="{Binding PublishChangesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left"
                 Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <Button Grid.Row="6" Grid.Column="1" Content="Обработать сообщения" Margin="10" Command="{Binding ProcessMessagesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <Button Grid.Row="7" Grid.Column="1" Content="Обработать сообщения" Margin="10" Command="{Binding ProcessMessagesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left"
                 Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
 </UserControl>

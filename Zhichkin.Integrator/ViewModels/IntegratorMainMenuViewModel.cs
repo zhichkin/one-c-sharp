@@ -36,9 +36,11 @@ namespace Zhichkin.Integrator.ViewModels
             SetupViewsLookup();
             SetupModelsLookup();
 
+            this.AddSubscriptionCommand = new DelegateCommand(this.OnAddSubscription);
             this.ActivateIntegratorContextCommand = new DelegateCommand(this.OnActivateIntegratorContext);
             this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(this.OnMetadataTreeViewItemSelected, true);
         }
+        public ICommand AddSubscriptionCommand { get; private set; }
         private void SetupViewsLookup()
         {
             viewsLookup.Add(typeof(InfoBase), typeof(InfoBaseView));
@@ -85,6 +87,10 @@ namespace Zhichkin.Integrator.ViewModels
             object view = GetView(item);
             if (view == null) return;
             rightRegion.Add(view, CONST_ItemView);
+        }
+        private void OnAddSubscription()
+        {
+
         }
     }
 }

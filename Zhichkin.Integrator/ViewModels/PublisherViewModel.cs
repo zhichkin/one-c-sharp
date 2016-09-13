@@ -12,7 +12,10 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
+using Zhichkin.Integrator.Views;
 using Zhichkin.Integrator.Services;
+using Zhichkin.Shell;
+using Microsoft.Practices.Unity;
 
 namespace Zhichkin.Integrator.ViewModels
 {
@@ -21,19 +24,22 @@ namespace Zhichkin.Integrator.ViewModels
         private Publisher publisher = null;
         private readonly Entity entity;
         private readonly InfoBase infoBase;
+        private readonly IUnityContainer container;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
 
         private ChangeTrackingDatabaseInfo _ChangeTrackingDatabaseInfo = null;
         private ChangeTrackingTableInfo _ChangeTrackingTableInfo = null;
         
-        public PublisherViewModel(Entity data, IRegionManager regionManager, IEventAggregator eventAggregator)
+        public PublisherViewModel(Entity data, IUnityContainer container, IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             entity = data;
             infoBase = entity.Namespace.InfoBase;
             publisher = Publisher.Select(entity.Identity);
+            if (container == null) throw new ArgumentNullException("container");
             if (regionManager == null) throw new ArgumentNullException("regionManager");
             if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
+            this.container = container;
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
 
@@ -79,6 +85,14 @@ namespace Zhichkin.Integrator.ViewModels
             if (_ChangeTrackingDatabaseInfo == null) return;
 
             _ChangeTrackingTableInfo = services.GetChangeTrackingTableInfo(entity.MainTable);
+
+            if (publisher == null) return;
+            _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(typeof(SubscriptionsListView), new ParameterOverride("publisher", publisher).OnType(typeof(SubscriptionsListViewModel)));
+        }
+        private SubscriptionsListView _SubscriptionsListView;
+        public SubscriptionsListView SubscriptionsListView
+        {
+            get { return _SubscriptionsListView; }
         }
         public bool IsDatabaseChangeTrackingEnabled
         {

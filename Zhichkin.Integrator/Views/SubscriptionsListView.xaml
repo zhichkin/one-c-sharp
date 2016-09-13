@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="Zhichkin.Integrator.Views.SubscriptionsListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Zhichkin.Integrator.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             DragEnter="View_DragEnter" DragLeave="View_DragLeave" AllowDrop="True" Drop="View_Drop">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
+            <BitmapImage x:Key="Icon_Cancel" UriSource="..\Images\26 Cancel.png"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Список получателей данных" FontWeight="DemiBold" Margin="0,0,0,5"/>
+        
+        <DataGrid Grid.Row="1" Grid.Column="0" 
+                  ItemsSource="{Binding Subscriptions}" SelectedItem="{Binding CurrentItem}"
+                  AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Узел обмена" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Subscriber.InfoBase}" Margin="5" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Тип объекта" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Subscriber.Namespace}" Margin="5" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Имя объекта" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Subscriber}" Margin="5" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Command="{Binding OpenSubscriptionViewCommand}" ToolTip="Открыть правила трансляции">
+                                    <Image Source="{StaticResource Icon_Settings}" />
+                                </Button>
+                                <Button Command="{Binding DeleteSubscriptionCommand}" ToolTip="Удалить подписку на изменения">
+                                    <Image Source="{StaticResource Icon_Cancel}" />
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

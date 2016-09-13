@@ -9,6 +9,7 @@ namespace Zhichkin.Integrator.Model
     {
         private static readonly IDataMapper _mapper = IntegratorPersistentContext.Current.GetDataMapper(typeof(Subscription));
         public static IList<Subscription> Select() { return DataMapper.Select(); }
+        public static IList<Subscription> Select(Publisher publisher) { return DataMapper.Select(publisher); }
 
         public Subscription() : base(_mapper) { }
         public Subscription(Guid identity) : base(_mapper, identity) { }

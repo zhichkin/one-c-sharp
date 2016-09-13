@@ -61,3 +61,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Proper
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module.csproj.GenerateResource.Cache
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\SubscriptionsListView.g.cs
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\SubscriptionsListView.baml

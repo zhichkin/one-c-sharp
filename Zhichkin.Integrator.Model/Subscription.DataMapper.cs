@@ -278,6 +278,40 @@ namespace Zhichkin.Integrator.Model
                 }
                 return list;
             }
+            public static IList<Subscription> Select(Publisher publisher)
+            {
+                IList<Subscription> list = new List<Subscription>();
+                IPersistentContext context = IntegratorPersistentContext.Current;
+                using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = @"SELECT [key], [version], [name], [publisher], [subscriber] FROM [integrator].[subscriptions] WHERE [publisher] = @publisher;";
+                    SqlParameter parameter = new SqlParameter("publisher", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = publisher.Identity;
+                    command.Parameters.Add(parameter);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Subscription entity = (Subscription)context.Factory.New(typeof(Subscription), reader.GetGuid(0));
+                            if (entity.State == PersistentState.New)
+                            {
+                                entity.State = PersistentState.Loading;
+                                entity.version = (byte[])reader[1];
+                                entity.name = reader.GetString(2);
+                                entity.publisher = context.Factory.New<Publisher>(reader.GetGuid(3));
+                                entity.subscriber = MetadataPersistentContext.Current.Factory.New<Entity>(reader.GetGuid(4));
+                                entity.State = PersistentState.Original;
+                            }
+                            list.Add(entity);
+                        }
+                    }
+                }
+                return list;
+            }
         }
     }
 }

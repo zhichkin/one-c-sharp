@@ -37,10 +37,14 @@ namespace Zhichkin.Integrator.Model
         private static void InitializeTypeCodes()
         {
             typeCodes.Add(1, typeof(Publisher));
+            typeCodes.Add(2, typeof(Subscription));
+            typeCodes.Add(3, typeof(TranslationRule));
         }
         private static void InitializeDataMappers()
         {
             mappers.Add(typeof(Publisher), new Publisher.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Subscription), new Publisher.DataMapper(connectionString, factory));
+            mappers.Add(typeof(TranslationRule), new Publisher.DataMapper(connectionString, factory));
         }
     }
 }

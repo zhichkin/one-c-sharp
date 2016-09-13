@@ -28,5 +28,17 @@ namespace Zhichkin.Integrator.Model
         private string msmq_target_queue = string.Empty;
         ///<summary>The target MSMQ queue to send messages with data changes to</summary>
         public string MSMQTargetQueue { set { Set<string>(value, ref msmq_target_queue); } get { return Get<string>(ref msmq_target_queue); } }
+
+        private IList<Subscription> subscriptions = new List<Subscription>();
+        public IList<Subscription> Subscriptions
+        {
+            get
+            {
+                if (this.state == PersistentState.New) return subscriptions;
+                if (subscriptions.Count > 0) return subscriptions;
+                subscriptions = Subscription.Select(this);
+                return subscriptions;
+            }
+        }
     }
 }
