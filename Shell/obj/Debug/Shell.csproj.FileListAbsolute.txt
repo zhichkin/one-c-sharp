@@ -87,4 +87,3 @@ C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.Properties.Resources.reso
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Shell.csproj.GenerateResource.Cache
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.exe
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.pdb
-C:\Users\User\Desktop\Z\Shell\obj\Debug\Shell.csprojResolveAssemblyReference.cache

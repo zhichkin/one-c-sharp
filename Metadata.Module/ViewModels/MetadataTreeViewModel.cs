@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Zhichkin.Metadata.Controllers;
 using System.Collections.ObjectModel;
@@ -27,12 +28,15 @@ namespace Zhichkin.Metadata.ViewModels
         {
             if (dataService == null) throw new ArgumentNullException("dataService");
             if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
-
             this.dataService = dataService;
             this.eventAggregator = eventAggregator;
 
+            this.TreeViewDoubleClickCommand = new DelegateCommand<object>(this.OnTreeViewDoubleClick);
+
             RefreshInfoBases();
         }
+        public ICommand TreeViewDoubleClickCommand { get; private set; }
+        
         private void RefreshInfoBases()
         {
             this.infoBases.Clear();
@@ -48,7 +52,6 @@ namespace Zhichkin.Metadata.ViewModels
                 return infoBases;
             }
         }
-        public object SelectedItem { get; private set; }
         public InfoBase CurrentInfoBase { get; set; }
         private void SetCurrentInfoBase(object model)
         {
@@ -90,9 +93,8 @@ namespace Zhichkin.Metadata.ViewModels
             }
             return (InfoBase)currentNamespace.Owner;
         }
-        public void SelectedItemChanged(object item)
+        private void OnTreeViewDoubleClick(object item)
         {
-            SelectedItem = item;
             SetCurrentInfoBase(item);
             this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Publish(item);
         }

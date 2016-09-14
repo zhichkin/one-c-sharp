@@ -28,7 +28,7 @@
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Список получателей данных" FontWeight="DemiBold" Margin="0,0,0,5"/>
         
         <DataGrid Grid.Row="1" Grid.Column="0" 
-                  ItemsSource="{Binding Subscriptions}" SelectedItem="{Binding CurrentItem}"
+                  ItemsSource="{Binding Subscriptions}" SelectedItem="{Binding SelectedItem}"
                   AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn IsReadOnly="True">
@@ -71,10 +71,18 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Command="{Binding OpenSubscriptionViewCommand}" ToolTip="Открыть правила трансляции">
+                                <Button ToolTip="Открыть правила трансляции"
+                                        Command="{Binding DataContext.OpenSubscriptionViewCommand,
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                        CommandParameter="{Binding Path=SelectedItem,
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
                                     <Image Source="{StaticResource Icon_Settings}" />
                                 </Button>
-                                <Button Command="{Binding DeleteSubscriptionCommand}" ToolTip="Удалить подписку на изменения">
+                                <Button ToolTip="Удалить подписку на изменения"
+                                        Command="{Binding DataContext.DeleteSubscriptionCommand,
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                        CommandParameter="{Binding Path=SelectedItem,
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
                                     <Image Source="{StaticResource Icon_Cancel}" />
                                 </Button>
                             </StackPanel>

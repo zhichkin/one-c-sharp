@@ -149,7 +149,7 @@ namespace Zhichkin.Integrator.ViewModels
             if (publisher == null)
             {
                 publisher = (Publisher)IntegratorPersistentContext.Current.Factory.New(typeof(Publisher), entity.Identity);
-                publisher.Name = string.Format("{0} ({1})", entity.Name, entity.MainTable.Name);
+                publisher.Name = entity.Name;
                 publisher.LastSyncVersion = 0;
                 publisher.Save();
             }

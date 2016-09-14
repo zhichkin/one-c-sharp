@@ -1,7 +1,9 @@
 ﻿<UserControl x:Class="Zhichkin.Metadata.Views.MetadataTreeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:wi="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
              xmlns:ViewModel="clr-namespace:Zhichkin.Metadata.Views"
@@ -27,8 +29,17 @@
     </UserControl.Resources>
     
     <Grid>
-        <TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=InfoBases}" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                  SelectedItemChanged="TreeView_SelectedItemChanged">
+        <TreeView Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  ItemsSource="{Binding Path=InfoBases}"
+                  MouseMove="TreeView_MouseMove">
+            <wi:Interaction.Triggers>
+                <wi:EventTrigger EventName="MouseDoubleClick">
+                    <pi:InvokeCommandAction
+                        Command="{Binding TreeViewDoubleClickCommand}"
+                        CommandParameter="{Binding Path=SelectedItem,
+                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}" />
+                </wi:EventTrigger>
+            </wi:Interaction.Triggers>
             <TreeView.Resources>
                 <ViewModel:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">

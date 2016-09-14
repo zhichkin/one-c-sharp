@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Zhichkin.Integrator.ViewModels;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Integrator.Views
 {
@@ -48,13 +49,13 @@ namespace Zhichkin.Integrator.Views
         private void View_Drop(object sender, DragEventArgs e)
         {
             SetDefaultBackground(sender);
-
-            //Class target = e.Data.GetData(typeof(Class)) as Class;
-            //SubscriptionsViewModel viewModel = (SubscriptionsViewModel)DataContext;
-            //try
-            //{ viewModel.AddSubscription(target); }
-            //catch (Exception ex)
-            //{ MessageBox.Show(ex.Message, "Metaglot © by zhichkin"); }
+            object data = e.Data.GetData(typeof(Entity));
+            if (data == null) return;
+            Entity item = data as Entity;
+            if (item == null) return;
+            SubscriptionsListViewModel viewModel = this.DataContext as SubscriptionsListViewModel;
+            if (viewModel == null) return;
+            viewModel.OnDrop(item);
         }
     }
 }

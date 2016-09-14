@@ -24,12 +24,24 @@ namespace Zhichkin.Metadata.Views
             InitializeComponent();
             this.DataContext = viewModel;
         }
-
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void TreeView_MouseMove(object sender, MouseEventArgs e)
         {
-            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
-            if (viewModel == null) return;
-            viewModel.SelectedItemChanged(e.NewValue);
+            if (e.LeftButton != MouseButtonState.Pressed) return;
+            TreeView control = sender as TreeView;
+            if (control == null) return;
+
+            Point point = e.GetPosition(this);
+            HitTestResult result = VisualTreeHelper.HitTest(this, point);
+            DependencyObject obj = result.VisualHit;
+            while (VisualTreeHelper.GetParent(obj) != null && !(obj is TextBlock))
+            {
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+            TextBlock item = obj as TextBlock;
+            if (item == null) return;
+            if (item.DataContext == null) return;
+
+            DragDrop.DoDragDrop(control, item.DataContext, DragDropEffects.Copy);
         }
     }
 }

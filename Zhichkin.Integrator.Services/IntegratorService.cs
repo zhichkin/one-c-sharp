@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Zhichkin.ORM;
 using Zhichkin.ChangeTracking;
+using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Translator;
 using System.Messaging;
@@ -197,6 +198,25 @@ namespace Zhichkin.Integrator.Services
                 }
             }
             return messagesProcessed;
+        }
+
+        public Subscription CreateSubscription(Publisher publisher, Entity subscriber)
+        {
+            if (publisher == null) throw new ArgumentNullException("publisher");
+            if (subscriber == null) throw new ArgumentNullException("subscriber");
+            if (publisher == subscriber) throw new InvalidOperationException("Publisher and subscriber can not be the same!");
+
+            Subscription subscription = (Subscription)Factory.New(typeof(Subscription));
+            subscription.Publisher = publisher;
+            subscription.Subscriber = subscriber;
+            subscription.Name = subscription.ToString();
+            subscription.Save();
+            return subscription;
+        }
+        public void DeleteSubscription(Subscription subscription)
+        {
+            if (subscription == null) throw new ArgumentNullException("subscription");
+            subscription.Kill();
         }
     }
 }
