@@ -28,8 +28,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Форма подписки" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Форма подписки на данные" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
+        <Button Grid.Row="0" Grid.Column="2" Width="26" Height="26" VerticalAlignment="Center" HorizontalAlignment="Right"
+                ToolTip="Закрыть форму подписки"
+                Command="{Binding CloseSubscriptionViewCommand}">
+            <Image Source="{StaticResource Icon_Cancel}" />
+        </Button>
+        
         <TextBlock Grid.Row="1" Grid.Column="1" Text="Источник данных" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <TextBlock Grid.Row="1" Grid.Column="2" Text="Приёмник данных" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
@@ -45,8 +51,8 @@
         <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Publisher.Entity}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Subscriber}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
-        <Button Grid.Row="5" Grid.Column="0" ToolTip="Закрыть форму подписки" Command="{Binding CloseSubscriptionViewCommand}">
-            <Image Source="{StaticResource Icon_Cancel}" />
-        </Button>
+        <ContentControl Grid.Row="5" Grid.ColumnSpan="3" Margin="10"
+                        Content="{Binding Path=TranslationRulesListView}" />
+        
     </Grid>
 </UserControl>

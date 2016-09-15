@@ -37,7 +37,11 @@ namespace Zhichkin.Integrator.ViewModels
         }
         public void InitializeViewModel()
         {
-
+            if (subscription == null) return;
+            translationRulesListView = (TranslationRulesListView)this.container.Resolve(
+                typeof(TranslationRulesListView),
+                new ParameterOverride("model", subscription)
+                    .OnType(typeof(TranslationRulesListViewModel)));
         }
         public ICommand CloseSubscriptionViewCommand { get; private set; }
         private void ClearRightRegion()
@@ -57,6 +61,11 @@ namespace Zhichkin.Integrator.ViewModels
         public Entity Subscriber
         {
             get { return subscription.Subscriber; }
+        }
+        private TranslationRulesListView translationRulesListView;
+        public TranslationRulesListView TranslationRulesListView
+        {
+            get { return translationRulesListView; }
         }
         private void OnCloseSubscriptionView()
         {

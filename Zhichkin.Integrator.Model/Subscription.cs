@@ -33,6 +33,14 @@ namespace Zhichkin.Integrator.Model
                 return DataMapper.GetTranslationRules(this);
             }
         }
+        public TranslationRule CreateTranslationRule()
+        {
+            return new TranslationRule()
+            {
+                Source = publisher.Entity,
+                Target = subscriber
+            };
+        }
         public override string ToString()
         {
             return string.Format("{0} -> {1}",

@@ -106,11 +106,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\TranslationRulesListViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionsListViewModel.cs" />
     <Compile Include="ViewModels\PublisherViewModel.cs" />
     <Compile Include="ViewModels\InfoBaseViewModel.cs" />
     <Compile Include="ViewModels\IntegratorMainMenuViewModel.cs" />
+    <Compile Include="Views\TranslationRulesListView.xaml.cs">
+      <DependentUpon>TranslationRulesListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SubscriptionView.xaml.cs">
       <DependentUpon>SubscriptionView.xaml</DependentUpon>
     </Compile>
@@ -138,6 +142,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\TranslationRulesListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\SubscriptionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -193,6 +201,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\26 Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

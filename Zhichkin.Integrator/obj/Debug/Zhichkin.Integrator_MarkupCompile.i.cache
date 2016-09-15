@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-5-1483483375
+61755863171
 
-181757512857
+20-763559498
 78-729983550
-Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
+Views\TranslationRulesListView.xaml;Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
 
 True
 

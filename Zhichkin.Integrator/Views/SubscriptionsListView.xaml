@@ -10,7 +10,7 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
+            <BitmapImage x:Key="Icon_Edit" UriSource="..\Images\26 Edit.png"/>
             <BitmapImage x:Key="Icon_Cancel" UriSource="..\Images\26 Cancel.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -76,7 +76,7 @@
                                         RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                         CommandParameter="{Binding Path=SelectedItem,
                                         RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
-                                    <Image Source="{StaticResource Icon_Settings}" />
+                                    <Image Source="{StaticResource Icon_Edit}" />
                                 </Button>
                                 <Button ToolTip="Удалить подписку на изменения"
                                         Command="{Binding DataContext.DeleteSubscriptionCommand,
