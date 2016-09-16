@@ -216,7 +216,16 @@ namespace Zhichkin.Integrator.Services
         public void DeleteSubscription(Subscription subscription)
         {
             if (subscription == null) throw new ArgumentNullException("subscription");
-            subscription.Kill();
+            TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+            {
+                foreach (TranslationRule rule in subscription.TranslationRules)
+                {
+                    rule.Kill();
+                }
+                subscription.Kill();
+                scope.Complete();
+            }
         }
     }
 }

@@ -19,7 +19,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -27,7 +27,7 @@
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Правила трансляции свойств объектов" FontWeight="DemiBold" Margin="0,0,0,5"/>
 
-        <DataGrid Grid.Row="1" Grid.Column="0" 
+        <DataGrid Grid.Row="1" Grid.Column="0" Height="Auto"
                   ItemsSource="{Binding TranslationRules}" SelectedItem="{Binding SelectedItem}"
                   AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False">
             <DataGrid.Columns>

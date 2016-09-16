@@ -25,7 +25,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Форма подписки на данные" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -52,7 +52,10 @@
         <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Subscriber}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
         <ContentControl Grid.Row="5" Grid.ColumnSpan="3" Margin="10"
-                        Content="{Binding Path=TranslationRulesListView}" />
+                        Content="{Binding Path=TranslationRulesListView}"
+                        ScrollViewer.CanContentScroll="True"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
         
     </Grid>
 </UserControl>

@@ -19,12 +19,5 @@ namespace Zhichkin.Integrator.Views
             if (comboBox.SelectedItem == null) return;
             viewModel.SetTargetProperty(comboBox.SelectedItem);
         }
-        private void IsSyncKey_ValueChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = sender as ComboBox;
-            if (comboBox == null) return;
-            if (comboBox.SelectedItem == null) return;
-            viewModel.SetTargetProperty(comboBox.SelectedItem);
-        }
     }
 }

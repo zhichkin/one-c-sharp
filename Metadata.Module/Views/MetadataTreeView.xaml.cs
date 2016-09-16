@@ -43,5 +43,19 @@ namespace Zhichkin.Metadata.Views
 
             DragDrop.DoDragDrop(control, item.DataContext, DragDropEffects.Copy);
         }
+
+        private void TreeView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount > 1)
+            {
+                e.Handled = true;
+                MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+                if (viewModel == null) return;
+                TreeView item = sender as TreeView;
+                if (item == null) return;
+                if (item.SelectedItem == null) return;
+                viewModel.TreeViewDoubleClickCommand.Execute(item.SelectedItem);
+            }
+        }
     }
 }

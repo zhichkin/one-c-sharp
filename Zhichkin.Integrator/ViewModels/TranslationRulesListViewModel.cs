@@ -10,6 +10,7 @@ using Zhichkin.ChangeTracking;
 using Zhichkin.ORM;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Integrator.Services;
+using System.Windows;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 
@@ -31,8 +32,8 @@ namespace Zhichkin.Integrator.ViewModels
             this.eventAggregator = eventAggregator;
             InitializeViewModel();
             this.DeleteTranslationRuleCommand = new DelegateCommand<TranslationRule>(this.OnDeleteTranslationRule);
-            this.IsSyncKeyCheckCommand = new DelegateCommand<TranslationRule>(this.OnIsSyncKeyChecked);
-            this.IsSyncKeyUncheckCommand = new DelegateCommand<TranslationRule>(this.OnIsSyncKeyUnchecked);
+            this.IsSyncKeyCheckCommand = new DelegateCommand<object>(this.OnIsSyncKeyChecked);
+            this.IsSyncKeyUncheckCommand = new DelegateCommand<object>(this.OnIsSyncKeyUnchecked);
         }
         private void InitializeViewModel()
         {
@@ -47,8 +48,8 @@ namespace Zhichkin.Integrator.ViewModels
                 {
                     rule = subscription.CreateTranslationRule();
                     rule.SourceProperty = property;
+                    translationRules.Add(rule);
                 }
-                translationRules.Add(rule);
             }
         }
         private TranslationRule selectedItem = null;
@@ -78,14 +79,16 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 rule.TargetProperty = null;
                 rule.IsSyncKey = false;
-                OnPropertyChanged("TargetProperty");
-                OnPropertyChanged("IsSyncKey");
             }
             else
             {
                 rule.Kill();
+                int index = translationRules.IndexOf(rule);
+                Property property = rule.SourceProperty;
+                rule = subscription.CreateTranslationRule();
+                rule.SourceProperty = property;
+                translationRules[index] = rule;
             }
-            //TODO: refresh subscription.TranslationRules !!!
         }
         public void SetTargetProperty(object value)
         {
@@ -99,18 +102,22 @@ namespace Zhichkin.Integrator.ViewModels
             rule.TargetProperty = property;
             rule.IsSyncKey = rule.TargetProperty.Fields.Where(f => f.IsPrimaryKey).FirstOrDefault() != null;
             rule.Save();
-
-            OnPropertyChanged("TargetProperty");
         }
         public ICommand IsSyncKeyCheckCommand { get; private set; }
-        private void OnIsSyncKeyChecked(TranslationRule rule)
+        private void OnIsSyncKeyChecked(object parameter)
         {
-
+            TranslationRule rule = parameter as TranslationRule;
+            if (rule == null) return;
+            rule.IsSyncKey = true;
+            rule.Save();
         }
         public ICommand IsSyncKeyUncheckCommand { get; private set; }
-        private void OnIsSyncKeyUnchecked(TranslationRule rule)
+        private void OnIsSyncKeyUnchecked(object parameter)
         {
-
+            TranslationRule rule = parameter as TranslationRule;
+            if (rule == null) return;
+            rule.IsSyncKey = false;
+            rule.Save();
         }
     }
 }
