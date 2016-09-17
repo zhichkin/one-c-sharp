@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-61755863171
+71530836745
 
-20-763559498
+22-2044423967
 78-729983550
-Views\TranslationRulesListView.xaml;Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
+Views\IntegratorSettingsView.xaml;Views\TranslationRulesListView.xaml;Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
 
-True
+False
 

@@ -34,7 +34,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Наименование:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
@@ -69,10 +68,5 @@
 
         <ContentControl Grid.Row="6" Grid.ColumnSpan="2" Content="{Binding Path=SubscriptionsListView}" Margin="10"
                         Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-
-        <Button Grid.Row="7" Grid.Column="0" Content="Сформировать сообщения" Margin="10" Command="{Binding PublishChangesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left"
-                Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <Button Grid.Row="7" Grid.Column="1" Content="Обработать сообщения" Margin="10" Command="{Binding ProcessMessagesCommand}" VerticalAlignment="Center" HorizontalAlignment="Left"
-                Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
 </UserControl>

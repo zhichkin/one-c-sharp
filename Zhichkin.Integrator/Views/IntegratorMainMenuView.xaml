@@ -9,16 +9,16 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="Icon_26_Add" UriSource="..\Images\26 Add.png"/>
+            <BitmapImage x:Key="Icon_26_Settings" UriSource="..\Images\26 Settings.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
         <Menu VerticalAlignment="Center" HorizontalAlignment="Center">
             <MenuItem Header="Интегратор" Command="{Binding ActivateIntegratorContextCommand}">
-                <MenuItem Header="Добавить подписку" Command="{Binding AddSubscriptionCommand}">
+                <MenuItem Header="Настройки ..." Command="{Binding ShowIntegratorSettingsCommand}">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource Icon_26_Add}" />
+                        <Image Source="{StaticResource Icon_26_Settings}" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>

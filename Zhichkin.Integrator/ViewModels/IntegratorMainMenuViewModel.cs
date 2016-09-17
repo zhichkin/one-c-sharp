@@ -36,11 +36,11 @@ namespace Zhichkin.Integrator.ViewModels
             SetupViewsLookup();
             SetupModelsLookup();
 
-            this.AddSubscriptionCommand = new DelegateCommand(this.OnAddSubscription);
+            this.ShowIntegratorSettingsCommand = new DelegateCommand(this.OnShowIntegratorSettings);
             this.ActivateIntegratorContextCommand = new DelegateCommand(this.OnActivateIntegratorContext);
             this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(this.OnMetadataTreeViewItemSelected, true);
         }
-        public ICommand AddSubscriptionCommand { get; private set; }
+        public ICommand ShowIntegratorSettingsCommand { get; private set; }
         private void SetupViewsLookup()
         {
             viewsLookup.Add(typeof(InfoBase), typeof(InfoBaseView));
@@ -88,9 +88,14 @@ namespace Zhichkin.Integrator.ViewModels
             if (view == null) return;
             rightRegion.Add(view, CONST_ItemView);
         }
-        private void OnAddSubscription()
+        private void OnShowIntegratorSettings()
         {
-
+            ClearRightRegion();
+            IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
+            if (rightRegion == null) return;
+            object view = this.container.Resolve(typeof(IntegratorSettingsView));
+            if (view == null) return;
+            rightRegion.Add(view);
         }
     }
 }

@@ -67,3 +67,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\SubscriptionView.g.c
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\SubscriptionView.baml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\TranslationRulesListView.g.cs
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\TranslationRulesListView.baml
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\IntegratorSettingsView.g.cs
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\IntegratorSettingsView.baml

@@ -13,8 +13,6 @@ using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Integrator.Views;
-using Zhichkin.Integrator.Services;
-using Zhichkin.Shell;
 using Microsoft.Practices.Unity;
 
 namespace Zhichkin.Integrator.ViewModels
@@ -46,8 +44,6 @@ namespace Zhichkin.Integrator.ViewModels
             this.NotificationRequest = new InteractionRequest<INotification>();
 
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
-            this.PublishChangesCommand = new DelegateCommand(this.OnPublishChanges);
-            this.ProcessMessagesCommand = new DelegateCommand(this.OnProcessMessages);
             InitializeViewModel();
         }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
@@ -185,34 +181,6 @@ namespace Zhichkin.Integrator.ViewModels
                 publisher.MSMQTargetQueue = value;
                 publisher.Save();
                 OnPropertyChanged("MSMQTargetQueue");
-            }
-        }
-
-        public ICommand PublishChangesCommand { get; private set; }
-        private void OnPublishChanges()
-        {
-            if (publisher == null) return;
-            IntegratorService service = new IntegratorService();
-            int messagesSent = service.PublishChanges(publisher);
-            this.NotificationRequest.Raise(new Notification
-            {
-                Content = string.Format("Публикация выполнена успешно.\nОпубликовано {0} сообщений.", messagesSent),
-                Title = "Z-Integrator © 2016"
-            });
-        }
-        public ICommand ProcessMessagesCommand { get; private set; }
-        private void OnProcessMessages()
-        {
-            if (publisher == null) return;
-            IntegratorService service = new IntegratorService();
-            foreach (Subscription subscription in service.GetSubscriptions())
-            {
-                int messagesProcessed = service.ProcessMessages(subscription);
-                this.NotificationRequest.Raise(new Notification
-                {
-                    Content = string.Format("Чтение выполнено успешно.\nПрочитано {0} сообщений.", messagesProcessed),
-                    Title = "Z-Integrator © 2016"
-                });
             }
         }
     }

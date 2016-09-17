@@ -106,12 +106,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\IntegratorSettingsViewModel.cs" />
     <Compile Include="ViewModels\TranslationRulesListViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionsListViewModel.cs" />
     <Compile Include="ViewModels\PublisherViewModel.cs" />
     <Compile Include="ViewModels\InfoBaseViewModel.cs" />
     <Compile Include="ViewModels\IntegratorMainMenuViewModel.cs" />
+    <Compile Include="Views\IntegratorSettingsView.xaml.cs">
+      <DependentUpon>IntegratorSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TranslationRulesListView.xaml.cs">
       <DependentUpon>TranslationRulesListView.xaml</DependentUpon>
     </Compile>
@@ -142,6 +146,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\IntegratorSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\TranslationRulesListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
