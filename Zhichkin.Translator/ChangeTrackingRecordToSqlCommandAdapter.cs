@@ -97,16 +97,18 @@ namespace Zhichkin.Translator
                 || field.TypeName == "nchar"
                 || field.TypeName == "nvarchar"
                 || field.TypeName == "text"
-                || field.TypeName == "ntext"
-                || field.TypeName == "image")
+                || field.TypeName == "ntext")
             {
                 return string.Empty;
             }
-            else if (field.TypeName == "binary"
-                || field.TypeName == "varbinary"
-                || field.TypeName == "image")
+            else if (field.TypeName == "binary")
             {
                 return new byte[field.Length];
+            }
+            else if (field.TypeName == "varbinary"
+                || field.TypeName == "image")
+            {
+                return Guid.Empty.ToByteArray();
             }
             else if (field.TypeName == "timestamp"
                 || field.TypeName == "rowversion")

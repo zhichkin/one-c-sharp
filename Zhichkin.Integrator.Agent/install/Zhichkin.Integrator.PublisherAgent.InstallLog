@@ -1,0 +1,13 @@
+﻿Выполняется установка сборки 'C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\install\Zhichkin.Integrator.PublisherAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\install\Zhichkin.Integrator.PublisherAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\install\Zhichkin.Integrator.PublisherAgent.exe
+Устанавливается служба Z-Integrator Publisher Service...
+Служба Z-Integrator Publisher Service успешно установлена.
+Создается исходный EventLog Z-Integrator Publisher Service в журнале Application...
+Выполняется фиксация сборки 'C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\install\Zhichkin.Integrator.PublisherAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\install\Zhichkin.Integrator.PublisherAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\install\Zhichkin.Integrator.PublisherAgent.exe

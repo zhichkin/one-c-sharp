@@ -45,7 +45,7 @@ namespace Zhichkin.Integrator.Model
         {
             return string.Format("{0} -> {1}",
                 this.Publisher == null ? string.Empty : this.Publisher.Name,
-                this.Subscriber == null ? string.Empty : this.Subscriber.Name);
+                this.Subscriber == null ? string.Empty : this.Subscriber.FullName);
         }
     }
 }

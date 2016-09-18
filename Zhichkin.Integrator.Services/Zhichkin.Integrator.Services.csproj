@@ -44,6 +44,8 @@
     <Compile Include="IIntegratorService.cs" />
     <Compile Include="IntegratorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceState.cs" />
+    <Compile Include="ServiceStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
