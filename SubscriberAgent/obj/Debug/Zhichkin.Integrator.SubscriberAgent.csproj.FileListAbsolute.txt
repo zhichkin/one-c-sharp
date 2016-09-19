@@ -7,15 +7,15 @@ C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Microsoft.Practices.Prism.PubS
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.ORM.dll
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.ChangeTracking.dll
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\NetSerializer.dll
-C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Translator.dll
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Metadata.Model.pdb
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Integrator.Model.pdb
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Integrator.Services.pdb
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.ORM.pdb
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.ChangeTracking.pdb
-C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Translator.pdb
 C:\Users\User\Desktop\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.csprojResolveAssemblyReference.cache
 C:\Users\User\Desktop\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.exe
 C:\Users\User\Desktop\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.pdb
 C:\Users\User\Desktop\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.ProjectInstaller.resources
 C:\Users\User\Desktop\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.csproj.GenerateResource.Cache
+C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Integrator.Translator.dll
+C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Integrator.Translator.pdb

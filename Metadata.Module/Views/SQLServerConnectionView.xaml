@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             Height="Auto" Width="300">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -16,16 +17,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Server name:" Margin="10"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Database:" Margin="10"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="User name:" Margin="10"/>
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Password:" Margin="10"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Notification.Server, Mode=TwoWay}" Margin="10"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Notification.Database, Mode=TwoWay}" Margin="10"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Notification.UserName, Mode=TwoWay}" Margin="10"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Notification.Password, Mode=TwoWay}" Margin="10"/>
-        <Button Grid.Row="4" Grid.Column="0" Content="OK" Margin="10" Command="{Binding ConfirmCommand}" />
-        <Button Grid.Row="4" Grid.Column="1" Content="Cancel" Margin="10" Command="{Binding CancelCommand}" />
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Импортировать метаданные SQL Server" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Server name:" Margin="10,10,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Database:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="User name:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Password:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Notification.Server, Mode=TwoWay}" Margin="5,10,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Notification.Database, Mode=TwoWay}" Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Notification.UserName, Mode=TwoWay}" Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Notification.Password, Mode=TwoWay}" Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="ОК" Margin="10" Width="80" Command="{Binding ConfirmCommand}" />
+            <Button Content="Отменить" Margin="10" Width="80" Command="{Binding CancelCommand}" />
+        </StackPanel>
     </Grid>
 </UserControl>

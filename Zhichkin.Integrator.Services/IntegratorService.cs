@@ -4,7 +4,7 @@ using Zhichkin.ORM;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
-using Zhichkin.Translator;
+using Zhichkin.Integrator.Translator;
 using System.Messaging;
 using NetSerializer;
 using System.Transactions;

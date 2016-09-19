@@ -6,7 +6,7 @@ using Zhichkin.Metadata.Model;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Integrator.Model;
 
-namespace Zhichkin.Translator
+namespace Zhichkin.Integrator.Translator
 {
     public sealed class ChangeTrackingRecordToSqlCommandAdapter : IMessageAdapter<ChangeTrackingRecord, SqlCommand>
     {

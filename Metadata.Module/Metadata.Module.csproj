@@ -76,7 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\MetadataObjectView.xaml">
+    <Page Include="Views\MetadataSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -94,6 +94,7 @@
     <Compile Include="Services\SQLMetadataAdapter.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
     <Compile Include="Services\COMMetadataAdapter.cs" />
+    <Compile Include="ViewModels\MetadataSettingsViewModel.cs" />
     <Compile Include="ViewModels\SQLConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -104,8 +105,8 @@
     <Compile Include="Views\SQLServerConnectionView.xaml.cs">
       <DependentUpon>SQLServerConnectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MetadataObjectView.xaml.cs">
-      <DependentUpon>MetadataObjectView.xaml</DependentUpon>
+    <Compile Include="Views\MetadataSettingsView.xaml.cs">
+      <DependentUpon>MetadataSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MetadataTreeView.xaml.cs">
       <DependentUpon>MetadataTreeView.xaml</DependentUpon>

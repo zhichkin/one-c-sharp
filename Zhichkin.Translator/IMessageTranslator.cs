@@ -1,4 +1,4 @@
-﻿namespace Zhichkin.Translator
+﻿namespace Zhichkin.Integrator.Translator
 {
     public interface IMessageTranslator<TMessage>
     {

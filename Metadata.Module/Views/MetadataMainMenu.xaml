@@ -15,15 +15,20 @@
             <BitmapImage x:Key="Icon_26_Add" UriSource="..\Images\26 Add.png"/>
             <BitmapImage x:Key="Icon_26_Save" UriSource="..\Images\26 Ok.png"/>
             <BitmapImage x:Key="Icon_26_Kill" UriSource="..\Images\26 Cancel.png"/>
-            <BitmapImage x:Key="Icon_26_SQL" UriSource="..\Images\26 SQL.png"/>
             <BitmapImage x:Key="Icon_26_Synchronize" UriSource="..\Images\26 Synchronize.png"/>
             <BitmapImage x:Key="Icon_26_Settings" UriSource="..\Images\26 Settings.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
+            <interactivity:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+            <interactivity:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
+        </prism:InteractionRequestTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding SQLConnectionPopupRequest, Mode=OneWay}">
-            <interactivity:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True">
+            <interactivity:PopupWindowAction IsModal="True">
                 <interactivity:PopupWindowAction.WindowContent>
                     <views:SQLServerConnectionView />
                 </interactivity:PopupWindowAction.WindowContent>
@@ -32,9 +37,9 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <Menu VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Menu Margin="10,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <MenuItem Header="Метаданные">
-                <MenuItem Header="Открыть ..." Command="{Binding OpenMetadataCommand}" CommandParameter="Open">
+                <MenuItem Header="Открыть" Command="{Binding OpenMetadataCommand}" CommandParameter="Open">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Add}" />
                     </MenuItem.Icon>
@@ -50,18 +55,13 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Импортировать метаданные SQL Server" Command="{Binding ImportSQLMetadataCommand}">
-                    <MenuItem.Icon>
-                        <Image Source="{StaticResource Icon_26_SQL}" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Синхронизировать" Command="{Binding UpdateMetadataCommand}" CommandParameter="Update">
+                <MenuItem Header="Обновить" Command="{Binding UpdateMetadataCommand}" CommandParameter="Update">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Synchronize}" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Настройки ..." Command="{Binding ShowSettingsCommand}">
+                <MenuItem Header="Настройки" Command="{Binding ShowSettingsCommand}">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Settings}" />
                     </MenuItem.Icon>

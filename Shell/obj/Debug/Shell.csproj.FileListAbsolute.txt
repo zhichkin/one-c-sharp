@@ -43,11 +43,7 @@ C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.Properties.Resources
 C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Shell.csproj.GenerateResource.Cache
 C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.exe
 C:\Users\Wingy Ace\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.pdb
-C:\Users\User\Desktop\Z\Shell\bin\Debug\Zhichkin.Shell.exe.config
 C:\Users\User\Desktop\Z\Shell\obj\Debug\App.g.cs
-C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell_MarkupCompile.cache
-C:\Users\User\Desktop\Z\Shell\bin\Debug\Zhichkin.Shell.exe
-C:\Users\User\Desktop\Z\Shell\bin\Debug\Zhichkin.Shell.pdb
 C:\Users\User\Desktop\Z\Shell\bin\Debug\Microsoft.Practices.Prism.Composition.dll
 C:\Users\User\Desktop\Z\Shell\bin\Debug\Microsoft.Practices.Prism.Interactivity.dll
 C:\Users\User\Desktop\Z\Shell\bin\Debug\Microsoft.Practices.Prism.Mvvm.Desktop.dll
@@ -82,8 +78,12 @@ C:\Users\User\Desktop\Z\Shell\bin\Debug\zh-Hans\System.Windows.Interactivity.res
 C:\Users\User\Desktop\Z\Shell\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Shell.baml
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Shell.g.cs
-C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.g.resources
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.Properties.Resources.resources
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Shell.csproj.GenerateResource.Cache
-C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.exe
-C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.pdb
+C:\Users\User\Desktop\Z\Shell\bin\Debug\z.exe.config
+C:\Users\User\Desktop\Z\Shell\bin\Debug\z.exe
+C:\Users\User\Desktop\Z\Shell\bin\Debug\z.pdb
+C:\Users\User\Desktop\Z\Shell\obj\Debug\z_MarkupCompile.cache
+C:\Users\User\Desktop\Z\Shell\obj\Debug\z.g.resources
+C:\Users\User\Desktop\Z\Shell\obj\Debug\z.exe
+C:\Users\User\Desktop\Z\Shell\obj\Debug\z.pdb

@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
-    
+
     <wi:Interaction.Triggers>
         <ir:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
             <pi:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
@@ -23,26 +23,49 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Z-Integrator Publisher Service:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PublisherServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <Button Grid.Row="0" Grid.Column="2" Content="{Binding PublisherServiceButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Настройки модуля Z-Integrator" FontWeight="DemiBold" Margin="10" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Строка подключения:" FontWeight="DemiBold" Margin="10,10,5,10"
+                   VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding IntegratorConnectionString, Mode=TwoWay}"
+                 Margin="5,10,5,10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox.ToolTip>
+                <TextBlock>
+                    Строка подключения к базе данных Z-Integrator,
+                    <LineBreak/>
+                    где хранятся настройки подписок и правила трансляции.
+                </TextBlock>
+            </TextBox.ToolTip>
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+        <Button Grid.Row="1" Grid.Column="2" Content="Проверить" Width="80" Margin="5,10,10,10" Command="{Binding CheckConnectionCommand}" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Сервис экспорта данных:" ToolTip="Z-Integrator Publisher Service"
+                   FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PublisherServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <Button Grid.Row="2" Grid.Column="2" Content="{Binding PublisherServiceButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
                 Command="{Binding PublisherServiceSwitchCommand}"
                 Visibility="{Binding IsPublisherServiceInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Z-Integrator Subscriber Service:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SubscriberServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <Button Grid.Row="1" Grid.Column="2" Content="{Binding SubscriberServiceButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Сервис импорта данных:" ToolTip="Z-Integrator Subscriber Service"
+                   FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SubscriberServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <Button Grid.Row="3" Grid.Column="2" Content="{Binding SubscriberServiceButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
                 Command="{Binding SubscriberServiceSwitchCommand}" 
                 Visibility="{Binding IsSubscriberServiceInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-
     </Grid>
 </UserControl>

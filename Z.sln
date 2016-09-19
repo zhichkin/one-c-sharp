@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.ChangeTracking", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Integrator.Model", "Zhichkin.Integrator.Model\Zhichkin.Integrator.Model.csproj", "{1241C202-F360-466C-A953-18F84BE5C3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Translator", "Zhichkin.Translator\Zhichkin.Translator.csproj", "{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Integrator.Translator", "Zhichkin.Translator\Zhichkin.Integrator.Translator.csproj", "{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Integrator.Services", "Zhichkin.Integrator.Services\Zhichkin.Integrator.Services.csproj", "{E7FED28C-D9A2-4044-A147-BA305FB235EB}"
 EndProject

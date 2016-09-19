@@ -23,7 +23,8 @@ namespace Zhichkin.Metadata.ViewModels
         private readonly IEventAggregator eventAggregator;
 
         private ObservableCollection<InfoBase> infoBases = new ObservableCollection<InfoBase>();
-        
+        private InfoBase _CurrentInfoBase = null;
+
         public MetadataTreeViewModel(IMetadataService dataService, IEventAggregator eventAggregator)
         {
             if (dataService == null) throw new ArgumentNullException("dataService");
@@ -52,35 +53,36 @@ namespace Zhichkin.Metadata.ViewModels
                 return infoBases;
             }
         }
-        public InfoBase CurrentInfoBase { get; set; }
-        private void SetCurrentInfoBase(object model)
+        public InfoBase CurrentInfoBase
+        {
+            get { return _CurrentInfoBase; }
+        }
+        public void SetCurrentInfoBase(object model)
         {
             if (model is InfoBase)
             {
-                CurrentInfoBase = (InfoBase)model;
-                return;
+                _CurrentInfoBase = (InfoBase)model;
             }
-            if (model is Namespace)
+            else if (model is Namespace)
             {
-                CurrentInfoBase = GetInfoBase((Namespace)model);
-                return;
+                _CurrentInfoBase = GetInfoBase((Namespace)model);
             }
-            if (model is Entity)
+            else if (model is Entity)
             {
-                CurrentInfoBase = GetInfoBase(((Entity)model).Namespace);
-                return;
+                _CurrentInfoBase = GetInfoBase(((Entity)model).Namespace);
             }
-            if (model is Property)
+            else if (model is Property)
             {
-                CurrentInfoBase = GetInfoBase(((Property)model).Entity.Namespace);
-                return;
+                _CurrentInfoBase = GetInfoBase(((Property)model).Entity.Namespace);
             }
-            if (model is Field)
+            else if (model is Field)
             {
-                CurrentInfoBase = GetInfoBase(((Field)model).Property.Entity.Namespace);
-                return;
+                _CurrentInfoBase = GetInfoBase(((Field)model).Property.Entity.Namespace);
             }
-            CurrentInfoBase = null;
+            else
+            {
+                _CurrentInfoBase = null;
+            }
         }
         private InfoBase GetInfoBase(Namespace _namespace)
         {

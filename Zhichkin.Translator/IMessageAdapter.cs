@@ -1,6 +1,6 @@
 ﻿using Zhichkin.Integrator.Model;
 
-namespace Zhichkin.ChangeTracking
+namespace Zhichkin.Integrator.Translator
 {
     public interface IMessageAdapter<TInput, TOutput>
     {

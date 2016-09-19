@@ -16,13 +16,10 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Model.
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Services.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Metadata.Model.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.ORM.dll
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Shell.exe
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Prism.UnityExtensions.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\NetSerializer.dll
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Translator.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Metadata.Model.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.ORM.pdb
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Shell.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.ChangeTracking.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Model.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Services.pdb
@@ -36,7 +33,6 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Unity.
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.xml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Prism.UnityExtensions.xml
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Translator.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\de\System.Windows.Interactivity.resources.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\en\System.Windows.Interactivity.resources.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\es\System.Windows.Interactivity.resources.dll
@@ -69,3 +65,7 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\TranslationRulesList
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\TranslationRulesListView.baml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\IntegratorSettingsView.g.cs
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\IntegratorSettingsView.baml
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\z.exe
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\z.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Translator.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Translator.pdb

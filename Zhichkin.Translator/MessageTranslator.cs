@@ -7,7 +7,7 @@ using Zhichkin.Integrator.Model;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace Zhichkin.Translator
+namespace Zhichkin.Integrator.Translator
 {
     public sealed class MessageTranslator : IMessageTranslator<ChangeTrackingRecord>
     {

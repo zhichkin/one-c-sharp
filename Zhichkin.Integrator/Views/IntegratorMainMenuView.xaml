@@ -4,9 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Zhichkin.Integrator.Views"
+             xmlns:wi="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ir="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+             xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
+    <wi:Interaction.Triggers>
+        <ir:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
+            <pi:PopupWindowAction IsModal="True" />
+        </ir:InteractionRequestTrigger>
+        <ir:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+            <pi:PopupWindowAction IsModal="True" />
+        </ir:InteractionRequestTrigger>
+    </wi:Interaction.Triggers>
+    
     <UserControl.Resources>
         <ResourceDictionary>
             <BitmapImage x:Key="Icon_26_Settings" UriSource="..\Images\26 Settings.png"/>
@@ -14,9 +26,9 @@
     </UserControl.Resources>
 
     <Grid>
-        <Menu VerticalAlignment="Center" HorizontalAlignment="Center">
-            <MenuItem Header="Интегратор" Command="{Binding ActivateIntegratorContextCommand}">
-                <MenuItem Header="Настройки ..." Command="{Binding ShowIntegratorSettingsCommand}">
+        <Menu Margin="5,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <MenuItem Header="Интегратор">
+                <MenuItem Header="Настройки" Command="{Binding ShowIntegratorSettingsCommand}">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Settings}" />
                     </MenuItem.Icon>

@@ -1,7 +1,7 @@
 ﻿using Zhichkin.ChangeTracking;
 using System.Collections.Generic;
 
-namespace Zhichkin.Translator
+namespace Zhichkin.Integrator.Translator
 {
     public class SimpleTranslationRule : ITranslationRule
     {

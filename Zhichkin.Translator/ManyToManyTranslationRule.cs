@@ -4,7 +4,7 @@ using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
 using M = Zhichkin.Metadata.Model;
 
-namespace Zhichkin.Translator
+namespace Zhichkin.Integrator.Translator
 {
     public class ManyToManyTranslationRule : SimpleTranslationRule
     {

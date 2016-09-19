@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="Zhichkin.Metadata.Views.MetadataSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:wi="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ir="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+             xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <wi:Interaction.Triggers>
+        <ir:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
+            <pi:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
+        </ir:InteractionRequestTrigger>
+        <ir:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+            <pi:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
+        </ir:InteractionRequestTrigger>
+    </wi:Interaction.Triggers>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Настройки модуля Z-Metadata" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Строка подключения:" FontWeight="DemiBold" Margin="10,10,5,10"
+                   VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MetadataConnectionString, Mode=TwoWay}"
+                 Margin="5,10,5,10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox.ToolTip>
+                <TextBlock>
+                    Строка подключения к базе данных Z-Metadata,
+                    <LineBreak/>
+                    где хранятся метаданные информационных баз.
+                </TextBlock>
+            </TextBox.ToolTip>
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+        <Button Grid.Row="1" Grid.Column="2" Content="Проверить" Width="80" Margin="5,10,10,10" Command="{Binding CheckConnectionCommand}" />
+
+    </Grid>
+</UserControl>

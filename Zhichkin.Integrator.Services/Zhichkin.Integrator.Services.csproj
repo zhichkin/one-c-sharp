@@ -64,9 +64,9 @@
       <Project>{1241c202-f360-466c-a953-18f84be5c3e7}</Project>
       <Name>Zhichkin.Integrator.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Zhichkin.Translator\Zhichkin.Translator.csproj">
+    <ProjectReference Include="..\Zhichkin.Translator\Zhichkin.Integrator.Translator.csproj">
       <Project>{8c403721-edea-4adf-9c47-d9c28cd52e81}</Project>
-      <Name>Zhichkin.Translator</Name>
+      <Name>Zhichkin.Integrator.Translator</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

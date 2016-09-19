@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Zhichkin.Translator
+namespace Zhichkin.Integrator.Translator
 {
     public static class Utilities
     {

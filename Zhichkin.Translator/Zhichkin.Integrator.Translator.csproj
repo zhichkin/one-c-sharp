@@ -7,8 +7,8 @@
     <ProjectGuid>{8C403721-EDEA-4ADF-9C47-D9C28CD52E81}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zhichkin.Translator</RootNamespace>
-    <AssemblyName>Zhichkin.Translator</AssemblyName>
+    <RootNamespace>Zhichkin.Integrator.Translator</RootNamespace>
+    <AssemblyName>Zhichkin.Integrator.Translator</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

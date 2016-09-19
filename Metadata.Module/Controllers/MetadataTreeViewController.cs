@@ -29,12 +29,12 @@ namespace Zhichkin.Metadata.Controllers
             this.eventAggregator = eventAggregator;
             this.dataService = dataService;
 
-            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(this.MetadataObjectSelected, true);
+            this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(this.MetadataItemSelected, true);
         }
 
-        private void MetadataObjectSelected(object item)
+        private void MetadataItemSelected(object item)
         {
-            // ???
+            // ??? реализовано в другом модуле, например, "Интегратор"
         }
     }
 }

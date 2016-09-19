@@ -38,9 +38,7 @@ C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataObjectView.
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataObjectView.g.cs
 C:\Users\Wingy Ace\Desktop\Z\Metadata.Module\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Metadata.Module.csprojResolveAssemblyReference.cache
-C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataObjectView.baml
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataMainMenu.g.cs
-C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataObjectView.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataTreeView.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata_MarkupCompile.cache
@@ -55,13 +53,11 @@ C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Unity.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.ComConnector.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.Model.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.ORM.dll
-C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Shell.exe
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.UnityExtensions.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.ServiceLocation.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.ComConnector.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.Model.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.ORM.pdb
-C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Shell.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.Composition.xml
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.Mvvm.xml
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.SharedInterfaces.xml
@@ -91,3 +87,7 @@ C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\zh-Hans\System.Windows.Interac
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\SQLServerConnectionView.baml
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\SQLServerConnectionView.g.cs
+C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\z.exe
+C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\z.pdb
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataSettingsView.baml
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataSettingsView.g.cs

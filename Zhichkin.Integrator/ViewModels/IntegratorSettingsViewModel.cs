@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Controls;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.Commands;
-using Zhichkin.Integrator.Services;
 using Zhichkin.Integrator.Model;
 using System.ServiceProcess;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace Zhichkin.Integrator.ViewModels
 {
     public class IntegratorSettingsViewModel : BindableBase
     {
+        private readonly string moduleName = IntegratorPersistentContext.Current.Name;
+        private const string CONST_ModuleDialogsTitle = "Z-Integrator";
         private const string CONST_PublisherServiceName = "Z-Integrator Publisher Service";
         private const string CONST_SubscriberServiceName = "Z-Integrator Subscriber Service";
 
@@ -33,11 +40,110 @@ namespace Zhichkin.Integrator.ViewModels
             this.PublisherServiceSwitchCommand = new DelegateCommand(this.OnPublisherServiceSwitch);
             this.SubscriberServiceSwitchCommand = new DelegateCommand(this.OnSubscriberServiceSwitch);
             this.NotificationRequest = new InteractionRequest<INotification>();
-
             InitializePublisherServiceInfo();
             InitializeSubscriberServiceInfo();
+            this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+            this.CheckConnectionCommand = new DelegateCommand(this.OnCheckConnection);
+            _IntegratorConnectionString = ConfigurationManager.ConnectionStrings[moduleName].ConnectionString;
         }
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public ICommand CheckConnectionCommand { get; private set; }
+        public ICommand UpdateTextBoxSourceCommand { get; private set; }
+        private void OnUpdateTextBoxSource(object userControl)
+        {
+            TextBox textBox = userControl as TextBox;
+            if (textBox == null) return;
+            DependencyProperty property = TextBox.TextProperty;
+            BindingExpression binding = BindingOperations.GetBindingExpression(textBox, property);
+            if (binding == null) return;
+            binding.UpdateSource();
+        }
+        private string GetErrorText(Exception ex)
+        {
+            string errorText = string.Empty;
+            Exception error = ex;
+            while (error != null)
+            {
+                errorText += (errorText == string.Empty) ? error.Message : Environment.NewLine + error.Message;
+                error = error.InnerException;
+            }
+            return errorText;
+        }
+
+        private string _IntegratorConnectionString = string.Empty;
+        public string IntegratorConnectionString
+        {
+            get { return _IntegratorConnectionString; }
+            set
+            {
+                try
+                {
+                    UpdateIntegratorConnectionString(value);
+                    _IntegratorConnectionString = value;
+                    OnPropertyChanged("IntegratorConnectionString");
+                }
+                catch (Exception ex)
+                {
+                    NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
+            }
+        }
+        private void UpdateIntegratorConnectionString(string connectionString)
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            ConnectionStringSettingsCollection settings = config.ConnectionStrings.ConnectionStrings;
+            ConnectionStringSettings setting = settings[moduleName];
+            if (setting == null)
+            {
+                settings.Add(new ConnectionStringSettings(moduleName, connectionString, "System.Data.SqlClient"));
+            }
+            else
+            {
+                setting.ConnectionString = connectionString;
+            }
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("connectionStrings");
+
+            this.NotificationRequest.Raise(new Notification
+            {
+                Title = CONST_ModuleDialogsTitle,
+                Content = string.Format("Настройка строки соединения для модуля \"{0}\" выполнена.", moduleName)
+            });
+        }
+        private void OnCheckConnection()
+        {
+            string resultMessage = string.Empty;
+            SqlConnection connection = new SqlConnection(_IntegratorConnectionString);
+            try
+            {
+                connection.Open();
+                if (connection.State == ConnectionState.Open)
+                {
+                    resultMessage = "Соединение открыто успешно.";
+                }
+                else
+                {
+                    resultMessage = string.Format("Соединение получило статус: \"{0}\".", connection.State.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                resultMessage = GetErrorText(ex);
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+                connection.Dispose();
+            }
+            this.NotificationRequest.Raise(new Notification
+            {
+                Title = CONST_ModuleDialogsTitle,
+                Content = resultMessage
+            });
+        }
 
         private ServiceController GetPublisherServiceController()
         {
@@ -106,6 +212,17 @@ namespace Zhichkin.Integrator.ViewModels
             }
         }
         private void OnPublisherServiceSwitch()
+        {
+            try
+            {
+                SwitchPublisherService();
+            }
+            catch (Exception ex)
+            {
+                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void SwitchPublisherService()
         {
             ServiceController publisherService = GetPublisherServiceController();
             if (publisherService == null) return;
@@ -193,6 +310,17 @@ namespace Zhichkin.Integrator.ViewModels
             }
         }
         private void OnSubscriberServiceSwitch()
+        {
+            try
+            {
+                SwitchSubscriberService();
+            }
+            catch (Exception ex)
+            {
+                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void SwitchSubscriberService()
         {
             ServiceController subscriberService = GetSubscriberServiceController();
             if (subscriberService == null) return;

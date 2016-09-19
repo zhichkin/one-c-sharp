@@ -28,8 +28,7 @@
     
     <Grid>
         <TreeView Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                  ItemsSource="{Binding Path=InfoBases}"
-                  MouseMove="TreeView_MouseMove"
+                  ItemsSource="{Binding Path=InfoBases}" MouseMove="TreeView_MouseMove"
                   TreeViewItem.PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown">
             <TreeView.Resources>
                 <ViewModel:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using System.Windows.Controls;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using Zhichkin.Shell;
@@ -16,7 +16,8 @@ namespace Zhichkin.Integrator.ViewModels
 {
     public class IntegratorMainMenuViewModel : BindableBase
     {
-        const string CONST_ItemView = "ItemView";
+        private const string CONST_ModuleDialogsTitle = "Z-Integrator";
+
         private readonly Dictionary<Type, Type> viewsLookup = new Dictionary<Type, Type>();
         private readonly Dictionary<Type, Type> modelsLookup = new Dictionary<Type, Type>();
 
@@ -32,15 +33,27 @@ namespace Zhichkin.Integrator.ViewModels
             this.container = container;
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
-
             SetupViewsLookup();
             SetupModelsLookup();
-
+            this.NotificationRequest = new InteractionRequest<INotification>();
+            this.ConfirmationRequest = new InteractionRequest<IConfirmation>();
             this.ShowIntegratorSettingsCommand = new DelegateCommand(this.OnShowIntegratorSettings);
-            this.ActivateIntegratorContextCommand = new DelegateCommand(this.OnActivateIntegratorContext);
             this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(this.OnMetadataTreeViewItemSelected, true);
         }
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<IConfirmation> ConfirmationRequest { get; private set; }
         public ICommand ShowIntegratorSettingsCommand { get; private set; }
+        private string GetErrorText(Exception ex)
+        {
+            string errorText = string.Empty;
+            Exception error = ex;
+            while (error != null)
+            {
+                errorText += (errorText == string.Empty) ? error.Message : Environment.NewLine + error.Message;
+                error = error.InnerException;
+            }
+            return errorText;
+        }
         private void SetupViewsLookup()
         {
             viewsLookup.Add(typeof(InfoBase), typeof(InfoBaseView));
@@ -58,11 +71,8 @@ namespace Zhichkin.Integrator.ViewModels
             viewsLookup.TryGetValue(itemType, out viewType);
             if (viewType == null) return null;
             Type modelType = modelsLookup[itemType];
-
             return this.container.Resolve(viewType, new ParameterOverride("data", item).OnType(modelType));
         }
-        public ICommand ActivateIntegratorContextCommand { get; private set; }
-
         private void ClearRightRegion()
         {
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
@@ -72,13 +82,18 @@ namespace Zhichkin.Integrator.ViewModels
                 rightRegion.Remove(view);
             }
         }
-        
-        private void OnActivateIntegratorContext()
-        {
-            // ???
-        }
-
         private void OnMetadataTreeViewItemSelected(object item)
+        {
+            try
+            {
+                ShowMetadataItemView(item);
+            }
+            catch (Exception ex)
+            {
+                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void ShowMetadataItemView(object item)
         {
             ClearRightRegion();
             if (item == null) return;
@@ -86,9 +101,20 @@ namespace Zhichkin.Integrator.ViewModels
             if (rightRegion == null) return;
             object view = GetView(item);
             if (view == null) return;
-            rightRegion.Add(view, CONST_ItemView);
+            rightRegion.Add(view);
         }
         private void OnShowIntegratorSettings()
+        {
+            try
+            {
+                ShowIntegratorSettings();
+            }
+            catch (Exception ex)
+            {
+                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void ShowIntegratorSettings()
         {
             ClearRightRegion();
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
