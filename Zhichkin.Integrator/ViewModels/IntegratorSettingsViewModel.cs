@@ -14,6 +14,7 @@ using System.ServiceProcess;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Integrator.ViewModels
 {
@@ -39,14 +40,12 @@ namespace Zhichkin.Integrator.ViewModels
         {
             this.PublisherServiceSwitchCommand = new DelegateCommand(this.OnPublisherServiceSwitch);
             this.SubscriberServiceSwitchCommand = new DelegateCommand(this.OnSubscriberServiceSwitch);
-            this.NotificationRequest = new InteractionRequest<INotification>();
             InitializePublisherServiceInfo();
             InitializeSubscriberServiceInfo();
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
             this.CheckConnectionCommand = new DelegateCommand(this.OnCheckConnection);
             _IntegratorConnectionString = ConfigurationManager.ConnectionStrings[moduleName].ConnectionString;
         }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
         public ICommand CheckConnectionCommand { get; private set; }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
         private void OnUpdateTextBoxSource(object userControl)
@@ -84,7 +83,7 @@ namespace Zhichkin.Integrator.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
                 }
             }
         }
@@ -104,7 +103,7 @@ namespace Zhichkin.Integrator.ViewModels
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("connectionStrings");
 
-            this.NotificationRequest.Raise(new Notification
+            Z.Notify(new Notification
             {
                 Title = CONST_ModuleDialogsTitle,
                 Content = string.Format("Настройка строки соединения для модуля \"{0}\" выполнена.", moduleName)
@@ -138,7 +137,7 @@ namespace Zhichkin.Integrator.ViewModels
                 }
                 connection.Dispose();
             }
-            this.NotificationRequest.Raise(new Notification
+            Z.Notify(new Notification
             {
                 Title = CONST_ModuleDialogsTitle,
                 Content = resultMessage
@@ -219,7 +218,7 @@ namespace Zhichkin.Integrator.ViewModels
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private void SwitchPublisherService()
@@ -317,7 +316,7 @@ namespace Zhichkin.Integrator.ViewModels
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private void SwitchSubscriberService()

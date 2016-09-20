@@ -60,7 +60,7 @@
     <Compile Include="Field.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="Relation.DataMapper.cs" />
-    <Compile Include="SharedEvents\MetadataTreeViewItemSelected.cs" />
+    <Compile Include="Events\MetadataPubSubEvents.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Field.DataMapper.cs" />
     <Compile Include="Table.DataMapper.cs" />

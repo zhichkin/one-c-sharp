@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using Zhichkin.Metadata.Model;
 using System.Data;
 using System.Data.SqlClient;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Metadata.ViewModels
 {
@@ -21,8 +22,6 @@ namespace Zhichkin.Metadata.ViewModels
         public MetadataSettingsViewModel()
         {
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
-            this.NotificationRequest = new InteractionRequest<INotification>();
-            this.ConfirmationRequest = new InteractionRequest<IConfirmation>();
             this.CheckConnectionCommand = new DelegateCommand(this.OnCheckConnection);
             _MetadataConnectionString = ConfigurationManager.ConnectionStrings[moduleName].ConnectionString;
         }
@@ -37,9 +36,7 @@ namespace Zhichkin.Metadata.ViewModels
             if (binding == null) return;
             binding.UpdateSource();
         }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
-        public InteractionRequest<IConfirmation> ConfirmationRequest { get; private set; }
-
+        
         private string _MetadataConnectionString = string.Empty;
         public string MetadataConnectionString
         {
@@ -54,7 +51,7 @@ namespace Zhichkin.Metadata.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
                 }
             }
         }
@@ -74,7 +71,7 @@ namespace Zhichkin.Metadata.ViewModels
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("connectionStrings");
 
-            this.NotificationRequest.Raise(new Notification
+            Z.Notify(new Notification
             {
                 Title = CONST_ModuleDialogsTitle,
                 Content = string.Format("Настройка строки соединения для модуля \"{0}\" выполнена.", moduleName)
@@ -108,7 +105,7 @@ namespace Zhichkin.Metadata.ViewModels
                 }
                 connection.Dispose();
             }
-            this.NotificationRequest.Raise(new Notification
+            Z.Notify(new Notification
             {
                 Title = CONST_ModuleDialogsTitle, Content = resultMessage
             });

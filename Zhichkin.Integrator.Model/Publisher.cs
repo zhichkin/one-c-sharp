@@ -10,7 +10,20 @@ namespace Zhichkin.Integrator.Model
         private static readonly IDataMapper _mapper = IntegratorPersistentContext.Current.GetDataMapper(typeof(Publisher));
         public static IList<Publisher> Select() { return DataMapper.Select(); }
         public static Publisher Select(Guid identity) { return DataMapper.Select(identity); }
-        
+        public static Publisher SelectOrCreate(Entity entity)
+        {
+            if (entity == null) throw new ArgumentNullException("entity");
+            Publisher publisher = Publisher.Select(entity.Identity);
+            if (publisher == null)
+            {
+                publisher = (Publisher)IntegratorPersistentContext.Current.Factory.New(typeof(Publisher), entity.Identity);
+                publisher.Name = entity.FullName;
+                publisher.LastSyncVersion = 0;
+                publisher.Save();
+            }
+            return publisher;
+        }
+
         public Publisher() : base(_mapper) { throw new NotSupportedException(); }
         public Publisher(Guid identity) : this(identity, PersistentState.New) { }
         public Publisher(Guid identity, PersistentState state) : base(_mapper, identity, state)

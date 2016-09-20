@@ -280,6 +280,7 @@ namespace Zhichkin.Integrator.Model
             }
             public static IList<Subscription> Select(Publisher publisher)
             {
+                if (publisher == null) throw new ArgumentNullException("publisher");
                 IList<Subscription> list = new List<Subscription>();
                 IPersistentContext context = IntegratorPersistentContext.Current;
                 using (SqlConnection connection = new SqlConnection(context.ConnectionString))

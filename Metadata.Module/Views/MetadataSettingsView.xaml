@@ -3,20 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:wi="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:ir="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
-             xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    
-    <wi:Interaction.Triggers>
-        <ir:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
-            <pi:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
-        </ir:InteractionRequestTrigger>
-        <ir:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
-            <pi:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
-        </ir:InteractionRequestTrigger>
-    </wi:Interaction.Triggers>
     
     <Grid>
         <Grid.ColumnDefinitions>

@@ -8,7 +8,6 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using Zhichkin.Shell;
-using Zhichkin.Metadata.SharedEvents;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Views;
 
@@ -35,13 +34,9 @@ namespace Zhichkin.Integrator.ViewModels
             this.eventAggregator = eventAggregator;
             SetupViewsLookup();
             SetupModelsLookup();
-            this.NotificationRequest = new InteractionRequest<INotification>();
-            this.ConfirmationRequest = new InteractionRequest<IConfirmation>();
             this.ShowIntegratorSettingsCommand = new DelegateCommand(this.OnShowIntegratorSettings);
             this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(this.OnMetadataTreeViewItemSelected, true);
         }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
-        public InteractionRequest<IConfirmation> ConfirmationRequest { get; private set; }
         public ICommand ShowIntegratorSettingsCommand { get; private set; }
         private string GetErrorText(Exception ex)
         {
@@ -90,7 +85,7 @@ namespace Zhichkin.Integrator.ViewModels
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private void ShowMetadataItemView(object item)
@@ -111,7 +106,7 @@ namespace Zhichkin.Integrator.ViewModels
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private void ShowIntegratorSettings()

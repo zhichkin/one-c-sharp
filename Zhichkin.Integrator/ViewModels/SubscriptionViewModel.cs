@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Zhichkin.Metadata.Model;
-using Zhichkin.ChangeTracking;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Integrator.Views;
-using System.Windows;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Zhichkin.Shell;

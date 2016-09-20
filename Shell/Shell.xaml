@@ -2,7 +2,20 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://www.codeplex.com/CompositeWPF"
+        xmlns:wi="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:ir="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+        xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
         Title="Z © 2016" Height="600" Width="800">
+
+    <wi:Interaction.Triggers>
+        <ir:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
+            <pi:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
+        </ir:InteractionRequestTrigger>
+        <ir:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+            <pi:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
+        </ir:InteractionRequestTrigger>
+    </wi:Interaction.Triggers>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />

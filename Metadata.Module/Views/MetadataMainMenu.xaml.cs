@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Zhichkin.Shell;
+using System.Windows.Controls;
 using Zhichkin.Metadata.ViewModels;
 
 namespace Zhichkin.Metadata.Views

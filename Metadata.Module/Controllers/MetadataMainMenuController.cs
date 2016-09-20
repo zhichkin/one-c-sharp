@@ -14,14 +14,14 @@ using Zhichkin.Shell;
 
 namespace Zhichkin.Metadata.Controllers
 {
-    public class MainMenuController
+    public class MetadataMainMenuController
     {
         private readonly IUnityContainer container;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IMetadataService dataService;
 
-        public MainMenuController(IUnityContainer container,
+        public MetadataMainMenuController(IUnityContainer container,
                                   IRegionManager regionManager,
                                   IEventAggregator eventAggregator,
                                   IMetadataService dataService)
@@ -36,8 +36,8 @@ namespace Zhichkin.Metadata.Controllers
             this.eventAggregator = eventAggregator;
             this.dataService = dataService;
 
-            this.eventAggregator.GetEvent<MainMenuSaveClicked>().Subscribe(this.MainMenuSaveClicked, true);
-            this.eventAggregator.GetEvent<MainMenuKillClicked>().Subscribe(this.MainMenuKillClicked, true);
+            this.eventAggregator.GetEvent<MetadataInfoBaseSaveClicked>().Subscribe(this.MainMenuSaveClicked, true);
+            this.eventAggregator.GetEvent<MetadataInfoBaseKillClicked>().Subscribe(this.MainMenuKillClicked, true);
         }
         private MetadataTreeViewModel MetadataTreeViewModel
         {
@@ -59,21 +59,17 @@ namespace Zhichkin.Metadata.Controllers
                 rightRegion.Remove(view);
             }
         }
-        private void MainMenuSaveClicked(MetadataTreeViewModel viewModel)
+        private void MainMenuSaveClicked(InfoBase infoBase)
         {
-            if (viewModel == null) throw new ArgumentNullException("viewModel");
-            if (viewModel.CurrentInfoBase == null) throw new ArgumentNullException("viewModel.CurrentInfoBase");
-            dataService.Save(viewModel.CurrentInfoBase);
-            viewModel.CurrentInfoBase.OnPropertyChanged("State");
+            if (infoBase == null) throw new ArgumentNullException("infoBase");
+            dataService.Save(infoBase);
+            //MetadataTreeViewModel.CurrentInfoBase.OnPropertyChanged("State");
+            infoBase.OnPropertyChanged("State");
         }
-        private void MainMenuKillClicked(MetadataTreeViewModel viewModel)
+        private void MainMenuKillClicked(InfoBase infoBase)
         {
-            if (viewModel == null) throw new ArgumentNullException("viewModel");
-            if (viewModel.CurrentInfoBase == null) throw new ArgumentNullException("viewModel.CurrentInfoBase");
-
-            dataService.Kill(viewModel.CurrentInfoBase);
-            viewModel.InfoBases.Remove(viewModel.CurrentInfoBase);
-            ClearRightRegion();
+            if (infoBase == null) throw new ArgumentNullException("infoBase");
+            dataService.Kill(infoBase);
         }
     }
 }

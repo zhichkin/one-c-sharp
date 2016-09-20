@@ -11,15 +11,12 @@ namespace Zhichkin.Shell
         {
             return this.Container.Resolve<Shell>();
         }
-
         protected override void InitializeShell()
         {
             base.InitializeShell();
-
             App.Current.MainWindow = (Window)this.Shell;
             App.Current.MainWindow.Show();
         }
-
         protected override IModuleCatalog CreateModuleCatalog()
         {
             return new ConfigurationModuleCatalog();

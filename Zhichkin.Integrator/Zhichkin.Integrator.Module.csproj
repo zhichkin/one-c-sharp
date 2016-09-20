@@ -94,6 +94,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\MetadataTreeViewController.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -215,6 +216,7 @@
   <ItemGroup>
     <Resource Include="Images\26 Edit.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.Integrator.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>

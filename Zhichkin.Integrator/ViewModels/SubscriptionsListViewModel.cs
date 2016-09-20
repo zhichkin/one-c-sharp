@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Input;
 using System.Collections.Generic;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Integrator.Views;
 using System.Collections.ObjectModel;
@@ -18,6 +18,8 @@ namespace Zhichkin.Integrator.ViewModels
 {
     public class SubscriptionsListViewModel : BindableBase
     {
+        private const string CONST_ModuleDialogsTitle = "Z-Integrator";
+
         private readonly Publisher publisher;
         private readonly IUnityContainer container;
         private readonly IRegionManager regionManager;
@@ -35,6 +37,17 @@ namespace Zhichkin.Integrator.ViewModels
             this.eventAggregator = eventAggregator;
             this.OpenSubscriptionViewCommand = new DelegateCommand(this.OnOpenSubscriptionView);
             this.DeleteSubscriptionCommand = new DelegateCommand(this.OnDeleteSubscription);
+        }
+        private string GetErrorText(Exception ex)
+        {
+            string errorText = string.Empty;
+            Exception error = ex;
+            while (error != null)
+            {
+                errorText += (errorText == string.Empty) ? error.Message : Environment.NewLine + error.Message;
+                error = error.InnerException;
+            }
+            return errorText;
         }
         public void OnDrop(Entity item)
         {
@@ -91,14 +104,28 @@ namespace Zhichkin.Integrator.ViewModels
             Subscription subscription = _SelectedItem as Subscription;
             if (subscription == null) return;
             IntegratorService service = new IntegratorService();
-            service.DeleteSubscription(subscription);
-            subscriptions.Remove(subscription);
+            try
+            {
+                service.DeleteSubscription(subscription);
+                subscriptions.Remove(subscription);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
         }
         private void OnCreateSubscription(Entity entity)
         {
             IntegratorService service = new IntegratorService();
-            Subscription subscription = service.CreateSubscription(publisher, entity);
-            subscriptions.Add(subscription);
+            try
+            {
+                Subscription subscription = service.CreateSubscription(publisher, entity);
+                subscriptions.Add(subscription);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
         }
     }
 }

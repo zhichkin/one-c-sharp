@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.PubSubEvents;
-using Zhichkin.Metadata.Controllers;
 using System.Collections.ObjectModel;
-using Zhichkin.Metadata.Commands;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
-using Zhichkin.Metadata.SharedEvents;
 
 namespace Zhichkin.Metadata.ViewModels
 {

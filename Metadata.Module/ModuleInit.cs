@@ -13,24 +13,18 @@ namespace Zhichkin.Metadata
     {
         private readonly IUnityContainer unity;
         private readonly IRegionViewRegistry regions;
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        private MainMenuController mainMenuController;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        private MetadataTreeViewController metadataTreeViewController;
+        private MetadataMainMenuController mainMenuController;
 
         public ModuleInit(IUnityContainer container, IRegionViewRegistry registry)
         {
             this.unity = container;
             this.regions = registry;
         }
-
         public void Initialize()
         {
             unity.RegisterType<IMetadataService, MetadataService>();
-
-            mainMenuController = unity.Resolve<MainMenuController>();
-            metadataTreeViewController = unity.Resolve<MetadataTreeViewController>();
+            mainMenuController = unity.Resolve<MetadataMainMenuController>();
 
             regions.RegisterViewWithRegion(RegionNames.TopRegion, ()=> this.unity.Resolve<MetadataMainMenu>());
             regions.RegisterViewWithRegion(RegionNames.LeftRegion, () => this.unity.Resolve<MetadataTreeView>());

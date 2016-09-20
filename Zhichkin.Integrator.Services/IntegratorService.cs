@@ -111,7 +111,7 @@ namespace Zhichkin.Integrator.Services
         {
             return CONST_MessageQueuePrefix + publisher.Identity.ToString();
         }
-        private void CreateQueue(Publisher publisher)
+        public void CreateQueue(Publisher publisher)
         {
             string path = GetQueuePath(publisher);
             if (!MessageQueue.Exists(path))
@@ -120,7 +120,7 @@ namespace Zhichkin.Integrator.Services
                 MessageQueue.Create(path, true); 
             }
         }
-        private void DeleteQueue(Publisher publisher)
+        public void DeleteQueue(Publisher publisher)
         {
             string path = GetQueuePath(publisher);
             if (MessageQueue.Exists(path))
@@ -224,6 +224,24 @@ namespace Zhichkin.Integrator.Services
                     rule.Kill();
                 }
                 subscription.Kill();
+                scope.Complete();
+            }
+        }
+        public void DeletePublisher(Publisher publisher)
+        {
+            if (publisher == null) throw new ArgumentNullException("publisher");
+            TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+            {
+                foreach (Subscription subscription in Subscription.Select(publisher))
+                {
+                    foreach (TranslationRule rule in subscription.TranslationRules)
+                    {
+                        rule.Kill();
+                    }
+                    subscription.Kill();
+                }
+                publisher.Kill();
                 scope.Complete();
             }
         }

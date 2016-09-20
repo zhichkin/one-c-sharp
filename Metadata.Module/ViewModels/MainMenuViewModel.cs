@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Win32;
-using System.Windows;
 using System.Windows.Input;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Zhichkin.Metadata.Controllers;
+using System.Transactions;
 using Zhichkin.Metadata.Notifications;
 using Zhichkin.Metadata.Views;
 using Zhichkin.Metadata.Model;
@@ -36,8 +35,6 @@ namespace Zhichkin.Metadata.ViewModels
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
 
-            this.NotificationRequest = new InteractionRequest<INotification>();
-            this.ConfirmationRequest = new InteractionRequest<IConfirmation>();
             this.SQLConnectionPopupRequest = new InteractionRequest<SQLConnectionDialogNotification>();
 
             OpenMetadataCommand = new OpenMetadataCommand<object>(this.OnOpenMetadata, this.CanExecuteCommand);
@@ -65,8 +62,6 @@ namespace Zhichkin.Metadata.ViewModels
         public ICommand UpdateMetadataCommand { get; private set; }
         public ICommand ShowSettingsCommand { get; private set; }
 
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
-        public InteractionRequest<IConfirmation> ConfirmationRequest { get; private set; }
         public InteractionRequest<SQLConnectionDialogNotification> SQLConnectionPopupRequest { get; private set; }
 
         private bool CanExecuteCommand(object args) { return true; }
@@ -91,13 +86,19 @@ namespace Zhichkin.Metadata.ViewModels
             return errorText;
         }
 
+        private const string CONST_InfoBaseNotSelectedWarning = "Не выбрана информационная база!\nЭто можно сделать при помощи двойного\nщелчка мыши на её наименовании.";
+
         private void OnSaveMetadata()
         {
-            if (this.MetadataTreeViewModel.CurrentInfoBase == null) return;
+            if (this.MetadataTreeViewModel.CurrentInfoBase == null)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = CONST_InfoBaseNotSelectedWarning });
+                return;
+            }
             try
             {
-                this.eventAggregator.GetEvent<MainMenuSaveClicked>().Publish(this.MetadataTreeViewModel);
-                this.NotificationRequest.Raise(new Notification
+                this.eventAggregator.GetEvent<MetadataInfoBaseSaveClicked>().Publish(MetadataTreeViewModel.CurrentInfoBase);
+                Z.Notify(new Notification
                     {
                         Title = CONST_ModuleDialogsTitle,
                         Content = string.Format(
@@ -107,35 +108,46 @@ namespace Zhichkin.Metadata.ViewModels
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private void OnKillMetadata()
         {
-            if (this.MetadataTreeViewModel.CurrentInfoBase == null) return;
-            this.ConfirmationRequest.Raise(new Confirmation
+            if (this.MetadataTreeViewModel.CurrentInfoBase == null)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = CONST_InfoBaseNotSelectedWarning });
+                return;
+            }
+            Z.Confirm(new Confirmation
                 {
                     Title = CONST_ModuleDialogsTitle,
                     Content = string.Format(
                         "Информация об информационной базе \"{0}\"\nбудет полностью удалена. Продолжить?",
                         this.MetadataTreeViewModel.CurrentInfoBase.ToString())
                 },
-                c => { if (c.Confirmed) this.KillMetadata(); });
+                c => { if (c.Confirmed) this.KillMetadata(MetadataTreeViewModel.CurrentInfoBase); });
         }
-        private void KillMetadata()
+        private void KillMetadata(InfoBase infoBase)
         {
             try
             {
-                this.eventAggregator.GetEvent<MainMenuKillClicked>().Publish(this.MetadataTreeViewModel);
+                TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+                {
+                    this.eventAggregator.GetEvent<MetadataInfoBaseKillClicked>().Publish(infoBase);
+                    scope.Complete();
+                }
+                MetadataTreeViewModel.InfoBases.Remove(infoBase);
+                ClearRightRegion();
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private void OnUpdateMetadata(object args)
         {
-            this.NotificationRequest.Raise(new Notification
+            Z.Notify(new Notification
                {
                    Title = CONST_ModuleDialogsTitle,
                    Content = "Мы работаем над этим ..."
@@ -149,7 +161,7 @@ namespace Zhichkin.Metadata.ViewModels
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private void ShowSettings()
@@ -176,7 +188,7 @@ namespace Zhichkin.Metadata.ViewModels
                 bool cancel = OpenSQLConnectionPopup(infoBase);
                 if (cancel)
                 {
-                    NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Действие отменено пользователем." });
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Действие отменено пользователем." });
                 }
                 else
                 {
@@ -185,7 +197,7 @@ namespace Zhichkin.Metadata.ViewModels
             }
             catch (Exception ex)
             {
-                NotificationRequest.Raise(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
         private bool OpenSQLConnectionPopup(InfoBase infoBase)

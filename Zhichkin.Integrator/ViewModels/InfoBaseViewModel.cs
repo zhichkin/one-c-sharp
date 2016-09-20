@@ -5,12 +5,15 @@ using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Zhichkin.Metadata.Model;
 using Zhichkin.ChangeTracking;
-using System.Windows;
+using Zhichkin.Shell;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 
 namespace Zhichkin.Integrator.ViewModels
 {
     public class InfoBaseViewModel : BindableBase
     {
+        private const string CONST_ModuleDialogsTitle = "Z-Integrator";
+        
         private readonly InfoBase infoBase;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
@@ -59,6 +62,17 @@ namespace Zhichkin.Integrator.ViewModels
                 _RetentionPeriodUnit = _RetentionPeriodUnits[_ChangeTrackingDatabaseInfo.RETENTION_PERIOD_UNITS - 1];
             }
         }
+        private string GetErrorText(Exception ex)
+        {
+            string errorText = string.Empty;
+            Exception error = ex;
+            while (error != null)
+            {
+                errorText += (errorText == string.Empty) ? error.Message : Environment.NewLine + error.Message;
+                error = error.InnerException;
+            }
+            return errorText;
+        }
         public List<string> RetentionPeriodUnits { get { return _RetentionPeriodUnits; } }
         public bool IsChangeTrackingEnabled
         {
@@ -76,10 +90,13 @@ namespace Zhichkin.Integrator.ViewModels
                     {
                         service.EnableDatabaseChangeTracking(infoBase, _ChangeTrackingDatabaseInfo);
                     }
+                    InitializeViewModel();
+                    OnPropertyChanged("IsChangeTrackingEnabled");
                 }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
-                InitializeViewModel();
-                OnPropertyChanged("IsChangeTrackingEnabled");
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
         public bool IsSnapshotIsolationEnabled
@@ -92,9 +109,16 @@ namespace Zhichkin.Integrator.ViewModels
                     return;
                 }
                 ChangeTrackingService services = new ChangeTrackingService(infoBase.ConnectionString);
-                services.SwitchSnapshotIsolationState(infoBase, !IsSnapshotIsolationEnabled);
-                InitializeViewModel();
-                OnPropertyChanged("IsSnapshotIsolationEnabled");
+                try
+                {
+                    services.SwitchSnapshotIsolationState(infoBase, !IsSnapshotIsolationEnabled);
+                    InitializeViewModel();
+                    OnPropertyChanged("IsSnapshotIsolationEnabled");
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
         public bool IsAutoCleanUpEnabled
@@ -104,9 +128,16 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 _ChangeTrackingDatabaseInfo.IS_AUTO_CLEANUP_ON = value;
                 ChangeTrackingService services = new ChangeTrackingService(infoBase.ConnectionString);
-                services.EnableDatabaseChangeTracking(infoBase, _ChangeTrackingDatabaseInfo);
-                InitializeViewModel();
-                OnPropertyChanged("IsAutoCleanUpEnabled");
+                try
+                {
+                    services.EnableDatabaseChangeTracking(infoBase, _ChangeTrackingDatabaseInfo);
+                    InitializeViewModel();
+                    OnPropertyChanged("IsAutoCleanUpEnabled");
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
         public int RetentionPeriod
@@ -116,9 +147,16 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 _ChangeTrackingDatabaseInfo.RETENTION_PERIOD = value;
                 ChangeTrackingService services = new ChangeTrackingService(infoBase.ConnectionString);
-                services.EnableDatabaseChangeTracking(infoBase, _ChangeTrackingDatabaseInfo);
-                InitializeViewModel();
-                OnPropertyChanged("RetentionPeriod");
+                try
+                {
+                    services.EnableDatabaseChangeTracking(infoBase, _ChangeTrackingDatabaseInfo);
+                    InitializeViewModel();
+                    OnPropertyChanged("RetentionPeriod");
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
         public string RetentionPeriodUnit
@@ -132,9 +170,16 @@ namespace Zhichkin.Integrator.ViewModels
                 _ChangeTrackingDatabaseInfo.RETENTION_PERIOD_UNITS_DESC =
                     (_RetentionPeriodUnit == "минуты" ? "MINUTES" : (_RetentionPeriodUnit == "часы" ? "HOURS" : "DAYS"));
                 ChangeTrackingService services = new ChangeTrackingService(infoBase.ConnectionString);
-                services.EnableDatabaseChangeTracking(infoBase, _ChangeTrackingDatabaseInfo);
-                InitializeViewModel();
-                OnPropertyChanged("RetentionPeriodUnit");
+                try
+                {
+                    services.EnableDatabaseChangeTracking(infoBase, _ChangeTrackingDatabaseInfo);
+                    InitializeViewModel();
+                    OnPropertyChanged("RetentionPeriodUnit");
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
     }

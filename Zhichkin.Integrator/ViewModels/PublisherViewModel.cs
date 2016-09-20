@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Controls;
-using System.Collections.Generic;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
@@ -13,12 +12,16 @@ using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Integrator.Views;
+using Zhichkin.Integrator.Services;
 using Microsoft.Practices.Unity;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Integrator.ViewModels
 {
     public class PublisherViewModel : BindableBase
     {
+        private const string CONST_ModuleDialogsTitle = "Z-Integrator";
+
         private Publisher publisher = null;
         private readonly Entity entity;
         private readonly InfoBase infoBase;
@@ -40,9 +43,7 @@ namespace Zhichkin.Integrator.ViewModels
             this.container = container;
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
-
-            this.NotificationRequest = new InteractionRequest<INotification>();
-
+            
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
             InitializeViewModel();
         }
@@ -56,7 +57,17 @@ namespace Zhichkin.Integrator.ViewModels
             if (binding == null) return;
             binding.UpdateSource();
         }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        private string GetErrorText(Exception ex)
+        {
+            string errorText = string.Empty;
+            Exception error = ex;
+            while (error != null)
+            {
+                errorText += (errorText == string.Empty) ? error.Message : Environment.NewLine + error.Message;
+                error = error.InnerException;
+            }
+            return errorText;
+        }
 
         public string Name
         {
@@ -74,16 +85,38 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 _ChangeTrackingDatabaseInfo = services.GetChangeTrackingDatabaseInfo(infoBase);
             }
-            catch
+            catch (Exception ex)
             {
                 _ChangeTrackingDatabaseInfo = null;
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
             if (_ChangeTrackingDatabaseInfo == null) return;
 
-            _ChangeTrackingTableInfo = services.GetChangeTrackingTableInfo(entity.MainTable);
+            try
+            {
+                _ChangeTrackingTableInfo = services.GetChangeTrackingTableInfo(entity.MainTable);
+            }
+            catch (Exception ex)
+            {
+                _ChangeTrackingTableInfo = null;
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+            if (_ChangeTrackingTableInfo == null) return;
 
-            if (publisher == null) return;
-            _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(typeof(SubscriptionsListView), new ParameterOverride("publisher", publisher).OnType(typeof(SubscriptionsListViewModel)));
+            try
+            {
+                publisher = Publisher.SelectOrCreate(entity);
+                _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(
+                    typeof(SubscriptionsListView),
+                    new ParameterOverride("publisher", publisher)
+                        .OnType(typeof(SubscriptionsListViewModel)));
+            }
+            catch (Exception ex)
+            {
+                publisher = null;
+                _SubscriptionsListView = null;
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
         }
         private SubscriptionsListView _SubscriptionsListView;
         public SubscriptionsListView SubscriptionsListView
@@ -103,7 +136,19 @@ namespace Zhichkin.Integrator.ViewModels
                 {
                     if (IsChangeTrackingEnabled)
                     {
-                        DisableChangeTracking();
+                        if (Subscription.Select(publisher).Count > 0)
+                        {
+                            Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Список получателей данных не равен нулю!" });
+                            return;
+                        }
+                        Z.Confirm(new Confirmation
+                        {
+                            Title = CONST_ModuleDialogsTitle,
+                            Content = string.Format(
+                                "Регистрация изменений и обмен данными для объекта\n\"{0}\"\nбудут полностью прекращены!\nВы уверены, что хотите продолжить?",
+                                entity.FullName)
+                        },
+                        c => { if (c.Confirmed) DisableChangeTracking(); });
                     }
                     else
                     {
@@ -113,8 +158,12 @@ namespace Zhichkin.Integrator.ViewModels
                     OnPropertyChanged("IsChangeTrackingEnabled");
                     OnPropertyChanged("LastSyncVersion");
                     OnPropertyChanged("MSMQTargetQueue");
+                    OnPropertyChanged("SubscriptionsListView");
                 }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
         public bool IsColumnsTrackingEnabled
@@ -129,7 +178,10 @@ namespace Zhichkin.Integrator.ViewModels
                     InitializeViewModel();
                     OnPropertyChanged("IsColumnsTrackingEnabled");
                 }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
         private void EnableChangeTracking()
@@ -140,25 +192,19 @@ namespace Zhichkin.Integrator.ViewModels
                 service.EnableDatabaseChangeTracking(infoBase, null);
             }
             service.SwitchTableChangeTracking(entity.MainTable, true);
-
-            publisher = Publisher.Select(entity.Identity);
-            if (publisher == null)
-            {
-                publisher = (Publisher)IntegratorPersistentContext.Current.Factory.New(typeof(Publisher), entity.Identity);
-                publisher.Name = entity.FullName;
-                publisher.LastSyncVersion = 0;
-                publisher.Save();
-            }
+            publisher = Publisher.SelectOrCreate(entity);
+            _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(
+                    typeof(SubscriptionsListView),
+                    new ParameterOverride("publisher", publisher)
+                        .OnType(typeof(SubscriptionsListViewModel)));
         }
         private void DisableChangeTracking()
         {
             ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
             service.SwitchTableChangeTracking(entity.MainTable, false);
-            if (publisher != null)
-            {
-                publisher.Kill();
-                publisher = null;
-            }
+            IntegratorService integrator = new IntegratorService();
+            integrator.DeletePublisher(publisher);
+            integrator.DeleteQueue(publisher);
         }
 
         public string LastSyncVersion
@@ -167,9 +213,16 @@ namespace Zhichkin.Integrator.ViewModels
             set
             {
                 if (publisher == null) return;
-                publisher.LastSyncVersion = long.Parse(value);
-                publisher.Save();
-                OnPropertyChanged("LastSyncVersion");
+                try
+                {
+                    publisher.LastSyncVersion = long.Parse(value);
+                    publisher.Save();
+                    OnPropertyChanged("LastSyncVersion");
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
         public string MSMQTargetQueue
@@ -178,9 +231,16 @@ namespace Zhichkin.Integrator.ViewModels
             set
             {
                 if (publisher == null) return;
-                publisher.MSMQTargetQueue = value;
-                publisher.Save();
-                OnPropertyChanged("MSMQTargetQueue");
+                try
+                {
+                    publisher.MSMQTargetQueue = value;
+                    publisher.Save();
+                    OnPropertyChanged("MSMQTargetQueue");
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
             }
         }
     }

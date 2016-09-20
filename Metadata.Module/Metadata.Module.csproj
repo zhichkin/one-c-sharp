@@ -85,9 +85,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Commands\MetadataMainMenu.cs" />
-    <Compile Include="Controllers\MetadataTreeViewController.cs" />
-    <Compile Include="Controllers\MainMenuController.cs" />
-    <Compile Include="Controllers\MainMenuEvents.cs" />
+    <Compile Include="Controllers\MetadataMainMenuController.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Notifications\SQLConnectionDialogNotification.cs" />
     <Compile Include="Services\IMetadataAdapter.cs" />
