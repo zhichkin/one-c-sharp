@@ -136,12 +136,18 @@ namespace Zhichkin.Metadata.Model
         [Description("List of elements.")]
         public static readonly Entity List;
 
+        /// <summary>
+        /// OBJREF structure: type code (Int32) + identity value (GUID)
+        /// </summary>
+        [Description("OBJREF structure: type code (Int32) + identity value (GUID).")]
+        public static readonly Entity ObjRef;
+
         # endregion
 
         static Entity()
         {
             QueryService service = new QueryService(MetadataPersistentContext.Current.ConnectionString);
-            string sql = "SELECT [key], [name] FROM [entities] WHERE [namespace] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
+            string sql = "SELECT [key], [name] FROM [metadata].[entities] WHERE [namespace] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
 
             List<dynamic> list = service.Execute(sql);
 

@@ -12,14 +12,14 @@ namespace Zhichkin.Metadata.Model
         {
             //private const string SelectCommandText = string.Empty;
             private const string InsertCommandText =
-                @"INSERT [relations] ([property], [entity]) VALUES (@property, @entity); SELECT @@ROWCOUNT;";
+                @"INSERT [metadata].[relations] ([property], [entity]) VALUES (@property, @entity); SELECT @@ROWCOUNT;";
             private const string UpdateCommandText =
-                @"UPDATE [relations]" +
+                @"UPDATE [metadata].[relations]" +
                 @" SET [property] = @new_property, [entity] = @new_entity" +
                 @" WHERE [property] = @old_property AND [entity] = @old_entity; " +
                 @"SELECT @@ROWCOUNT;";
             private const string DeleteCommandText =
-                @"DELETE [relations] WHERE [property] = @old_property AND [entity] = @old_entity; SELECT @@ROWCOUNT;";
+                @"DELETE [metadata].[relations] WHERE [property] = @old_property AND [entity] = @old_entity; SELECT @@ROWCOUNT;";
 
             private readonly string ConnectionString;
             private readonly IReferenceObjectFactory Factory;

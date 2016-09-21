@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -15,6 +16,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 using Zhichkin.Shell;
+using System.Diagnostics;
 
 namespace Zhichkin.Integrator.ViewModels
 {
@@ -38,7 +40,9 @@ namespace Zhichkin.Integrator.ViewModels
         }
         private void InitializeViewModel()
         {
+            this.PublisherSetupCommand = new DelegateCommand(this.OnPublisherSetup);
             this.PublisherServiceSwitchCommand = new DelegateCommand(this.OnPublisherServiceSwitch);
+            this.SubscriberSetupCommand = new DelegateCommand(this.OnSubscriberSetup);
             this.SubscriberServiceSwitchCommand = new DelegateCommand(this.OnSubscriberServiceSwitch);
             InitializePublisherServiceInfo();
             InitializeSubscriberServiceInfo();
@@ -156,11 +160,13 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 this.IsPublisherServiceInstalled = false;
                 PublisherServiceStateText = "not installed";
+                PublisherSetupButtonContent = "Install";
                 PublisherServiceButtonContent = "";
             }
             else
             {
                 this.IsPublisherServiceInstalled = true;
+                PublisherSetupButtonContent = "Uninstall";
                 if (publisherService.Status == ServiceControllerStatus.Running)
                 {
                     PublisherServiceStateText = "Running";
@@ -173,6 +179,7 @@ namespace Zhichkin.Integrator.ViewModels
                 }
             }
             OnPropertyChanged("IsPublisherServiceInstalled");
+            OnPropertyChanged("PublisherSetupButtonContent");
             OnPropertyChanged("PublisherServiceStateText");
             OnPropertyChanged("PublisherServiceButtonContent");
         }
@@ -251,11 +258,13 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 this.IsSubscriberServiceInstalled = false;
                 SubscriberServiceStateText = "not installed";
+                SubscriberSetupButtonContent = "Install";
                 SubscriberServiceButtonContent = "";
             }
             else
             {
                 this.IsSubscriberServiceInstalled = true;
+                SubscriberSetupButtonContent = "Uninstall";
                 if (subscriberService.Status == ServiceControllerStatus.Running)
                 {
                     SubscriberServiceStateText = "Running";
@@ -268,6 +277,7 @@ namespace Zhichkin.Integrator.ViewModels
                 }
             }
             OnPropertyChanged("IsSubscriberServiceInstalled");
+            OnPropertyChanged("SubscriberSetupButtonContent");
             OnPropertyChanged("SubscriberServiceStateText");
             OnPropertyChanged("SubscriberServiceButtonContent");
         }
@@ -335,6 +345,82 @@ namespace Zhichkin.Integrator.ViewModels
                 subscriberService.WaitForStatus(ServiceControllerStatus.Running);
                 InitializeSubscriberServiceInfo();
             }
+        }
+
+        private string _PublisherSetupButtonContent = string.Empty;
+        public string PublisherSetupButtonContent { get; private set; }
+        public ICommand PublisherSetupCommand { get; private set; }
+        private void OnPublisherSetup()
+        {
+            try
+            {
+                SetupPublisherService(!IsPublisherServiceInstalled);
+                IsPublisherServiceInstalled = !IsPublisherServiceInstalled;
+                PublisherServiceStateText = IsPublisherServiceInstalled ? "installed" : "not installed";
+                PublisherSetupButtonContent = IsPublisherServiceInstalled ? "Uninstall" : "Install";
+                PublisherServiceButtonContent = IsPublisherServiceInstalled ? "Start" : "";
+                OnPropertyChanged("IsPublisherServiceInstalled");
+                OnPropertyChanged("PublisherSetupButtonContent");
+                OnPropertyChanged("PublisherServiceStateText");
+                OnPropertyChanged("PublisherServiceButtonContent");
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void SetupPublisherService(bool install)
+        {
+            string bat_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup_publisher_service.bat");
+            string exe_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Zhichkin.Integrator.PublisherAgent.exe");
+            string installutil = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "installutil.exe");
+            File.WriteAllText(bat_path, string.Format(
+                "@ECHO OFF\nCLS\n{0}{1}{2}\nPAUSE", installutil, (install ? " " : " /u "), exe_path));
+            ProcessStartInfo info = new ProcessStartInfo
+            {
+                FileName = bat_path,
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(info);
+        }
+
+        private string _SubscriberSetupButtonContent = string.Empty;
+        public string SubscriberSetupButtonContent { get; private set; }
+        public ICommand SubscriberSetupCommand { get; private set; }
+        private void OnSubscriberSetup()
+        {
+            try
+            {
+                SetupSubscriberService(!IsSubscriberServiceInstalled);
+                IsSubscriberServiceInstalled = !IsSubscriberServiceInstalled;
+                SubscriberServiceStateText = IsSubscriberServiceInstalled ? "installed" : "not installed";
+                SubscriberSetupButtonContent = IsSubscriberServiceInstalled ? "Uninstall" : "Install";
+                SubscriberServiceButtonContent = IsSubscriberServiceInstalled ? "Start" : "";
+                OnPropertyChanged("IsSubscriberServiceInstalled");
+                OnPropertyChanged("SubscriberSetupButtonContent");
+                OnPropertyChanged("SubscriberServiceStateText");
+                OnPropertyChanged("SubscriberServiceButtonContent");
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void SetupSubscriberService(bool install)
+        {
+            string bat_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup_subscriber_service.bat");
+            string exe_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Zhichkin.Integrator.SubscriberAgent.exe");
+            string installutil = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "installutil.exe");
+            File.WriteAllText(bat_path, string.Format(
+                "@ECHO OFF\nCLS\n{0}{1}{2}\nPAUSE", installutil, (install ? " " : " /u "), exe_path));
+            ProcessStartInfo info = new ProcessStartInfo
+            {
+                FileName = bat_path,
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(info);
         }
     }
 }

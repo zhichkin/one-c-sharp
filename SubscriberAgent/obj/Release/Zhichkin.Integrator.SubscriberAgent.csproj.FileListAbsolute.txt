@@ -1,0 +1,7 @@
+C:\Users\User\Desktop\Z\deploy\Zhichkin.Integrator.SubscriberAgent.exe
+C:\Users\User\Desktop\Z\deploy\Zhichkin.Integrator.SubscriberAgent.pdb
+C:\Users\User\Desktop\Z\SubscriberAgent\obj\Release\Zhichkin.Integrator.SubscriberAgent.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\SubscriberAgent\obj\Release\Zhichkin.Integrator.SubscriberAgent.ProjectInstaller.resources
+C:\Users\User\Desktop\Z\SubscriberAgent\obj\Release\Zhichkin.Integrator.SubscriberAgent.csproj.GenerateResource.Cache
+C:\Users\User\Desktop\Z\SubscriberAgent\obj\Release\Zhichkin.Integrator.SubscriberAgent.exe
+C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe

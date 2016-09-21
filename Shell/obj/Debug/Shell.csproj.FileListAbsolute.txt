@@ -87,3 +87,7 @@ C:\Users\User\Desktop\Z\Shell\obj\Debug\z_MarkupCompile.cache
 C:\Users\User\Desktop\Z\Shell\obj\Debug\z.g.resources
 C:\Users\User\Desktop\Z\Shell\obj\Debug\z.exe
 C:\Users\User\Desktop\Z\Shell\obj\Debug\z.pdb
+C:\Users\User\Desktop\Z\Shell\z.exe.config
+C:\Users\User\Desktop\Z\deploy\z.exe.config
+C:\Users\User\Desktop\Z\deploy\z.exe
+C:\Users\User\Desktop\Z\deploy\z.pdb

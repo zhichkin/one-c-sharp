@@ -1,0 +1,4 @@
+C:\Users\User\Desktop\Z\deploy\Zhichkin.ComConnector.dll
+C:\Users\User\Desktop\Z\deploy\Zhichkin.ComConnector.pdb
+C:\Users\User\Desktop\Z\ComConnector\obj\Release\Zhichkin.ComConnector.dll
+C:\Users\User\Desktop\Z\build\Zhichkin.ComConnector.dll

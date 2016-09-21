@@ -22,7 +22,7 @@ namespace Zhichkin.Metadata.Services
             List<InfoBase> list = new List<InfoBase>();
 
             QueryService service = new QueryService(MetadataPersistentContext.Current.ConnectionString);
-            string sql = "SELECT [key] FROM [infobases] WHERE [key] <> CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
+            string sql = "SELECT [key] FROM [metadata].[infobases] WHERE [key] <> CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
             foreach (dynamic item in service.Execute(sql))
             {
                 list.Add(new InfoBase((Guid)item.key, PersistentState.Virtual));
@@ -256,7 +256,7 @@ namespace Zhichkin.Metadata.Services
         {
             List<TChild> list = new List<TChild>();
 
-            string sql = @"SELECT [key] FROM [{table_name}] WHERE [{fk_name}] = @key {filter}"
+            string sql = @"SELECT [key] FROM [metadata].[{table_name}] WHERE [{fk_name}] = @key {filter}"
                 .Replace("{table_name}", GetTableName<TChild>())
                 .Replace("{fk_name}", propertyName)
                 .Replace("{filter}", GetWhereClause<TParent, TChild>());
@@ -292,7 +292,7 @@ namespace Zhichkin.Metadata.Services
         {
             List<TChild> list = new List<TChild>();
 
-            string sql = @"SELECT {fields_list} FROM [{table_name}] WHERE [{fk_name}] = @key"
+            string sql = @"SELECT {fields_list} FROM [metadata].[{table_name}] WHERE [{fk_name}] = @key"
                 .Replace("{fields_list}", GetValueFields<TChild>())
                 .Replace("{table_name}", GetTableName<TChild>())
                 .Replace("{fk_name}", propertyName);

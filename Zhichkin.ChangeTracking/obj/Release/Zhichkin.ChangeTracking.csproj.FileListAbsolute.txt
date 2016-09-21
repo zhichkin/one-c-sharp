@@ -1,0 +1,5 @@
+C:\Users\User\Desktop\Z\deploy\Zhichkin.ChangeTracking.dll
+C:\Users\User\Desktop\Z\deploy\Zhichkin.ChangeTracking.pdb
+C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\obj\Release\Zhichkin.ChangeTracking.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\obj\Release\Zhichkin.ChangeTracking.dll
+C:\Users\User\Desktop\Z\build\Zhichkin.ChangeTracking.dll

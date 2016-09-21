@@ -47,14 +47,22 @@
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Сервис экспорта данных:" ToolTip="Z-Integrator Publisher Service"
                    FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PublisherServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Text="{Binding PublisherServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <Button Content="{Binding PublisherSetupButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
+                Command="{Binding PublisherSetupCommand}"/>
+        </StackPanel>
         <Button Grid.Row="2" Grid.Column="2" Content="{Binding PublisherServiceButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
                 Command="{Binding PublisherServiceSwitchCommand}"
                 Visibility="{Binding IsPublisherServiceInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Сервис импорта данных:" ToolTip="Z-Integrator Subscriber Service"
                    FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SubscriberServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Text="{Binding SubscriberServiceStateText, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <Button Content="{Binding SubscriberSetupButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
+                Command="{Binding SubscriberSetupCommand}"/>
+        </StackPanel>
         <Button Grid.Row="3" Grid.Column="2" Content="{Binding SubscriberServiceButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
                 Command="{Binding SubscriberServiceSwitchCommand}" 
                 Visibility="{Binding IsSubscriberServiceInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"/>

@@ -309,7 +309,7 @@ namespace Zhichkin.ChangeTracking
                 info = new ChangeTrackingDatabaseInfo()
                 {
                     IS_AUTO_CLEANUP_ON          = true,
-                    RETENTION_PERIOD            = 2,
+                    RETENTION_PERIOD            = 5,
                     RETENTION_PERIOD_UNITS      = 3,
                     RETENTION_PERIOD_UNITS_DESC = "DAYS"
                 };

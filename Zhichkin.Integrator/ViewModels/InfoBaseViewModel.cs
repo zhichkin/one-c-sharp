@@ -92,6 +92,10 @@ namespace Zhichkin.Integrator.ViewModels
                     }
                     InitializeViewModel();
                     OnPropertyChanged("IsChangeTrackingEnabled");
+                    OnPropertyChanged("IsSnapshotIsolationEnabled");
+                    OnPropertyChanged("IsAutoCleanUpEnabled");
+                    OnPropertyChanged("RetentionPeriod");
+                    OnPropertyChanged("RetentionPeriodUnit");
                 }
                 catch (Exception ex)
                 {

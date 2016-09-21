@@ -10,26 +10,26 @@ namespace Zhichkin.Metadata.Model
     {
         public sealed class DataMapper : IDataMapper
         {
-            private const string SelectCommandText = @"SELECT [entity], [name], [purpose], [version] FROM [properties] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [entity], [name], [purpose], [version] FROM [metadata].[properties] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [properties] ([key], [entity], [name], [purpose]) " +
+                @"INSERT [metadata].[properties] ([key], [entity], [name], [purpose]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
                 @"VALUES (@key, @entity, @name, @purpose); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [properties] SET [entity] = @entity, [name] = @name, [purpose] = @purpose " +
+                @"UPDATE [metadata].[properties] SET [entity] = @entity, [name] = @name, [purpose] = @purpose " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
                 @"IF (@rows_affected = 0) " +
                 @"BEGIN " +
-                @"  INSERT @result ([version]) SELECT [version] FROM [properties] WHERE [key] = @key; " +
+                @"  INSERT @result ([version]) SELECT [version] FROM [metadata].[properties] WHERE [key] = @key; " +
                 @"END " +
                 @"SELECT @rows_affected, [version] FROM @result;";
             private const string DeleteCommandText =
-                @"DELETE [properties] WHERE [key] = @key " +
+                @"DELETE [metadata].[properties] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
 

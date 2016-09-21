@@ -10,27 +10,27 @@ namespace Zhichkin.Metadata.Model
     {
         public sealed class DataMapper : IDataMapper
         {
-            private const string SelectCommandText = @"SELECT [owner_], [owner], [name], [version] FROM [namespaces] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [owner_], [owner], [name], [version] FROM [metadata].[namespaces] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [namespaces] ([key], [owner_], [owner], [name]) " +
+                @"INSERT [metadata].[namespaces] ([key], [owner_], [owner], [name]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
                 @"VALUES (@key, @owner_, @owner, @name); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [namespaces]" +
+                @"UPDATE [metadata].[namespaces]" +
                 @" SET [owner_] = @owner_, [owner] = @owner, [name] = @name " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
                 @"IF (@rows_affected = 0) " +
                 @"BEGIN " +
-                @"  INSERT @result ([version]) SELECT [version] FROM [namespaces] WHERE [key] = @key; " +
+                @"  INSERT @result ([version]) SELECT [version] FROM [metadata].[namespaces] WHERE [key] = @key; " +
                 @"END " +
                 @"SELECT @rows_affected, [version] FROM @result;";
             private const string DeleteCommandText =
-                @"DELETE [namespaces] WHERE [key] = @key " +
+                @"DELETE [metadata].[namespaces] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
 

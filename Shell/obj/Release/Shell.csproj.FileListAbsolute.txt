@@ -1,0 +1,15 @@
+C:\Users\User\Desktop\Z\Shell\bin\Release\z.exe.config
+C:\Users\User\Desktop\Z\deploy\z.exe.config
+C:\Users\User\Desktop\Z\deploy\z.exe
+C:\Users\User\Desktop\Z\deploy\z.pdb
+C:\Users\User\Desktop\Z\Shell\obj\Release\Shell.baml
+C:\Users\User\Desktop\Z\Shell\obj\Release\Shell.g.cs
+C:\Users\User\Desktop\Z\Shell\obj\Release\App.g.cs
+C:\Users\User\Desktop\Z\Shell\obj\Release\z_MarkupCompile.cache
+C:\Users\User\Desktop\Z\Shell\obj\Release\z.g.resources
+C:\Users\User\Desktop\Z\Shell\obj\Release\Zhichkin.Shell.Properties.Resources.resources
+C:\Users\User\Desktop\Z\Shell\obj\Release\Shell.csproj.GenerateResource.Cache
+C:\Users\User\Desktop\Z\Shell\obj\Release\z.exe
+C:\Users\User\Desktop\Z\build\z.exe.config
+C:\Users\User\Desktop\Z\build\z.exe
+C:\Users\User\Desktop\Z\Shell\obj\Release\Shell.csprojResolveAssemblyReference.cache

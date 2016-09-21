@@ -10,27 +10,27 @@ namespace Zhichkin.Metadata.Model
     {
         public sealed class DataMapper : IDataMapper
         {
-            private const string SelectCommandText = @"SELECT [namespace], [owner], [parent], [name], [code], [version] FROM [entities] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [namespace], [owner], [parent], [name], [code], [version] FROM [metadata].[entities] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [entities] ([key], [namespace], [owner], [parent], [name], [code]) " +
+                @"INSERT [metadata].[entities] ([key], [namespace], [owner], [parent], [name], [code]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
                 @"VALUES (@key, @namespace, @owner, @parent, @name, @code); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [entities] SET [namespace] = @namespace, [owner] = @owner, [parent] = @parent, " +
+                @"UPDATE [metadata].[entities] SET [namespace] = @namespace, [owner] = @owner, [parent] = @parent, " +
                 @"[name] = @name, [code] = @code " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
                 @"IF (@rows_affected = 0) " +
                 @"BEGIN " +
-                @"  INSERT @result ([version]) SELECT [version] FROM [entities] WHERE [key] = @key; " +
+                @"  INSERT @result ([version]) SELECT [version] FROM [metadata].[entities] WHERE [key] = @key; " +
                 @"END " +
                 @"SELECT @rows_affected, [version] FROM @result;";
             private const string DeleteCommandText =
-                @"DELETE [entities] WHERE [key] = @key " +
+                @"DELETE [metadata].[entities] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
 

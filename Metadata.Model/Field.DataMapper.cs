@@ -11,26 +11,26 @@ namespace Zhichkin.Metadata.Model
         public sealed class DataMapper : IDataMapper
         {
             private const string SelectCommandText =
-                @"SELECT [version], [name], [table], [property], [purpose], [type_name], [length], [precision], [scale], [is_nullable], [is_primary_key], [key_ordinal] FROM [fields] WHERE [key] = @key";
+                @"SELECT [version], [name], [table], [property], [purpose], [type_name], [length], [precision], [scale], [is_nullable], [is_primary_key], [key_ordinal] FROM [metadata].[fields] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [fields] ([key], [name], [table], [property], [purpose], [type_name], [length], [precision], [scale], [is_nullable], [is_primary_key], [key_ordinal]) " +
+                @"INSERT [metadata].[fields] ([key], [name], [table], [property], [purpose], [type_name], [length], [precision], [scale], [is_nullable], [is_primary_key], [key_ordinal]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
                 @"VALUES (@key, @name, @table, @property, @purpose, @type_name, @length, @precision, @scale, @is_nullable, @is_primary_key, @key_ordinal); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [fields] SET [name] = @name, [table] = @table, [property] = @property, [purpose] = @purpose, [type_name] = @type_name, [length] = @length, [precision] = @precision, [scale] = @scale, [is_nullable] = @is_nullable, [is_primary_key] = @is_primary_key, [key_ordinal] = @key_ordinal " +
+                @"UPDATE [metadata].[fields] SET [name] = @name, [table] = @table, [property] = @property, [purpose] = @purpose, [type_name] = @type_name, [length] = @length, [precision] = @precision, [scale] = @scale, [is_nullable] = @is_nullable, [is_primary_key] = @is_primary_key, [key_ordinal] = @key_ordinal " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
                 @"IF (@rows_affected = 0) " +
                 @"BEGIN " +
-                @"  INSERT @result ([version]) SELECT [version] FROM [fields] WHERE [key] = @key; " +
+                @"  INSERT @result ([version]) SELECT [version] FROM [metadata].[fields] WHERE [key] = @key; " +
                 @"END " +
                 @"SELECT @rows_affected, [version] FROM @result;";
             private const string DeleteCommandText =
-                @"DELETE [fields] WHERE [key] = @key " +
+                @"DELETE [metadata].[fields] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
 

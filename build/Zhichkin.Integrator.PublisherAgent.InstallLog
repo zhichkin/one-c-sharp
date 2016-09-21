@@ -1,0 +1,10 @@
+﻿Выполняется установка сборки 'C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.exe
+Выполняется откат для сборки 'C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.exe

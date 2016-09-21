@@ -22,9 +22,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\build\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,14 +75,15 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="SQL\CreateDatabase_zhichkin.sql" />
-    <Content Include="SQL\CreateTable_entities.sql" />
-    <Content Include="SQL\CreateTable_fields.sql" />
-    <Content Include="SQL\CreateTable_infobases.sql" />
-    <Content Include="SQL\CreateTable_namespaces.sql" />
-    <Content Include="SQL\CreateTable_properties.sql" />
-    <Content Include="SQL\CreateTable_relations.sql" />
-    <Content Include="SQL\CreateTable_tables.sql" />
+    <Content Include="SQL\create_database.sql" />
+    <Content Include="SQL\schema_metadata.sql" />
+    <Content Include="SQL\entities.sql" />
+    <Content Include="SQL\fields.sql" />
+    <Content Include="SQL\infobases.sql" />
+    <Content Include="SQL\namespaces.sql" />
+    <Content Include="SQL\properties.sql" />
+    <Content Include="SQL\relations.sql" />
+    <Content Include="SQL\tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

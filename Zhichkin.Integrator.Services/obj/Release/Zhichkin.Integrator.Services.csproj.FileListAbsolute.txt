@@ -1,0 +1,5 @@
+C:\Users\User\Desktop\Z\deploy\Zhichkin.Integrator.Services.dll
+C:\Users\User\Desktop\Z\deploy\Zhichkin.Integrator.Services.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Services\obj\Release\Zhichkin.Integrator.Services.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Services\obj\Release\Zhichkin.Integrator.Services.dll
+C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.Services.dll

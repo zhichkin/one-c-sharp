@@ -1,0 +1,5 @@
+C:\Users\User\Desktop\Z\deploy\Zhichkin.Integrator.Translator.dll
+C:\Users\User\Desktop\Z\deploy\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Release\Zhichkin.Integrator.Translator.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Release\Zhichkin.Integrator.Translator.dll
+C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.Translator.dll
