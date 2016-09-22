@@ -22,3 +22,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Release\Zhichkin.Integrator.Modu
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Release\Zhichkin.Integrator.Module_MarkupCompile.lref
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Release\Zhichkin.Integrator.Module.g.resources
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Release\Zhichkin.Integrator.Module.dll
+C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.Module.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Release\Zhichkin.Integrator.Module.pdb

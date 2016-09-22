@@ -41,10 +41,6 @@ C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Metadata.Module.csprojResolveA
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataMainMenu.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataTreeView.g.cs
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata_MarkupCompile.cache
-C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata_MarkupCompile.lref
-C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.dll
-C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.Composition.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.Mvvm.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.PubSubEvents.dll
@@ -67,11 +63,8 @@ C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.ServiceLoc
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.ServiceLocation.xml
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataMainMenu.baml
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataTreeView.baml
-C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.g.resources
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Properties.Resources.resources
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Metadata.Module.csproj.GenerateResource.Cache
-C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.dll
-C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.Interactivity.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\System.Windows.Interactivity.dll
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Microsoft.Practices.Prism.Interactivity.xml
@@ -91,3 +84,10 @@ C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\z.exe
 C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\z.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataSettingsView.baml
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Views\MetadataSettingsView.g.cs
+C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.Module.dll
+C:\Users\User\Desktop\Z\Metadata.Module\bin\Debug\Zhichkin.Metadata.Module.pdb
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module_MarkupCompile.cache
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module_MarkupCompile.lref
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module.g.resources
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module.dll
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module.pdb

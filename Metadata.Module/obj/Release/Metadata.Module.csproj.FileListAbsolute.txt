@@ -17,3 +17,5 @@ C:\Users\User\Desktop\Z\Metadata.Module\obj\Release\Zhichkin.Metadata.Module_Mar
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Release\Zhichkin.Metadata.Module_MarkupCompile.lref
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Release\Zhichkin.Metadata.Module.g.resources
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Release\Zhichkin.Metadata.Module.dll
+C:\Users\User\Desktop\Z\build\Zhichkin.Metadata.Module.pdb
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Release\Zhichkin.Metadata.Module.pdb

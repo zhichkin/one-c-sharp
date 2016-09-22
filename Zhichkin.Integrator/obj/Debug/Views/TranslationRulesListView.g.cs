@@ -54,7 +54,7 @@ namespace Zhichkin.Integrator.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Zhichkin.Integrator;component/views/translationruleslistview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Zhichkin.Integrator.Module;component/views/translationruleslistview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Views\TranslationRulesListView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

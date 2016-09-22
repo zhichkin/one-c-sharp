@@ -51,7 +51,7 @@ namespace Zhichkin.Metadata.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Zhichkin.Metadata;component/views/metadatasettingsview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Zhichkin.Metadata.Module;component/views/metadatasettingsview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Views\MetadataSettingsView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

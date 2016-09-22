@@ -16,6 +16,7 @@
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
             <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
             <BitmapImage x:Key="Icon_Enumeration" UriSource="..\Images\Перечисление.png"/>
+            <BitmapImage x:Key="Icon_Charecteristic" UriSource="..\Images\ПланВидовХарактеристик.png"/>
             <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
             <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
             <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
@@ -78,6 +79,9 @@
                                         <DataTrigger Binding="{Binding Name}" Value="Документ">
                                             <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="ПланВидовХарактеристик">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Charecteristic}"/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Name}" Value="РегистрСведений">
                                             <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
                                         </DataTrigger>
@@ -117,6 +121,9 @@
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Owner.Namespace.Name}" Value="Документ">
                                             <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="ПланВидовХарактеристик">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Charecteristic}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Namespace.Name}" Value="РегистрСведений">
                                             <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>

@@ -51,7 +51,7 @@ namespace Zhichkin.Metadata.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Zhichkin.Metadata;component/views/sqlserverconnectionview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Zhichkin.Metadata.Module;component/views/sqlserverconnectionview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Views\SQLServerConnectionView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

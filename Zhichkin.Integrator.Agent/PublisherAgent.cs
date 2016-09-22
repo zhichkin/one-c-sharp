@@ -142,7 +142,10 @@ namespace Zhichkin.Integrator.PublisherAgent
                 try
                 {
                     messagesSent = integrator.PublishChanges(publisher);
-                    log.WriteEntry(GetSuccessText(publisher, messagesSent), EventLogEntryType.Information);
+                    if (messagesSent != 0)
+                    {
+                        log.WriteEntry(GetSuccessText(publisher, messagesSent), EventLogEntryType.Information);
+                    }
                 }
                 catch (Exception ex)
                 {

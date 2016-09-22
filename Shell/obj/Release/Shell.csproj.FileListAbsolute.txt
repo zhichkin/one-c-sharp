@@ -13,3 +13,5 @@ C:\Users\User\Desktop\Z\Shell\obj\Release\z.exe
 C:\Users\User\Desktop\Z\build\z.exe.config
 C:\Users\User\Desktop\Z\build\z.exe
 C:\Users\User\Desktop\Z\Shell\obj\Release\Shell.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\build\z.pdb
+C:\Users\User\Desktop\Z\Shell\obj\Release\z.pdb

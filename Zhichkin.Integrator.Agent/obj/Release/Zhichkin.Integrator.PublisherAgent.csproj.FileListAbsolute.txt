@@ -5,3 +5,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\obj\Release\Zhichkin.Integrato
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\obj\Release\Zhichkin.Integrator.PublisherAgent.csproj.GenerateResource.Cache
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\obj\Release\Zhichkin.Integrator.PublisherAgent.exe
 C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.exe
+C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.PublisherAgent.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\obj\Release\Zhichkin.Integrator.PublisherAgent.pdb

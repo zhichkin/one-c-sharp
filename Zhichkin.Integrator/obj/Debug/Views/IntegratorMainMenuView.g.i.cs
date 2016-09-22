@@ -52,7 +52,7 @@ namespace Zhichkin.Integrator.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Zhichkin.Integrator;component/views/integratormainmenuview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Zhichkin.Integrator.Module;component/views/integratormainmenuview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Views\IntegratorMainMenuView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

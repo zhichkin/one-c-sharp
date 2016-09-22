@@ -142,7 +142,10 @@ namespace SubscriberAgent
                 try
                 {
                     messagesProcessed = integrator.ProcessMessages(subscription);
-                    log.WriteEntry(GetSuccessText(subscription, messagesProcessed), EventLogEntryType.Information);
+                    if (messagesProcessed != 0)
+                    {
+                        log.WriteEntry(GetSuccessText(subscription, messagesProcessed), EventLogEntryType.Information);
+                    }
                 }
                 catch (Exception ex)
                 {

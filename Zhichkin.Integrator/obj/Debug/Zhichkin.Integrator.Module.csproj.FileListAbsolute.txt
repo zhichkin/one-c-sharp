@@ -1,5 +1,3 @@
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.dll
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Prism.Composition.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Prism.Interactivity.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Microsoft.Practices.Prism.Mvvm.Desktop.dll
@@ -47,16 +45,11 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\PublisherView.g.cs
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\InfoBaseView.g.cs
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\IntegratorMainMenuView.g.cs
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator_MarkupCompile.cache
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator_MarkupCompile.lref
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\PublisherView.baml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\InfoBaseView.baml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\IntegratorMainMenuView.baml
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.g.resources
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Properties.Resources.resources
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module.csproj.GenerateResource.Cache
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.dll
-C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\SubscriptionsListView.g.cs
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\SubscriptionsListView.baml
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\SubscriptionView.g.cs
@@ -69,3 +62,10 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\z.exe
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\z.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Translator.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Module.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\bin\Debug\Zhichkin.Integrator.Module.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module_MarkupCompile.cache
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module_MarkupCompile.lref
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module.g.resources
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module.dll
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module.pdb
