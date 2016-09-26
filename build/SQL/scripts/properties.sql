@@ -4,7 +4,7 @@ GO
 CREATE TABLE [metadata].[properties](
 	[key] [uniqueidentifier] NOT NULL,
 	[version] [rowversion] NOT NULL,
-	[name] [nvarchar](100) NOT NULL,
+	[name] [nvarchar](128) NOT NULL,
 	[entity] [uniqueidentifier] NOT NULL,
 	[purpose] [int] NOT NULL,
  CONSTRAINT [PK_properties] PRIMARY KEY CLUSTERED 

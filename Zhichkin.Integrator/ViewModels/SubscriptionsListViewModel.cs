@@ -103,16 +103,26 @@ namespace Zhichkin.Integrator.ViewModels
             if (_SelectedItem == null) return;
             Subscription subscription = _SelectedItem as Subscription;
             if (subscription == null) return;
-            IntegratorService service = new IntegratorService();
             try
             {
-                service.DeleteSubscription(subscription);
-                subscriptions.Remove(subscription);
+                Z.Confirm(new Confirmation
+                {
+                    Title = CONST_ModuleDialogsTitle,
+                    Content = string.Format(
+                                    "Обмен данными для подписки\n\"{0}\"\nбудет полностью прекращён!\nВы уверены, что хотите продолжить?",
+                                    subscription.ToString())
+                }, c => { if (c.Confirmed) DeleteSubscription(subscription); });
             }
             catch (Exception ex)
             {
                 Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
+        }
+        private void DeleteSubscription(Subscription subscription)
+        {
+            IntegratorService service = new IntegratorService();
+            service.DeleteSubscription(subscription);
+            subscriptions.Remove(subscription);
         }
         private void OnCreateSubscription(Entity entity)
         {

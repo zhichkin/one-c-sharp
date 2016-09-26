@@ -21,6 +21,8 @@ CREATE TABLE [metadata].[infobases](
 	[name] [nvarchar](100) NOT NULL,
 	[server] [nvarchar](100) NOT NULL,
 	[database] [nvarchar](100) NOT NULL,
+	[username] [nvarchar](100) NOT NULL,
+	[password] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_infobases] PRIMARY KEY CLUSTERED 
 (
 	[key] ASC
@@ -28,8 +30,8 @@ CREATE TABLE [metadata].[infobases](
 ) ON [PRIMARY]
 GO
 
-INSERT [metadata].[infobases] ([key], [name], [server], [database])
-VALUES (CAST(0x00000000000000000000000000000000 AS uniqueidentifier), N'Metadata', N'', N'');
+INSERT [metadata].[infobases] ([key], [name], [server], [database], [username], [password])
+VALUES (CAST(0x00000000000000000000000000000000 AS uniqueidentifier), N'Metadata', N'', N'', N'', N'');
 GO
 
 CREATE TABLE [metadata].[namespaces](
@@ -98,7 +100,7 @@ VALUES
 CREATE TABLE [metadata].[properties](
 	[key] [uniqueidentifier] NOT NULL,
 	[version] [rowversion] NOT NULL,
-	[name] [nvarchar](100) NOT NULL,
+	[name] [nvarchar](128) NOT NULL,
 	[entity] [uniqueidentifier] NOT NULL,
 	[purpose] [int] NOT NULL,
  CONSTRAINT [PK_properties] PRIMARY KEY CLUSTERED 

@@ -16,5 +16,5 @@ TRACE
 80-1956494865
 Views\IntegratorSettingsView.xaml;Views\TranslationRulesListView.xaml;Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
 
-True
+False
 

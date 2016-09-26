@@ -10,16 +10,16 @@ namespace Zhichkin.Metadata.Model
     {
         public sealed class DataMapper : IDataMapper
         {
-            private const string SelectCommandText = @"SELECT [name], [server], [database], [version] FROM [metadata].[infobases] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [name], [server], [database], [username], [password], [version] FROM [metadata].[infobases] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [metadata].[infobases] ([key], [name], [server], [database]) " +
+                @"INSERT [metadata].[infobases] ([key], [name], [server], [database], [username], [password]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @name, @server, @database); " +
+                @"VALUES (@key, @name, @server, @database, @username, @password); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [metadata].[infobases] SET [name] = @name, [server] = @server, [database] = @database " +
+                @"UPDATE [metadata].[infobases] SET [name] = @name, [server] = @server, [database] = @database, [username] = @username, [password] = @password " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
@@ -71,7 +71,9 @@ namespace Zhichkin.Metadata.Model
                         e.name     = (string)reader[0];
                         e.server   = (string)reader[1];
                         e.database = (string)reader[2];
-                        e.version  = (byte[])reader[3];
+                        e.username = (string)reader[3];
+                        e.password = (string)reader[4];
+                        e.version  = (byte[])reader[5];
                         ok = true;
                     }
 
@@ -115,6 +117,16 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("database", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.database;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("username", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.username;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("password", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.password;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -169,6 +181,16 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("database", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.database;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("username", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.username;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("password", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.password;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())

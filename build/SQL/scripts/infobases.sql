@@ -7,6 +7,8 @@ CREATE TABLE [metadata].[infobases](
 	[name] [nvarchar](100) NOT NULL,
 	[server] [nvarchar](100) NOT NULL,
 	[database] [nvarchar](100) NOT NULL,
+	[username] [nvarchar](100) NOT NULL,
+	[password] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_infobases] PRIMARY KEY CLUSTERED 
 (
 	[key] ASC

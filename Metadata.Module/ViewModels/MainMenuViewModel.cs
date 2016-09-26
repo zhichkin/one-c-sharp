@@ -138,6 +138,7 @@ namespace Zhichkin.Metadata.ViewModels
                     scope.Complete();
                 }
                 MetadataTreeViewModel.InfoBases.Remove(infoBase);
+                MetadataTreeViewModel.SetCurrentInfoBase(null);
                 ClearRightRegion();
             }
             catch (Exception ex)
@@ -236,9 +237,12 @@ namespace Zhichkin.Metadata.ViewModels
             {
                 helper.UserID = response.UserName;
                 helper.Password = response.Password;
+                helper.PersistSecurityInfo = false;
             }
             infoBase.Server = helper.DataSource;
             infoBase.Database = helper.InitialCatalog;
+            infoBase.UserName = helper.UserID;
+            infoBase.Password = helper.Password;
             (new SQLMetadataAdapter()).Load(helper.ToString(), infoBase);
         }
     }

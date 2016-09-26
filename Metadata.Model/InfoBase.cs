@@ -18,9 +18,13 @@ namespace Zhichkin.Metadata.Model
 
         private string server = string.Empty;
         private string database = string.Empty;
+        private string username = string.Empty;
+        private string password = string.Empty;
 
         public string Server { set { Set<string>(value, ref server); } get { return Get<string>(ref server); } }
         public string Database { set { Set<string>(value, ref database); } get { return Get<string>(ref database); } }
+        public string UserName { set { Set<string>(value, ref username); } get { return Get<string>(ref username); } }
+        public string Password { set { Set<string>(value, ref password); } get { return Get<string>(ref password); } }
 
         private List<Namespace> namespaces = new List<Namespace>();
         public IList<Namespace> Namespaces
@@ -41,8 +45,14 @@ namespace Zhichkin.Metadata.Model
                 {
                     DataSource = this.Server,
                     InitialCatalog = this.Database,
-                    IntegratedSecurity = true
+                    IntegratedSecurity = string.IsNullOrWhiteSpace(this.UserName)
                 };
+                if (!helper.IntegratedSecurity)
+                {
+                    helper.UserID = this.UserName;
+                    helper.Password = this.Password;
+                    helper.PersistSecurityInfo = false;
+                }
                 return helper.ToString();
             }
         }

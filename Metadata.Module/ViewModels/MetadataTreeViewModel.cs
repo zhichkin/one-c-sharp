@@ -69,7 +69,7 @@ namespace Zhichkin.Metadata.ViewModels
             }
             else if (model is Field)
             {
-                _CurrentInfoBase = GetInfoBase(((Field)model).Property.Entity.Namespace);
+                _CurrentInfoBase = GetInfoBase(((Field)model).Table.Entity.Namespace);
             }
             else
             {

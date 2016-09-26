@@ -191,7 +191,6 @@ namespace Zhichkin.Metadata.Services
         {
             string code = reader.GetAttribute("code");
             string name = reader.GetAttribute("name");
-            string owner = reader.GetAttribute("owner");
             
             if (string.IsNullOrEmpty(code) && string.IsNullOrEmpty(name)) return; // system table
             
@@ -202,20 +201,27 @@ namespace Zhichkin.Metadata.Services
                 return;
             }
 
-            context.Entity = new Entity() // value type
-            {
-                Name = name,
-                Namespace = context.Namespace
-            };
+            // value type
 
-            if (string.IsNullOrEmpty(owner)) // independent type
+            if (context.Entity == null) // independent type
             {
+                context.Entity = new Entity()
+                {
+                    Name = name,
+                    Namespace = context.Namespace
+                };
                 context.Namespace.Entities.Add(context.Entity);
             }
             else // nested type
             {
-                context.Entity.Owner = context.TypeCodes[int.Parse(owner)];
-                context.Entity.Owner.NestedEntities.Add(context.Entity);
+                Entity entity = new Entity()
+                {
+                    Name = name,
+                    Namespace = context.Namespace,
+                    Owner = context.Entity
+                };
+                context.Entity.NestedEntities.Add(entity);
+                context.Entity = entity;
             }
         }
         private void Read_Property_Element(XmlReader reader, AdapterContext context)
@@ -276,11 +282,19 @@ namespace Zhichkin.Metadata.Services
                 }
                 else
                 {
-                    context.Property.Relations.Add(new Relation()
+                    int typeCode;
+                    if (int.TryParse(type, out typeCode))
                     {
-                        Entity = context.TypeCodes[int.Parse(type)],
-                        Property = context.Property
-                    });
+                        context.Property.Relations.Add(new Relation()
+                        {
+                            Entity = context.TypeCodes[typeCode],
+                            Property = context.Property
+                        });
+                    }
+                    else
+                    {
+                        // wtf ? 8\
+                    }
                 }
             }
         }
@@ -310,6 +324,8 @@ namespace Zhichkin.Metadata.Services
                 Purpose = (FieldPurpose)Enum.Parse(typeof(FieldPurpose), purpose)
             };
             context.Table.Fields.Add(context.Field);
+
+            if (context.Table.Purpose != TablePurpose.Main) return;
 
             Property property = context.Entity.Properties
                 .Where((p) => p.Name == _property)

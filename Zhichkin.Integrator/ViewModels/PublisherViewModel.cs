@@ -69,6 +69,10 @@ namespace Zhichkin.Integrator.ViewModels
             return errorText;
         }
 
+        public string InfoBase
+        {
+            get { return (entity == null) ? string.Empty : entity.InfoBase.Name; }
+        }
         public string Name
         {
             get { return (entity == null) ? string.Empty : entity.Name; }

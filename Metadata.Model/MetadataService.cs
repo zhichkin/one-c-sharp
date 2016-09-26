@@ -256,7 +256,7 @@ namespace Zhichkin.Metadata.Services
         {
             List<TChild> list = new List<TChild>();
 
-            string sql = @"SELECT [key] FROM [metadata].[{table_name}] WHERE [{fk_name}] = @key {filter}"
+            string sql = @"SELECT [key] FROM [metadata].[{table_name}] WHERE [{fk_name}] = @key {filter} ORDER BY [name] ASC"
                 .Replace("{table_name}", GetTableName<TChild>())
                 .Replace("{fk_name}", propertyName)
                 .Replace("{filter}", GetWhereClause<TParent, TChild>());
