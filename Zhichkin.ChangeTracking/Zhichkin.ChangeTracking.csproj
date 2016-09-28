@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -50,6 +50,15 @@
       <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
       <Name>Metadata.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\orm\ORM.csproj">
+      <Project>{431d3f9f-2134-4e49-bfa3-66a629492389}</Project>
+      <Name>ORM</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sql\DeleteFromTheTargetTable.sql" />
+    <Content Include="sql\InsertToTheTargetTable.sql" />
+    <Content Include="sql\UpdateToTheTargetTable.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

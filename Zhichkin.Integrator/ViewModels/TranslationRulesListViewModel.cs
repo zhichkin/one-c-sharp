@@ -36,6 +36,7 @@ namespace Zhichkin.Integrator.ViewModels
             this.DeleteTranslationRuleCommand = new DelegateCommand<TranslationRule>(this.OnDeleteTranslationRule);
             this.IsSyncKeyCheckCommand = new DelegateCommand<object>(this.OnIsSyncKeyChecked);
             this.IsSyncKeyUncheckCommand = new DelegateCommand<object>(this.OnIsSyncKeyUnchecked);
+            this.RefreshCommand = new DelegateCommand(this.OnRefresh);
         }
         private void InitializeViewModel()
         {
@@ -177,6 +178,12 @@ namespace Zhichkin.Integrator.ViewModels
             }
             rule.IsSyncKey = value;
             rule.Save();
+        }
+        public ICommand RefreshCommand { get; private set; }
+        private void OnRefresh()
+        {
+            InitializeViewModel();
+            OnPropertyChanged("TranslationRules");
         }
     }
 }

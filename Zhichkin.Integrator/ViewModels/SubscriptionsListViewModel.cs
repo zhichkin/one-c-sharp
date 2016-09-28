@@ -49,11 +49,6 @@ namespace Zhichkin.Integrator.ViewModels
             }
             return errorText;
         }
-        public void OnDrop(Entity item)
-        {
-            if (item == null) return;
-            OnCreateSubscription(item);
-        }
         private object _SelectedItem = null;
         public object SelectedItem
         {
@@ -84,6 +79,44 @@ namespace Zhichkin.Integrator.ViewModels
             }
         }
 
+        public void OnDrop(Entity item)
+        {
+            if (item == null) return;
+            OnCreateSubscription(item);
+        }
+        private void OnCreateSubscription(Entity entity)
+        {
+            Subscription subscription = null;
+            IntegratorService service = new IntegratorService();
+            try
+            {
+                subscription = service.CreateSubscription(publisher, entity);
+                subscriptions.Add(subscription);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+            try
+            {
+                Z.Confirm(new Confirmation
+                {
+                    Title = CONST_ModuleDialogsTitle,
+                    Content = string.Format(
+                                    "Создать правила трансляции свойств объектов\nдля подписки \"{0}\" по умолчанию?\nСопоставление свойств будет выполнено по их наименованиям.",
+                                    subscription.ToString())
+                }, c => { if (c.Confirmed) CreateDefaultTranslationRules(subscription); });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void CreateDefaultTranslationRules(Subscription subscription)
+        {
+            IntegratorService service = new IntegratorService();
+            service.CreateTranslationRules(subscription);
+        }
         public ICommand OpenSubscriptionViewCommand { get; private set; }
         public ICommand DeleteSubscriptionCommand { get; private set; }
         private void OnOpenSubscriptionView()
@@ -123,19 +156,6 @@ namespace Zhichkin.Integrator.ViewModels
             IntegratorService service = new IntegratorService();
             service.DeleteSubscription(subscription);
             subscriptions.Remove(subscription);
-        }
-        private void OnCreateSubscription(Entity entity)
-        {
-            IntegratorService service = new IntegratorService();
-            try
-            {
-                Subscription subscription = service.CreateSubscription(publisher, entity);
-                subscriptions.Add(subscription);
-            }
-            catch (Exception ex)
-            {
-                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
-            }
         }
     }
 }

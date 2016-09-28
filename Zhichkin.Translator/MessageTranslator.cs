@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
@@ -9,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace Zhichkin.Integrator.Translator
 {
-    public sealed class MessageTranslator : IMessageTranslator<ChangeTrackingRecord>
+    public sealed class MessageTranslator : IMessageTranslator<ChangeTrackingMessage>
     {
         private Dictionary<string, ITranslationRule> rules = new Dictionary<string, ITranslationRule>();
         
@@ -19,21 +17,25 @@ namespace Zhichkin.Integrator.Translator
             this.subscription = subscription;
             InitializeTranslationRules();
         }
-        public ChangeTrackingRecord Translate(ChangeTrackingRecord source)
+        public ChangeTrackingMessage Translate(ChangeTrackingMessage source)
         {
-            ChangeTrackingRecord target = new ChangeTrackingRecord();
+            ChangeTrackingMessage target = new ChangeTrackingMessage();
             target.SYS_CHANGE_OPERATION = source.SYS_CHANGE_OPERATION;
             List<ChangeTrackingField> target_fields = new List<ChangeTrackingField>();
+            List<object> target_values = new List<object>();
             ITranslationRule rule;
-            foreach (ChangeTrackingField field in source.Fields)
+            ChangeTrackingRecord record = source.Records[0];
+            for (int i = 0; i < source.Fields.Length; i++)
             {
+                ChangeTrackingField field = source.Fields[i];
                 if (rules.TryGetValue(field.Name, out rule))
                 {
                     if (source.SYS_CHANGE_OPERATION == "D" && !rule.IsKey) continue;
-                    rule.Apply(field, target_fields);
+                    rule.Apply(field, record.Values[i], target_fields, target_values);
                 }
             }
             target.Fields = target_fields.ToArray();
+            target.Records = new ChangeTrackingRecord[] { new ChangeTrackingRecord() { Values = target_values.ToArray() } };
             return target;
         }
         private void InitializeTranslationRules()
@@ -133,7 +135,7 @@ namespace Zhichkin.Integrator.Translator
         }
         private void CreateSimpleRule(TranslationRule rule, IList<Field> source, IList<Field> target)
         {
-            SimpleTranslationRule new_rule = new SimpleTranslationRule()
+            OneToOneTranslationRule new_rule = new OneToOneTranslationRule()
             {
                 Name = target[0].Name,
                 IsKey = rule.IsSyncKey

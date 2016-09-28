@@ -12,3 +12,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Translator\bin\Debug\Zhichkin.Integrator.Model.
 C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.csprojResolveAssemblyReference.cache
 C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.dll
 C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Translator.dll
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Translator.pdb

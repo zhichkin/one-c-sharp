@@ -8,3 +8,5 @@ C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\bin\Debug\Zhichkin.ORM.pdb
 C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.csprojResolveAssemblyReference.cache
 C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.dll
 C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.pdb
+C:\Users\User\Desktop\Z\debug\Zhichkin.ChangeTracking.dll
+C:\Users\User\Desktop\Z\debug\Zhichkin.ChangeTracking.pdb

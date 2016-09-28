@@ -25,6 +25,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
@@ -51,7 +52,12 @@
         <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Publisher.Entity}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Subscriber}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
-        <ContentControl Grid.Row="5" Grid.ColumnSpan="3" Margin="10"
+        <Button Grid.Row="5" Grid.ColumnSpan="3" Margin="10" Width="120"
+                VerticalAlignment="Center" HorizontalAlignment="Left"
+                Content="Создать правила" ToolTip="Создание правил трансляции по умолчанию."
+                Command="{Binding CreateTranslationRulesCommand}"/>
+
+        <ContentControl Grid.Row="6" Grid.ColumnSpan="3" Margin="10"
                         Content="{Binding Path=TranslationRulesListView}"
                         ScrollViewer.CanContentScroll="True"
                         ScrollViewer.VerticalScrollBarVisibility="Auto"

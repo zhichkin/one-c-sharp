@@ -19,3 +19,5 @@ C:\Users\User\Desktop\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.Subscriber
 C:\Users\User\Desktop\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.csproj.GenerateResource.Cache
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Integrator.Translator.dll
 C:\Users\User\Desktop\Z\SubscriberAgent\bin\Debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.SubscriberAgent.exe
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.SubscriberAgent.pdb

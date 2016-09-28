@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.Prism.Commands;
 using Zhichkin.Metadata.Model;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Shell;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace Zhichkin.Integrator.ViewModels
 {
@@ -32,19 +37,6 @@ namespace Zhichkin.Integrator.ViewModels
             this.eventAggregator = eventAggregator;
             InitializeViewModel();
         }
-        public string Name
-        {
-            get { return (infoBase == null) ? string.Empty : infoBase.Name; }
-        }
-        public string Server
-        {
-            get { return (infoBase == null) ? string.Empty : infoBase.Server; }
-        }
-        public string Database
-        {
-            get { return (infoBase == null) ? string.Empty : infoBase.Database; }
-        }
-
         public void InitializeViewModel()
         {
             ChangeTrackingService service = new ChangeTrackingService(infoBase.ConnectionString);
@@ -61,6 +53,17 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 _RetentionPeriodUnit = _RetentionPeriodUnits[_ChangeTrackingDatabaseInfo.RETENTION_PERIOD_UNITS - 1];
             }
+            this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+        }
+        public ICommand UpdateTextBoxSourceCommand { get; private set; }
+        private void OnUpdateTextBoxSource(object userControl)
+        {
+            TextBox textBox = userControl as TextBox;
+            if (textBox == null) return;
+            DependencyProperty property = TextBox.TextProperty;
+            BindingExpression binding = BindingOperations.GetBindingExpression(textBox, property);
+            if (binding == null) return;
+            binding.UpdateSource();
         }
         private string GetErrorText(Exception ex)
         {
@@ -73,6 +76,71 @@ namespace Zhichkin.Integrator.ViewModels
             }
             return errorText;
         }
+
+        private string _Name = string.Empty;
+        private string _Server = string.Empty;
+        private string _Database = string.Empty;
+        public string Name
+        {
+            get { return infoBase.Name; }
+            set
+            {
+                try
+                {
+                    _Name = infoBase.Name;
+                    infoBase.Name = value;
+                    infoBase.Save();
+                    OnPropertyChanged("Name");
+                }
+                catch (Exception ex)
+                {
+                    infoBase.Name = _Name;
+                    _Name = string.Empty;
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
+            }
+        }
+        public string Server
+        {
+            get { return infoBase.Server; }
+            set
+            {
+                try
+                {
+                    _Server = infoBase.Server;
+                    infoBase.Server = value;
+                    infoBase.Save();
+                    OnPropertyChanged("Server");
+                }
+                catch (Exception ex)
+                {
+                    infoBase.Server = _Server;
+                    _Server = string.Empty;
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
+            }
+        }
+        public string Database
+        {
+            get { return infoBase.Database; }
+            set
+            {
+                try
+                {
+                    _Database = infoBase.Database;
+                    infoBase.Database = value;
+                    infoBase.Save();
+                    OnPropertyChanged("Database");
+                }
+                catch (Exception ex)
+                {
+                    infoBase.Database = _Database;
+                    _Database = string.Empty;
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
+            }
+        }
+
         public List<string> RetentionPeriodUnits { get { return _RetentionPeriodUnits; } }
         public bool IsChangeTrackingEnabled
         {

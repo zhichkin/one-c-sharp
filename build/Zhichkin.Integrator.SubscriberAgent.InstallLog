@@ -1,0 +1,31 @@
+﻿Выполняется установка сборки 'C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe
+Устанавливается служба Z-Integrator Subscriber Service...
+Служба Z-Integrator Subscriber Service успешно установлена.
+Создается исходный EventLog Z-Integrator Subscriber Service в журнале Application...
+Выполняется фиксация сборки 'C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe
+Выполняется удаление сборки 'C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe
+Выполняется удаление источника EventLog Z-Integrator Subscriber Service.
+Выполняется удаление службы Z-Integrator Subscriber Service из системы...
+Служба Z-Integrator Subscriber Service успешно удалена из системы.
+Выполняется установка сборки 'C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe
+Выполняется откат для сборки 'C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.InstallLog
+   assemblypath = C:\Users\User\Desktop\Z\build\Zhichkin.Integrator.SubscriberAgent.exe

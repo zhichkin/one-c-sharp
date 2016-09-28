@@ -6,7 +6,7 @@ using M = Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Integrator.Translator
 {
-    public class ManyToManyTranslationRule : SimpleTranslationRule
+    public class ManyToManyTranslationRule : OneToOneTranslationRule
     {
         public Dictionary<FieldPurpose, string> Fields = new Dictionary<FieldPurpose, string>()
                 {
@@ -25,12 +25,12 @@ namespace Zhichkin.Integrator.Translator
                     { FieldPurpose.Object,   false }
                 };
         public Dictionary<int, int> TypeCodesLookup = new Dictionary<int, int>();
-        public override void Apply(ChangeTrackingField field, IList<ChangeTrackingField> target)
+        public override void Apply(ChangeTrackingField sourceField, object sourceValue, IList<ChangeTrackingField> targetFields, IList<object> targetValues)
         {
-            FieldPurpose purpose = M.Utilities.ParseFieldPurpose(field.Name);
+            FieldPurpose purpose = M.Utilities.ParseFieldPurpose(sourceField.Name);
             if (purpose == FieldPurpose.TypeCode || purpose == FieldPurpose.Object)
             {
-                Values[purpose] = field.Value;
+                Values[purpose] = sourceValue;
                 Flags[purpose] = true;
             }
             else
@@ -41,38 +41,36 @@ namespace Zhichkin.Integrator.Translator
             {
                 if (Fields[FieldPurpose.Locator] != string.Empty)
                 {
-                    target.Add(new ChangeTrackingField()
+                    targetFields.Add(new ChangeTrackingField()
                     {
                         Name = Fields[FieldPurpose.Locator],
-                        Value = 0x08,
-                        IsKey = field.IsKey
+                        Type = "binary",
+                        IsKey = sourceField.IsKey
                     });
+                    targetValues.Add(0x08);
                 }
                 int type_code = Utilities.GetInt32(((byte[])Values[FieldPurpose.TypeCode]));
+                targetFields.Add(new ChangeTrackingField()
+                {
+                    Name = Fields[FieldPurpose.Object],
+                    Type = "binary",
+                    IsKey = sourceField.IsKey
+                });
                 if (TypeCodesLookup.TryGetValue(type_code, out type_code))
                 {
-                    target.Add(new ChangeTrackingField()
-                    {
-                        Name = Fields[FieldPurpose.Object],
-                        Value = Values[FieldPurpose.Object],
-                        IsKey = field.IsKey
-                    });
+                    targetValues.Add(Values[FieldPurpose.Object]);
                 }
                 else
                 {
-                    target.Add(new ChangeTrackingField()
-                    {
-                        Name = Fields[FieldPurpose.Object],
-                        Value = Guid.Empty,
-                        IsKey = field.IsKey
-                    });
+                    targetValues.Add(Guid.Empty);
                 }
-                target.Add(new ChangeTrackingField()
+                targetFields.Add(new ChangeTrackingField()
                 {
                     Name = Fields[FieldPurpose.TypeCode],
-                    Value = type_code,
-                    IsKey = field.IsKey
+                    Type = "binary",
+                    IsKey = sourceField.IsKey
                 });
+                targetValues.Add(type_code);
             }
         }
     }

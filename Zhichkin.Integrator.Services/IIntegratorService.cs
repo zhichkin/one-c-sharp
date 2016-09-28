@@ -10,7 +10,10 @@ namespace Zhichkin.Integrator.Services
         int PublishChanges(Publisher publisher);
         int ProcessMessages(Subscription subscription);
 
+        int GetPublishersQueuesLength();
+
         Subscription CreateSubscription(Publisher publisher, Entity subscriber);
         void DeleteSubscription(Subscription subscription);
+        void CreateTranslationRules(Subscription subscription);
     }
 }

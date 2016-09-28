@@ -11,6 +11,7 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.Commands;
 using Zhichkin.Integrator.Model;
+using Zhichkin.Integrator.Services;
 using System.ServiceProcess;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -49,6 +50,8 @@ namespace Zhichkin.Integrator.ViewModels
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
             this.CheckConnectionCommand = new DelegateCommand(this.OnCheckConnection);
             _IntegratorConnectionString = ConfigurationManager.ConnectionStrings[moduleName].ConnectionString;
+
+            this.RefreshPublisherQueuesLength = new DelegateCommand(this.OnRefreshPublisherQueuesLength);
         }
         public ICommand CheckConnectionCommand { get; private set; }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
@@ -421,6 +424,24 @@ namespace Zhichkin.Integrator.ViewModels
                 Verb = "runas"
             };
             Process.Start(info);
+        }
+
+        public int PublisherQueuesLength { get; private set; }
+        public ICommand RefreshPublisherQueuesLength { get; private set; }
+        public void OnRefreshPublisherQueuesLength()
+        {
+            try
+            {
+                IntegratorService service = new IntegratorService();
+                PublisherQueuesLength = service.GetPublishersQueuesLength();
+            }
+            catch (Exception ex)
+            {
+                PublisherQueuesLength = 0;
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+            OnPropertyChanged("PublisherQueuesLength");
+            Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Значение обновлено." });
         }
     }
 }

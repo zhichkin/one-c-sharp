@@ -497,7 +497,7 @@ namespace Zhichkin.ChangeTracking
                 sb.AppendLine(@"WHERE");
                 sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT IS NULL");
                 sb.AppendLine(@"    OR");
-                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT <> CAST(@target AS varbinary(128));");
+                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT <> CAST(@change_tracking_context AS varbinary(128));");
                 return sb.ToString();
             }
         }
@@ -555,36 +555,46 @@ namespace Zhichkin.ChangeTracking
             if (result == DBNull.Value) return 0;
             return (long)result;
         }
-        public List<ChangeTrackingRecord> SelectChanges(Table table, long last_sync_version, SqlCommand command)
+
+        public List<ChangeTrackingMessage> SelectChanges(Table table, long last_sync_version, SqlCommand command)
         {
             command.CommandType = CommandType.Text;
             command.CommandText = GetSelectChangesScript(table, command);
             command.Parameters.Clear();
-            command.Parameters.AddWithValue("target", Guid.Empty);
+            command.Parameters.AddWithValue("change_tracking_context", Guid.Empty);
             command.Parameters.AddWithValue("last_sync_version", last_sync_version);
 
-            List<ChangeTrackingRecord> changes = new List<ChangeTrackingRecord>();
+            List<ChangeTrackingMessage> messages = new List<ChangeTrackingMessage>();
             using (SqlDataReader reader = command.ExecuteReader())
             {
+                // reader[0] - SYS_CHANGE_OPERATION nchar(1) I, U, D
+                ChangeTrackingField[] fields = new ChangeTrackingField[reader.FieldCount - 1];
+                for (int i = 1; i < reader.FieldCount; i++)
+                {
+                    ChangeTrackingField field = new ChangeTrackingField();
+                    field.Name = reader.GetName(i);
+                    field.Type = reader.GetDataTypeName(i);
+                    field.IsKey = table.Fields.Where(f => f.Name == field.Name).FirstOrDefault().IsPrimaryKey;
+                    fields[i - 1] = field;
+                }
                 while (reader.Read())
                 {
+                    ChangeTrackingMessage message = new ChangeTrackingMessage();
+                    message.SYS_CHANGE_OPERATION = reader.GetString(0);
+                    message.Fields = fields;
+                    List<ChangeTrackingRecord> records = new List<ChangeTrackingRecord>();
                     ChangeTrackingRecord record = new ChangeTrackingRecord();
-                    // 0 - SYS_CHANGE_OPERATION nchar(1) I, U, D
-                    record.SYS_CHANGE_OPERATION = reader.GetString(0);
-                    List<ChangeTrackingField> list = new List<ChangeTrackingField>();
+                    record.Values = new object[reader.FieldCount - 1];
                     for (int i = 1; i < reader.FieldCount; i++)
                     {
-                        ChangeTrackingField field = new ChangeTrackingField();
-                        field.Name = reader.GetName(i);
-                        field.Value = reader.IsDBNull(i) ? null : reader[i];
-                        field.IsKey = table.Fields.Where(f => f.Name == field.Name).FirstOrDefault().IsPrimaryKey;
-                        list.Add(field);
+                        record.Values[i - 1] = reader.IsDBNull(i) ? null : reader[i];
                     }
-                    record.Fields = list.ToArray();
-                    changes.Add(record);
+                    records.Add(record);
+                    message.Records = records.ToArray();
+                    messages.Add(message);
                 }
             }
-            return changes;
+            return messages;
         }
     }
 }

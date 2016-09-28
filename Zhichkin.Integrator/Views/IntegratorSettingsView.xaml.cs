@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows.Input;
+using System.Windows.Controls;
 using Zhichkin.Integrator.ViewModels;
 
 namespace Zhichkin.Integrator.Views
@@ -9,6 +10,14 @@ namespace Zhichkin.Integrator.Views
         {
             InitializeComponent();
             this.DataContext = viewModel;
+        }
+        private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            this.Cursor = Cursors.Hand;
+        }
+        private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            this.Cursor = null;
         }
     }
 }

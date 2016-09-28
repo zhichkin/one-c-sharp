@@ -6,6 +6,6 @@ namespace Zhichkin.Integrator.Translator
     public interface ITranslationRule
     {
         bool IsKey { set; get; }
-        void Apply(ChangeTrackingField sourceField, IList<ChangeTrackingField> targetFields);
+        void Apply(ChangeTrackingField sourceField, object sourceValue, IList<ChangeTrackingField> targetFields, IList<object> targetValues);
     }
 }

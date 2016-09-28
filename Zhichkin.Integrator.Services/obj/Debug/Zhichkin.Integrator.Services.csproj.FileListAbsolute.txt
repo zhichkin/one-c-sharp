@@ -15,3 +15,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator.Services\obj\Debug\Zhichkin.Integrat
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Services\obj\Debug\Zhichkin.Integrator.Services.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Services\bin\Debug\Zhichkin.Integrator.Translator.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Services\bin\Debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Services.dll
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Services.pdb

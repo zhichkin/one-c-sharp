@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using Zhichkin.Metadata.Model;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Integrator.Model;
+using Zhichkin.ORM;
 
 namespace Zhichkin.Integrator.Translator
 {
-    public sealed class ChangeTrackingRecordToSqlCommandAdapter : IMessageAdapter<ChangeTrackingRecord, SqlCommand>
+    public sealed class ChangeTrackingRecordToSqlCommandAdapter : IMessageAdapter<ChangeTrackingMessage, SqlCommand>
     {
         private Subscription subscription = null;
-        private ChangeTrackingRecord adaptee = null;
+        private ChangeTrackingMessage adaptee = null;
         private Dictionary<string, string> commands = null;
         private Dictionary<string, object> defaults = null;
         public ChangeTrackingRecordToSqlCommandAdapter() { }
-        public IMessageAdapter<ChangeTrackingRecord, SqlCommand> Use(Subscription subscription)
+        public IMessageAdapter<ChangeTrackingMessage, SqlCommand> Use(Subscription subscription)
         {
             if (subscription == null) throw new ArgumentNullException("subscription");
             this.subscription = subscription;
             return this;
         }
-        public IMessageAdapter<ChangeTrackingRecord, SqlCommand> Input(ChangeTrackingRecord adaptee)
+        public IMessageAdapter<ChangeTrackingMessage, SqlCommand> Input(ChangeTrackingMessage adaptee)
         {
             if (subscription == null) throw new ArgumentNullException("subscription");
             if (adaptee == null) throw new ArgumentNullException("adaptee");
@@ -37,9 +39,25 @@ namespace Zhichkin.Integrator.Translator
             if (commands == null) InitializeSQLCommands();
             target.CommandText = commands[adaptee.SYS_CHANGE_OPERATION];
             target.Parameters.Clear();
-            foreach (ChangeTrackingField field in adaptee.Fields)
+            target.Parameters.Add(new SqlParameter()
             {
-                target.Parameters.AddWithValue(field.Name, field.Value);
+                Direction = ParameterDirection.Input,
+                SqlDbType = SqlDbType.VarBinary, // varbinary(128)
+                ParameterName = "change_tracking_context",
+                Value = subscription.Publisher.Identity.ToByteArray()
+            });
+            for (int i = 0; i < adaptee.Fields.Length; i++)
+            {
+                ChangeTrackingField field = adaptee.Fields[i];
+                if (adaptee.SYS_CHANGE_OPERATION == "D" && !field.IsKey) continue;
+                object value = adaptee.Records[0].Values[i];
+                target.Parameters.Add(new SqlParameter()
+                {
+                    Direction = ParameterDirection.Input,
+                    SqlDbType = Helper.GetSqlTypeByName(field.Type),
+                    ParameterName = field.Name,
+                    Value = (value == null ? DBNull.Value : value)
+                });
             }
             foreach (KeyValuePair<string, object> item in defaults)
             {
@@ -142,7 +160,7 @@ namespace Zhichkin.Integrator.Translator
         }
         private void BuildInsertCommand(Table target)
         {
-            string insertSQL = "INSERT {0} ({1}) VALUES ({2})";
+            string insertSQL = "WITH CHANGE_TRACKING_CONTEXT (@change_tracking_context) INSERT {0} ({1}) VALUES ({2})";
             string fields = string.Empty;
             string values = string.Empty;
             string table = target.FullName;
@@ -164,7 +182,7 @@ namespace Zhichkin.Integrator.Translator
         }
         private void BuildUpdateCommand(Table target)
         {
-            string updateSQL = "UPDATE {0} SET {1} WHERE {2}";
+            string updateSQL = "WITH CHANGE_TRACKING_CONTEXT (@change_tracking_context) UPDATE {0} SET {1} WHERE {2}";
             string key_value_pairs = string.Empty;
             string field_value_pairs = string.Empty;
             string table = target.FullName;
@@ -191,7 +209,7 @@ namespace Zhichkin.Integrator.Translator
         }
         private void BuildDeleteCommand(Table target)
         {
-            string deleteSQL = "DELETE {0} WHERE {1}";
+            string deleteSQL = "WITH CHANGE_TRACKING_CONTEXT (@change_tracking_context) DELETE {0} WHERE {1}";
             string key_value_pairs = string.Empty;
             string table = target.FullName;
             foreach (TranslationRule rule in subscription.TranslationRules)

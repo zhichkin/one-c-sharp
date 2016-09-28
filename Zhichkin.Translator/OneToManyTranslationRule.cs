@@ -3,31 +3,33 @@ using System.Collections.Generic;
 
 namespace Zhichkin.Integrator.Translator
 {
-    public class OneToManyTranslationRule : SimpleTranslationRule
+    public class OneToManyTranslationRule : OneToOneTranslationRule
     {
         public string LocatorField = string.Empty;
         public string TypeCodeField = string.Empty;
         public int TypeCode = 0;
-        public override void Apply(ChangeTrackingField field, IList<ChangeTrackingField> target)
+        public override void Apply(ChangeTrackingField sourceField, object sourceValue, IList<ChangeTrackingField> targetFields, IList<object> targetValues)
         {
-            base.Apply(field, target);
+            base.Apply(sourceField, sourceValue, targetFields, targetValues);
             if (LocatorField != string.Empty)
             {
-                target.Add(new ChangeTrackingField()
+                targetFields.Add(new ChangeTrackingField()
                 {
                     Name = LocatorField,
-                    Value = 0x08,
-                    IsKey = field.IsKey
+                    Type = "binary", // binary(1)
+                    IsKey = sourceField.IsKey
                 });
+                targetValues.Add(0x08); // reference type
             }
             if (TypeCodeField != string.Empty)
             {
-                target.Add(new ChangeTrackingField()
+                targetFields.Add(new ChangeTrackingField()
                 {
                     Name = TypeCodeField,
-                    Value = TypeCode,
-                    IsKey = field.IsKey
+                    Type = "binary", // binary(4)
+                    IsKey = sourceField.IsKey
                 });
+                targetValues.Add(TypeCode);
             }
         }
     }

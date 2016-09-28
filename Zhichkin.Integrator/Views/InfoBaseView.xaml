@@ -25,20 +25,45 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Информационная база:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+        
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Сервер SQL Server:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Server}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Server, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+        
         <TextBlock Grid.Row="2" Grid.Column="0" Text="База данных SQL Server:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Database}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Database, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+        
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Регистрация изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding IsChangeTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Использовать snapshot:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsSnapshotIsolationEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        
         <TextBlock Grid.Row="5" Grid.Column="0" Text="Авто удаление изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsAutoCleanUpEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                   Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Срок хранения изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
@@ -46,5 +71,6 @@
             <TextBox Text="{Binding RetentionPeriod, Mode=TwoWay}" Width="30" Margin="10,10,5,10"/>
             <ComboBox ItemsSource="{Binding RetentionPeriodUnits}" SelectedItem="{Binding RetentionPeriodUnit}" Width="70" Margin="5,10,10,10" />
         </StackPanel>
+        
     </Grid>
 </UserControl>

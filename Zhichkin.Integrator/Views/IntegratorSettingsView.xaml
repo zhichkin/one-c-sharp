@@ -22,6 +22,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Настройки модуля Z-Integrator" FontWeight="DemiBold" Margin="10" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
@@ -66,5 +67,15 @@
         <Button Grid.Row="3" Grid.Column="2" Content="{Binding SubscriberServiceButtonContent}" Margin="10" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left"
                 Command="{Binding SubscriberServiceSwitchCommand}" 
                 Visibility="{Binding IsSubscriberServiceInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Длина всех очередей:" FontWeight="DemiBold" Margin="10,10,5,10"
+                   VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Text="{Binding PublisherQueuesLength}" Margin="5,10,5,10" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <Button Content="Обновить" Width="80" Margin="5,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"
+                Command="{Binding RefreshPublisherQueuesLength}"
+                MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"/>
+        </StackPanel>
+
     </Grid>
 </UserControl>

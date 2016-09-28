@@ -6,3 +6,5 @@ C:\Users\User\Desktop\Z\orm\bin\Debug\Zhichkin.ORM.dll
 C:\Users\User\Desktop\Z\orm\bin\Debug\Zhichkin.ORM.pdb
 C:\Users\User\Desktop\Z\orm\obj\Debug\Zhichkin.ORM.dll
 C:\Users\User\Desktop\Z\orm\obj\Debug\Zhichkin.ORM.pdb
+C:\Users\User\Desktop\Z\debug\Zhichkin.ORM.dll
+C:\Users\User\Desktop\Z\debug\Zhichkin.ORM.pdb

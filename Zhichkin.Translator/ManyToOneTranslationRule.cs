@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Zhichkin.Integrator.Translator
 {
-    public class ManyToOneTranslationRule : SimpleTranslationRule
+    public class ManyToOneTranslationRule : OneToOneTranslationRule
     {
         public string TypeCodeField = string.Empty;
         public string ObjectField = string.Empty;
@@ -13,41 +13,37 @@ namespace Zhichkin.Integrator.Translator
         public int TestTypeCode = 0;
         private bool value_is_set = false;
         private bool type_code_is_set = false;
-        public override void Apply(ChangeTrackingField field, IList<ChangeTrackingField> target)
+        public override void Apply(ChangeTrackingField sourceField, object sourceValue, IList<ChangeTrackingField> targetFields, IList<object> targetValues)
         {
-            if (field.Name == ObjectField)
+            if (sourceField.Name == ObjectField)
             {
-                Value = field.Value;
+                Value = sourceValue;
                 value_is_set = true;
             }
-            else if (field.Name == TypeCodeField)
+            else if (sourceField.Name == TypeCodeField)
             {
-                TypeCodeValue = Utilities.GetInt32((byte[])field.Value);
+                TypeCodeValue = Utilities.GetInt32((byte[])sourceValue);
                 type_code_is_set = true;
             }
             else // _TYPE
             {
-                return;
+                return; // allways 0x08 the rest values are ignored
             }
             if (value_is_set && type_code_is_set)
             {
+                targetFields.Add(new ChangeTrackingField()
+                {
+                    Name = Name,
+                    Type = "binary", // binary(16)
+                    IsKey = sourceField.IsKey
+                });
                 if (TestTypeCode == TypeCodeValue) // TEST: byte[4] ?
                 {
-                    target.Add(new ChangeTrackingField()
-                    {
-                        Name = Name,
-                        Value = Value,
-                        IsKey = field.IsKey
-                    });
+                    targetValues.Add(Value);
                 }
                 else
                 {
-                    target.Add(new ChangeTrackingField()
-                    {
-                        Name = Name,
-                        Value = Guid.Empty, // TEST: byte[16] ?
-                        IsKey = field.IsKey
-                    });
+                    targetValues.Add(Guid.Empty); // TEST: byte[16] ?
                 }
             }
         }

@@ -19,3 +19,5 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.pdb
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\bin\Debug\Zhichkin.Integrator.Translator.dll
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\bin\Debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe
+C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.pdb

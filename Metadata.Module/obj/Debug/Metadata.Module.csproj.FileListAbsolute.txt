@@ -91,3 +91,5 @@ C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module_Marku
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module.g.resources
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module.dll
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Zhichkin.Metadata.Module.pdb
+C:\Users\User\Desktop\Z\debug\Zhichkin.Metadata.Module.dll
+C:\Users\User\Desktop\Z\debug\Zhichkin.Metadata.Module.pdb
