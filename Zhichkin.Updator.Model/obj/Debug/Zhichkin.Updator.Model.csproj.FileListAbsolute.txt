@@ -1,0 +1,10 @@
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\bin\Debug\Zhichkin.Updator.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\bin\Debug\Zhichkin.Updator.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\bin\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\bin\Debug\Zhichkin.ORM.dll
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\bin\Debug\Microsoft.Practices.Prism.PubSubEvents.dll
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\bin\Debug\Zhichkin.Metadata.Model.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\bin\Debug\Zhichkin.ORM.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\obj\Debug\Zhichkin.Updator.Model.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\obj\Debug\Zhichkin.Updator.Model.dll
+C:\Users\User\Desktop\Z\Zhichkin.Updator.Model\obj\Debug\Zhichkin.Updator.Model.pdb

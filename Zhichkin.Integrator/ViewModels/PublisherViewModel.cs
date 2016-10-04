@@ -45,6 +45,8 @@ namespace Zhichkin.Integrator.ViewModels
             this.eventAggregator = eventAggregator;
             
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+            this.QueueTestCommand = new DelegateCommand(this.OnQueueTest);
+            this.CountChangesCommand = new DelegateCommand(this.OnCountChanges);
             InitializeViewModel();
         }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
@@ -196,7 +198,11 @@ namespace Zhichkin.Integrator.ViewModels
                 service.EnableDatabaseChangeTracking(infoBase, null);
             }
             service.SwitchTableChangeTracking(entity.MainTable, true);
+            ChangeTrackingTableInfo info = service.GetChangeTrackingTableInfo(entity.MainTable);
+            if (info == null) throw new OperationCanceledException("Произошла неожиданная ошибка включения регистрации изменений!");
             publisher = Publisher.SelectOrCreate(entity);
+            publisher.LastSyncVersion = info.BEGIN_VERSION;
+            publisher.Save();
             _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(
                     typeof(SubscriptionsListView),
                     new ParameterOverride("publisher", publisher)
@@ -245,6 +251,49 @@ namespace Zhichkin.Integrator.ViewModels
                 {
                     Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
                 }
+            }
+        }
+
+        public ICommand QueueTestCommand { get; private set; }
+        private void OnQueueTest()
+        {
+            string test = "test message";
+            string answer = string.Empty;
+            IntegratorService service = new IntegratorService();
+            try
+            {
+                answer = service.TestQueue(publisher, test);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                return;
+            }
+            if (test == answer)
+            {
+                OnPropertyChanged("MSMQTargetQueue");
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Тест очереди прошёл успешно!" });
+            }
+            else
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Тест очереди провалился!\nПопробуйте ещё раз." });
+            }
+        }
+        public ICommand CountChangesCommand { get; private set; }
+        private void OnCountChanges()
+        {
+            IntegratorService service = new IntegratorService();
+            try
+            {
+                publisher.Load();
+                OnPropertyChanged("LastSyncVersion");
+                int count = service.CountChanges(publisher);
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle,
+                    Content = string.Format("Текущее количество изменений: {0} сообщений.", count.ToString()) });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
         }
     }

@@ -41,26 +41,54 @@
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsColumnsTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                   Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        
         <TextBlock Grid.Row="5" Grid.Column="0" Text="Актуальная версия изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding LastSyncVersion, Mode=TwoWay}" Width="50" Margin="10" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Left"
-                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBox.InputBindings>
-                <KeyBinding Gesture="Enter"
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox Text="{Binding LastSyncVersion, Mode=TwoWay}" Width="50" Margin="10" TextAlignment="Right"
+                     Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBox.InputBindings>
+                    <KeyBinding Gesture="Enter"
                             Command="{Binding UpdateTextBoxSourceCommand}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
-            </TextBox.InputBindings>
-        </TextBox>
+                </TextBox.InputBindings>
+            </TextBox>
+            <Button Content="Количество изменений" Margin="10"
+                    Command="{Binding CountChangesCommand}"
+                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button.ToolTip>
+                    <TextBlock>
+                    Вычисляет текущее количество изменений данного объекта,
+                    <LineBreak/>
+                    которое ожидает своей публикации в очередь сообщений.
+                    </TextBlock>
+                </Button.ToolTip>
+            </Button>
+        </StackPanel>
+
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Очередь сообщений MSMQ:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding MSMQTargetQueue, Mode=TwoWay}" Width="300" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
-                  Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBox.InputBindings>
-                <KeyBinding Gesture="Enter"
+        <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox Text="{Binding MSMQTargetQueue, Mode=TwoWay}" Margin="10" MinWidth="100"
+                     Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBox.InputBindings>
+                    <KeyBinding Gesture="Enter"
                             Command="{Binding UpdateTextBoxSourceCommand}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
-            </TextBox.InputBindings>
-        </TextBox>
+                </TextBox.InputBindings>
+            </TextBox>
+            <Button Content="Тест!" Margin="10" Width="50"
+                    Command="{Binding QueueTestCommand}"
+                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button.ToolTip>
+                    <TextBlock>
+                    Отправляет и принимает тестовое сообщение в/из очереди.
+                    <LineBreak/>
+                    Если очередь ещё не создана, то она создаётся автоматически.
+                    </TextBlock>
+                </Button.ToolTip>
+            </Button>
+        </StackPanel>
 
         <ContentControl Grid.Row="7" Grid.ColumnSpan="2" Content="{Binding Path=SubscriptionsListView}" Margin="10"
                         Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>

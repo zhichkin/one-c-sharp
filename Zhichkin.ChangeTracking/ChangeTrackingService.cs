@@ -482,6 +482,31 @@ namespace Zhichkin.ChangeTracking
                 return sb.ToString();
             }
         }
+        private string SelectChangesCountTemplate
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(@"SELECT");
+                sb.AppendLine(@"    COUNT(*) AS [Count]");
+                sb.AppendLine(@"FROM");
+                sb.AppendLine(@"    CHANGETABLE(CHANGES {0}, @last_sync_version) AS c");
+                sb.AppendLine(@"    LEFT JOIN {0} AS d");
+                sb.AppendLine(@"    ON {1}");
+                sb.AppendLine(@"WHERE");
+                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT IS NULL");
+                sb.AppendLine(@"    OR");
+                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT <> CAST(@change_tracking_context AS varbinary(128));");
+                return sb.ToString();
+            }
+        }
+        private string GetSelectChangesCountScript(Table table, SqlCommand command)
+        {
+            string sql = SelectChangesCountTemplate;
+            string tableName = table.FullName;
+            string keys = GetPrimaryKeysJoinScript(table, command);
+            return string.Format(sql, tableName, keys); ;
+        }
         private string SelectChangesTemplate
         {
             get
@@ -556,6 +581,15 @@ namespace Zhichkin.ChangeTracking
             return (long)result;
         }
 
+        public int CountChanges(Table table, long last_sync_version, SqlCommand command)
+        {
+            command.CommandType = CommandType.Text;
+            command.CommandText = GetSelectChangesCountScript(table, command);
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("change_tracking_context", Guid.Empty);
+            command.Parameters.AddWithValue("last_sync_version", last_sync_version);
+            return (int)command.ExecuteScalar();
+        }
         public List<ChangeTrackingMessage> SelectChanges(Table table, long last_sync_version, SqlCommand command)
         {
             command.CommandType = CommandType.Text;

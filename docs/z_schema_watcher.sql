@@ -69,4 +69,8 @@ SELECT
 FROM
 	[Z_schema_watcher]
 WHERE
-	EventXML.value('(/EVENT_INSTANCE/ObjectType)[1]', 'NVARCHAR(255)') = 'TABLE';
+	EventXML.value('(/EVENT_INSTANCE/ObjectType)[1]', 'NVARCHAR(255)') = 'TABLE'
+ORDER BY
+	EventDate ASC;
+
+--DELETE [Z_schema_watcher];

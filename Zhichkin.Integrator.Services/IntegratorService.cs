@@ -7,7 +7,6 @@ using Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Integrator.Translator;
 using System.Messaging;
-using System.Diagnostics;
 using NetSerializer;
 using System.Transactions;
 using System.Data;
@@ -29,9 +28,30 @@ namespace Zhichkin.Integrator.Services
         {
             return Publisher.Select();
         }
+
+        public int CountChanges(Publisher publisher)
+        {
+            if (publisher == null) throw new ArgumentNullException("publisher");
+            int count = 0;
+            string connectionString = publisher.Entity.InfoBase.ConnectionString;
+            ChangeTrackingService service = new ChangeTrackingService(connectionString);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                count = service.CountChanges(publisher.Entity.MainTable, publisher.LastSyncVersion, command);
+            }
+            return count;
+        }
+
         public int PublishChanges(Publisher publisher)
         {
             if (publisher == null) throw new ArgumentNullException("publisher");
+
+            string connectionString = publisher.Entity.InfoBase.ConnectionString;
+            ChangeTrackingService service = new ChangeTrackingService(connectionString);
+            ChangeTrackingTableInfo info = service.GetChangeTrackingTableInfo(publisher.Entity.MainTable);
+            if (info == null) return 0;
 
             int messagesSent = 0;
             List<ChangeTrackingMessage> changes = new List<ChangeTrackingMessage>();
@@ -146,6 +166,15 @@ namespace Zhichkin.Integrator.Services
                 //TODO: check if this queue referenced by several subscribers
                 MessageQueue.Delete(path);
             }
+        }
+        public string TestQueue(Publisher publisher, string messageText)
+        {
+            MessageQueue queue = GetPublisherQueue(publisher);
+            Message message = new Message(messageText);
+            queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
+            queue.Send(message, MessageQueueTransactionType.Single);
+            message = queue.Receive(TimeSpan.FromSeconds(1));
+            return (string)message.Body;
         }
         private MessageQueue GetPublisherQueue(Publisher publisher)
         {
