@@ -47,5 +47,19 @@ namespace Zhichkin.Integrator.Model
                 this.Publisher == null ? string.Empty : this.Publisher.Name,
                 this.Subscriber == null ? string.Empty : this.Subscriber.FullName);
         }
+
+        // default collision resolution strategy
+        /// <summary>
+        /// Insert-Insert collision (duplicate primary key exception)
+        /// </summary>
+        public CollisionResolutionStrategy OnInsertCollision { get { return CollisionResolutionStrategy.Update; } }
+        /// <summary>
+        /// Update-Delete collision (zero rows affected exception)
+        /// </summary>
+        public CollisionResolutionStrategy OnUpdateCollision { get { return CollisionResolutionStrategy.Insert; } }
+        /// <summary>
+        /// Delete-Delete collision (zero rows affected exception)
+        /// </summary>
+        public CollisionResolutionStrategy OnDeleteCollision { get { return CollisionResolutionStrategy.Ignore; } }
     }
 }

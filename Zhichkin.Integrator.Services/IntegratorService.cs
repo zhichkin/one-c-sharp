@@ -23,6 +23,9 @@ namespace Zhichkin.Integrator.Services
         {
             Factory = IntegratorPersistentContext.Current.Factory;
             ConnectionString = IntegratorPersistentContext.Current.ConnectionString;
+            processingStrategies.Add("I", this.ProcessInsertMessage);
+            processingStrategies.Add("U", this.ProcessUpdateMessage);
+            processingStrategies.Add("D", this.ProcessDeleteMessage);
         }
         public IList<Publisher> GetPublishers()
         {
@@ -203,6 +206,7 @@ namespace Zhichkin.Integrator.Services
         }
         #endregion
 
+        private Dictionary<string, Action<Subscription, ChangeTrackingMessage, SqlCommand>> processingStrategies = new Dictionary<string, Action<Subscription, ChangeTrackingMessage, SqlCommand>>();
         public IList<Subscription> GetSubscriptions()
         {
             return Subscription.Select();
@@ -211,8 +215,7 @@ namespace Zhichkin.Integrator.Services
         {
             string connectionString = subscription.Subscriber.InfoBase.ConnectionString;
             IMessageTranslator<ChangeTrackingMessage> translator = new MessageTranslator(subscription);
-            ChangeTrackingRecordToSqlCommandAdapter adapter = new ChangeTrackingRecordToSqlCommandAdapter();
-
+            
             MessageQueue source = GetPublisherQueue(subscription.Publisher);
             source.Formatter = new BinaryMessageFormatter();
             var serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingMessage) });
@@ -231,8 +234,7 @@ namespace Zhichkin.Integrator.Services
                         Message message = source.Peek(new TimeSpan(0, 0, 0));
                         ChangeTrackingMessage change = (ChangeTrackingMessage)serializer.Deserialize(message.BodyStream);
                         ChangeTrackingMessage target = translator.Translate(change);
-                        adapter.Use(subscription).Input(target).Output(command);
-                        command.ExecuteNonQuery();
+                        processingStrategies[target.SYS_CHANGE_OPERATION](subscription, target, command);
                         source.Receive();
                         messagesProcessed++;
                     }
@@ -244,6 +246,55 @@ namespace Zhichkin.Integrator.Services
                 }
             }
             return messagesProcessed;
+        }
+        private void ProcessInsertMessage(Subscription subscription, ChangeTrackingMessage message, SqlCommand command)
+        {
+            ChangeTrackingRecordToSqlCommandAdapter adapter = new ChangeTrackingRecordToSqlCommandAdapter();
+            adapter.Use(subscription).Input(message).Output(command);
+            int rowsAffected = 0;
+            try
+            {
+                rowsAffected = command.ExecuteNonQuery();
+            }
+            catch
+            {
+                // insert-insert collision
+                if (subscription.OnInsertCollision == CollisionResolutionStrategy.RaiseError) throw;
+            }
+            if (rowsAffected > 0) return;
+            // insert-insert collision
+            if (subscription.OnInsertCollision == CollisionResolutionStrategy.Ignore) return;
+            if (subscription.OnInsertCollision == CollisionResolutionStrategy.Update)
+            {
+                message.SYS_CHANGE_OPERATION = "U";
+                adapter.Use(subscription).Input(message).Output(command);
+                rowsAffected = command.ExecuteNonQuery();
+            }
+        }
+        private void ProcessUpdateMessage(Subscription subscription, ChangeTrackingMessage message, SqlCommand command)
+        {
+            ChangeTrackingRecordToSqlCommandAdapter adapter = new ChangeTrackingRecordToSqlCommandAdapter();
+            adapter.Use(subscription).Input(message).Output(command);
+            int rowsAffected = command.ExecuteNonQuery();
+            if (rowsAffected > 0) return;
+            // update-delete or update-none collision
+            if (subscription.OnUpdateCollision == CollisionResolutionStrategy.Ignore) return;
+            if (subscription.OnUpdateCollision == CollisionResolutionStrategy.Insert)
+            {
+                message.SYS_CHANGE_OPERATION = "I";
+                ProcessInsertMessage(subscription, message, command);
+            }
+            //TODO: CollisionResolutionStrategy.RaiseError
+        }
+        private void ProcessDeleteMessage(Subscription subscription, ChangeTrackingMessage message, SqlCommand command)
+        {
+            ChangeTrackingRecordToSqlCommandAdapter adapter = new ChangeTrackingRecordToSqlCommandAdapter();
+            adapter.Use(subscription).Input(message).Output(command);
+            int rowsAffected = command.ExecuteNonQuery();
+            if (rowsAffected > 0) return;
+            // delete-delete or delete-none collision
+            if (subscription.OnDeleteCollision == CollisionResolutionStrategy.Ignore) return;
+            //TODO: CollisionResolutionStrategy.RaiseError
         }
 
         public Subscription CreateSubscription(Publisher publisher, Entity subscriber)
