@@ -47,7 +47,7 @@ namespace Zhichkin.Integrator.Translator
                         Type = "binary",
                         IsKey = sourceField.IsKey
                     });
-                    targetValues.Add(0x08);
+                    targetValues.Add(new byte[1] { 0x08 });
                 }
                 int type_code = Utilities.GetInt32(((byte[])Values[FieldPurpose.TypeCode]));
                 targetFields.Add(new ChangeTrackingField()
@@ -62,15 +62,15 @@ namespace Zhichkin.Integrator.Translator
                 }
                 else
                 {
-                    targetValues.Add(Guid.Empty);
+                    targetValues.Add(Guid.Empty.ToByteArray());
                 }
                 targetFields.Add(new ChangeTrackingField()
                 {
                     Name = Fields[FieldPurpose.TypeCode],
                     Type = "binary",
-                    IsKey = sourceField.IsKey
+                    IsKey = sourceField.IsKey // _TYPE
                 });
-                targetValues.Add(type_code);
+                targetValues.Add(Values[FieldPurpose.TypeCode]);
             }
         }
     }

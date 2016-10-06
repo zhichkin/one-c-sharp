@@ -37,13 +37,13 @@ namespace Zhichkin.Integrator.Translator
                     Type = "binary", // binary(16)
                     IsKey = sourceField.IsKey
                 });
-                if (TestTypeCode == TypeCodeValue) // TEST: byte[4] ?
+                if (TestTypeCode == TypeCodeValue)
                 {
                     targetValues.Add(Value);
                 }
                 else
                 {
-                    targetValues.Add(Guid.Empty); // TEST: byte[16] ?
+                    targetValues.Add(Guid.Empty.ToByteArray());
                 }
             }
         }

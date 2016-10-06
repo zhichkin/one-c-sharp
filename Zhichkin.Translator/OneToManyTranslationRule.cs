@@ -15,11 +15,11 @@ namespace Zhichkin.Integrator.Translator
             {
                 targetFields.Add(new ChangeTrackingField()
                 {
-                    Name = LocatorField,
+                    Name = LocatorField, // _TYPE
                     Type = "binary", // binary(1)
                     IsKey = sourceField.IsKey
                 });
-                targetValues.Add(0x08); // reference type
+                targetValues.Add(new byte[1] { 0x08 }); // reference type
             }
             if (TypeCodeField != string.Empty)
             {
@@ -29,7 +29,7 @@ namespace Zhichkin.Integrator.Translator
                     Type = "binary", // binary(4)
                     IsKey = sourceField.IsKey
                 });
-                targetValues.Add(TypeCode);
+                targetValues.Add(Utilities.GetByteArray(TypeCode));
             }
         }
     }

@@ -84,17 +84,32 @@ namespace Zhichkin.Integrator.Translator
         }
         private object GetDefaultValue(Field field)
         {
-            if (field.TypeName == "bigint"
-                || field.TypeName == "numeric"
-                || field.TypeName == "bit"
-                || field.TypeName == "smallint"
+            if (field.TypeName == "numeric"
                 || field.TypeName == "decimal"
                 || field.TypeName == "smallmoney"
-                || field.TypeName == "int"
-                || field.TypeName == "tinyint"
                 || field.TypeName == "money")
             {
                 return 0;
+            }
+            else if (field.TypeName == "bit")
+            {
+                return false;
+            }
+            else if (field.TypeName == "tinyint")
+            {
+                return (byte)0;
+            }
+            else if (field.TypeName == "smallint")
+            {
+                return (short)0;
+            }
+            else if (field.TypeName == "int")
+            {
+                return 0;
+            }
+            else if (field.TypeName == "bigint")
+            {
+                return (long)0;
             }
             else if (field.TypeName == "float"
                 || field.TypeName == "real")
