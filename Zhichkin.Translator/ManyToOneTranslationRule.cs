@@ -33,7 +33,7 @@ namespace Zhichkin.Integrator.Translator
             {
                 targetFields.Add(new ChangeTrackingField()
                 {
-                    Name = Name,
+                    Name = TargetName,
                     Type = "binary", // binary(16)
                     IsKey = sourceField.IsKey
                 });
@@ -46,6 +46,12 @@ namespace Zhichkin.Integrator.Translator
                     targetValues.Add(Guid.Empty.ToByteArray());
                 }
             }
+        }
+        public override void Reset()
+        {
+            value_is_set = false;
+            type_code_is_set = false;
+            TypeCodeValue = 0;
         }
     }
 }

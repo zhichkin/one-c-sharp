@@ -32,5 +32,6 @@ namespace Zhichkin.Integrator.Translator
                 targetValues.Add(Utilities.GetByteArray(TypeCode));
             }
         }
+        public override void Reset() { }
     }
 }

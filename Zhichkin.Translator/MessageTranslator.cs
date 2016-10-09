@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
 using Zhichkin.ChangeTracking;
 using Zhichkin.Metadata.Model;
+using M = Zhichkin.Metadata.Model;
 using Zhichkin.Integrator.Model;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace Zhichkin.Integrator.Translator
 {
     public sealed class MessageTranslator : IMessageTranslator<ChangeTrackingMessage>
     {
         private Dictionary<string, ITranslationRule> rules = new Dictionary<string, ITranslationRule>();
-        
+
         private readonly Subscription subscription;
         public MessageTranslator(Subscription subscription)
         {
@@ -19,6 +21,7 @@ namespace Zhichkin.Integrator.Translator
         }
         public ChangeTrackingMessage Translate(ChangeTrackingMessage source)
         {
+            this.ResetRules();
             ChangeTrackingMessage target = new ChangeTrackingMessage();
             target.SYS_CHANGE_OPERATION = source.SYS_CHANGE_OPERATION;
             List<ChangeTrackingField> target_fields = new List<ChangeTrackingField>();
@@ -30,13 +33,20 @@ namespace Zhichkin.Integrator.Translator
                 ChangeTrackingField field = source.Fields[i];
                 if (rules.TryGetValue(field.Name, out rule))
                 {
-                    if (source.SYS_CHANGE_OPERATION == "D" && !rule.IsKey) continue;
+                    if (source.SYS_CHANGE_OPERATION == "D" && !rule.IsSyncKey) continue;
                     rule.Apply(field, record.Values[i], target_fields, target_values);
                 }
             }
             target.Fields = target_fields.ToArray();
             target.Records = new ChangeTrackingRecord[] { new ChangeTrackingRecord() { Values = target_values.ToArray() } };
             return target;
+        }
+        private void ResetRules()
+        {
+            foreach (ITranslationRule rule in rules.Values)
+            {
+                rule.Reset();
+            }
         }
         private void InitializeTranslationRules()
         {
@@ -46,7 +56,7 @@ namespace Zhichkin.Integrator.Translator
                 IList<Field> target_fields = rule.TargetProperty.Fields;
                 if (source_fields.Count == 1 && target_fields.Count == 1)
                 {
-                    CreateSimpleRule(rule, source_fields, target_fields);
+                    CreateOneToOneRule(rule, source_fields, target_fields);
                 }
                 else if (source_fields.Count == 1 && target_fields.Count > 1)
                 {
@@ -133,20 +143,37 @@ namespace Zhichkin.Integrator.Translator
             }
             return lookup;
         }
-        private void CreateSimpleRule(TranslationRule rule, IList<Field> source, IList<Field> target)
+        private void CreateOneToOneRule(TranslationRule rule, IList<Field> source, IList<Field> target)
         {
             OneToOneTranslationRule new_rule = new OneToOneTranslationRule()
             {
-                Name = target[0].Name,
-                IsKey = rule.IsSyncKey
+                TargetName = target[0].Name,
+                IsSyncKey = rule.IsSyncKey
             };
             rules.Add(source[0].Name, new_rule);
         }
+        private void CreateManyToManyRule(TranslationRule rule, IList<Field> source, IList<Field> target)
+        {
+            ManyToManyTranslationRule new_rule = new ManyToManyTranslationRule()
+            {
+                IsSyncKey = rule.IsSyncKey
+            };
+            foreach (Field field in source)
+            {
+                rules.Add(field.Name, new_rule);
+            }
+            foreach (Field field in target)
+            {
+                new_rule.TargetFields[field.Purpose] = field.Name;
+            }
+            new_rule.TypeCodesLookup = GetPropertyTypeCodesLookup(rule.SourceProperty, rule.Target.Namespace.InfoBase);
+        }
+        // TODO: 1-X and X-1 rules have to be revised !
         private void CreateOneToManyRule(TranslationRule rule, IList<Field> source, IList<Field> target)
         {
             OneToManyTranslationRule new_rule = new OneToManyTranslationRule()
             {
-                IsKey = rule.IsSyncKey
+                IsSyncKey = rule.IsSyncKey
             };
             foreach (Field field in target)
             {
@@ -165,7 +192,7 @@ namespace Zhichkin.Integrator.Translator
                 }
                 else if (field.Purpose == FieldPurpose.Object)
                 {
-                    new_rule.Name = field.Name;
+                    new_rule.TargetName = field.Name;
                 }
                 else
                 {
@@ -178,8 +205,8 @@ namespace Zhichkin.Integrator.Translator
         {
             ManyToOneTranslationRule new_rule = new ManyToOneTranslationRule()
             {
-                Name = target[0].Name,
-                IsKey = rule.IsSyncKey
+                TargetName = target[0].Name,
+                IsSyncKey = rule.IsSyncKey
             };
             foreach (Field field in source)
             {
@@ -198,22 +225,6 @@ namespace Zhichkin.Integrator.Translator
                 rule.Target.Namespace.InfoBase,
                 rule.TargetProperty.Relations[0].Entity.Code);
             new_rule.TestTypeCode = (corresponding_type == null ? 0 : corresponding_type.Code);
-        }
-        private void CreateManyToManyRule(TranslationRule rule, IList<Field> source, IList<Field> target)
-        {
-            ManyToManyTranslationRule new_rule = new ManyToManyTranslationRule()
-            {
-                IsKey = rule.IsSyncKey
-            };
-            foreach (Field field in source)
-            {
-                rules.Add(field.Name, new_rule);
-            }
-            foreach (Field field in target)
-            {
-                new_rule.Fields[field.Purpose] = field.Name;
-            }
-            new_rule.TypeCodesLookup = GetPropertyTypeCodesLookup(rule.SourceProperty, rule.Target.Namespace.InfoBase);
         }
     }
 }

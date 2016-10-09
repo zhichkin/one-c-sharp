@@ -16,5 +16,5 @@ DEBUG;TRACE
 732056601369
 Views\MetadataMainMenu.xaml;Views\SQLServerConnectionView.xaml;Views\MetadataSettingsView.xaml;Views\MetadataTreeView.xaml;
 
-True
+False
 

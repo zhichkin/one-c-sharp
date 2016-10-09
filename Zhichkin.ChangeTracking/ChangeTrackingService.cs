@@ -517,12 +517,10 @@ namespace Zhichkin.ChangeTracking
                 sb.AppendLine(@"    {2}");
                 sb.AppendLine(@"FROM");
                 sb.AppendLine(@"    CHANGETABLE(CHANGES {0}, @last_sync_version) AS c");
-                sb.AppendLine(@"    LEFT JOIN {0} AS d");
+                sb.AppendLine(@"    LEFT JOIN {0} AS d"); // inner join won't work with deleted records!
                 sb.AppendLine(@"    ON {1}");
                 sb.AppendLine(@"WHERE");
-                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT IS NULL");
-                sb.AppendLine(@"    OR");
-                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT <> CAST(@change_tracking_context AS varbinary(128));");
+                sb.AppendLine(@"    c.SYS_CHANGE_CONTEXT IS NULL;");
                 return sb.ToString();
             }
         }
@@ -595,7 +593,6 @@ namespace Zhichkin.ChangeTracking
             command.CommandType = CommandType.Text;
             command.CommandText = GetSelectChangesScript(table, command);
             command.Parameters.Clear();
-            command.Parameters.AddWithValue("change_tracking_context", Guid.Empty);
             command.Parameters.AddWithValue("last_sync_version", last_sync_version);
 
             List<ChangeTrackingMessage> messages = new List<ChangeTrackingMessage>();

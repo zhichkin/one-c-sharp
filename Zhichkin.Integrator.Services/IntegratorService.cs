@@ -158,7 +158,9 @@ namespace Zhichkin.Integrator.Services
             if (!MessageQueue.Exists(path))
             {
                 // create transactional message queue
-                MessageQueue.Create(path, true); 
+                MessageQueue queue = MessageQueue.Create(path, true);
+                string label = publisher.Entity.ToString();
+                queue.Label = (label.Length > 124) ? label.Substring(0, 124) : label;
             }
         }
         public void DeleteQueue(Publisher publisher)
