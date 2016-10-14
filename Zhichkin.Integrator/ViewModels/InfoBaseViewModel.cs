@@ -54,6 +54,8 @@ namespace Zhichkin.Integrator.ViewModels
                 _RetentionPeriodUnit = _RetentionPeriodUnits[_ChangeTrackingDatabaseInfo.RETENTION_PERIOD_UNITS - 1];
             }
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+            this.SelectLogEntityCommand = new DelegateCommand(this.OnSelectLogEntity);
+            this.SelectEntityPopupRequest = new InteractionRequest<Notification>();
         }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
         private void OnUpdateTextBoxSource(object userControl)
@@ -253,6 +255,25 @@ namespace Zhichkin.Integrator.ViewModels
                     Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
                 }
             }
+        }
+
+        public InteractionRequest<Notification> SelectEntityPopupRequest { get; private set; }
+        public ICommand SelectLogEntityCommand { get; private set; }
+        private void OnSelectLogEntity()
+        {
+            Confirmation notification = new Confirmation() { Content = infoBase, Title = infoBase.Name };
+            this.SelectEntityPopupRequest.Raise(notification, response =>
+            {
+                Confirmation confirmation = response as Confirmation;
+                if (confirmation == null) return;
+                if (!confirmation.Confirmed) return;
+                this.SelectLogEntity(confirmation.Content as Entity);
+            });
+        }
+        private void SelectLogEntity(Entity entity)
+        {
+            if (entity == null) return;
+            Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = entity.FullName });
         }
     }
 }

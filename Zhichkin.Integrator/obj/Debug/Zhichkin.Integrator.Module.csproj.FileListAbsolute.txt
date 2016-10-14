@@ -71,3 +71,6 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module
 C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Zhichkin.Integrator.Module.pdb
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Module.dll
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Module.pdb
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\MetadataEntitySelectionView.g.cs
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\User\Desktop\Z\Zhichkin.Integrator\obj\Debug\Views\MetadataEntitySelectionView.baml

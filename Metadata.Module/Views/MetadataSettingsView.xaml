@@ -37,6 +37,5 @@
             </TextBox.InputBindings>
         </TextBox>
         <Button Grid.Row="1" Grid.Column="2" Content="Проверить" Width="80" Margin="5,10,10,10" Command="{Binding CheckConnectionCommand}" />
-
     </Grid>
 </UserControl>

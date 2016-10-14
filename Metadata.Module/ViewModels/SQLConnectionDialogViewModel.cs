@@ -40,7 +40,7 @@ namespace Zhichkin.Metadata.ViewModels
                 }
             }
         }
-        
+
         public void Confirm()
         {
             if (this.notification != null)

@@ -3,20 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Zhichkin.Integrator.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:views="clr-namespace:Zhichkin.Integrator.Views"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
-    
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding SelectEntityPopupRequest}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <views:MetadataEntitySelectionView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -52,21 +67,26 @@
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
             </TextBox.InputBindings>
         </TextBox>
+
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" 
+                    Margin="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <Button Content="..." Margin="0" Width="25" Height="25" Command="{Binding SelectLogEntityCommand}" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Регистрация изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsChangeTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Регистрация изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding IsChangeTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Использовать snapshot:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsSnapshotIsolationEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Использовать snapshot:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsSnapshotIsolationEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Авто удаление изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Авто удаление изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsAutoCleanUpEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding IsAutoCleanUpEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                   Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Срок хранения изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Срок хранения изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
                     Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBox Text="{Binding RetentionPeriod, Mode=TwoWay}" Width="30" Margin="10,10,5,10"/>
             <ComboBox ItemsSource="{Binding RetentionPeriodUnits}" SelectedItem="{Binding RetentionPeriodUnit}" Width="70" Margin="5,10,10,10" />

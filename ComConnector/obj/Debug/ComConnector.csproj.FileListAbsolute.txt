@@ -6,4 +6,3 @@ C:\Users\User\Desktop\Z\ComConnector\bin\Debug\Zhichkin.ComConnector.dll
 C:\Users\User\Desktop\Z\ComConnector\bin\Debug\Zhichkin.ComConnector.pdb
 C:\Users\User\Desktop\Z\ComConnector\obj\Debug\Zhichkin.ComConnector.dll
 C:\Users\User\Desktop\Z\ComConnector\obj\Debug\Zhichkin.ComConnector.pdb
-C:\Users\User\Desktop\Z\ComConnector\obj\Debug\ComConnector.csprojResolveAssemblyReference.cache
