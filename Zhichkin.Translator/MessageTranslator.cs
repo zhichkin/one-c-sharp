@@ -136,7 +136,11 @@ namespace Zhichkin.Integrator.Translator
                     {
                         while (reader.Read())
                         {
-                            lookup.Add(reader.GetInt32(0), reader.GetInt32(1));
+                            int key = reader.GetInt32(0);
+                            if (lookup.ContainsKey(key)) continue;
+                            int value = reader.GetInt32(1);
+                            if (value == 0) continue;
+                            lookup.Add(key, value);
                         }
                     }
                 }

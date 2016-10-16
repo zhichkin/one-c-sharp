@@ -18,7 +18,10 @@ namespace Zhichkin.Integrator.ViewModels
     public class InfoBaseViewModel : BindableBase
     {
         private const string CONST_ModuleDialogsTitle = "Z-Integrator";
-        
+        private const string CONST_LogEntityNameTooltip = ". . .";
+        private const string CONST_LogEntitySettingName = "documents_log_entity";
+        private const string CONST_LogPropertySettingName = "documents_log_property";
+
         private readonly InfoBase infoBase;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
@@ -30,9 +33,10 @@ namespace Zhichkin.Integrator.ViewModels
 
         public InfoBaseViewModel(InfoBase data, IRegionManager regionManager, IEventAggregator eventAggregator)
         {
-            infoBase = data;
+            if (data == null) throw new ArgumentNullException("data");
             if (regionManager == null) throw new ArgumentNullException("regionManager");
             if (eventAggregator == null) throw new ArgumentNullException("eventAggregator");
+            infoBase = data;
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             InitializeViewModel();
@@ -54,9 +58,41 @@ namespace Zhichkin.Integrator.ViewModels
                 _RetentionPeriodUnit = _RetentionPeriodUnits[_ChangeTrackingDatabaseInfo.RETENTION_PERIOD_UNITS - 1];
             }
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+
             this.SelectLogEntityCommand = new DelegateCommand(this.OnSelectLogEntity);
+            this.ClearLogEntityCommand = new DelegateCommand(this.OnClearLogEntity);
             this.SelectEntityPopupRequest = new InteractionRequest<Notification>();
+            InitializeCustomSettings();
         }
+        private void InitializeCustomSettings()
+        {
+            this.LogEntityName = CONST_LogEntityNameTooltip;
+            _LogEntityProperty = string.Empty;
+            this.LogEntityProperties = new List<string>();
+            this.IsLogEntityEnabled = false;
+            IDictionary<string, CustomSetting> settings = infoBase.CustomSettings;
+            if (settings.Count == 0) return;
+            if (settings.Keys.Contains(CONST_LogEntitySettingName))
+            {
+                Guid identity = new Guid(settings[CONST_LogEntitySettingName].Value);
+                this.LogEntity = Entity.Select(identity);
+                if (this.LogEntity != null)
+                {
+                    this.LogEntityName = this.LogEntity.FullName;
+                    foreach (Property property in this.LogEntity.Properties)
+                    {
+                        this.LogEntityProperties.Add(property.Name);
+                    }
+                }
+                this.IsLogEntityEnabled = true;
+            }
+            if (settings.Keys.Contains(CONST_LogPropertySettingName))
+            {
+                _LogEntityProperty = settings[CONST_LogPropertySettingName].Value;
+            }
+        }
+        public Entity LogEntity { get; private set; }
+        public string LogEntityName { get; private set; }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
         private void OnUpdateTextBoxSource(object userControl)
         {
@@ -259,9 +295,12 @@ namespace Zhichkin.Integrator.ViewModels
 
         public InteractionRequest<Notification> SelectEntityPopupRequest { get; private set; }
         public ICommand SelectLogEntityCommand { get; private set; }
+        public ICommand ClearLogEntityCommand { get; private set; }
+        public bool IsLogEntityEnabled { get; private set; }
+        public List<string> LogEntityProperties { get; private set; }
         private void OnSelectLogEntity()
         {
-            Confirmation notification = new Confirmation() { Content = infoBase, Title = infoBase.Name };
+            Confirmation notification = new Confirmation() { Content = infoBase, Title = CONST_ModuleDialogsTitle };
             this.SelectEntityPopupRequest.Raise(notification, response =>
             {
                 Confirmation confirmation = response as Confirmation;
@@ -273,7 +312,104 @@ namespace Zhichkin.Integrator.ViewModels
         private void SelectLogEntity(Entity entity)
         {
             if (entity == null) return;
-            Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = entity.FullName });
+            if (this.LogEntity == entity) return;
+            try
+            {
+                SaveCustomSetting(CONST_LogEntitySettingName, entity.Identity.ToString());
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                return;
+            }
+            this.LogEntity = entity;
+            this.LogEntityName = this.LogEntity.FullName;
+            this.OnPropertyChanged("LogEntityName");
+            this.LogEntityProperties = new List<string>();
+            foreach (Property property in this.LogEntity.Properties)
+            {
+                this.LogEntityProperties.Add(property.Name);
+            }
+            this.OnPropertyChanged("LogEntityProperties");
+            if (this.LogEntityProperties.Count > 0)
+            {
+                this.LogEntityProperty = this.LogEntityProperties[0];
+            }
+            else
+            {
+                _LogEntityProperty = string.Empty;
+            }
+            this.OnPropertyChanged("LogEntityProperty");
+            this.IsLogEntityEnabled = true;
+            this.OnPropertyChanged("IsLogEntityEnabled");
+        }
+        private void OnClearLogEntity()
+        {
+            if (this.LogEntity == null) return;
+            this.ClearLogEntity();
+            this.OnPropertyChanged("LogEntityName");
+            this.OnPropertyChanged("LogEntityProperties");
+            this.OnPropertyChanged("LogEntityProperty");
+            this.OnPropertyChanged("IsLogEntityEnabled");
+        }
+        private void ClearLogEntity()
+        {
+            if (this.LogEntity == null) return;
+            try
+            {
+                KillCustomSetting(CONST_LogEntitySettingName);
+                KillCustomSetting(CONST_LogPropertySettingName);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                return;
+            }
+            this.LogEntity = null;
+            this.LogEntityName = CONST_LogEntityNameTooltip;
+            this.LogEntityProperties = new List<string>();
+            _LogEntityProperty = string.Empty;
+            this.IsLogEntityEnabled = false;
+        }
+        private string _LogEntityProperty = string.Empty;
+        public string LogEntityProperty
+        {
+            get { return _LogEntityProperty; }
+            private set
+            {
+                try
+                {
+                    SaveCustomSetting(CONST_LogPropertySettingName, value);
+                    _LogEntityProperty = value;
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                    return;
+                }
+            }
+        }
+        private void SaveCustomSetting(string name, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return;
+            CustomSetting setting = null;
+            if (infoBase.CustomSettings.TryGetValue(name, out setting))
+            {
+                setting.Value = value;
+                setting.Save();
+            }
+            else
+            {
+                setting = CustomSetting.Create(infoBase, name, value);
+            }
+        }
+        private void KillCustomSetting(string name)
+        {
+            CustomSetting setting = null;
+            if (infoBase.CustomSettings.TryGetValue(name, out setting))
+            {
+                setting.Kill();
+            }
         }
     }
 }

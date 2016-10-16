@@ -11,6 +11,7 @@ namespace Zhichkin.Metadata.Model
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Entity));
         private static readonly IMetadataService service = new MetadataService();
+        public static Entity Select(Guid identity) { return DataMapper.Select(identity); }
 
         public Entity() : base(_mapper) { }
         public Entity(Guid identity) : base(_mapper, identity) { }

@@ -37,6 +37,7 @@ namespace Zhichkin.Integrator.Translator
             if (target == null) throw new ArgumentNullException("target");
             if (defaults == null) InitializeDefaultValues();
             if (commands == null) InitializeSQLCommands();
+            target.CommandType = CommandType.Text;
             target.CommandText = commands[adaptee.SYS_CHANGE_OPERATION];
             target.Parameters.Clear();
             target.Parameters.Add(new SqlParameter()
@@ -221,6 +222,13 @@ namespace Zhichkin.Integrator.Translator
             {
                 string field_name = rule.Key;
                 field_value_pairs += (field_value_pairs == string.Empty ? string.Empty : ", ") + string.Format("[{0}] = @{0}", field_name);
+            }
+            if (string.IsNullOrWhiteSpace(field_value_pairs))
+            {
+                // возможно регистр сведений без ресурсов или реквизитов
+                // (передложение SET команды UPDATE не содержит полей)
+                // такой UPDATE не имеет смысла, просто делаем так, чтобы не было ошибок
+                field_value_pairs = key_value_pairs.Replace(" AND ", ", ");
             }
             commands["U"] = string.Format(updateSQL, table, field_value_pairs, key_value_pairs);
         }

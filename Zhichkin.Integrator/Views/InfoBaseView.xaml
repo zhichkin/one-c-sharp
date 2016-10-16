@@ -7,7 +7,7 @@
              xmlns:views="clr-namespace:Zhichkin.Integrator.Views"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="300">
     
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -31,6 +31,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -68,25 +69,38 @@
             </TextBox.InputBindings>
         </TextBox>
 
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" 
-                    Margin="10" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <Button Content="..." Margin="0" Width="25" Height="25" Command="{Binding SelectLogEntityCommand}" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Журнал импорта документов:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <TextBlock.ToolTip>
+                Регистр сведений для регистрации загруженных документов.
+            </TextBlock.ToolTip>
+        </TextBlock>
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" 
+                    Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBlock Text="{Binding LogEntityName}" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <Button Content="..." Margin="10,0,0,0" Width="24" Height="24" Command="{Binding SelectLogEntityCommand}" />
+            <Button Content="X" Margin="1,0,0,0" Width="24" Height="24" Command="{Binding ClearLogEntityCommand}" />
         </StackPanel>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Регистрация изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsChangeTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Измерение журнала импорта:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Visibility="{Binding IsLogEntityEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+                  ItemsSource="{Binding LogEntityProperties}" SelectedItem="{Binding LogEntityProperty}" MinWidth="150"
+                  Visibility="{Binding IsLogEntityEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Регистрация изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsChangeTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Использовать snapshot:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsSnapshotIsolationEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Использовать snapshot:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding IsSnapshotIsolationEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Авто удаление изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Авто удаление изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding IsAutoCleanUpEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <CheckBox Grid.Row="7" Grid.Column="1" IsChecked="{Binding IsAutoCleanUpEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                   Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="Срок хранения изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
+        <TextBlock Grid.Row="8" Grid.Column="0" Text="Срок хранения изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
                    Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+        <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
                     Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBox Text="{Binding RetentionPeriod, Mode=TwoWay}" Width="30" Margin="10,10,5,10"/>
             <ComboBox ItemsSource="{Binding RetentionPeriodUnits}" SelectedItem="{Binding RetentionPeriodUnit}" Width="70" Margin="5,10,10,10" />

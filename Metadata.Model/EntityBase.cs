@@ -1,5 +1,7 @@
 ﻿using System;
 using Zhichkin.ORM;
+using Zhichkin.Metadata.Services;
+using System.Collections.Generic;
 
 namespace Zhichkin.Metadata.Model
 {
@@ -32,6 +34,14 @@ namespace Zhichkin.Metadata.Model
             if (other == null) return 1;
             if (this.GetType() != other.GetType()) throw new InvalidOperationException();
             return this.Name.CompareTo(other.Name);
+        }
+
+        public IDictionary<string, CustomSetting> CustomSettings
+        {
+            get
+            {
+                return CustomSetting.Select(this);
+            }
         }
     }
 }

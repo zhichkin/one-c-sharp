@@ -208,46 +208,62 @@ namespace Zhichkin.Integrator.Services
         }
         #endregion
 
+        private Dictionary<Guid, IMessageTranslator<ChangeTrackingMessage>> translators = new Dictionary<Guid, IMessageTranslator<ChangeTrackingMessage>>();
         private Dictionary<string, Action<Subscription, ChangeTrackingMessage, SqlCommand>> processingStrategies = new Dictionary<string, Action<Subscription, ChangeTrackingMessage, SqlCommand>>();
-        public IList<Subscription> GetSubscriptions()
+        private IMessageTranslator<ChangeTrackingMessage> GetMessageTranslator(Subscription subscription)
         {
-            return Subscription.Select();
+            IMessageTranslator<ChangeTrackingMessage> translator;
+            if (translators.TryGetValue(subscription.Identity, out translator))
+            {
+                return translator;
+            }
+            translator = new MessageTranslator(subscription);
+            translators.Add(subscription.Identity, translator);
+            return translator;
         }
-        public int ProcessMessages(Subscription subscription)
+        public int ProcessMessages(Publisher publisher)
         {
-            string connectionString = subscription.Subscriber.InfoBase.ConnectionString;
-            IMessageTranslator<ChangeTrackingMessage> translator = new MessageTranslator(subscription);
-            
-            MessageQueue source = GetPublisherQueue(subscription.Publisher);
-            source.Formatter = new BinaryMessageFormatter();
-            var serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingMessage) });
-
             int messagesProcessed = 0;
+            IList<Subscription> subscriptions = publisher.Subscriptions;
+            if (subscriptions == null || subscriptions.Count == 0) return messagesProcessed;
+
+            MessageQueue queue = GetPublisherQueue(publisher);
+            queue.Formatter = new BinaryMessageFormatter();
+            Serializer serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingMessage) });
+            
+            bool queue_is_empty = false;
+            while (!queue_is_empty)
+            {
+                try
+                {
+                    Message message = queue.Peek(new TimeSpan(0, 0, 0));
+                    ChangeTrackingMessage change = (ChangeTrackingMessage)serializer.Deserialize(message.BodyStream);
+                    foreach (Subscription subscription in subscriptions)
+                    {
+                        ProcessMessage(subscription, change);
+                    }
+                    queue.Receive();
+                    messagesProcessed++;
+                }
+                catch (MessageQueueException msx)
+                {
+                    if (msx.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout) throw msx;
+                    queue_is_empty = true;
+                }
+            }
+            return messagesProcessed;
+        }
+        private void ProcessMessage(Subscription subscription, ChangeTrackingMessage message)
+        {
+            ChangeTrackingMessage target = GetMessageTranslator(subscription).Translate(message);
+
+            string connectionString = subscription.Subscriber.InfoBase.ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
-                command.CommandType = CommandType.Text;
-                bool queue_is_empty = false;
-                while (!queue_is_empty)
-                {
-                    try
-                    {
-                        Message message = source.Peek(new TimeSpan(0, 0, 0));
-                        ChangeTrackingMessage change = (ChangeTrackingMessage)serializer.Deserialize(message.BodyStream);
-                        ChangeTrackingMessage target = translator.Translate(change);
-                        processingStrategies[target.SYS_CHANGE_OPERATION](subscription, target, command);
-                        source.Receive();
-                        messagesProcessed++;
-                    }
-                    catch (MessageQueueException msx)
-                    {
-                        if (msx.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout) throw msx;
-                        queue_is_empty = true;
-                    }
-                }
+                processingStrategies[target.SYS_CHANGE_OPERATION](subscription, target, command);
             }
-            return messagesProcessed;
         }
         private void ProcessInsertMessage(Subscription subscription, ChangeTrackingMessage message, SqlCommand command)
         {
@@ -277,7 +293,8 @@ namespace Zhichkin.Integrator.Services
         {
             ChangeTrackingRecordToSqlCommandAdapter adapter = new ChangeTrackingRecordToSqlCommandAdapter();
             adapter.Use(subscription).Input(message).Output(command);
-            int rowsAffected = command.ExecuteNonQuery();
+            int rowsAffected = 0;
+            rowsAffected = command.ExecuteNonQuery();
             if (rowsAffected > 0) return;
             // update-delete or update-none collision
             if (subscription.OnUpdateCollision == CollisionResolutionStrategy.Ignore) return;

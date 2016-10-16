@@ -62,5 +62,11 @@ namespace Zhichkin.Metadata.Model
 
             return FieldPurpose.Value;
         }
+
+        public static string GetErrorText()
+        {
+            // TODO сделать сообщения об ошибках DataMapper'ов более информативными
+            return string.Empty;
+        }
     }
 }

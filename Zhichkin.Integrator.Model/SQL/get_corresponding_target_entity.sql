@@ -1,6 +1,12 @@
 USE [Z]
 GO
 
+IF OBJECT_ID('[integrator].[get_corresponding_target_entity]') IS NOT NULL
+BEGIN
+	DROP PROCEDURE [integrator].[get_corresponding_target_entity];
+END
+GO
+
 CREATE PROCEDURE [integrator].[get_corresponding_target_entity]
 	@source_infobase uniqueidentifier, 
 	@target_infobase uniqueidentifier,
@@ -39,7 +45,7 @@ BEGIN
 	INNER JOIN [metadata].[entities] AS se ON subs.[publisher] = se.[key]
 	INNER JOIN #source_namespaces AS s ON se.[namespace] = s.[key]
 	INNER JOIN #target_namespaces AS t ON te.[namespace] = t.[key]
-	WHERE se.[code] = @type_code;
+	WHERE se.[code] = @type_code AND te.[code] > 0;
 
 	DROP TABLE #source_namespaces;
 	DROP TABLE #target_namespaces;

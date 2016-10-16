@@ -17,6 +17,7 @@ namespace Zhichkin.Metadata.ViewModels
             this.SelectCommand = new DelegateCommand(this.Confirm);
             this.CancelCommand = new DelegateCommand(this.Cancel);
         }
+        public string Name { get { return (infoBase == null) ? string.Empty : infoBase.Name; } }
         private ObservableCollection<Namespace> namespaces = new ObservableCollection<Namespace>();
         public ObservableCollection<Namespace> Namespaces
         {
@@ -64,6 +65,7 @@ namespace Zhichkin.Metadata.ViewModels
                 if (this.notification == null) return;
                 infoBase = this.notification.Content as InfoBase;
                 this.OnPropertyChanged("Namespaces");
+                this.OnPropertyChanged("Name");
             }
         }
         public Action FinishInteraction { get; set; }

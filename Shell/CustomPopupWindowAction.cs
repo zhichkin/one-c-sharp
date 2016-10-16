@@ -19,7 +19,7 @@ namespace Zhichkin.Shell
             }
 
             Window wrapperWindow = this.GetWindow(args.Context);
-            wrapperWindow.ResizeMode = ResizeMode.NoResize;
+            wrapperWindow.ResizeMode = ResizeMode.CanResize;
             wrapperWindow.SizeToContent = SizeToContent.WidthAndHeight;
 
             // We invoke the callback when the interaction's window is closed.
@@ -42,6 +42,8 @@ namespace Zhichkin.Shell
                     (o, e) => {
                         wrapperWindow.SizeChanged -= sizeHandler;
 
+                        // вот это было дописано, чтобы все всплывающие окна
+                        // центрировались относительно главного окна приложения
                         FrameworkElement view = App.Current.MainWindow;
                         Point position = view.PointToScreen(new Point(0, 0));
 

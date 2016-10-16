@@ -36,14 +36,12 @@ namespace Zhichkin.Metadata.Model
 
             private readonly string ConnectionString;
             private readonly IReferenceObjectFactory Factory;
-
             private DataMapper() { }
             public DataMapper(string connectionString, IReferenceObjectFactory factory)
             {
                 ConnectionString = connectionString;
                 Factory = factory;
             }
-
             void IDataMapper.Select(IPersistent entity)
             {
                 Entity e = (Entity)entity;
@@ -87,7 +85,6 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new ApplicationException("Error executing select command.");
             }
-
             void IDataMapper.Insert(IPersistent entity)
             {
                 Entity e = (Entity)entity;
@@ -146,7 +143,6 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new ApplicationException("Error executing insert command.");
             }
-
             void IDataMapper.Update(IPersistent entity)
             {
                 Entity e = (Entity)entity;
@@ -222,7 +218,6 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new OptimisticConcurrencyException(e.state.ToString());
             }
-
             void IDataMapper.Delete(IPersistent entity)
             {
                 Entity e = (Entity)entity;
@@ -257,6 +252,48 @@ namespace Zhichkin.Metadata.Model
                 }
 
                 if (!ok) throw new ApplicationException("Error executing delete command.");
+            }
+
+            public static Entity Select(Guid identity)
+            {
+                Entity entity = null;
+                IPersistentContext context = MetadataPersistentContext.Current;
+                IReferenceObjectFactory factory = MetadataPersistentContext.Current.Factory;
+                using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = SelectCommandText;
+                    SqlParameter parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier)
+                    {
+                        Direction = ParameterDirection.Input,
+                        Value = identity
+                    };
+                    command.Parameters.Add(parameter);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            entity = (Entity)context.Factory.New(typeof(Entity), identity);
+                            if (entity.State == PersistentState.New)
+                            {
+                                entity.State = PersistentState.Loading;
+                                Guid guid;
+                                entity._namespace = factory.New<Namespace>((Guid)reader[0]);
+                                guid = (Guid)reader[1];
+                                entity.owner = (guid == Guid.Empty) ? null : factory.New<Entity>(guid);
+                                guid = (Guid)reader[2];
+                                entity.parent = (guid == Guid.Empty) ? null : factory.New<Entity>(guid);
+                                entity.name = (string)reader[3];
+                                entity.code = (int)reader[4];
+                                entity.version = (byte[])reader[5];
+                                entity.State = PersistentState.Original;
+                            }
+                        }
+                    }
+                }
+                return entity;
             }
         }
     }

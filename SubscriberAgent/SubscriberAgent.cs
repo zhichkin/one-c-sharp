@@ -133,18 +133,18 @@ namespace SubscriberAgent
         {
             log.WriteEntry(ex.Message, EventLogEntryType.Error);
         }
-
+                
         private void ExecuteServiceTask()
         {
             int messagesProcessed = 0;
-            foreach (Subscription subscription in integrator.GetSubscriptions())
+            foreach (Publisher publisher in integrator.GetPublishers())
             {
                 try
                 {
-                    messagesProcessed = integrator.ProcessMessages(subscription);
+                    messagesProcessed = integrator.ProcessMessages(publisher);
                     if (messagesProcessed != 0)
                     {
-                        log.WriteEntry(GetSuccessText(subscription, messagesProcessed), EventLogEntryType.Information);
+                        log.WriteEntry(GetSuccessText(publisher, messagesProcessed), EventLogEntryType.Information);
                     }
                 }
                 catch (Exception ex)
@@ -166,10 +166,10 @@ namespace SubscriberAgent
             }
             return errorText;
         }
-        private string GetSuccessText(Subscription subscription, int messagesProcessed)
+        private string GetSuccessText(Publisher publisher, int messagesProcessed)
         {
-            return string.Format("Subscription \"{0}\": {1} messages processed.",
-                subscription.Name,
+            return string.Format("Publisher \"{0}\": {1} messages processed.",
+                publisher.Name,
                 messagesProcessed.ToString());
         }
     }

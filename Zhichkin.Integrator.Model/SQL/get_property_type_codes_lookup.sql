@@ -1,6 +1,12 @@
 USE [Z]
 GO
 
+IF OBJECT_ID('[integrator].[get_property_type_codes_lookup]') IS NOT NULL
+BEGIN
+	DROP PROCEDURE [integrator].[get_property_type_codes_lookup];
+END
+GO
+
 CREATE PROCEDURE [integrator].[get_property_type_codes_lookup]
 	@property uniqueidentifier,
 	@target_infobase uniqueidentifier
@@ -25,7 +31,7 @@ BEGIN
 	INNER JOIN [metadata].[entities] AS te ON s.[subscriber] = te.[key]
 	INNER JOIN #target_namespaces AS n ON te.[namespace] = n.[key]
 	INNER JOIN [metadata].[relations] AS r ON r.[entity] = s.[publisher]
-	WHERE r.[property] = @property;
+	WHERE r.[property] = @property AND te.[code] > 0;
 
 	DROP TABLE #target_namespaces;
 END

@@ -94,3 +94,4 @@ C:\Users\User\Desktop\Z\deploy\z.pdb
 C:\Users\User\Desktop\Z\debug\z.exe.config
 C:\Users\User\Desktop\Z\debug\z.exe
 C:\Users\User\Desktop\Z\debug\z.pdb
+C:\Users\User\Desktop\Z\Shell\obj\Debug\Shell.csprojResolveAssemblyReference.cache

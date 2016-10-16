@@ -25,29 +25,22 @@ namespace Zhichkin.Integrator.Translator
 
             SourceFields[purpose] = sourceField;
             SourceValues[purpose] = sourceValue;
+            
+            if (purpose == FieldPurpose.Locator) { SetLocatorValue(targetFields, targetValues); }
+            else if (purpose == FieldPurpose.Boolean) { SetBooleanValue(targetFields, targetValues); return; }
+            else if (purpose == FieldPurpose.Number) { SetNumberValue(targetFields, targetValues); return; }
+            else if (purpose == FieldPurpose.DateTime) { SetDateTimeValue(targetFields, targetValues); return; }
+            else if (purpose == FieldPurpose.String) { SetStringValue(targetFields, targetValues); return; }
 
-            if (purpose == FieldPurpose.Boolean
-                || purpose == FieldPurpose.Number
-                || purpose == FieldPurpose.DateTime
-                || purpose == FieldPurpose.String)
+            // если есть поле-локатор, тогда ждём его заполнения
+            if (TargetFields.ContainsKey(FieldPurpose.Locator) && !SourceValues.ContainsKey(FieldPurpose.Locator)) // _TYPE
             {
-                targetFields.Add(new ChangeTrackingField()
-                {
-                    Name = name,
-                    Type = sourceField.Type,
-                    IsKey = IsSyncKey
-                });
-                targetValues.Add(sourceValue);
                 return;
             }
 
-            // до тех пор пока не соберём все три значения, не устанавливаем их,
+            // до тех пор пока не соберём все нужные значения, не устанавливаем их,
             // так как для ссылочных типов нужно проверить соответствие кодов типов
             if (!SourceValues.ContainsKey(FieldPurpose.TypeCode) || !SourceValues.ContainsKey(FieldPurpose.Object))
-            {
-                return;
-            }
-            if (TargetFields.ContainsKey(FieldPurpose.Locator) && !SourceValues.ContainsKey(FieldPurpose.Locator)) // _TYPE
             {
                 return;
             }
@@ -71,7 +64,6 @@ namespace Zhichkin.Integrator.Translator
                 {
                     SetEmptyCompoundValue(targetFields, targetValues);
                 }
-                
             }
             else
             {
@@ -85,28 +77,65 @@ namespace Zhichkin.Integrator.Translator
                 }
             }
         }
-        private void SetCompoundValue(int typeCode, IList<ChangeTrackingField> targetFields, IList<object> targetValues)
+        private void SetLocatorValue(IList<ChangeTrackingField> targetFields, IList<object> targetValues)
+        {
+            if (TargetFields.ContainsKey(FieldPurpose.Locator)) // _TYPE
+            {
+                targetFields.Add(new ChangeTrackingField()
+                {
+                    Name = TargetFields[FieldPurpose.Locator],
+                    Type = SourceFields[FieldPurpose.Locator].Type,
+                    IsKey = this.IsSyncKey
+                });
+                targetValues.Add(SourceValues[FieldPurpose.Locator]);
+            }
+        }
+        private void SetBooleanValue(IList<ChangeTrackingField> targetFields, IList<object> targetValues)
         {
             targetFields.Add(new ChangeTrackingField()
             {
-                Name = TargetFields[FieldPurpose.Locator],
-                Type = SourceFields[FieldPurpose.Locator].Type,
+                Name = TargetFields[FieldPurpose.Boolean],
+                Type = SourceFields[FieldPurpose.Boolean].Type,
                 IsKey = this.IsSyncKey
             });
-            targetValues.Add(SourceValues[FieldPurpose.Locator]);
-
+            targetValues.Add(SourceValues[FieldPurpose.Boolean]);
+        }
+        private void SetStringValue(IList<ChangeTrackingField> targetFields, IList<object> targetValues)
+        {
+            targetFields.Add(new ChangeTrackingField()
+            {
+                Name = TargetFields[FieldPurpose.String],
+                Type = SourceFields[FieldPurpose.String].Type,
+                IsKey = this.IsSyncKey
+            });
+            targetValues.Add(SourceValues[FieldPurpose.String]);
+        }
+        private void SetNumberValue(IList<ChangeTrackingField> targetFields, IList<object> targetValues)
+        {
+            targetFields.Add(new ChangeTrackingField()
+            {
+                Name = TargetFields[FieldPurpose.Number],
+                Type = SourceFields[FieldPurpose.Number].Type,
+                IsKey = this.IsSyncKey
+            });
+            targetValues.Add(SourceValues[FieldPurpose.Number]);
+        }
+        private void SetDateTimeValue(IList<ChangeTrackingField> targetFields, IList<object> targetValues)
+        {
+            targetFields.Add(new ChangeTrackingField()
+            {
+                Name = TargetFields[FieldPurpose.DateTime],
+                Type = SourceFields[FieldPurpose.DateTime].Type,
+                IsKey = this.IsSyncKey
+            });
+            targetValues.Add(SourceValues[FieldPurpose.DateTime]);
+        }
+        private void SetCompoundValue(int typeCode, IList<ChangeTrackingField> targetFields, IList<object> targetValues)
+        {
             SetReferenceValue(typeCode, targetFields, targetValues);
         }
         private void SetEmptyCompoundValue(IList<ChangeTrackingField> targetFields, IList<object> targetValues)
         {
-            targetFields.Add(new ChangeTrackingField()
-            {
-                Name = TargetFields[FieldPurpose.Locator],
-                Type = SourceFields[FieldPurpose.Locator].Type,
-                IsKey = this.IsSyncKey
-            });
-            targetValues.Add(new byte[1] { 0x01 }); // _TYPE
-
             targetFields.Add(new ChangeTrackingField()
             {
                 Name = TargetFields[FieldPurpose.TypeCode],

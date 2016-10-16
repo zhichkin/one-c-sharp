@@ -8,7 +8,7 @@ namespace Zhichkin.Integrator.Services
     {
         IList<Publisher> GetPublishers();
         int PublishChanges(Publisher publisher);
-        int ProcessMessages(Subscription subscription);
+        int ProcessMessages(Publisher publisher);
 
         int GetPublishersQueuesLength();
 

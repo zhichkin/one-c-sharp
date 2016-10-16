@@ -27,10 +27,15 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TreeView Grid.Row="0" Grid.Column="0" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Path=Name}"
+                   FontWeight="DemiBold" Margin="10,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+        <TreeView Grid.Row="1" Grid.Column="0" Margin="10,5,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                   ItemsSource="{Binding Path=Namespaces}"
                   SelectedItemChanged="TreeView_SelectedItemChanged" MouseDoubleClick="TreeView_MouseDoubleClick">
             <TreeView.Resources>
@@ -119,11 +124,13 @@
                 </HierarchicalDataTemplate>
             </TreeView.Resources>
         </TreeView>
-        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" 
+        
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" 
                     Margin="0,0,10,10" VerticalAlignment="Center" HorizontalAlignment="Right">
             <Button Content="Выбрать" Margin="0,0,5,0" Width="80" Height="25" Command="{Binding SelectCommand}" />
             <Button Content="Отменить" Margin="5,0,0,0" Width="80" Height="25" Command="{Binding CancelCommand}" />
         </StackPanel>
+        
     </Grid>
     
 </UserControl>

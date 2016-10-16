@@ -47,11 +47,13 @@
     <Compile Include="Entity.SystemTypes.cs" />
     <Compile Include="EntityBase.cs" />
     <Compile Include="IMetadataService.cs" />
+    <Compile Include="CustomSetting.cs" />
     <Compile Include="InfoBase.cs" />
     <Compile Include="InfoBase.DataMapper.cs" />
     <Compile Include="InfoBase.Metadata.cs" />
     <Compile Include="MetadataService.cs" />
     <Compile Include="Namespace.cs" />
+    <Compile Include="CustomSetting.DataMapper.cs" />
     <Compile Include="Namespace.DataMapper.cs" />
     <Compile Include="Namespace.TypeSystem.cs" />
     <Compile Include="PersistentContext.cs" />
@@ -77,6 +79,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="SQL\create_database.sql" />
+    <Content Include="SQL\settings.sql" />
     <Content Include="SQL\schema_metadata.sql" />
     <Content Include="SQL\entities.sql" />
     <Content Include="SQL\fields.sql" />

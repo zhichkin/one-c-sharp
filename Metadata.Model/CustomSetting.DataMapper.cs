@@ -1,40 +1,39 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using Zhichkin.ORM;
 using System.Collections.Generic;
 
-namespace Zhichkin.Integrator.Model
+using Zhichkin.ORM;
+
+namespace Zhichkin.Metadata.Model
 {
-    public partial class Publisher
+    public partial class CustomSetting
     {
         public sealed class DataMapper : IDataMapper
         {
-            #region " SQL CRUD commands "
-            private const string SelectCommandText =
-                @"SELECT [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[publishers] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [owner_], [owner], [name], [value], [version] FROM [metadata].[settings] WHERE [key] = @key";
             private const string InsertCommandText =
-                @"DECLARE @result TABLE([version] binary(8)); " +
-                @"INSERT [integrator].[publishers] ([key], [name], [last_sync_version], [msmq_target_queue]) " +
+                @"DECLARE @result table([version] binary(8)); " +
+                @"INSERT [metadata].[settings] ([key], [owner_], [owner], [name], [value]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @name, @last_sync_version, @msmq_target_queue); " +
+                @"VALUES (@key, @owner_, @owner, @name, @value); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
-                @"DECLARE @rows_affected int; DECLARE @result TABLE([version] binary(8)); " +
-                @"UPDATE [integrator].[publishers] SET [name] = @name, [last_sync_version] = @last_sync_version, [msmq_target_queue] = @msmq_target_queue " +
+                @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
+                @"UPDATE [metadata].[settings]" +
+                @" SET [owner_] = @owner_, [owner] = @owner, [name] = @name, [value] = @value " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
                 @"IF (@rows_affected = 0) " +
                 @"BEGIN " +
-                @"  INSERT @result ([version]) SELECT [version] FROM [integrator].[publishers] WHERE [key] = @key; " +
+                @"  INSERT @result ([version]) SELECT [version] FROM [metadata].[settings] WHERE [key] = @key; " +
                 @"END " +
                 @"SELECT @rows_affected, [version] FROM @result;";
             private const string DeleteCommandText =
-                @"DELETE [integrator].[publishers] WHERE [key] = @key " +
+                @"DELETE [metadata].[settings] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
-            #endregion
 
             private readonly string ConnectionString;
             private readonly IReferenceObjectFactory Factory;
@@ -44,111 +43,141 @@ namespace Zhichkin.Integrator.Model
                 ConnectionString = connectionString;
                 Factory = factory;
             }
-
             void IDataMapper.Select(IPersistent entity)
             {
-                Publisher e = (Publisher)entity;
+                CustomSetting e = (CustomSetting)entity;
 
                 bool ok = false;
+
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
-                using (SqlCommand command = connection.CreateCommand())
                 {
                     connection.Open();
+
+                    SqlCommand command  = connection.CreateCommand();
                     command.CommandType = CommandType.Text;
                     command.CommandText = SelectCommandText;
-                    SqlParameter parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier)
-                    {
-                        Direction = ParameterDirection.Input,
-                        Value = e.identity
-                    };
+
+                    SqlParameter parameter = null;
+
+                    parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
-                    using (SqlDataReader reader = command.ExecuteReader())
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                        {
-                            e.version = (byte[])reader[0];
-                            e.name = reader.GetString(1);
-                            e.last_sync_version = reader.GetInt64(2);
-                            e.msmq_target_queue = reader.GetString(3);
-                            ok = true;
-                        }
+                        e.owner = (EntityBase)Factory.New((int)reader[0], (Guid)reader[1]);
+                        e.name = (string)reader[2];
+                        e._value = (string)reader[3];
+                        e.version = (byte[])reader[4];
+
+                        ok = true;
                     }
+
+                    reader.Close(); connection.Close();
                 }
+
                 if (!ok) throw new ApplicationException("Error executing select command.");
             }
             void IDataMapper.Insert(IPersistent entity)
             {
-                Publisher e = (Publisher)entity;
+                CustomSetting e = (CustomSetting)entity;
 
                 bool ok = false;
+
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
-                using (SqlCommand command = connection.CreateCommand())
                 {
                     connection.Open();
+
+                    SqlCommand command  = connection.CreateCommand();
                     command.CommandType = CommandType.Text;
                     command.CommandText = InsertCommandText;
 
                     SqlParameter parameter = null;
+
                     parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
-                    parameter = new SqlParameter("name", SqlDbType.NVarChar);
+
+                    parameter = new SqlParameter("owner_", SqlDbType.Int);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.name;
-                    command.Parameters.Add(parameter);
-                    parameter = new SqlParameter("last_sync_version", SqlDbType.BigInt);
-                    parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.last_sync_version;
-                    command.Parameters.Add(parameter);
-                    parameter = new SqlParameter("msmq_target_queue", SqlDbType.NVarChar);
-                    parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.msmq_target_queue;
+                    parameter.Value = (e.owner == null) ? 0 : e.owner.TypeCode;
                     command.Parameters.Add(parameter);
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    parameter = new SqlParameter("owner", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.owner == null) ? Guid.Empty : e.owner.Identity;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("name", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.name == null) ? string.Empty : e.name;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("value", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e._value == null) ? string.Empty : e._value;
+                    command.Parameters.Add(parameter);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                        {
-                            e.version = (byte[])reader[0]; ok = true;
-                        }
+                        e.version = (byte[])reader[0]; ok = true;
                     }
+
+                    reader.Close(); connection.Close();
                 }
+
                 if (!ok) throw new ApplicationException("Error executing insert command.");
             }
             void IDataMapper.Update(IPersistent entity)
             {
-                Publisher e = (Publisher)entity;
+                CustomSetting e = (CustomSetting)entity;
 
                 bool ok = false; int rows_affected = 0;
 
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
-                using (SqlCommand command = connection.CreateCommand())
                 {
                     connection.Open();
+
+                    SqlCommand command  = connection.CreateCommand();
                     command.CommandType = CommandType.Text;
                     command.CommandText = UpdateCommandText;
 
                     SqlParameter parameter = null;
+
                     parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
+
                     parameter = new SqlParameter("version", SqlDbType.Timestamp);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.version;
                     command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("owner_", SqlDbType.Int);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.owner == null) ? 0 : e.owner.TypeCode;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("owner", SqlDbType.UniqueIdentifier);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.owner == null) ? Guid.Empty : e.owner.Identity;
+                    command.Parameters.Add(parameter);
+
                     parameter = new SqlParameter("name", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.name;
+                    parameter.Value = (e.name == null) ? string.Empty : e.name;
                     command.Parameters.Add(parameter);
-                    parameter = new SqlParameter("last_sync_version", SqlDbType.BigInt);
+
+                    parameter = new SqlParameter("value", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.last_sync_version;
-                    command.Parameters.Add(parameter);
-                    parameter = new SqlParameter("msmq_target_queue", SqlDbType.NVarChar);
-                    parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e.msmq_target_queue;
+                    parameter.Value = (e._value == null) ? string.Empty : e._value;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -172,104 +201,95 @@ namespace Zhichkin.Integrator.Model
                         }
                     }
                 }
+
                 if (!ok) throw new OptimisticConcurrencyException(e.state.ToString());
             }
             void IDataMapper.Delete(IPersistent entity)
             {
-                Publisher e = (Publisher)entity;
+                CustomSetting e = (CustomSetting)entity;
 
                 bool ok = false;
 
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
-                using (SqlCommand command = connection.CreateCommand())
                 {
                     connection.Open();
+
+                    SqlCommand command = connection.CreateCommand();
                     command.CommandType = CommandType.Text;
                     command.CommandText = DeleteCommandText;
 
                     SqlParameter parameter = null;
+
                     parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.identity;
                     command.Parameters.Add(parameter);
+
                     parameter = new SqlParameter("version", SqlDbType.Timestamp);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.version;
                     command.Parameters.Add(parameter);
 
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read()) { ok = reader.GetInt32(0) > 0; }
-                    }
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read()) { ok = (int)reader[0] > 0; }
+
+                    reader.Close(); connection.Close();
                 }
+
                 if (!ok) throw new ApplicationException("Error executing delete command.");
             }
 
-            public static IList<Publisher> Select()
+            public static IDictionary<string, CustomSetting> Select(EntityBase owner)
             {
-                IList<Publisher> list = new List<Publisher>();
-                IPersistentContext context = IntegratorPersistentContext.Current;
+                IPersistentContext context = MetadataPersistentContext.Current;
+
+                Dictionary<string, CustomSetting> settings = new Dictionary<string, CustomSetting>();
+
+                string sql = @"SELECT [key], [owner_], [owner], [name], [value], [version] FROM [metadata].[settings] WHERE [owner_] = @code AND [owner] = @owner";
+
                 using (SqlConnection connection = new SqlConnection(context.ConnectionString))
                 using (SqlCommand command = connection.CreateCommand())
                 {
                     connection.Open();
+
                     command.CommandType = CommandType.Text;
-                    command.CommandText = @"SELECT [key], [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[publishers];";
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Publisher entity = (Publisher)context.Factory.New(typeof(Publisher), reader.GetGuid(0));
-                            if (entity.State == PersistentState.New) // was not found in the cash (identity map)
-                            {
-                                entity.State = PersistentState.Loading;
-                                entity.version = (byte[])reader[1];
-                                entity.name = reader.GetString(2);
-                                entity.last_sync_version = reader.GetInt64(3);
-                                entity.msmq_target_queue = reader.GetString(4);
-                                entity.State = PersistentState.Original;
-                            }
-                            list.Add(entity);
-                        }
-                    }
-                }
-                return list;
-            }
-            public static Publisher Select(Guid identity)
-            {
-                Publisher entity = null;
-                IPersistentContext context = IntegratorPersistentContext.Current;
-                using (SqlConnection connection = new SqlConnection(context.ConnectionString))
-                using (SqlCommand command = connection.CreateCommand())
-                {
-                    connection.Open();
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = SelectCommandText;
-                    SqlParameter parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier)
+                    command.CommandText = sql;
+
+                    SqlParameter parameter = new SqlParameter("code", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Input,
-                        Value = identity
+                        Value = (owner == null) ? 0 : owner.TypeCode
                     };
                     command.Parameters.Add(parameter);
-                    using (SqlDataReader reader = command.ExecuteReader())
+
+                    parameter = new SqlParameter("owner", SqlDbType.UniqueIdentifier)
                     {
-                        if (reader.Read())
+                        Direction = ParameterDirection.Input,
+                        Value = (owner == null) ? Guid.Empty : owner.Identity
+                    };
+                    command.Parameters.Add(parameter);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        CustomSetting setting = (CustomSetting)context.Factory.New(typeof(CustomSetting), reader.GetGuid(0));
+                        if (setting.State == PersistentState.New) // was not found in the context cash (identity map)
                         {
-                            entity = (Publisher)context.Factory.New(typeof(Publisher), identity);
-                            if (entity.State == PersistentState.New)
-                            {
-                                entity.State = PersistentState.Loading;
-                                entity.version = (byte[])reader[0];
-                                entity.name = reader.GetString(1);
-                                entity.last_sync_version = reader.GetInt64(2);
-                                entity.msmq_target_queue = reader.GetString(3);
-                                entity.State = PersistentState.Original;
-                            }
+                            setting.State = PersistentState.Loading;
+                            setting.owner = (EntityBase)context.Factory.New(reader.GetInt32(1), reader.GetGuid(2));
+                            setting.name = reader.GetString(3);
+                            setting._value = reader.GetString(4);
+                            setting.version = (byte[])reader[5];
+                            setting.State = PersistentState.Original;
                         }
+                        settings.Add(setting.name, setting);
                     }
                 }
-                return entity;
-            }            
+
+                return settings;
+            }
         }
     }
 }
