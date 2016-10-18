@@ -8,6 +8,7 @@ using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Metadata.ViewModels
 {
+    // TODO: this class should be moved to a separate project called "Zhichkin.Metadata.Common"
     public class MetadataEntitySelectionViewModel : BindableBase, IInteractionRequestAware
     {
         private InfoBase infoBase;

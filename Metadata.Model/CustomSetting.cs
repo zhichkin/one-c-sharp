@@ -19,7 +19,6 @@ namespace Zhichkin.Metadata.Model
             setting.Owner = owner;
             setting.Name = name;
             setting.Value = value;
-            setting.Save();
             return setting;
         }
 
