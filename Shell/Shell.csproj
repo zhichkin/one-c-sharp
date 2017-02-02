@@ -118,6 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="CompositeCollectionConverter.cs" />
     <Compile Include="CustomPopupWindowAction.cs" />
     <Compile Include="ShellViewModel.cs" />
     <Compile Include="RegionNames.cs" />

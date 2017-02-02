@@ -10,7 +10,7 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="Icon_Edit" UriSource="..\Images\26 Edit.png"/>
+            <BitmapImage x:Key="Icon_Edit" UriSource="..\Images\26 Data Exchange.png"/>
             <BitmapImage x:Key="Icon_Cancel" UriSource="..\Images\26 Cancel.png"/>
         </ResourceDictionary>
     </UserControl.Resources>

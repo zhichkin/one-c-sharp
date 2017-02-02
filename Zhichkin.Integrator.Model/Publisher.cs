@@ -30,17 +30,20 @@ namespace Zhichkin.Integrator.Model
         {
             entity = MetadataPersistentContext.Current.Factory.New<Entity>(identity);
         }
+
         private readonly Entity entity;
+        private long last_sync_version = 0;
+        private string msmq_target_queue = string.Empty;
+        private ChangeTrackingSystem change_tracking_system = ChangeTrackingSystem.None;
+
         ///<summary>Inheritance: one-to-one entity reference</summary>
         public Entity Entity { get { return entity; } }
-
-        private long last_sync_version = 0;
         ///<summary>The last version number that was used to synchronize data</summary>
         public long LastSyncVersion { set { Set<long>(value, ref last_sync_version); } get { return Get<long>(ref last_sync_version); } }
-
-        private string msmq_target_queue = string.Empty;
         ///<summary>The target MSMQ queue to send messages with data changes to</summary>
         public string MSMQTargetQueue { set { Set<string>(value, ref msmq_target_queue); } get { return Get<string>(ref msmq_target_queue); } }
+        ///<summary>Change tracking system used to track data changes of entities</summary>
+        public ChangeTrackingSystem ChangeTrackingSystem { set { Set<ChangeTrackingSystem>(value, ref change_tracking_system); } get { return Get<ChangeTrackingSystem>(ref change_tracking_system); } }
 
         private IList<Subscription> subscriptions = new List<Subscription>();
         public IList<Subscription> Subscriptions

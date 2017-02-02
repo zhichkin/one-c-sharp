@@ -5,6 +5,7 @@ CREATE TABLE [integrator].[publishers](
 	[key] [uniqueidentifier] NOT NULL,
 	[version] [rowversion] NOT NULL,
 	[name] [nvarchar](100) NOT NULL,
+	[change_tracking_system] [int] NOT NULL,
 	[last_sync_version] [bigint] NOT NULL,
 	[msmq_target_queue] [nvarchar](256) NOT NULL,
  CONSTRAINT [pk_integrator_publishers] PRIMARY KEY CLUSTERED 

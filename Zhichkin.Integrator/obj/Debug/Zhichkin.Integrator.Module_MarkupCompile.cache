@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-82050752322
+9791944384
 
-211396884690
+241557348020
 80892060117
-Views\IntegratorSettingsView.xaml;Views\MetadataEntitySelectionView.xaml;Views\TranslationRulesListView.xaml;Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
+Views\IntegratorSettingsView.xaml;Views\MetadataEntitySelectionView.xaml;Views\AggregateItemsListView.xaml;Views\TranslationRulesListView.xaml;Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
 
 False
 

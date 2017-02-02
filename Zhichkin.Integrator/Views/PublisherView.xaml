@@ -5,13 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Zhichkin.Integrator.Views"
              xmlns:p="http://www.codeplex.com/CompositeWPF"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:views="clr-namespace:Zhichkin.Integrator.Views"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="450">
 
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <BitmapImage x:Key="Icon_Aggregate_Items" UriSource="..\Images\26 Settings.png"/>
+        </ResourceDictionary>
     </UserControl.Resources>
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding AggregatePopupRequest}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <views:AggregateItemsListView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -33,8 +51,16 @@
         
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Наименование:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Name}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Основная таблица:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MainTable}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBlock Text="{Binding MainTable}" VerticalAlignment="Center" />
+            <Button ToolTip="Настройка зависимых объектов" Margin="10,0,0,0"
+                    Command="{Binding ShowAggregatePopup}">
+                <Image Source="{StaticResource Icon_Aggregate_Items}" />
+            </Button>
+        </StackPanel>
+        
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Регистрация изменений:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding IsChangeTrackingEnabled, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Отслеживать изменения полей:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"
@@ -90,7 +116,7 @@
             </Button>
         </StackPanel>
 
-        <ContentControl Grid.Row="7" Grid.ColumnSpan="2" Content="{Binding Path=SubscriptionsListView}" Margin="10"
-                        Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <ContentControl Grid.Row="7" Grid.ColumnSpan="2" Content="{Binding Path=SubscriptionsListView}" Margin="10" />
+        <!--Visibility="{Binding IsChangeTrackingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"-->
     </Grid>
 </UserControl>

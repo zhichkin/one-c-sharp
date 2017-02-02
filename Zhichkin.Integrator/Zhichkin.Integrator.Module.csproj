@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\MetadataTreeViewController.cs" />
+    <Compile Include="ExceptionsHandling.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -112,6 +113,7 @@
     </Compile>
     <Compile Include="ViewModels\IntegratorSettingsViewModel.cs" />
     <Compile Include="ViewModels\MetadataEntitySelectionViewModel.cs" />
+    <Compile Include="ViewModels\AggregateItemsListViewModel.cs" />
     <Compile Include="ViewModels\TranslationRulesListViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionsListViewModel.cs" />
@@ -123,6 +125,9 @@
     </Compile>
     <Compile Include="Views\MetadataEntitySelectionView.xaml.cs">
       <DependentUpon>MetadataEntitySelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AggregateItemsListView.xaml.cs">
+      <DependentUpon>AggregateItemsListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TranslationRulesListView.xaml.cs">
       <DependentUpon>TranslationRulesListView.xaml</DependentUpon>
@@ -159,6 +164,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MetadataEntitySelectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AggregateItemsListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -235,6 +244,9 @@
     <Resource Include="Images\РегистрНакопления.png" />
     <Resource Include="Images\РегистрСведений.png" />
     <Resource Include="Images\Справочник.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Data Exchange.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -31,7 +31,9 @@ namespace Zhichkin.Integrator.ViewModels
 
         private ChangeTrackingDatabaseInfo _ChangeTrackingDatabaseInfo = null;
         private ChangeTrackingTableInfo _ChangeTrackingTableInfo = null;
-        
+
+        public InteractionRequest<Notification> AggregatePopupRequest { get; private set; }
+
         public PublisherViewModel(Entity data, IUnityContainer container, IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             entity = data;
@@ -43,10 +45,13 @@ namespace Zhichkin.Integrator.ViewModels
             this.container = container;
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
-            
+
+            this.AggregatePopupRequest = new InteractionRequest<Notification>();
+
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
             this.QueueTestCommand = new DelegateCommand(this.OnQueueTest);
             this.CountChangesCommand = new DelegateCommand(this.OnCountChanges);
+            this.ShowAggregatePopup = new DelegateCommand(this.OnShowAggregatePopup);
             InitializeViewModel();
         }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
@@ -86,6 +91,21 @@ namespace Zhichkin.Integrator.ViewModels
 
         public void InitializeViewModel()
         {
+            try
+            {
+                publisher = Publisher.SelectOrCreate(entity);
+                _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(
+                    typeof(SubscriptionsListView),
+                    new ParameterOverride("publisher", publisher)
+                        .OnType(typeof(SubscriptionsListViewModel)));
+            }
+            catch (Exception ex)
+            {
+                publisher = null;
+                _SubscriptionsListView = null;
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+
             ChangeTrackingService services = new ChangeTrackingService(infoBase.ConnectionString);
             try
             {
@@ -108,21 +128,6 @@ namespace Zhichkin.Integrator.ViewModels
                 Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
             if (_ChangeTrackingTableInfo == null) return;
-
-            try
-            {
-                publisher = Publisher.SelectOrCreate(entity);
-                _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(
-                    typeof(SubscriptionsListView),
-                    new ParameterOverride("publisher", publisher)
-                        .OnType(typeof(SubscriptionsListViewModel)));
-            }
-            catch (Exception ex)
-            {
-                publisher = null;
-                _SubscriptionsListView = null;
-                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
-            }
         }
         private SubscriptionsListView _SubscriptionsListView;
         public SubscriptionsListView SubscriptionsListView
@@ -202,6 +207,7 @@ namespace Zhichkin.Integrator.ViewModels
             if (info == null) throw new OperationCanceledException("Произошла неожиданная ошибка включения регистрации изменений!");
             publisher = Publisher.SelectOrCreate(entity);
             publisher.LastSyncVersion = info.BEGIN_VERSION;
+            publisher.ChangeTrackingSystem = ChangeTrackingSystem.ChangeTracking;
             publisher.Save();
             _SubscriptionsListView = (SubscriptionsListView)this.container.Resolve(
                     typeof(SubscriptionsListView),
@@ -295,6 +301,16 @@ namespace Zhichkin.Integrator.ViewModels
             {
                 Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
             }
+        }
+
+        public ICommand ShowAggregatePopup { get; private set; }
+        private void OnShowAggregatePopup()
+        {
+            this.AggregatePopupRequest.Raise(new Notification()
+            {
+                Title = CONST_ModuleDialogsTitle,
+                Content = entity
+            });
         }
     }
 }

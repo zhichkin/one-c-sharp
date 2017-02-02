@@ -39,12 +39,14 @@ namespace Zhichkin.Integrator.Model
             typeCodes.Add(1, typeof(Publisher));
             typeCodes.Add(2, typeof(Subscription));
             typeCodes.Add(3, typeof(TranslationRule));
+            typeCodes.Add(4, typeof(AggregateItem));
         }
         private static void InitializeDataMappers()
         {
             mappers.Add(typeof(Publisher), new Publisher.DataMapper(connectionString, factory));
             mappers.Add(typeof(Subscription), new Subscription.DataMapper(connectionString, factory));
             mappers.Add(typeof(TranslationRule), new TranslationRule.DataMapper(connectionString, factory));
+            mappers.Add(typeof(AggregateItem), new AggregateItem.DataMapper(connectionString, factory));
         }
     }
 }

@@ -12,16 +12,16 @@ namespace Zhichkin.Integrator.Model
         {
             #region " SQL CRUD commands "
             private const string SelectCommandText =
-                @"SELECT [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[publishers] WHERE [key] = @key";
+                @"SELECT [version], [name], [last_sync_version], [msmq_target_queue], [change_tracking_system] FROM [integrator].[publishers] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result TABLE([version] binary(8)); " +
-                @"INSERT [integrator].[publishers] ([key], [name], [last_sync_version], [msmq_target_queue]) " +
+                @"INSERT [integrator].[publishers] ([key], [name], [last_sync_version], [msmq_target_queue], [change_tracking_system]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @name, @last_sync_version, @msmq_target_queue); " +
+                @"VALUES (@key, @name, @last_sync_version, @msmq_target_queue, @change_tracking_system); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result TABLE([version] binary(8)); " +
-                @"UPDATE [integrator].[publishers] SET [name] = @name, [last_sync_version] = @last_sync_version, [msmq_target_queue] = @msmq_target_queue " +
+                @"UPDATE [integrator].[publishers] SET [name] = @name, [last_sync_version] = @last_sync_version, [msmq_target_queue] = @msmq_target_queue, [change_tracking_system] = @change_tracking_system " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
@@ -70,6 +70,7 @@ namespace Zhichkin.Integrator.Model
                             e.name = reader.GetString(1);
                             e.last_sync_version = reader.GetInt64(2);
                             e.msmq_target_queue = reader.GetString(3);
+                            e.change_tracking_system = (ChangeTrackingSystem)reader.GetInt32(4);
                             ok = true;
                         }
                     }
@@ -104,6 +105,10 @@ namespace Zhichkin.Integrator.Model
                     parameter = new SqlParameter("msmq_target_queue", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.msmq_target_queue;
+                    command.Parameters.Add(parameter);
+                    parameter = new SqlParameter("change_tracking_system", SqlDbType.Int);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (int)e.change_tracking_system;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -149,6 +154,10 @@ namespace Zhichkin.Integrator.Model
                     parameter = new SqlParameter("msmq_target_queue", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.msmq_target_queue;
+                    command.Parameters.Add(parameter);
+                    parameter = new SqlParameter("change_tracking_system", SqlDbType.Int);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (int)e.change_tracking_system;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())

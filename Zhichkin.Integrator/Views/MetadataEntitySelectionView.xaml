@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
              xmlns:ViewModel="clr-namespace:Zhichkin.Integrator.Views"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
@@ -22,7 +23,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <Grid>
+    <Grid MinWidth="300" MinHeight="400">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -39,6 +40,7 @@
                   ItemsSource="{Binding Path=Namespaces}"
                   SelectedItemChanged="TreeView_SelectedItemChanged" MouseDoubleClick="TreeView_MouseDoubleClick">
             <TreeView.Resources>
+                <shell:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type Model:Namespace}" ItemsSource="{Binding Path=Entities}">
                     <StackPanel Orientation="Horizontal">
                         <Image Margin="2">
@@ -77,6 +79,12 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Entity}">
+                    <HierarchicalDataTemplate.ItemsSource>
+                        <MultiBinding Converter="{StaticResource CompositeCollectionConverter}">
+                            <!--<Binding Path="Properties" />-->
+                            <Binding Path="NestedEntities" />
+                        </MultiBinding>
+                    </HierarchicalDataTemplate.ItemsSource>
                     <StackPanel Orientation="Horizontal">
                         <Image Margin="2">
                             <Image.Style>
