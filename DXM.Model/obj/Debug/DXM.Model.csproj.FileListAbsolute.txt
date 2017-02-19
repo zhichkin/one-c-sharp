@@ -1,0 +1,10 @@
+C:\Users\User\Desktop\Z\DXM.Model\bin\Debug\Zhichkin.DXM.Model.dll
+C:\Users\User\Desktop\Z\DXM.Model\bin\Debug\Zhichkin.DXM.Model.pdb
+C:\Users\User\Desktop\Z\DXM.Model\bin\Debug\Zhichkin.Metadata.Model.dll
+C:\Users\User\Desktop\Z\DXM.Model\bin\Debug\Zhichkin.ORM.dll
+C:\Users\User\Desktop\Z\DXM.Model\bin\Debug\Microsoft.Practices.Prism.PubSubEvents.dll
+C:\Users\User\Desktop\Z\DXM.Model\bin\Debug\Zhichkin.Metadata.Model.pdb
+C:\Users\User\Desktop\Z\DXM.Model\bin\Debug\Zhichkin.ORM.pdb
+C:\Users\User\Desktop\Z\DXM.Model\obj\Debug\Zhichkin.DXM.Model.dll
+C:\Users\User\Desktop\Z\DXM.Model\obj\Debug\Zhichkin.DXM.Model.pdb
+C:\Users\User\Desktop\Z\DXM.Model\obj\Debug\DXM.Model.csprojResolveAssemblyReference.cache

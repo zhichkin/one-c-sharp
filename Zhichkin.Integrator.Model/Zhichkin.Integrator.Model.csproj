@@ -65,6 +65,7 @@
   <ItemGroup>
     <Content Include="SQL\get_corresponding_source_entity.sql" />
     <Content Include="SQL\get_corresponding_target_entity.sql" />
+    <Content Include="SQL\get_type_codes_lookup.sql" />
     <Content Include="SQL\get_property_type_codes_lookup.sql" />
     <Content Include="SQL\schema_integrator.sql" />
     <Content Include="SQL\aggregates.sql" />

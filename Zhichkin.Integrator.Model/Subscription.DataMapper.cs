@@ -236,6 +236,41 @@ namespace Zhichkin.Integrator.Model
                 }
                 return list;
             }
+            public static Subscription Select(Guid identity)
+            {
+                Subscription entity = null;
+                IPersistentContext context = IntegratorPersistentContext.Current;
+                using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = SelectCommandText;
+                    SqlParameter parameter = new SqlParameter("key", SqlDbType.UniqueIdentifier)
+                    {
+                        Direction = ParameterDirection.Input,
+                        Value = identity
+                    };
+                    command.Parameters.Add(parameter);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            entity = (Subscription)context.Factory.New(typeof(Subscription), identity);
+                            if (entity.State == PersistentState.New)
+                            {
+                                entity.State = PersistentState.Loading;
+                                entity.version = (byte[])reader[0];
+                                entity.name = reader.GetString(1);
+                                entity.publisher = (Publisher)context.Factory.New(typeof(Publisher), reader.GetGuid(2));
+                                entity.subscriber = (Entity)context.Factory.New(typeof(Entity), reader.GetGuid(3));
+                                entity.State = PersistentState.Original;
+                            }
+                        }
+                    }
+                }
+                return entity;
+            }
             public static IList<TranslationRule> GetTranslationRules(Subscription subscription)
             {
                 IPersistentContext context = MetadataPersistentContext.Current;

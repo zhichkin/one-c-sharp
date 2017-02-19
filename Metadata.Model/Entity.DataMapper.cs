@@ -276,6 +276,7 @@ namespace Zhichkin.Metadata.Model
                         if (reader.Read())
                         {
                             entity = (Entity)context.Factory.New(typeof(Entity), identity);
+                            // check if nothing was found in IdentityMap - in-memory cash
                             if (entity.State == PersistentState.New)
                             {
                                 entity.State = PersistentState.Loading;

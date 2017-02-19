@@ -223,7 +223,7 @@ namespace Zhichkin.Integrator.Model
                 {
                     connection.Open();
                     command.CommandType = CommandType.Text;
-                    command.CommandText = @"SELECT [key], [version], [name], [last_sync_version], [msmq_target_queue] FROM [integrator].[publishers];";
+                    command.CommandText = @"SELECT [key], [version], [name], [last_sync_version], [msmq_target_queue], [change_tracking_system] FROM [integrator].[publishers];";
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -236,6 +236,7 @@ namespace Zhichkin.Integrator.Model
                                 entity.name = reader.GetString(2);
                                 entity.last_sync_version = reader.GetInt64(3);
                                 entity.msmq_target_queue = reader.GetString(4);
+                                entity.change_tracking_system = (ChangeTrackingSystem)reader.GetInt32(5);
                                 entity.State = PersistentState.Original;
                             }
                             list.Add(entity);
@@ -272,6 +273,7 @@ namespace Zhichkin.Integrator.Model
                                 entity.name = reader.GetString(1);
                                 entity.last_sync_version = reader.GetInt64(2);
                                 entity.msmq_target_queue = reader.GetString(3);
+                                entity.change_tracking_system = (ChangeTrackingSystem)reader.GetInt32(4);
                                 entity.State = PersistentState.Original;
                             }
                         }

@@ -627,5 +627,12 @@ namespace Zhichkin.ChangeTracking
             }
             return messages;
         }
+        public void PrepareSelectChangesCommand(Table table, long last_sync_version, SqlCommand command)
+        {
+            command.CommandType = CommandType.Text;
+            command.CommandText = GetSelectChangesScript(table, command);
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("last_sync_version", last_sync_version);
+        }
     }
 }

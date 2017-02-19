@@ -15,5 +15,6 @@ namespace Zhichkin.ChangeTracking
         void DisableDatabaseChangeTracking(InfoBase infoBase);
         void SwitchTableChangeTracking(Table table, bool on);
         void SwitchTableColumnsTracking(Table table, bool on);
+        void PrepareSelectChangesCommand(Table table, long last_sync_version, SqlCommand command);
     }
 }

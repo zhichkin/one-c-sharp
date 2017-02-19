@@ -1,4 +1,5 @@
 ﻿using Zhichkin.ChangeTracking;
+using Zhichkin.Metadata.Model;
 using System.Collections.Generic;
 
 namespace Zhichkin.Integrator.Translator

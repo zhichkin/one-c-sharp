@@ -1,0 +1,66 @@
+﻿
+
+Начинается установка.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Удаление из системы выполнено.
+
+Выполняется групповая операция установки.
+
+Начинается этап установки процедуры установки.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+На этапе установки возникло исключение.
+System.ComponentModel.Win32Exception: Имя учетной записи задано неверно или не существует, или же неверен указанный пароль
+
+Начинается этап отката процедуры установки.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Этап отката выполнен успешно.
+
+Групповая операция установки выполнена.
+
+
+Начинается установка.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Удаление из системы выполнено.
+
+Выполняется групповая операция установки.
+
+Начинается этап установки процедуры установки.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Этап установки успешно выполнен, начинается этап фиксации.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Этап фиксации выполнен успешно.
+
+Групповая операция установки выполнена.
+
+
+Начинается установка.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Удаление из системы выполнено.
+
+Выполняется групповая операция установки.
+
+Начинается этап установки процедуры установки.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Этап установки успешно выполнен, начинается этап фиксации.
+См. файл журнала выполнения операция для сборки C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.
+Данный файл находится в C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.InstallLog.
+
+Этап фиксации выполнен успешно.
+
+Групповая операция установки выполнена.

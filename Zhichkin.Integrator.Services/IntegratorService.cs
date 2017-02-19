@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Xml;
+using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using Zhichkin.ORM;
@@ -47,34 +50,118 @@ namespace Zhichkin.Integrator.Services
             return count;
         }
 
+        //+++ XML version
+        //public int PublishChanges(Publisher publisher)
+        //{
+        //    if (publisher == null) throw new ArgumentNullException("publisher");
+        //    if (publisher.ChangeTrackingSystem == ChangeTrackingSystem.None) return 0;
+
+        //    string connectionString = publisher.Entity.InfoBase.ConnectionString;
+        //    ChangeTrackingService service = new ChangeTrackingService(connectionString);
+        //    ChangeTrackingTableInfo info = service.GetChangeTrackingTableInfo(publisher.Entity.MainTable);
+        //    if (info == null) return 0;
+
+        //    int messagesSent = 0;
+        //    List<ChangeTrackingMessage> changes = new List<ChangeTrackingMessage>();
+        //    long current_sync_version = GetChangesToPublish(publisher, ref changes);
+        //    if (current_sync_version == 0) return 0; // there is no new changes available
+
+        //    TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+        //    using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+        //    {
+        //        // save current synchronization version to be used the next time
+        //        publisher.LastSyncVersion = current_sync_version;
+        //        publisher.Save();
+
+        //        // send changes to the target queue
+        //        messagesSent = SendChanges(publisher, changes);
+
+        //        scope.Complete();
+        //    }
+        //    return messagesSent;
+        //}
         public int PublishChanges(Publisher publisher)
         {
             if (publisher == null) throw new ArgumentNullException("publisher");
+            if (publisher.ChangeTrackingSystem == ChangeTrackingSystem.None) return 0;
 
             string connectionString = publisher.Entity.InfoBase.ConnectionString;
             ChangeTrackingService service = new ChangeTrackingService(connectionString);
+
+            // check if change tracking is enabled
             ChangeTrackingTableInfo info = service.GetChangeTrackingTableInfo(publisher.Entity.MainTable);
             if (info == null) return 0;
 
             int messagesSent = 0;
-            List<ChangeTrackingMessage> changes = new List<ChangeTrackingMessage>();
-            long current_sync_version = GetChangesToPublish(publisher, ref changes);
-            if (current_sync_version == 0) return 0; // there is no new changes available
-
+            //TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.Snapshot };
             TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
-            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = connection.CreateCommand())
             {
-                // save current synchronization version to be used the next time
-                publisher.LastSyncVersion = current_sync_version;
-                publisher.Save();
+                connection.Open();
 
-                // send changes to the target queue
-                messagesSent = SendChanges(publisher, changes);
-
+                long current_sync_version = ValidateLastSyncVersion(publisher, command);
+                Dictionary<InfoBase, MessageQueue> queues = null;
+                if (current_sync_version != 0)
+                {
+                    //MessageQueue queue = GetPublisherQueue(publisher);
+                    IMessageFormatter formatter = new BinaryMessageFormatter();
+                    queues = GetMessageQueues(publisher);
+                    Dictionary<Subscription, XMLMessageProducer> producers = GetMessageProducers(publisher);
+                    service.PrepareSelectChangesCommand(publisher.Entity.MainTable, publisher.LastSyncVersion, command);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            foreach (Subscription subscription in publisher.Subscriptions)
+                            {
+                                Message message = new Message() { Formatter = formatter };
+                                producers[subscription].Produce(reader, message.BodyStream);
+                                // send changes to the target queue
+                                queues[subscription.Subscriber.InfoBase].Send(message, MessageQueueTransactionType.Automatic);
+                                messagesSent++;
+                            }
+                        }
+                    }
+                    // save current synchronization version to be used the next time
+                    publisher.LastSyncVersion = current_sync_version;
+                    publisher.Save();
+                }
                 scope.Complete();
+                if (queues != null) CloseQueues(queues);
             }
             return messagesSent;
         }
+        private Dictionary<InfoBase, MessageQueue> GetMessageQueues(Publisher publisher)
+        {
+            Dictionary<InfoBase, MessageQueue> queues = new Dictionary<InfoBase, MessageQueue>();
+            foreach (Subscription subscription in publisher.Subscriptions)
+            {
+                InfoBase infoBase = subscription.Subscriber.InfoBase;
+                if (queues.ContainsKey(infoBase)) continue;
+                MessageQueue queue = GetMessageQueue(infoBase);
+                queues.Add(infoBase, queue);
+            }
+            return queues;
+        }
+        private void CloseQueues(Dictionary<InfoBase, MessageQueue> queues)
+        {
+            foreach (MessageQueue queue in queues.Values)
+            {
+                queue.Close();
+            }
+        }
+        private Dictionary<Subscription, XMLMessageProducer> GetMessageProducers(Publisher publisher)
+        {
+            Dictionary<Subscription, XMLMessageProducer> producers = new Dictionary<Subscription, XMLMessageProducer>();
+            foreach (Subscription subscription in publisher.Subscriptions)
+            {
+                producers.Add(subscription, new XMLMessageProducer().Use(subscription));
+            }
+            return producers;
+        }
+        //---
         private long ValidateLastSyncVersion(Publisher publisher, SqlCommand command)
         {
             ChangeTrackingService service = new ChangeTrackingService(publisher.Entity.InfoBase.ConnectionString);
@@ -172,6 +259,32 @@ namespace Zhichkin.Integrator.Services
                 MessageQueue.Delete(path);
             }
         }
+        private string GetQueuePath(InfoBase infoBase)
+        {
+            return CONST_MessageQueuePrefix + infoBase.Identity.ToString();
+        }
+        private MessageQueue GetMessageQueue(InfoBase infoBase)
+        {
+            string path = GetQueuePath(infoBase);
+            if (MessageQueue.Exists(path))
+            {
+                return new MessageQueue(path);
+            }
+            // create transactional message queue
+            MessageQueue queue = MessageQueue.Create(path, true);
+            string label = infoBase.ToString();
+            queue.Label = (label.Length > 124) ? label.Substring(0, 124) : label;
+            return queue;
+        }
+        public void DeleteQueue(InfoBase infoBase)
+        {
+            string path = GetQueuePath(infoBase);
+            if (MessageQueue.Exists(path))
+            {
+                //TODO: check if this queue referenced by several subscribers
+                MessageQueue.Delete(path);
+            }
+        } 
         public string TestQueue(Publisher publisher, string messageText)
         {
             MessageQueue queue = GetPublisherQueue(publisher);
@@ -180,6 +293,32 @@ namespace Zhichkin.Integrator.Services
             queue.Send(message, MessageQueueTransactionType.Single);
             message = queue.Receive(TimeSpan.FromSeconds(1));
             return (string)message.Body;
+            //Message message = queue.Receive(TimeSpan.FromSeconds(1));
+            //return ReadXMLStream(message.BodyStream);
+        }
+        private string ReadXMLStream(Stream stream)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (XmlReader reader = XmlReader.Create(stream))
+            {
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element)
+                    {
+                        sb.AppendLine(reader.Name);
+                        if (reader.HasAttributes)
+                        {
+                            while (reader.MoveToNextAttribute())
+                            {
+                                sb.AppendLine(string.Format("{0}=\"{1}\"", reader.Name, reader.Value));
+                            }
+                        }
+                    }
+                    else if (reader.NodeType == XmlNodeType.Text) { sb.AppendLine(reader.Value); }
+                    else if (reader.NodeType == XmlNodeType.EndElement) { sb.AppendLine(reader.Name); }
+                }
+            }
+            return sb.ToString();
         }
         private MessageQueue GetPublisherQueue(Publisher publisher)
         {
@@ -221,38 +360,154 @@ namespace Zhichkin.Integrator.Services
             translators.Add(subscription.Identity, translator);
             return translator;
         }
+        //+++ XML version
+        //public int ProcessMessages(Publisher publisher)
+        //{
+        //    int messagesProcessed = 0;
+        //    IList<Subscription> subscriptions = publisher.Subscriptions;
+        //    if (subscriptions == null || subscriptions.Count == 0) return messagesProcessed;
+
+        //    MessageQueue queue = GetPublisherQueue(publisher);
+        //    queue.Formatter = new BinaryMessageFormatter();
+        //    Serializer serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingMessage) });
+            
+        //    bool queue_is_empty = false;
+        //    while (!queue_is_empty)
+        //    {
+        //        try
+        //        {
+        //            Message message = queue.Peek(new TimeSpan(0, 0, 0));
+        //            ChangeTrackingMessage change = (ChangeTrackingMessage)serializer.Deserialize(message.BodyStream);
+        //            foreach (Subscription subscription in subscriptions)
+        //            {
+        //                ProcessMessage(subscription, change);
+        //            }
+        //            queue.Receive();
+        //            messagesProcessed++;
+        //        }
+        //        catch (MessageQueueException msx)
+        //        {
+        //            if (msx.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout) throw msx;
+        //            queue_is_empty = true;
+        //        }
+        //    }
+        //    return messagesProcessed;
+        //}
         public int ProcessMessages(Publisher publisher)
         {
             int messagesProcessed = 0;
             IList<Subscription> subscriptions = publisher.Subscriptions;
             if (subscriptions == null || subscriptions.Count == 0) return messagesProcessed;
 
-            MessageQueue queue = GetPublisherQueue(publisher);
-            queue.Formatter = new BinaryMessageFormatter();
-            Serializer serializer = new Serializer(new List<Type>() { typeof(ChangeTrackingMessage) });
-            
-            bool queue_is_empty = false;
-            while (!queue_is_empty)
+            Dictionary<InfoBase, MessageQueue> queues = GetMessageQueues(publisher);
+            IMessageFormatter formatter = new BinaryMessageFormatter();
+            foreach (KeyValuePair<InfoBase, MessageQueue> item in queues)
             {
-                try
+                InfoBase infoBase = item.Key;
+                MessageQueue queue = item.Value;
+                queue.Formatter = new BinaryMessageFormatter();
+
+                using (SqlConnection connection = new SqlConnection(infoBase.ConnectionString))
                 {
-                    Message message = queue.Peek(new TimeSpan(0, 0, 0));
-                    ChangeTrackingMessage change = (ChangeTrackingMessage)serializer.Deserialize(message.BodyStream);
-                    foreach (Subscription subscription in subscriptions)
+                    connection.Open();
+                    bool queue_is_empty = false;
+                    while (!queue_is_empty)
                     {
-                        ProcessMessage(subscription, change);
+                        try
+                        {
+                            Message message = queue.Peek(new TimeSpan(0, 0, 0));
+                            IDataMessage data = new XMLMessageConsumer().Consume(message.BodyStream);
+                            ProcessDataMessage(connection, data);
+                            queue.Receive();
+                            messagesProcessed++;
+                        }
+                        catch (MessageQueueException msx)
+                        {
+                            if (msx.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout) throw msx;
+                            queue_is_empty = true;
+                        }
                     }
-                    queue.Receive();
-                    messagesProcessed++;
-                }
-                catch (MessageQueueException msx)
-                {
-                    if (msx.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout) throw msx;
-                    queue_is_empty = true;
                 }
             }
             return messagesProcessed;
         }
+        private void ProcessDataMessage(IDbConnection connection, IDataMessage message)
+        {
+            //TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+            //using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
+            using(IDbTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
+            using (IDbCommand command = connection.CreateCommand())
+            {
+                command.Transaction = transaction;
+                Subscription subscription = Subscription.Select(new Guid(message.Key));
+                foreach (IDataEntity entity in message.Entities)
+                {
+                    ProcessDataEntity(subscription, entity, command);
+                }
+                transaction.Commit();
+            }
+        }
+        private void ProcessDataEntity(Subscription subscription, IDataEntity entity, IDbCommand command)
+        {
+            InfoBase source = subscription.Publisher.Entity.InfoBase;
+            Entity metadata = Entity.Select(new Guid(entity.Key));
+            ICommandBuilder builder = new DataCommandBuilder(metadata) { ChangeTrackingContext = source };
+            foreach (DataRecord record in entity.Records)
+            {
+                if (record.RecordType == DataRecordType.Insert) ExecuteInsertCommand(subscription, builder, command, record);
+                else if (record.RecordType == DataRecordType.Update) ExecuteUpdateCommand(subscription, builder, command, record);
+                else if (record.RecordType == DataRecordType.Delete) ExecuteDeleteCommand(subscription, builder, command, record);
+            }
+        }
+        private void ExecuteInsertCommand(Subscription subscription, ICommandBuilder builder, IDbCommand command, DataRecord record)
+        {
+            builder.PrepareInsert(command, record);
+            int rowsAffected = 0;
+            try
+            {
+                rowsAffected = command.ExecuteNonQuery();
+            }
+            catch
+            {
+                // insert-insert collision
+                if (subscription.OnInsertCollision == CollisionResolutionStrategy.RaiseError) throw;
+            }
+            if (rowsAffected > 0) return;
+
+            // insert-insert collision
+            if (subscription.OnInsertCollision == CollisionResolutionStrategy.Ignore) return;
+            if (subscription.OnInsertCollision == CollisionResolutionStrategy.Update)
+            {
+                record.RecordType = DataRecordType.Update;
+                ExecuteUpdateCommand(subscription, builder, command, record);
+            }
+        }
+        private void ExecuteUpdateCommand(Subscription subscription, ICommandBuilder builder, IDbCommand command, DataRecord record)
+        {
+            builder.PrepareUpdate(command, record);
+            int rowsAffected = command.ExecuteNonQuery();
+            if (rowsAffected > 0) return;
+
+            // update-delete or update-none collision
+            if (subscription.OnUpdateCollision == CollisionResolutionStrategy.Ignore) return;
+            if (subscription.OnUpdateCollision == CollisionResolutionStrategy.Insert)
+            {
+                record.RecordType = DataRecordType.Insert;
+                ExecuteInsertCommand(subscription, builder, command, record);
+            }
+            //TODO: CollisionResolutionStrategy.RaiseError
+        }
+        private void ExecuteDeleteCommand(Subscription subscription, ICommandBuilder builder, IDbCommand command, DataRecord record)
+        {
+            builder.PrepareDelete(command, record);
+            int rowsAffected = command.ExecuteNonQuery();
+            if (rowsAffected > 0) return;
+
+            // delete-delete or delete-none collision
+            if (subscription.OnDeleteCollision == CollisionResolutionStrategy.Ignore) return;
+            //TODO: CollisionResolutionStrategy.RaiseError
+        }
+        //---
         private void ProcessMessage(Subscription subscription, ChangeTrackingMessage message)
         {
             ChangeTrackingMessage target = GetMessageTranslator(subscription).Translate(message);
@@ -378,6 +633,46 @@ namespace Zhichkin.Integrator.Services
                 rule.TargetProperty = targetProperty;
                 rule.IsSyncKey = rule.TargetProperty.Fields.Where(f => f.IsPrimaryKey).FirstOrDefault() != null;
                 rule.Save();
+            }
+        }
+
+        public Dictionary<int, int> GetTypeCodesLookup(Subscription subscription)
+        {
+            Dictionary<int, int> lookup = new Dictionary<int, int>();
+            using (SqlConnection connection = new SqlConnection(IntegratorPersistentContext.Current.ConnectionString))
+            {
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = "[integrator].[get_type_codes_lookup]";
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("source_infobase", subscription.Publisher.Entity.InfoBase.Identity);
+                    command.Parameters.AddWithValue("target_infobase", subscription.Subscriber.InfoBase.Identity);
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            lookup.Add(
+                                reader.GetInt32(0),
+                                reader.GetInt32(1));
+                        }
+                    }
+                }
+            }
+            return lookup;
+        }
+
+        public void ExecuteNewScopeCommand(InfoBase infoBase, ICommandExecutor executor)
+        {
+            string connectionString = infoBase.ConnectionString;
+            TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                executor.Execute(command);
+                scope.Complete();
             }
         }
     }
