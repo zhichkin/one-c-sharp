@@ -1,0 +1,9 @@
+C:\Users\User\Desktop\Z\debug\Zhichkin.DXM.Module.dll
+C:\Users\User\Desktop\Z\debug\Zhichkin.DXM.Module.pdb
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\DXM.Module.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\InfoBase\InfoBaseView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\InfoBase\InfoBaseView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module_MarkupCompile.cache
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module.g.resources
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module.dll
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module.pdb

@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhichkin.Updator.Model", "Z
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DXM.Model", "DXM.Model\DXM.Model.csproj", "{5119E6A3-AF81-4AA9-B1B4-D9214E921EEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DXM.Module", "DXM.Module\DXM.Module.csproj", "{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{5119E6A3-AF81-4AA9-B1B4-D9214E921EEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5119E6A3-AF81-4AA9-B1B4-D9214E921EEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5119E6A3-AF81-4AA9-B1B4-D9214E921EEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

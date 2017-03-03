@@ -9,7 +9,7 @@ namespace Zhichkin.DXM.Model
     {
         private static readonly IPersistentContext singelton;
 
-        private const string name = "Zhichkin.Metadata";
+        private const string name = "Zhichkin.DXM";
         private static readonly string connectionString = string.Empty;
         private static readonly BiDictionary<int, Type> typeCodes = new BiDictionary<int, Type>();
         private static readonly Dictionary<Type, IDataMapper> mappers = new Dictionary<Type, IDataMapper>();
