@@ -12,8 +12,6 @@ namespace Zhichkin.DXM.Module
 {
     public class MetadataTreeViewController
     {
-        private const string CONST_ModuleDialogsTitle = "Z-DXM";
-
         private readonly IUnityContainer container;
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
@@ -43,15 +41,6 @@ namespace Zhichkin.DXM.Module
             viewsLookup.Add(typeof(InfoBase), typeof(InfoBaseView));
             modelsLookup.Add(typeof(InfoBase), typeof(InfoBaseViewModel));
         }
-        private void ClearRightRegion()
-        {
-            IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
-            if (rightRegion == null) return;
-            foreach (object view in rightRegion.Views)
-            {
-                rightRegion.Remove(view);
-            }
-        }
         private object GetView(object item)
         {
             Type itemType = item.GetType();
@@ -75,7 +64,7 @@ namespace Zhichkin.DXM.Module
         {
             try
             {
-                ClearRightRegion();
+                Z.ClearRightRegion(regionManager);
                 if (item == null) return;
                 IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
                 if (rightRegion == null) return;
@@ -85,7 +74,7 @@ namespace Zhichkin.DXM.Module
             }
             catch (Exception ex)
             {
-                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = ExceptionsHandling.GetErrorText(ex) });
+                Z.Notify(new Notification { Title = Utilities.PopupDialogsTitle, Content = ExceptionsHandling.GetErrorText(ex) });
             }
         }
     }

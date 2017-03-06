@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 
 namespace Zhichkin.Shell
@@ -14,6 +15,15 @@ namespace Zhichkin.Shell
         public static void Confirm(IConfirmation context, Action<IConfirmation> callback)
         {
             viewModel.ConfirmationRequest.Raise(context, callback);
+        }
+        public static void ClearRightRegion(IRegionManager regionManager)
+        {
+            IRegion rightRegion = regionManager.Regions[RegionNames.RightRegion];
+            if (rightRegion == null) return;
+            foreach (object view in rightRegion.Views)
+            {
+                rightRegion.Remove(view);
+            }
         }
     }
 }

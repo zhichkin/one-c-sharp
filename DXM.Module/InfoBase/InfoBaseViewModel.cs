@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Practices.Unity;
 using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
@@ -16,22 +17,28 @@ namespace Zhichkin.DXM.Module
 {
     public class InfoBaseViewModel : BindableBase
     {
-        private const string CONST_ModuleDialogsTitle = "Z-DXM";
-
         private readonly InfoBase _infoBase;
-        private readonly IRegionManager _regionManager;
+        private readonly IUnityContainer _container;
+
+        private string _Name = string.Empty;
+        private PublicationsListView _PublicationsListView;
         
-        public InfoBaseViewModel(InfoBase model, IRegionManager regionManager, IEventAggregator eventAggregator)
+        public InfoBaseViewModel(InfoBase model, IUnityContainer container)
         {
             if (model == null) throw new ArgumentNullException("model");
-            if (regionManager == null) throw new ArgumentNullException("regionManager");
             _infoBase = model;
-            _regionManager = regionManager;
+            _container = container;
             InitializeViewModel();
         }
         public void InitializeViewModel()
         {
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+            this.DatabaseSettingsPopupRequest = new InteractionRequest<DatabaseSettingsNotification>();
+            this.ShowDatabaseSettingsPopupCommand = new DelegateCommand(this.ShowDatabaseSettingsPopup);
+            _PublicationsListView = (PublicationsListView)_container.Resolve(
+                typeof(PublicationsListView),
+                new ParameterOverride("publisher", _infoBase)
+                    .OnType(typeof(PublicationsListViewModel)));
         }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
         private void OnUpdateTextBoxSource(object userControl)
@@ -43,10 +50,9 @@ namespace Zhichkin.DXM.Module
             if (binding == null) return;
             binding.UpdateSource();
         }
-        
-        private string _Name = string.Empty;
-        private string _Server = string.Empty;
-        private string _Database = string.Empty;
+        public InteractionRequest<DatabaseSettingsNotification> DatabaseSettingsPopupRequest { get; private set; }
+        public ICommand ShowDatabaseSettingsPopupCommand { get; private set; }
+        public PublicationsListView PublicationsListView { get { return _PublicationsListView; } }
         public string Name
         {
             get { return _infoBase.Name; }
@@ -63,49 +69,35 @@ namespace Zhichkin.DXM.Module
                 {
                     _infoBase.Name = _Name;
                     _Name = string.Empty;
-                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = ExceptionsHandling.GetErrorText(ex) });
+                    Z.Notify(new Notification { Title = Utilities.PopupDialogsTitle, Content = ExceptionsHandling.GetErrorText(ex) });
                 }
             }
         }
-        public string Server
+        private void ShowDatabaseSettingsPopup()
         {
-            get { return _infoBase.Server; }
-            set
+            bool cancel = false;
+            DatabaseSettingsNotification notification = new DatabaseSettingsNotification()
             {
-                try
-                {
-                    _Server = _infoBase.Server;
-                    _infoBase.Server = value;
-                    _infoBase.Save();
-                    OnPropertyChanged("Server");
-                }
-                catch (Exception ex)
-                {
-                    _infoBase.Server = _Server;
-                    _Server = string.Empty;
-                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = ExceptionsHandling.GetErrorText(ex) });
-                }
-            }
-        }
-        public string Database
-        {
-            get { return _infoBase.Database; }
-            set
+                Title = Utilities.PopupDialogsTitle,
+                Server = _infoBase.Server,
+                Database = _infoBase.Database,
+                UserName = "",
+                Password = ""
+            };
+            this.DatabaseSettingsPopupRequest.Raise(notification, response =>
             {
-                try
+                if (!response.Confirmed)
                 {
-                    _Database = _infoBase.Database;
-                    _infoBase.Database = value;
-                    _infoBase.Save();
-                    OnPropertyChanged("Database");
+                    cancel = true;
                 }
-                catch (Exception ex)
+                else
                 {
-                    _infoBase.Database = _Database;
-                    _Database = string.Empty;
-                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = ExceptionsHandling.GetErrorText(ex) });
+                    _infoBase.Server = response.Server;
+                    _infoBase.Database = response.Database;
+                    _infoBase.UserName = response.UserName;
+                    _infoBase.Password = response.Password;
                 }
-            }
+            });
         }
     }
 }

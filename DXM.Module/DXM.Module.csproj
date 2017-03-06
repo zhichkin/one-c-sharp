@@ -94,6 +94,15 @@
     <Compile Include="InfoBase\InfoBaseViewModel.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Subscriber\SubscribersListView.xaml.cs">
+      <DependentUpon>SubscribersListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Subscriber\SubscribersListViewModel.cs" />
+    <Compile Include="Publication\PublicationsListView.xaml.cs">
+      <DependentUpon>PublicationsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Publication\PublicationsListViewModel.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -104,6 +113,10 @@
   </Target>
   -->
   <ItemGroup>
+    <ProjectReference Include="..\DXM.Model\DXM.Model.csproj">
+      <Project>{5119e6a3-af81-4aa9-b1b4-d9214e921eeb}</Project>
+      <Name>DXM.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
       <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
       <Name>Metadata.Model</Name>
@@ -122,6 +135,149 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Subscriber\SubscribersListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Publication\PublicationsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Accept Database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Add Database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Data Configuration.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Delete Database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Ok.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 SQL.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Synchronize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\datetime.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\number.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\БизнесПроцесс.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ВинниПух.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ВложеннаяТаблица.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ВнешнийИсточникДанных.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Документ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ЖурналДокументов.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Задача.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Записать.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Измерение.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Константа.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Остановить.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Перечисление.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПланВидовРасчета.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПланВидовХарактеристик.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПланОбмена.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПланСчетов.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПрочиеПользовательскиеНастройки.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегистрБухгалтерии.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегистрНакопления.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегистрРасчета.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегистрСведений.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегламентноеЗадание.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Реквизит.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Ресурс.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\СоздатьЭлементСписка.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Справочник.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\СтандартныйРеквизит.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\УстановитьИнтервал.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Edit.png" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.DXM.Module.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>

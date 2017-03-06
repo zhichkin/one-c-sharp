@@ -7,15 +7,30 @@
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    
+
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
+            <BitmapImage x:Key="Icon_InfoBase" UriSource="..\Images\26 Accept Database.png"/>
+        </ResourceDictionary>
     </UserControl.Resources>
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding DatabaseSettingsPopupRequest}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <shell:DatabaseSettingsView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -23,32 +38,24 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Информационная база:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-            <TextBox.InputBindings>
-                <KeyBinding Gesture="Enter"
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Информационная база (издатель)" FontWeight="DemiBold" Margin="10,10,10,5" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="10,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <Image Source="{StaticResource Icon_InfoBase}" Margin="0,0,10,0"/>
+            <TextBox Text="{Binding Name, Mode=TwoWay}" MinWidth="200" VerticalAlignment="Center">
+                <TextBox.InputBindings>
+                    <KeyBinding Gesture="Enter"
                             Command="{Binding UpdateTextBoxSourceCommand}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
-            </TextBox.InputBindings>
-        </TextBox>
-        
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Сервер SQL Server:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Server, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-            <TextBox.InputBindings>
-                <KeyBinding Gesture="Enter"
-                            Command="{Binding UpdateTextBoxSourceCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
-            </TextBox.InputBindings>
-        </TextBox>
-        
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="База данных SQL Server:" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Database, Mode=TwoWay}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-            <TextBox.InputBindings>
-                <KeyBinding Gesture="Enter"
-                            Command="{Binding UpdateTextBoxSourceCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
-            </TextBox.InputBindings>
-        </TextBox>
+                </TextBox.InputBindings>
+            </TextBox>
+            <Button ToolTip="Настройки подключения к базе данных" Margin="10,0,10,0"
+                    Command="{Binding ShowDatabaseSettingsPopupCommand}">
+                <Image Source="{StaticResource Icon_Settings}" />
+            </Button>
+        </StackPanel>
+
+        <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding Path=PublicationsListView}" Margin="10" />
 
     </Grid>
 </UserControl>

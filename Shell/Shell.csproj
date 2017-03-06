@@ -118,6 +118,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsViewModel.cs" />
+    <Compile Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml.cs">
+      <DependentUpon>DatabaseSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsNotification.cs" />
     <Compile Include="CompositeCollectionConverter.cs" />
     <Compile Include="CustomPopupWindowAction.cs" />
     <Compile Include="ShellViewModel.cs" />
@@ -158,6 +163,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -61,7 +61,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SQL\99 aggregates.sql" />
+    <Content Include="SQL\99 dxm_install.sql" />
+    <Content Include="SQL\60 aggregates.sql" />
     <Content Include="SQL\25 articles.sql" />
     <Content Include="SQL\40 mappings.sql" />
     <Content Include="SQL\50 filters.sql" />

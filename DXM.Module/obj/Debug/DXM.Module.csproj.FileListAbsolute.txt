@@ -7,3 +7,7 @@ C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module_MarkupCompile.c
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module.g.resources
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module.dll
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module.pdb
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationsListView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationsListView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Subscriber\SubscribersListView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Subscriber\SubscribersListView.g.cs
