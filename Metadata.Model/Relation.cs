@@ -1,8 +1,9 @@
-﻿using Zhichkin.ORM;
+﻿using System;
+using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class Relation : ValueObject
+    public sealed partial class Relation : ValueObject, IComparable
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Relation));
 
@@ -30,9 +31,13 @@ namespace Zhichkin.Metadata.Model
                 this.Property == null ? string.Empty : this.Property.Name,
                 this.Entity == null ? string.Empty : this.Entity.FullName);
         }
-
+        public int CompareTo(object other)
+        {
+            return this.CompareTo((Relation)other);
+        }
         public int CompareTo(Relation other)
         {
+            
             if (other == null) return 1;
             if (this.Entity == null) return -1;
             if (other.Entity == null) return 1;

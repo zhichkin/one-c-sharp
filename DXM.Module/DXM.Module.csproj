@@ -94,6 +94,10 @@
     <Compile Include="InfoBase\InfoBaseViewModel.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Publication\PublicationViewModel.cs" />
+    <Compile Include="Publication\PublicationView.xaml.cs">
+      <DependentUpon>PublicationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Subscriber\SubscribersListView.xaml.cs">
       <DependentUpon>SubscribersListView.xaml</DependentUpon>
     </Compile>
@@ -132,6 +136,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="InfoBase\InfoBaseView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Publication\PublicationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

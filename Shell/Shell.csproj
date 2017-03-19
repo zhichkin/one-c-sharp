@@ -125,6 +125,7 @@
     <Compile Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsNotification.cs" />
     <Compile Include="CompositeCollectionConverter.cs" />
     <Compile Include="CustomPopupWindowAction.cs" />
+    <Compile Include="DataTypeConverter.cs" />
     <Compile Include="ShellViewModel.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Shell.xaml.cs">

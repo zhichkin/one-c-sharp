@@ -1,9 +1,9 @@
-﻿namespace Zhichkin.Updator.Model
+﻿namespace Zhichkin.Metadata.Model
 {
     public enum DifferenceType
     {
         /// <summary>
-        /// No difference
+        /// No difference (used just as a root of child differences)
         /// </summary>
         None,
         /// <summary>

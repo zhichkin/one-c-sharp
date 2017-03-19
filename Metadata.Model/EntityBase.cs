@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Zhichkin.Metadata.Model
 {
-    public abstract class EntityBase : ReferenceObject, IComparable<EntityBase>
+    public abstract class EntityBase : ReferenceObject, IComparable
     {
         private static int typeCode = 0;
 
@@ -29,7 +29,11 @@ namespace Zhichkin.Metadata.Model
 
         public override string ToString() { return this.Name; }
 
-        public int CompareTo(EntityBase other)
+        public virtual int CompareTo(object other)
+        {
+            return this.CompareTo((EntityBase)other);
+        }
+        public virtual int CompareTo(EntityBase other)
         {
             if (other == null) return 1;
             if (this.GetType() != other.GetType()) throw new InvalidOperationException();

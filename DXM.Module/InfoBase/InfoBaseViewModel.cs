@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Zhichkin.DXM.Module
 {
@@ -33,6 +35,7 @@ namespace Zhichkin.DXM.Module
         public void InitializeViewModel()
         {
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
+            this.CheckConnectionCommand = new DelegateCommand(this.OnCheckConnection);
             this.DatabaseSettingsPopupRequest = new InteractionRequest<DatabaseSettingsNotification>();
             this.ShowDatabaseSettingsPopupCommand = new DelegateCommand(this.ShowDatabaseSettingsPopup);
             _PublicationsListView = (PublicationsListView)_container.Resolve(
@@ -52,6 +55,7 @@ namespace Zhichkin.DXM.Module
         }
         public InteractionRequest<DatabaseSettingsNotification> DatabaseSettingsPopupRequest { get; private set; }
         public ICommand ShowDatabaseSettingsPopupCommand { get; private set; }
+        public ICommand CheckConnectionCommand { get; private set; }
         public PublicationsListView PublicationsListView { get { return _PublicationsListView; } }
         public string Name
         {
@@ -81,8 +85,8 @@ namespace Zhichkin.DXM.Module
                 Title = Utilities.PopupDialogsTitle,
                 Server = _infoBase.Server,
                 Database = _infoBase.Database,
-                UserName = "",
-                Password = ""
+                UserName = _infoBase.UserName,
+                Password = _infoBase.Password
             };
             this.DatabaseSettingsPopupRequest.Raise(notification, response =>
             {
@@ -97,6 +101,49 @@ namespace Zhichkin.DXM.Module
                     _infoBase.UserName = response.UserName;
                     _infoBase.Password = response.Password;
                 }
+            });
+        }
+        private void OnCheckConnection()
+        {
+            SqlConnectionStringBuilder helper = new SqlConnectionStringBuilder()
+            {
+                DataSource = _infoBase.Server,
+                InitialCatalog = _infoBase.Database,
+                IntegratedSecurity = string.IsNullOrWhiteSpace(_infoBase.UserName),
+                UserID = string.IsNullOrWhiteSpace(_infoBase.UserName) ? string.Empty:_infoBase.UserName,
+                Password = string.IsNullOrWhiteSpace(_infoBase.Password) ? string.Empty : _infoBase.Password
+            };
+
+            string resultMessage = string.Empty;
+            SqlConnection connection = new SqlConnection(helper.ConnectionString);
+            try
+            {
+                connection.Open();
+                if (connection.State == ConnectionState.Open)
+                {
+                    resultMessage = "Соединение открыто успешно.";
+                }
+                else
+                {
+                    resultMessage = string.Format("Соединение получило статус: \"{0}\".", connection.State.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                resultMessage = ExceptionsHandling.GetErrorText(ex);
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+                connection.Dispose();
+            }
+            Z.Notify(new Notification
+            {
+                Title = Utilities.PopupDialogsTitle,
+                Content = resultMessage
             });
         }
     }

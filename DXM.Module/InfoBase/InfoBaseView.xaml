@@ -6,11 +6,12 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="100" d:DesignWidth="400">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <BitmapImage x:Key="Icon_OK" UriSource="..\Images\26 Ok.png"/>
             <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
             <BitmapImage x:Key="Icon_InfoBase" UriSource="..\Images\26 Accept Database.png"/>
         </ResourceDictionary>
@@ -42,16 +43,20 @@
 
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="10,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
             <Image Source="{StaticResource Icon_InfoBase}" Margin="0,0,10,0"/>
-            <TextBox Text="{Binding Name, Mode=TwoWay}" MinWidth="200" VerticalAlignment="Center">
+            <TextBox Text="{Binding Name, Mode=TwoWay}" MinWidth="200" MinHeight="24" VerticalAlignment="Center" VerticalContentAlignment="Center">
                 <TextBox.InputBindings>
                     <KeyBinding Gesture="Enter"
                             Command="{Binding UpdateTextBoxSourceCommand}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
                 </TextBox.InputBindings>
             </TextBox>
-            <Button ToolTip="Настройки подключения к базе данных" Margin="10,0,10,0"
+            <Button ToolTip="Настройки подключения к базе данных" Margin="10,0,5,0"
                     Command="{Binding ShowDatabaseSettingsPopupCommand}">
                 <Image Source="{StaticResource Icon_Settings}" />
+            </Button>
+            <Button ToolTip="Проверка подключения к базе данных" Margin="5,0,0,0"
+                    Command="{Binding CheckConnectionCommand}">
+                <Image Source="{StaticResource Icon_OK}" />
             </Button>
         </StackPanel>
 

@@ -20,6 +20,7 @@ namespace Zhichkin.DXM.Module
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IPublisherService _publisherService = new PublisherService();
 
         private object _SelectedItem = null;
         private ObservableCollection<Publication> _Publications = null;
@@ -48,7 +49,7 @@ namespace Zhichkin.DXM.Module
             {
                 if (_Publications == null)
                 {
-                    IList<Publication> list = Publication.Select(_publisher);
+                    List<Publication> list = _publisherService.Select(_publisher);
                     _Publications = new ObservableCollection<Publication>(list);
                 }
                 return _Publications;

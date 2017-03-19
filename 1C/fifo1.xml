@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<InfoBase name="Источник данных" server="zhichkin" database="FIFO">
+	<Types>
+		<Type code="58" name="ПланВидовХарактеристик.ХарактеристикиНоменклатуры"/>
+		<Type code="14" name="Документ.Расход"/>
+		<Type code="53" name="Перечисление.ТипСклада"/>
+		<Type code="12" name="Справочник.Номенклатура"/>
+		<Type code="81" name="Справочник.ИнфоБаза"/>
+		<Type code="57" name="Справочник.Характеристики"/>
+		<Type code="11" name="Справочник.Склады"/>
+		<Type code="10" name="Справочник.Организации"/>
+		<Type code="13" name="Документ.Приход"/>
+	</Types>
+	<Namespaces>
+		<Namespace name="Перечисление">
+			<Entity code="53">
+				<Values>
+					<Value order="0" name="Розничный"/>
+					<Value order="1" name="Оптовый"/>
+				</Values>
+				<Properties>
+					<Property name="Порядок" purpose="System" type="N"/>
+					<Property name="Ссылка" purpose="System" type="53"/>
+				</Properties>
+				<Tables>
+					<Table name="_Enum53" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="Порядок" name="_EnumOrder" purpose="Value"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+		</Namespace>
+		<Namespace name="Справочник">
+			<Entity code="10">
+				<Properties>
+					<Property name="ИмяПредопределенныхДанных" purpose="System" type="S"/>
+					<Property name="Предопределенный" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="10"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="Наименование" purpose="System" type="S"/>
+					<Property name="Код" purpose="System" type="N"/>
+					<Property name="СоставнойТип" purpose="Property" type="L,11,S,T,N,10"/>
+					<Property name="ХранилищеЗначения" purpose="Property" type="B"/>
+					<Property name="УникальныйИдентификатор" purpose="Property" type="GUID"/>
+				</Properties>
+				<Tables>
+					<Table name="_Reference10" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="ИмяПредопределенныхДанных" name="_PredefinedID" purpose="Value"/>
+							<Field property="Код" name="_Code" purpose="Value"/>
+							<Field property="Наименование" name="_Description" purpose="Value"/>
+							<Field property="СоставнойТип" name="_Fld50_TYPE" purpose="Locator"/>
+							<Field property="СоставнойТип" name="_Fld50_L" purpose="Boolean"/>
+							<Field property="СоставнойТип" name="_Fld50_N" purpose="Number"/>
+							<Field property="СоставнойТип" name="_Fld50_T" purpose="DateTime"/>
+							<Field property="СоставнойТип" name="_Fld50_S" purpose="String"/>
+							<Field property="СоставнойТип" name="_Fld50_RTRef" purpose="TypeCode"/>
+							<Field property="СоставнойТип" name="_Fld50_RRRef" purpose="Object"/>
+							<Field property="ХранилищеЗначения" name="_Fld51" purpose="Value"/>
+							<Field property="УникальныйИдентификатор" name="_Fld52" purpose="Value"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+			<Entity code="11">
+				<Properties>
+					<Property name="ИмяПредопределенныхДанных" purpose="System" type="S"/>
+					<Property name="Предопределенный" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="11"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="ЭтоГруппа" purpose="System" type="L"/>
+					<Property name="Родитель" purpose="System" type="11"/>
+					<Property name="Наименование" purpose="System" type="S"/>
+					<Property name="Код" purpose="System" type="N"/>
+					<Property name="ТипСклада" purpose="Property" type="53"/>
+				</Properties>
+				<Tables>
+					<Table name="_Reference11" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="ИмяПредопределенныхДанных" name="_PredefinedID" purpose="Value"/>
+							<Field property="Родитель" name="_ParentIDRRef" purpose="Object"/>
+							<Field property="ЭтоГруппа" name="_Folder" purpose="Value"/>
+							<Field property="Код" name="_Code" purpose="Value"/>
+							<Field property="Наименование" name="_Description" purpose="Value"/>
+							<Field property="ТипСклада" name="_Fld66RRef" purpose="Object"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+			<Entity code="12">
+				<Properties>
+					<Property name="ИмяПредопределенныхДанных" purpose="System" type="S"/>
+					<Property name="Предопределенный" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="12"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="Наименование" purpose="System" type="S"/>
+					<Property name="Код" purpose="System" type="N"/>
+					<Property name="Реквизит1" purpose="Property" type="L,11,12,S,T,N"/>
+				</Properties>
+				<Tables>
+					<Table name="_Reference12" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="ИмяПредопределенныхДанных" name="_PredefinedID" purpose="Value"/>
+							<Field property="Код" name="_Code" purpose="Value"/>
+							<Field property="Наименование" name="_Description" purpose="Value"/>
+							<Field property="Реквизит1" name="_Fld67_TYPE" purpose="Locator"/>
+							<Field property="Реквизит1" name="_Fld67_L" purpose="Boolean"/>
+							<Field property="Реквизит1" name="_Fld67_N" purpose="Number"/>
+							<Field property="Реквизит1" name="_Fld67_T" purpose="DateTime"/>
+							<Field property="Реквизит1" name="_Fld67_S" purpose="String"/>
+							<Field property="Реквизит1" name="_Fld67_RTRef" purpose="TypeCode"/>
+							<Field property="Реквизит1" name="_Fld67_RRRef" purpose="Object"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+			<Entity code="57">
+				<Properties>
+					<Property name="ИмяПредопределенныхДанных" purpose="System" type="S"/>
+					<Property name="Предопределенный" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="57"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="Наименование" purpose="System" type="S"/>
+					<Property name="Код" purpose="System" type="S"/>
+				</Properties>
+				<Tables>
+					<Table name="_Reference57" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="ИмяПредопределенныхДанных" name="_PredefinedID" purpose="Value"/>
+							<Field property="Код" name="_Code" purpose="Value"/>
+							<Field property="Наименование" name="_Description" purpose="Value"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+			<Entity code="81">
+				<Properties>
+					<Property name="ИмяПредопределенныхДанных" purpose="System" type="S"/>
+					<Property name="Предопределенный" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="81"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="Наименование" purpose="System" type="S"/>
+				</Properties>
+				<Tables>
+					<Table name="_Reference81" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="ИмяПредопределенныхДанных" name="_PredefinedID" purpose="Value"/>
+							<Field property="Наименование" name="_Description" purpose="Value"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+		</Namespace>
+		<Namespace name="Документ">
+			<Entity code="13">
+				<Properties>
+					<Property name="Проведен" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="13"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="Дата" purpose="System" type="T"/>
+					<Property name="Организация" purpose="Property" type="10"/>
+					<Property name="Склад" purpose="Property" type="11"/>
+				</Properties>
+				<Tables>
+					<Table name="_Document13" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="Дата" name="_Date_Time" purpose="Value"/>
+							<Field property="Проведен" name="_Posted" purpose="Value"/>
+							<Field property="Организация" name="_Fld15RRef" purpose="Object"/>
+							<Field property="Склад" name="_Fld16RRef" purpose="Object"/>
+						</Fields>
+					</Table>
+				</Tables>
+				<Entities>
+					<Entity name="Товары">
+						<Properties>
+							<Property name="НомерСтроки" purpose="System" type="N"/>
+							<Property name="Номенклатура" purpose="Property" type="12"/>
+							<Property name="Количество" purpose="Property" type="N"/>
+							<Property name="Цена" purpose="Property" type="N"/>
+						</Properties>
+						<Tables>
+							<Table name="_Document13_VT17" purpose="Main">
+								<Fields>
+									<Field property="НомерСтроки" name="_LineNo18" purpose="Value"/>
+									<Field property="Номенклатура" name="_Fld19RRef" purpose="Object"/>
+									<Field property="Количество" name="_Fld20" purpose="Value"/>
+									<Field property="Цена" name="_Fld21" purpose="Value"/>
+									<Field property="Ссылка" name="_Document13_IDRRef" purpose="Object"/>
+									<Field property="_KeyField" name="_KeyField" purpose="Value"/>
+								</Fields>
+							</Table>
+						</Tables>
+					</Entity>
+				</Entities>
+			</Entity>
+			<Entity code="14">
+				<Properties>
+					<Property name="Проведен" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="14"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="Дата" purpose="System" type="T"/>
+					<Property name="Организация" purpose="Property" type="10"/>
+					<Property name="Склад" purpose="Property" type="11"/>
+				</Properties>
+				<Tables>
+					<Table name="_Document14" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="Дата" name="_Date_Time" purpose="Value"/>
+							<Field property="Проведен" name="_Posted" purpose="Value"/>
+							<Field property="Организация" name="_Fld22RRef" purpose="Object"/>
+							<Field property="Склад" name="_Fld23RRef" purpose="Object"/>
+						</Fields>
+					</Table>
+				</Tables>
+				<Entities>
+					<Entity name="Товары">
+						<Properties>
+							<Property name="НомерСтроки" purpose="System" type="N"/>
+							<Property name="Номенклатура" purpose="Property" type="12"/>
+							<Property name="Партия" purpose="Property" type="13"/>
+							<Property name="Количество" purpose="Property" type="N"/>
+							<Property name="Цена" purpose="Property" type="N"/>
+						</Properties>
+						<Tables>
+							<Table name="_Document14_VT24" purpose="Main">
+								<Fields>
+									<Field property="НомерСтроки" name="_LineNo25" purpose="Value"/>
+									<Field property="Номенклатура" name="_Fld26RRef" purpose="Object"/>
+									<Field property="Партия" name="_Fld27RRef" purpose="Object"/>
+									<Field property="Количество" name="_Fld28" purpose="Value"/>
+									<Field property="Цена" name="_Fld29" purpose="Value"/>
+									<Field property="Ссылка" name="_Document14_IDRRef" purpose="Object"/>
+									<Field property="_KeyField" name="_KeyField" purpose="Value"/>
+								</Fields>
+							</Table>
+						</Tables>
+					</Entity>
+				</Entities>
+			</Entity>
+		</Namespace>
+		<Namespace name="ПланВидовХарактеристик">
+			<Entity code="58">
+				<Properties>
+					<Property name="ИмяПредопределенныхДанных" purpose="System" type="S"/>
+					<Property name="ТипЗначения" purpose="System" type="B"/>
+					<Property name="Наименование" purpose="System" type="S"/>
+					<Property name="Код" purpose="System" type="S"/>
+					<Property name="Предопределенный" purpose="System" type="L"/>
+					<Property name="ПометкаУдаления" purpose="System" type="L"/>
+					<Property name="Ссылка" purpose="System" type="58"/>
+				</Properties>
+				<Tables>
+					<Table name="_Chrc58" purpose="Main">
+						<Fields>
+							<Field property="Ссылка" name="_IDRRef" purpose="Object"/>
+							<Field property="ВерсияДанных" name="_Version" purpose="Value"/>
+							<Field property="ПометкаУдаления" name="_Marked" purpose="Value"/>
+							<Field property="ИмяПредопределенныхДанных" name="_PredefinedID" purpose="Value"/>
+							<Field property="Код" name="_Code" purpose="Value"/>
+							<Field property="Наименование" name="_Description" purpose="Value"/>
+							<Field property="ТипЗначения" name="_Type" purpose="Value"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+		</Namespace>
+		<Namespace name="ПланСчетов"/>
+		<Namespace name="РегистрСведений">
+			<Entity name="ЦеныНоменклатуры">
+				<Properties>
+					<Property name="Период" purpose="System" type="T"/>
+					<Property name="Номенклатура" purpose="Dimension" type="12"/>
+					<Property name="Цена" purpose="Measure" type="N"/>
+				</Properties>
+				<Tables>
+					<Table name="_InfoRg54" purpose="Main">
+						<Fields>
+							<Field property="Период" name="_Period" purpose="Value"/>
+							<Field property="Номенклатура" name="_Fld55RRef" purpose="Object"/>
+							<Field property="Цена" name="_Fld56" purpose="Value"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+			<Entity name="ЗначенияХарактеристик">
+				<Properties>
+					<Property name="Номенклатура" purpose="Dimension" type="12"/>
+					<Property name="Характеристика" purpose="Dimension" type="58"/>
+					<Property name="Значение" purpose="Measure" type="57"/>
+				</Properties>
+				<Tables>
+					<Table name="_InfoRg59" purpose="Main">
+						<Fields>
+							<Field property="Номенклатура" name="_Fld60RRef" purpose="Object"/>
+							<Field property="Характеристика" name="_Fld61RRef" purpose="Object"/>
+							<Field property="Значение" name="_Fld62RRef" purpose="Object"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+		</Namespace>
+		<Namespace name="РегистрНакопления">
+			<Entity name="ПартииТоваровНаСкладах">
+				<Properties>
+					<Property name="ВидДвижения" purpose="System" type="IO"/>
+					<Property name="Активность" purpose="System" type="L"/>
+					<Property name="НомерСтроки" purpose="System" type="N"/>
+					<Property name="Регистратор" purpose="System" type="13,14"/>
+					<Property name="Период" purpose="System" type="T"/>
+					<Property name="Организация" purpose="Dimension" type="10"/>
+					<Property name="Склад" purpose="Dimension" type="11"/>
+					<Property name="Номенклатура" purpose="Dimension" type="12"/>
+					<Property name="Партия" purpose="Dimension" type="13"/>
+					<Property name="Количество" purpose="Measure" type="N"/>
+					<Property name="Стоимость" purpose="Measure" type="N"/>
+					<Property name="НарастающийИтог" purpose="Property" type="N"/>
+					<Property name="Цена" purpose="Property" type="N"/>
+				</Properties>
+				<Tables>
+					<Table name="_AccumRg30" purpose="Main">
+						<Fields>
+							<Field property="Период" name="_Period" purpose="Value"/>
+							<Field property="Регистратор" name="_RecorderTRef" purpose="TypeCode"/>
+							<Field property="Регистратор" name="_RecorderRRef" purpose="Object"/>
+							<Field property="НомерСтроки" name="_LineNo" purpose="Value"/>
+							<Field property="Активность" name="_Active" purpose="Value"/>
+							<Field property="ВидДвижения" name="_RecordKind" purpose="Value"/>
+							<Field property="Организация" name="_Fld31RRef" purpose="Object"/>
+							<Field property="Склад" name="_Fld32RRef" purpose="Object"/>
+							<Field property="Номенклатура" name="_Fld33RRef" purpose="Object"/>
+							<Field property="Партия" name="_Fld34RRef" purpose="Object"/>
+							<Field property="Количество" name="_Fld35" purpose="Value"/>
+							<Field property="Стоимость" name="_Fld36" purpose="Value"/>
+							<Field property="НарастающийИтог" name="_Fld37" purpose="Value"/>
+							<Field property="Цена" name="_Fld49" purpose="Value"/>
+						</Fields>
+					</Table>
+				</Tables>
+			</Entity>
+		</Namespace>
+		<Namespace name="РегистрБухгалтерии"/>
+	</Namespaces>
+</InfoBase>

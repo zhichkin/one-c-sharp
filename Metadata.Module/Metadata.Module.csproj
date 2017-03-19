@@ -69,6 +69,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="DifferenceObject\DifferenceTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MetadataMainMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,6 +91,11 @@
     </Page>
     <Compile Include="Commands\MetadataMainMenu.cs" />
     <Compile Include="Controllers\MetadataMainMenuController.cs" />
+    <Compile Include="DifferenceObject\DifferenceTreeView.xaml.cs">
+      <DependentUpon>DifferenceTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DifferenceObject\DifferenceTreeViewModel.cs" />
+    <Compile Include="ExceptionsHandling.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Notifications\SQLConnectionDialogNotification.cs" />
     <Compile Include="Services\IMetadataAdapter.cs" />

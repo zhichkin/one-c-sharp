@@ -16,6 +16,7 @@ using Zhichkin.Shell;
 using System.Data.SqlClient;
 using Microsoft.Practices.Prism.Regions;
 using Zhichkin.Metadata.Commands;
+using Zhichkin.Metadata.Module;
 
 namespace Zhichkin.Metadata.ViewModels
 {
@@ -148,11 +149,49 @@ namespace Zhichkin.Metadata.ViewModels
         }
         private void OnUpdateMetadata(object args)
         {
-            Z.Notify(new Notification
-               {
-                   Title = CONST_ModuleDialogsTitle,
-                   Content = "Мы работаем над этим ..."
-               });
+            if (this.MetadataTreeViewModel.CurrentInfoBase == null)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = CONST_InfoBaseNotSelectedWarning });
+                return;
+            }
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Файлы XML(*.xml)|*.xml" + "|Все файлы (*.*)|*.* ";
+            dialog.CheckFileExists = true;
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog() != true) return;
+            if (MetadataTreeViewModel == null) return;
+            try
+            {
+                InfoBase sourceInfoBase = new InfoBase();
+                (new XMLMetadataAdapter()).Load(dialog.FileName, sourceInfoBase);
+                bool cancel = OpenSQLConnectionPopup(sourceInfoBase);
+                if (cancel)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Действие отменено пользователем." });
+                }
+                else
+                {
+                    InfoBase targetInfoBase = this.MetadataTreeViewModel.CurrentInfoBase;
+                    IDifferenceObject difference = (new DifferenceService()).Compare(targetInfoBase, sourceInfoBase);
+                    ShowDifferenceObject(difference);
+                }
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void ShowDifferenceObject(IDifferenceObject difference)
+        {
+            Z.ClearRightRegion(regionManager);
+            IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
+            if (rightRegion == null) return;
+            object view = this.container.Resolve(
+                typeof(DifferenceTreeView),
+                new ParameterOverride("model", difference)
+                    .OnType(typeof(DifferenceTreeViewModel)));
+            if (view == null) return;
+            rightRegion.Add(view);
         }
         private void OnShowSettings(object args)
         {

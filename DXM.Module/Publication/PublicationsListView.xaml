@@ -43,7 +43,15 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource Icon_Publication}" Margin="5" />
-                                <TextBlock Text="{Binding Path=Name}" Margin="5" VerticalAlignment="Center" />
+                                <TextBlock Margin="5" VerticalAlignment="Center">
+                                    <Hyperlink ToolTip="Открыть форму плана обмена (публикации)"
+                                        Command="{Binding DataContext.BrowsePublicationCommand,
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                        CommandParameter="{Binding Path=SelectedItem,
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
+                                        <TextBlock Text="{Binding Path=Name}" FontWeight="DemiBold" />
+                                    </Hyperlink>
+                                </TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -53,13 +61,6 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button ToolTip="Открыть форму плана обмена (публикации)"
-                                        Command="{Binding DataContext.BrowsePublicationCommand,
-                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                                        CommandParameter="{Binding Path=SelectedItem,
-                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
-                                    <Image Source="{StaticResource Icon_Edit}" />
-                                </Button>
                                 <Button ToolTip="Удалить план обмена (публикацию)"
                                         Command="{Binding DataContext.DeletePublicationCommand,
                                         RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"

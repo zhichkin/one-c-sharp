@@ -11,3 +11,5 @@ C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationsListView.g.
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationsListView.baml
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Subscriber\SubscribersListView.baml
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Subscriber\SubscribersListView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationView.g.cs

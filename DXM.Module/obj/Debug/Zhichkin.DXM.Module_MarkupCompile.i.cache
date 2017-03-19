@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-3-668283844
+4-1158239190
 
-15-2121822522
+17-1673899030
 78-1428407482
-InfoBase\InfoBaseView.xaml;Subscriber\SubscribersListView.xaml;Publication\PublicationsListView.xaml;
+InfoBase\InfoBaseView.xaml;Publication\PublicationView.xaml;Subscriber\SubscribersListView.xaml;Publication\PublicationsListView.xaml;
 
 False
 

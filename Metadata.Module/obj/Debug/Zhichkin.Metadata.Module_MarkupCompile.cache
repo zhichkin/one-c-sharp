@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-41685812498
+51077902743
 
-201092265047
+23-1716628048
 732056601369
-Views\MetadataMainMenu.xaml;Views\SQLServerConnectionView.xaml;Views\MetadataSettingsView.xaml;Views\MetadataTreeView.xaml;
+DifferenceObject\DifferenceTreeView.xaml;Views\MetadataMainMenu.xaml;Views\SQLServerConnectionView.xaml;Views\MetadataSettingsView.xaml;Views\MetadataTreeView.xaml;
 
 False
 

@@ -8,14 +8,7 @@ namespace Zhichkin.DXM.Model
     public sealed partial class Publication : EntityBase
     {
         private static readonly IDataMapper _mapper = DXMContext.Current.GetDataMapper(typeof(Publication));
-        public static Publication Create(InfoBase infoBase)
-        {
-            Publication publication = (Publication)DXMContext.Current.Factory.New(typeof(Publication));
-            publication.Publisher = infoBase;
-            return publication;
-        }
-        public static IList<Publication> Select(InfoBase infoBase) { return DataMapper.Select(infoBase); }
-
+        
         private InfoBase _Publisher = null;
 
         public Publication() : base(_mapper) { }

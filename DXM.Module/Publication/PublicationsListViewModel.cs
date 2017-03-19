@@ -20,6 +20,7 @@ namespace Zhichkin.DXM.Module
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IPublisherService _publisherService = new PublisherService();
 
         private object _SelectedItem = null;
         private ObservableCollection<Publication> _Publications = null;
@@ -53,7 +54,7 @@ namespace Zhichkin.DXM.Module
             {
                 if (_Publications == null)
                 {
-                    IList<Publication> list = Publication.Select(_publisher);
+                    List<Publication> list = _publisherService.Select(_publisher);
                     _Publications = new ObservableCollection<Publication>(list);
                 }
                 return _Publications;
@@ -75,7 +76,7 @@ namespace Zhichkin.DXM.Module
         {
             try
             {
-                Publication publication = Publication.Create(_publisher);
+                Publication publication = _publisherService.Create(_publisher);
                 publication.Name = "Новый план обмена (публикация)";
                 publication.Save();
                 _Publications.Add(publication);
@@ -87,11 +88,36 @@ namespace Zhichkin.DXM.Module
         }
         private void OnBrowsePublication(Publication publication)
         {
-            Z.Notify(new Notification { Title = Utilities.PopupDialogsTitle, Content = "Browse: " + publication.Name });
+            Z.ClearRightRegion(_regionManager);
+            IRegion rightRegion = _regionManager.Regions[RegionNames.RightRegion];
+            if (rightRegion == null) return;
+            object view = _container.Resolve(
+                typeof(PublicationView),
+                new ParameterOverride("model", publication)
+                    .OnType(typeof(PublicationViewModel)));
+            if (view == null) return;
+            rightRegion.Add(view);
         }
         private void OnDeletePublication(Publication publication)
         {
-            Z.Notify(new Notification { Title = Utilities.PopupDialogsTitle, Content = "Delete: " + publication.Name });
+            if (publication == null) return;
+            try
+            {
+                Z.Confirm(new Confirmation
+                {
+                    Title = Utilities.PopupDialogsTitle,
+                    Content = string.Format("Публицация \"{0}\" будет удалена. Продолжить ?", publication.Name)
+                }, c => { if (c.Confirmed) DeletePublication(publication); });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = Utilities.PopupDialogsTitle, Content = ExceptionsHandling.GetErrorText(ex) });
+            }
+        }
+        private void DeletePublication(Publication publication)
+        {
+            _publisherService.Delete(publication);
+            _Publications.Remove(publication);
         }
     }
 }

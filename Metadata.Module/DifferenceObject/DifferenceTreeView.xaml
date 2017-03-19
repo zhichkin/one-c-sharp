@@ -1,0 +1,334 @@
+﻿<UserControl x:Class="Zhichkin.Metadata.Module.DifferenceTreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="Icon_26_Refresh" UriSource="..\Images\26 Refresh.png"/>
+            <BitmapImage x:Key="Icon_Add_Database" UriSource="..\Images\26 Add Database.png"/>
+            <BitmapImage x:Key="Icon_Exist_Database" UriSource="..\Images\26 Accept Database.png"/>
+            <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
+            <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
+            <BitmapImage x:Key="Icon_Enumeration" UriSource="..\Images\Перечисление.png"/>
+            <BitmapImage x:Key="Icon_Charecteristic" UriSource="..\Images\ПланВидовХарактеристик.png"/>
+            <BitmapImage x:Key="Icon_Accounts" UriSource="..\Images\ПланСчетов.png"/>
+            <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
+            <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
+            <BitmapImage x:Key="Icon_AccountsRegister" UriSource="..\Images\РегистрБухгалтерии.png"/>
+            <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
+            <BitmapImage x:Key="Icon_System" UriSource="..\Images\СтандартныйРеквизит.png"/>
+            <BitmapImage x:Key="Icon_Property" UriSource="..\Images\Реквизит.png"/>
+            <BitmapImage x:Key="Icon_Dimension" UriSource="..\Images\Измерение.png"/>
+            <BitmapImage x:Key="Icon_Measure" UriSource="..\Images\Ресурс.png"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Список изменений информационной базы" FontWeight="DemiBold" Margin="10,10,10,5" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        
+        <TreeView Grid.Row="1" Grid.Column="0" Margin="10"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  ItemsSource="{Binding Path=InfoBases}">
+            
+            <TreeView.Resources>
+                
+                <shell:DataTypeConverter x:Key="DataTypeConverter" />
+                <shell:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
+                
+                <HierarchicalDataTemplate DataType="{x:Type Model:DifferenceObject}" ItemsSource="{Binding Path=Children}">
+                    <StackPanel Margin="0,2,0,2" Orientation="Horizontal">
+                        
+                        <!-- Icon -->
+                        <Image Margin="2,0,2,0" VerticalAlignment="Center">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+
+                                        <!-- InfoBase -->
+                                        <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                     Value="{x:Type Model:InfoBase}">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Exist_Database}"/>
+                                        </DataTrigger>
+
+                                        <!-- Namespace -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="Перечисление" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="Справочник" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="Документ" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="ПланВидовХарактеристик" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Charecteristic}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="ПланСчетов" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Accounts}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="РегистрСведений" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="РегистрНакопления" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Namespace}" />
+                                                <Condition Binding="{Binding Target.Name}" Value="РегистрБухгалтерии" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccountsRegister}"/>
+                                        </MultiDataTrigger>
+                                        
+                                        <!-- Entity -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Namespace.Name}" Value="Перечисление" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Namespace.Name}" Value="Документ" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Namespace.Name}" Value="РегистрБухгалтерии" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccountsRegister}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Owner.Namespace.Name}" Value="Справочник" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Owner.Namespace.Name}" Value="Документ" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Owner.Namespace.Name}" Value="РегистрБухгалтерии" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Namespace.Name}" Value="ПланВидовХарактеристик" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Charecteristic}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Namespace.Name}" Value="ПланСчетов" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Accounts}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Namespace.Name}" Value="РегистрСведений" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Entity}" />
+                                                <Condition Binding="{Binding Target.Namespace.Name}" Value="РегистрНакопления" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
+                                        </MultiDataTrigger>
+
+                                        <!-- Property -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Property}" />
+                                                <Condition Binding="{Binding Target.Purpose}" Value="System" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_System}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Property}" />
+                                                <Condition Binding="{Binding Target.Purpose}" Value="Property" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Property}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Property}" />
+                                                <Condition Binding="{Binding Target.Purpose}" Value="Dimension" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Dimension}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                           Value="{x:Type Model:Property}" />
+                                                <Condition Binding="{Binding Target.Purpose}" Value="Measure" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Measure}"/>
+                                        </MultiDataTrigger>
+
+                                        <!-- Relation -->
+                                        <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                     Value="{x:Type Model:Relation}">
+                                            <Setter Property="Source" Value="{StaticResource Icon_System}"/>
+                                        </DataTrigger>
+
+                                        <!-- Table -->
+                                        <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                     Value="{x:Type Model:Table}">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </DataTrigger>
+
+                                        <!-- Field -->
+                                        <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                     Value="{x:Type Model:Field}">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Property}"/>
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+
+                        <!-- Difference type -->
+                        <TextBlock Margin="2,0,2,0" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Difference}" Value="Insert">
+                                            <Setter Property="Text" Value="(I)" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Difference}" Value="Update">
+                                            <Setter Property="Text" Value="(U)" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Difference}" Value="Delete">
+                                            <Setter Property="Text" Value="(D)" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!-- Name of the target entity -->
+                        <TextBlock Margin="2,0,2,0" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="{Binding Path=Target.Name}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
+                                                     Value="{x:Type Model:Relation}">
+                                            <Setter Property="Text" Value="{Binding Path=Target.Entity.FullName}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!--
+                        <TextBlock Text="{Binding Path=Difference}" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Difference}" Value="Update">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        -->
+
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                
+            </TreeView.Resources>
+            
+        </TreeView>
+
+        <Button Grid.Row="2" Grid.Column="0" Margin="10" HorizontalAlignment="Right"
+                 Content="Принять изменения" Command="{Binding ApplyChangesCommand}" />
+
+    </Grid>
+    
+</UserControl>
