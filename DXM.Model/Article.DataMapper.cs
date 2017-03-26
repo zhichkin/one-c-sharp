@@ -16,7 +16,7 @@ namespace Zhichkin.DXM.Model
                 @"DECLARE @result table([version] binary(8)); " +
                 @"INSERT [dxm].[articles] ([key], [name], [publication], [entity]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @name, @publisher, @entity); " +
+                @"VALUES (@key, @name, @publication, @entity); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +

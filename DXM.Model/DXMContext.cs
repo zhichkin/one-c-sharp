@@ -32,11 +32,21 @@ namespace Zhichkin.DXM.Model
         private static void InitializeTypeCodes()
         {
             typeCodes.Add(1, typeof(Publication));
+            typeCodes.Add(2, typeof(Article));
+            typeCodes.Add(3, typeof(PublicationSubscriber));
+            typeCodes.Add(4, typeof(Subscription));
+            typeCodes.Add(5, typeof(Mapping));
+            typeCodes.Add(6, typeof(PublicationProperty));
         }
 
         private static void InitializeDataMappers()
         {
             mappers.Add(typeof(Publication), new Publication.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Article), new Article.DataMapper(connectionString, factory));
+            mappers.Add(typeof(PublicationSubscriber), new PublicationSubscriber.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Subscription), new Subscription.DataMapper(connectionString, factory));
+            mappers.Add(typeof(Mapping), new Mapping.DataMapper(connectionString, factory));
+            mappers.Add(typeof(PublicationProperty), new PublicationProperty.DataMapper(connectionString, factory));
         }
 
         public string Name { get { return name; } }

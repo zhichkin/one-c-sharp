@@ -13,3 +13,11 @@ C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Subscriber\SubscribersListView.baml
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Subscriber\SubscribersListView.g.cs
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationView.baml
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Article\ArticlesListView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Article\ArticlesListView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationPropertiesView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\PublicationPropertiesView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\RoutingPropertiesView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\FiltrationPropertiesView.baml
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\RoutingPropertiesView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\FiltrationPropertiesView.g.cs

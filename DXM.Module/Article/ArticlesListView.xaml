@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="Zhichkin.DXM.Module.ArticlesListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:md="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
+             xmlns:dxm="clr-namespace:Zhichkin.DXM.Model;assembly=Zhichkin.DXM.Model"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             DragEnter="ArticlesListView_DragEnter"
+             DragLeave="ArticlesListView_DragLeave"
+             AllowDrop="True" Drop="ArticlesListView_Drop">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="Icon_Add" UriSource="..\Images\26 Add.png"/>
+            <BitmapImage x:Key="Icon_Cancel" UriSource="..\Images\26 Cancel.png"/>
+            <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
+            <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
+            <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
+            <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
+            <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBlock Text="Состав плана обмена (статьи публикации)" FontWeight="DemiBold" VerticalAlignment="Center" />
+            <Button ToolTip="Редактировать список" Margin="10,0,0,0"
+                    Command="{Binding SelectArticlesCommand}">
+                <Image Source="{StaticResource Icon_Add}" />
+            </Button>
+        </StackPanel>
+
+        <TreeView Grid.Row="1" Grid.Column="0" Margin="0,5,0,0"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <TreeView.Resources>
+                <DataTemplate DataType="{x:Type dxm:Article}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="2">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Entity.Owner.Namespace.Name}" Value="Справочник">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Entity.Owner.Namespace.Name}" Value="Документ">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="Справочник">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="Документ">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="РегистрСведений">
+                                            <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="РегистрНакопления">
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Path=Name}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+            
+            <TreeViewItem ItemsSource="{Binding Path=Catalogs}">
+                <TreeViewItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Icon_Catalog}" Margin="2"/>
+                        <TextBlock Text="Справочники" Margin="0,0,5,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TreeViewItem.Header>
+            </TreeViewItem>
+
+            <TreeViewItem ItemsSource="{Binding Path=Documents}">
+                <TreeViewItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Icon_Document}" Margin="2"/>
+                        <TextBlock Text="Документы" Margin="0,0,5,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TreeViewItem.Header>
+            </TreeViewItem>
+
+            <TreeViewItem ItemsSource="{Binding Path=InfoRegisters}">
+                <TreeViewItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Icon_InfoRegister}" Margin="2"/>
+                        <TextBlock Text="Регистры сведений" Margin="0,0,5,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TreeViewItem.Header>
+            </TreeViewItem>
+
+            <TreeViewItem ItemsSource="{Binding Path=AccumRegisters}">
+                <TreeViewItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Icon_AccumRegister}" Margin="2"/>
+                        <TextBlock Text="Регистры накопления" Margin="0,0,5,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TreeViewItem.Header>
+            </TreeViewItem>
+
+        </TreeView>
+        
+    </Grid>
+</UserControl>

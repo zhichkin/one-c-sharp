@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-4-1158239190
+8-1186078765
 
-13-1887102578
+21371498472
 78-1428407482
-InfoBase\InfoBaseView.xaml;Publication\PublicationView.xaml;Subscriber\SubscribersListView.xaml;Publication\PublicationsListView.xaml;
+Article\ArticlesListView.xaml;InfoBase\InfoBaseView.xaml;Publication\RoutingPropertiesView.xaml;Publication\FiltrationPropertiesView.xaml;Publication\PublicationPropertiesView.xaml;Publication\PublicationView.xaml;Subscriber\SubscribersListView.xaml;Publication\PublicationsListView.xaml;
 
 False
 

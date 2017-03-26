@@ -20,7 +20,9 @@ namespace Zhichkin.DXM.Module
         private readonly IRegionManager _regionManager;
 
         private string _Name = string.Empty;
-        
+        private ArticlesListView _ArticlesListView;
+        private PublicationPropertiesView _PublicationPropertiesView;
+
         public PublicationViewModel(Publication model, IUnityContainer container, IRegionManager regionManager)
         {
             if (model == null) throw new ArgumentNullException("model");
@@ -35,6 +37,14 @@ namespace Zhichkin.DXM.Module
         {
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
             this.GoBackToInfoBaseViewCommand = new DelegateCommand(this.GoBackToInfoBaseView);
+            _ArticlesListView = (ArticlesListView)_container.Resolve(
+                typeof(ArticlesListView),
+                new ParameterOverride("publication", _publication)
+                    .OnType(typeof(ArticlesListViewModel)));
+            _PublicationPropertiesView = (PublicationPropertiesView)_container.Resolve(
+                typeof(PublicationPropertiesView),
+                new ParameterOverride("publication", _publication)
+                    .OnType(typeof(PublicationPropertiesViewModel)));
         }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
         public ICommand GoBackToInfoBaseViewCommand { get; private set; }
@@ -68,6 +78,7 @@ namespace Zhichkin.DXM.Module
             }
         }
         public string InfoBaseName { get { return _publication.Publisher.Name; } }
+        public ArticlesListView ArticlesListView { get { return _ArticlesListView; } }
         private void GoBackToInfoBaseView()
         {
             Z.ClearRightRegion(_regionManager);
@@ -80,5 +91,6 @@ namespace Zhichkin.DXM.Module
             if (view == null) return;
             rightRegion.Add(view);
         }
+        public PublicationPropertiesView PublicationPropertiesView { get { return _PublicationPropertiesView; } }
     }
 }

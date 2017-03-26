@@ -36,7 +36,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Информационная база (издатель)" FontWeight="DemiBold" Margin="10,10,10,5" VerticalAlignment="Center" HorizontalAlignment="Left" />

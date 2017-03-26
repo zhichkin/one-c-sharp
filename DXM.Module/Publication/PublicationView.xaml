@@ -41,9 +41,9 @@
 
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" Margin="10,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
             <TextBlock Text="План обмена (публикация):" FontWeight="DemiBold" Margin="0,0,0,5" />
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <Image Source="{StaticResource Icon_Publication}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Name, Mode=TwoWay}" MinWidth="200" MinHeight="24" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                <TextBox Text="{Binding Name, Mode=TwoWay}" MinWidth="200" MinHeight="24" VerticalAlignment="Center" HorizontalAlignment="Stretch" VerticalContentAlignment="Center">
                     <TextBox.InputBindings>
                         <KeyBinding Gesture="Enter"
                             Command="{Binding UpdateTextBoxSourceCommand}"
@@ -66,15 +66,16 @@
                     </Style.Triggers>
                 </Style>
             </TabControl.Resources>
-            
+
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" ToolTip="Cтатьи публикации">
                         <TextBlock Margin="5" Text="Состав плана обмена" Style="{StaticResource SelectedTabTextStyle}" />
                     </StackPanel>
                 </TabItem.Header>
-                <TextBlock Text="Состав плана обмена (cтатьи публикации)" Margin="10"/>
+                <ContentControl Content="{Binding Path=ArticlesListView}" Margin="10" />
             </TabItem>
+
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" ToolTip="Подписчики на эту публикацию">
@@ -83,6 +84,20 @@
                 </TabItem.Header>
                 <TextBlock Text="Узлы плана обмена (подписчики на эту публикацию)" Margin="10"/>
             </TabItem>
+            
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" ToolTip="Настройки фильтрации и маршрутизации">
+                        <TextBlock Margin="5" Style="{StaticResource SelectedTabTextStyle}" TextAlignment="Center">
+                            Настройки фильтрации
+                            <LineBreak/>
+                            и маршрутизации
+                        </TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <ContentControl Content="{Binding Path=PublicationPropertiesView}" Margin="10" />
+            </TabItem>
+
         </TabControl>
         
     </Grid>

@@ -86,6 +86,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Article\ArticlesListView.xaml.cs">
+      <DependentUpon>ArticlesListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Article\ArticlesListViewModel.cs" />
     <Compile Include="Controllers\MetadataTreeViewController.cs" />
     <Compile Include="ExceptionsHandling.cs" />
     <Compile Include="InfoBase\InfoBaseView.xaml.cs">
@@ -94,6 +98,18 @@
     <Compile Include="InfoBase\InfoBaseViewModel.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Publication\RoutingPropertiesView.xaml.cs">
+      <DependentUpon>RoutingPropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Publication\FiltrationPropertiesView.xaml.cs">
+      <DependentUpon>FiltrationPropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Publication\RoutingPropertiesViewModel.cs" />
+    <Compile Include="Publication\PublicationPropertiesView.xaml.cs">
+      <DependentUpon>PublicationPropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Publication\FiltrationPropertiesViewModel.cs" />
+    <Compile Include="Publication\PublicationPropertiesViewModel.cs" />
     <Compile Include="Publication\PublicationViewModel.cs" />
     <Compile Include="Publication\PublicationView.xaml.cs">
       <DependentUpon>PublicationView.xaml</DependentUpon>
@@ -135,7 +151,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Article\ArticlesListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="InfoBase\InfoBaseView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Publication\RoutingPropertiesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Publication\FiltrationPropertiesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Publication\PublicationPropertiesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
