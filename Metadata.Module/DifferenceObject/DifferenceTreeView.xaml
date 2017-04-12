@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
@@ -47,25 +48,25 @@
             
             <TreeView.Resources>
                 
-                <shell:DataTypeConverter x:Key="DataTypeConverter" />
-                <shell:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
+                <ui:DataTypeConverter x:Key="DataTypeConverter" />
+                <ui:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 
                 <HierarchicalDataTemplate DataType="{x:Type Model:DifferenceObject}" ItemsSource="{Binding Path=Children}">
                     <StackPanel Margin="0,2,0,2" Orientation="Horizontal">
-                        
+
                         <!-- Icon -->
                         <Image Margin="2,0,2,0" VerticalAlignment="Center">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
 
-                                        <!-- InfoBase -->
+                                         <!--InfoBase--> 
                                         <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
                                                      Value="{x:Type Model:InfoBase}">
                                             <Setter Property="Source" Value="{StaticResource Icon_Exist_Database}"/>
                                         </DataTrigger>
 
-                                        <!-- Namespace -->
+                                         <!--Namespace--> 
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
@@ -131,7 +132,7 @@
                                             <Setter Property="Source" Value="{StaticResource Icon_AccountsRegister}"/>
                                         </MultiDataTrigger>
                                         
-                                        <!-- Entity -->
+                                         <!--Entity--> 
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
@@ -213,7 +214,7 @@
                                             <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
                                         </MultiDataTrigger>
 
-                                        <!-- Property -->
+                                         <!--Property--> 
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
@@ -247,19 +248,19 @@
                                             <Setter Property="Source" Value="{StaticResource Icon_Measure}"/>
                                         </MultiDataTrigger>
 
-                                        <!-- Relation -->
+                                         <!--Relation--> 
                                         <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
                                                      Value="{x:Type Model:Relation}">
                                             <Setter Property="Source" Value="{StaticResource Icon_System}"/>
                                         </DataTrigger>
 
-                                        <!-- Table -->
+                                         <!--Table--> 
                                         <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
                                                      Value="{x:Type Model:Table}">
                                             <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
                                         </DataTrigger>
 
-                                        <!-- Field -->
+                                         <!--Field--> 
                                         <DataTrigger Binding="{Binding Target, Converter={StaticResource DataTypeConverter}}"
                                                      Value="{x:Type Model:Field}">
                                             <Setter Property="Source" Value="{StaticResource Icon_Property}"/>
@@ -304,7 +305,6 @@
                             </TextBlock.Style>
                         </TextBlock>
 
-                        <!--
                         <TextBlock Text="{Binding Path=Difference}" VerticalAlignment="Center">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -317,7 +317,6 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        -->
 
                     </StackPanel>
                 </HierarchicalDataTemplate>

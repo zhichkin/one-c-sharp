@@ -201,6 +201,10 @@
       <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
       <Name>Metadata.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Metadata.UI\Metadata.UI.csproj">
+      <Project>{4fcf0512-bb1b-48ac-b335-aa903edc770a}</Project>
+      <Name>Metadata.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\orm\ORM.csproj">
       <Project>{431d3f9f-2134-4e49-bfa3-66a629492389}</Project>
       <Name>ORM</Name>

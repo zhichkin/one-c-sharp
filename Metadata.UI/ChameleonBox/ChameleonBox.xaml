@@ -1,0 +1,193 @@
+﻿<UserControl x:Class="Zhichkin.Metadata.UI.ChameleonBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <i:Interaction.Triggers>
+        
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding SelectDataTypeDialog,
+            RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:SelectDataTypeDialogView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding SelectReferenceObjectDialog,
+            RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:SelectReferenceObjectDialogView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+        
+    </i:Interaction.Triggers>
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <!-- Empty templates -->
+
+            <DataTemplate x:Key="EmptyReadOnlyTemplate">
+                <TextBlock Text=""/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EmptyEditableTemplate">
+                <TextBlock VerticalAlignment="Center" Margin="5">
+                    <Hyperlink Click="SelectChameleonTypeHyperlink_Click">
+                        <TextBlock Text="Выберите тип значения" FontWeight="DemiBold" />
+                    </Hyperlink>
+                </TextBlock>
+            </DataTemplate>
+
+            <!-- DateTime templates -->
+
+            <DataTemplate x:Key="DateTimeReadOnlyTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBlock Text="{Binding ChameleonValue, StringFormat = {}{0:dd.MM.yyyy},
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="DateTimeEditableTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <DatePicker SelectedDate="{Binding ChameleonValue, Mode=OneWay, StringFormat = {}{0:dd.MM.yyyy},
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
+                                SelectedDateChanged="DatePicker_SelectedDateChanged">
+                        <DatePicker.Resources>
+                            <Style TargetType="DatePickerTextBox">
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <TextBox x:Name="PART_TextBox"
+                                                     Text="{Binding SelectedDate, Mode=OneWay, StringFormat = {}{0:dd.MM.yyyy},
+                                                RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}"
+                                                     KeyUp="DatePicker_TextBox_KeyUp"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DatePicker.Resources>
+                    </DatePicker>
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                           MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
+                </StackPanel>
+            </DataTemplate>
+            
+            <!-- Boolean templates -->
+
+            <DataTemplate x:Key="BooleanReadOnlyTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBlock Text="{Binding ChameleonValue,
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="BooleanEditableTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <CheckBox IsChecked="{Binding ChameleonValue, Mode=OneWay,
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
+                              VerticalContentAlignment="Center" Checked="Boolean_CheckBox_Checked"/>
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                           MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp" Margin="20,0,0,0"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- Int32 templates -->
+
+            <DataTemplate x:Key="Int32ReadOnlyTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBlock Text="{Binding ChameleonValue, StringFormat = {}{0:G},
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
+                               TextAlignment="Right" MinWidth="60"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="Int32EditableTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBox Text="{Binding ChameleonValue, Mode=OneWay, StringFormat = {}{0:G},
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
+                               TextAlignment="Right" VerticalContentAlignment="Center"
+                             MinWidth="60" KeyDown="Int32_TextBox_KeyDown"/>
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                           MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- Decimal templates -->
+
+            <DataTemplate x:Key="DecimalReadOnlyTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBlock Text="{Binding ChameleonValue, StringFormat = {}{0:G},
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
+                               TextAlignment="Right" MinWidth="60"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="DecimalEditableTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBox Text="{Binding ChameleonValue, Mode=OneWay, StringFormat = {}{0:G},
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
+                               TextAlignment="Right" VerticalContentAlignment="Center"
+                             MinWidth="60" KeyDown="Decimal_TextBox_KeyDown"/>
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                           MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- String templates -->
+
+            <DataTemplate x:Key="StringReadOnlyTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBlock Text="{Binding ChameleonValue,
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="StringEditableTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBox Text="{Binding ChameleonValue, Mode=OneWay,
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
+                               MinWidth="100" VerticalContentAlignment="Center" KeyDown="String_TextBox_KeyDown"/>
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                           MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- ReferenceObject templates -->
+
+            <DataTemplate x:Key="ReferenceObjectReadOnlyTemplate">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBlock Text="{Binding ChameleonValue,
+                        RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="ReferenceObjectEditableTemplate">
+                <TextBlock VerticalAlignment="Center" Margin="5">
+                    <Hyperlink Click="SelectChameleonValueHyperlink_Click">
+                        <TextBlock Text="Выберите значение" FontWeight="DemiBold" />
+                    </Hyperlink>
+                </TextBlock>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.ContentTemplateSelector>
+        <ui:ChameleonTemplateSelector/>
+    </UserControl.ContentTemplateSelector>
+    
+</UserControl>

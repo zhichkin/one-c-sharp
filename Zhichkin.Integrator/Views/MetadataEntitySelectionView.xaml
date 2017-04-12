@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
              xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
              xmlns:ViewModel="clr-namespace:Zhichkin.Integrator.Views"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
@@ -40,7 +41,7 @@
                   ItemsSource="{Binding Path=Namespaces}"
                   SelectedItemChanged="TreeView_SelectedItemChanged" MouseDoubleClick="TreeView_MouseDoubleClick">
             <TreeView.Resources>
-                <shell:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
+                <ui:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type Model:Namespace}" ItemsSource="{Binding Path=Entities}">
                     <StackPanel Orientation="Horizontal">
                         <Image Margin="2">

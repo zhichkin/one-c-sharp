@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Zhichkin.Metadata.Model;
 using Zhichkin.ORM;
 
@@ -21,8 +22,8 @@ namespace Zhichkin.DXM.Model
         private static readonly IDataMapper _mapper = DXMContext.Current.GetDataMapper(typeof(PublicationProperty));
 
         private Publication _owner = null;
-        private Entity _type = null;
-        private byte[] _value = new byte[16]; // 256 max
+        private Entity _type = Entity.Empty;
+        private object _value = null;
         private PublicationPropertyPurpose _purpose = PublicationPropertyPurpose.Filtration;
 
         public PublicationProperty() : base(_mapper) { }
@@ -30,8 +31,45 @@ namespace Zhichkin.DXM.Model
         public PublicationProperty(Guid identity, PersistentState state) : base(_mapper, identity, state) { }
 
         public Publication Owner { set { Set<Publication>(value, ref _owner); } get { return Get<Publication>(ref _owner); } }
-        public Entity Type { set { Set<Entity>(value, ref _type); } get { return Get<Entity>(ref _type); } }
-        public byte[] Value { set { Set<byte[]>(value, ref _value); } get { return Get<byte[]>(ref _value); } }
         public PublicationPropertyPurpose Purpose { set { Set<PublicationPropertyPurpose>(value, ref _purpose); } get { return Get<PublicationPropertyPurpose>(ref _purpose); } }
+        public Entity Type
+        {
+            get { return Get<Entity>(ref _type); }
+            private set
+            {
+                if (value == null)
+                {
+                    Set<Entity>(Entity.Empty, ref _type);
+                }
+                else
+                {
+                    Set<Entity>(value, ref _type);
+                }
+            }
+        }
+        public object Value
+        {
+            get { return Get<object>(ref _value); }
+            set
+            {
+                if (value == null)
+                {
+                    this.Type = Entity.Empty;
+                }
+                else
+                {
+                    Entity metadata = Entity.GetMetadataType(value.GetType());
+                    if (metadata == Entity.Object)
+                    {
+                        metadata = ((ReferenceProxy)value).Type; // !!! ReferenceProxy !!!
+                    }
+                    if (metadata != _type)
+                    {
+                        this.Type = metadata;
+                    }
+                }
+                Set<object>(value, ref _value);
+            }
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace Zhichkin.DXM.Model
             void IDataMapper.Select(IPersistent entity)
             {
                 Article e = (Article)entity;
+                IPersistentContext metadata = MetadataPersistentContext.Current;
 
                 bool ok = false;
 
@@ -70,7 +71,7 @@ namespace Zhichkin.DXM.Model
                         e.version = (byte[])reader[0];
                         e.name = (string)reader[1];
                         e._Publication = Factory.New<Publication>(reader.GetGuid(2));
-                        e._Entity = Factory.New<Entity>(reader.GetGuid(3));
+                        e._Entity = metadata.Factory.New<Entity>(reader.GetGuid(3));
 
                         ok = true;
                     }

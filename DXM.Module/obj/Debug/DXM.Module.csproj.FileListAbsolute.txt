@@ -21,3 +21,4 @@ C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\RoutingPropertiesView.b
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\FiltrationPropertiesView.baml
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\RoutingPropertiesView.g.cs
 C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Publication\FiltrationPropertiesView.g.cs
+C:\Users\User\Desktop\Z\DXM.Module\obj\Debug\Zhichkin.DXM.Module_MarkupCompile.lref

@@ -11,8 +11,26 @@ namespace Zhichkin.Metadata.Model
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Entity));
         private static readonly IMetadataService service = new MetadataService();
+        public static Entity GetMetadataType(Type type)
+        {
+            Entity metadata;
+            if (!Entity.CLRTypesMapping.TryGetValue(type, out metadata))
+            {
+                metadata = Entity.Object;
+            }
+            return metadata;
+        }
+        public static object GetDefaultValue(Entity type)
+        {
+            object value;
+            if (!Entity.Defaults.TryGetValue(type, out value))
+            {
+                value = null;
+            }
+            return value;
+        }
         public static Entity Select(Guid identity) { return DataMapper.Select(identity); }
-
+        
         public Entity() : base(_mapper) { }
         public Entity(Guid identity) : base(_mapper, identity) { }
         public Entity(Guid identity, PersistentState state) : base(_mapper, identity, state) { }
@@ -29,7 +47,6 @@ namespace Zhichkin.Metadata.Model
         public Entity Owner { set { Set<Entity>(value, ref owner); } get { return Get<Entity>(ref owner); } }
         ///<summary>Inheritance: base entity reference</summary>
         public Entity Parent { set { Set<Entity>(value, ref parent); } get { return Get<Entity>(ref parent); } }
-        
         public string FullName { get { return string.Format("{0}.{1}", this.Namespace.Name, this.Name); } }
 
         public Table MainTable
@@ -84,6 +101,19 @@ namespace Zhichkin.Metadata.Model
                 if (tables.Count > 0) return tables;
                 return service.GetChildren<Entity, Table>(this, "entity");
             }
+        }
+
+        public Type GetCLRType()
+        {
+            if (this == Entity.Empty) return null;
+            else if (this == Entity.Object) return typeof(object);
+            else if (this == Entity.Boolean) return typeof(bool);
+            else if (this == Entity.Int32) return typeof(int);
+            else if (this == Entity.Decimal) return typeof(decimal);
+            else if (this == Entity.DateTime) return typeof(DateTime);
+            else if (this == Entity.String) return typeof(string);
+            else if (this.TypeCode > 0) return typeof(object);
+            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Data;
 using System.Data.SqlClient;
 using Zhichkin.Metadata.Model;
@@ -48,6 +49,7 @@ namespace Zhichkin.DXM.Model
             {
                 PublicationProperty e = (PublicationProperty)entity;
                 IPersistentContext metadata = MetadataPersistentContext.Current;
+                IBinaryFormatter formatter = new BinaryFormatter();
 
                 bool ok = false;
 
@@ -73,10 +75,10 @@ namespace Zhichkin.DXM.Model
                         e._owner = Factory.New<Publication>(reader.GetGuid(0));
                         e.name = reader.GetString(1);
                         e._type = metadata.Factory.New<Entity>(reader.GetGuid(2));
-                        e._value = (byte[])reader[3];
+                        e._value = formatter.Deserialize(new MemoryStream((byte[])reader[3]), e._type);
                         e._purpose = (PublicationPropertyPurpose)reader.GetInt32(4);
                         e.version = (byte[])reader[5];
-
+                        
                         ok = true;
                     }
 
@@ -88,7 +90,8 @@ namespace Zhichkin.DXM.Model
             void IDataMapper.Insert(IPersistent entity)
             {
                 PublicationProperty e = (PublicationProperty)entity;
-                
+                IBinaryFormatter formatter = new BinaryFormatter();
+
                 bool ok = false;
 
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -123,7 +126,9 @@ namespace Zhichkin.DXM.Model
 
                     parameter = new SqlParameter("value", SqlDbType.VarBinary);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e._value;
+                    MemoryStream stream = new MemoryStream();
+                    formatter.Serialize(stream, e._value);
+                    parameter.Value = stream.ToArray();
                     command.Parameters.Add(parameter);
 
                     parameter = new SqlParameter("purpose", SqlDbType.Int);
@@ -146,6 +151,7 @@ namespace Zhichkin.DXM.Model
             void IDataMapper.Update(IPersistent entity)
             {
                 PublicationProperty e = (PublicationProperty)entity;
+                IBinaryFormatter formatter = new BinaryFormatter();
 
                 bool ok = false; int rows_affected = 0;
 
@@ -186,7 +192,9 @@ namespace Zhichkin.DXM.Model
 
                     parameter = new SqlParameter("value", SqlDbType.VarBinary);
                     parameter.Direction = ParameterDirection.Input;
-                    parameter.Value = e._value;
+                    MemoryStream stream = new MemoryStream();
+                    formatter.Serialize(stream, e._value);
+                    parameter.Value = stream.ToArray();
                     command.Parameters.Add(parameter);
 
                     parameter = new SqlParameter("purpose", SqlDbType.Int);

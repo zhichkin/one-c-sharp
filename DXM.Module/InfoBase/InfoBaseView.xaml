@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="400">
 
@@ -22,7 +23,7 @@
             <i:EventTrigger.Actions>
                 <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
                     <shell:CustomPopupWindowAction.WindowContent>
-                        <shell:DatabaseSettingsView />
+                        <ui:DatabaseSettingsView />
                     </shell:CustomPopupWindowAction.WindowContent>
                 </shell:CustomPopupWindowAction>
             </i:EventTrigger.Actions>

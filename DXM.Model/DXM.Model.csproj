@@ -42,6 +42,7 @@
     <Compile Include="Mapping.cs" />
     <Compile Include="Services\IChangeTrackingService.cs" />
     <Compile Include="Services\IPublisherService.cs" />
+    <Compile Include="Services\ISQLCommandBuilder.cs" />
     <Compile Include="Services\PublisherService.cs" />
     <Compile Include="Subscription.cs" />
     <Compile Include="Mapping.DataMapper.cs" />

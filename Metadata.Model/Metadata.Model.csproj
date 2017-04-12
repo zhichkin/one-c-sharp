@@ -42,23 +42,25 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\SqlCommandBuilder.cs" />
     <Compile Include="Difference\DifferenceObject.cs" />
     <Compile Include="Services\DifferenceService.cs" />
     <Compile Include="Difference\DifferenceType.cs" />
     <Compile Include="Difference\IDifferenceObject.cs" />
+    <Compile Include="Services\IBinaryFormatter.cs" />
     <Compile Include="Services\IDifferenceService.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Entity.DataMapper.cs" />
     <Compile Include="Context\Entity.SystemTypes.cs" />
     <Compile Include="EntityBase.cs" />
     <Compile Include="Services\IMetadataService.cs" />
-    <Compile Include="CustomSetting.cs" />
+    <Compile Include="Services\CustomSetting.cs" />
     <Compile Include="InfoBase.cs" />
     <Compile Include="InfoBase.DataMapper.cs" />
     <Compile Include="Context\InfoBase.Metadata.cs" />
     <Compile Include="Services\MetadataService.cs" />
     <Compile Include="Namespace.cs" />
-    <Compile Include="CustomSetting.DataMapper.cs" />
+    <Compile Include="Services\CustomSetting.DataMapper.cs" />
     <Compile Include="Namespace.DataMapper.cs" />
     <Compile Include="Context\Namespace.TypeSystem.cs" />
     <Compile Include="Context\PersistentContext.cs" />
@@ -69,6 +71,8 @@
     <Compile Include="Relation.cs" />
     <Compile Include="Relation.DataMapper.cs" />
     <Compile Include="Events\MetadataPubSubEvents.cs" />
+    <Compile Include="Context\ReferenceProxy.cs" />
+    <Compile Include="Context\ReferenceProxy.DataMapper.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Field.DataMapper.cs" />
     <Compile Include="Table.DataMapper.cs" />

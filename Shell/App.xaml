@@ -2,6 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
-        
+        <BitmapImage x:Key="Icon_Catalog" UriSource="C:\Users\User\Desktop\Z\Shell\Images\Справочник.png"/>
+        <BitmapImage x:Key="Icon_Document" UriSource="C:\Users\User\Desktop\Z\Shell\Images\Документ.png"/>
+        <BitmapImage x:Key="Icon_Cancel" UriSource="C:\Users\User\Desktop\Z\Shell\Images\26 Cancel.png"/>
+        <BitmapImage x:Key="Icon_TypeSystem" UriSource="C:\Users\User\Desktop\Z\Shell\Images\ПрочиеПользовательскиеНастройки.png"/>
     </Application.Resources>
 </Application>

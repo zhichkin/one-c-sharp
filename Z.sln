@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DXM.Model", "DXM.Model\DXM.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DXM.Module", "DXM.Module\DXM.Module.csproj", "{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata.UI", "Metadata.UI\Metadata.UI.csproj", "{4FCF0512-BB1B-48AC-B335-AA903EDC770A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38DCEFC7-2A57-4A74-B0E9-C8FDD28BE023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCF0512-BB1B-48AC-B335-AA903EDC770A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FCF0512-BB1B-48AC-B335-AA903EDC770A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FCF0512-BB1B-48AC-B335-AA903EDC770A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FCF0512-BB1B-48AC-B335-AA903EDC770A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

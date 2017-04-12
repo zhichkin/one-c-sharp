@@ -118,14 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsViewModel.cs" />
-    <Compile Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml.cs">
-      <DependentUpon>DatabaseSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsNotification.cs" />
-    <Compile Include="CompositeCollectionConverter.cs" />
     <Compile Include="CustomPopupWindowAction.cs" />
-    <Compile Include="DataTypeConverter.cs" />
     <Compile Include="ShellViewModel.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Shell.xaml.cs">
@@ -164,10 +157,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CommonDialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,6 +173,53 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\26 Accept Database.png" />
+    <Resource Include="Images\26 Add Database.png" />
+    <Resource Include="Images\26 Add.png" />
+    <Resource Include="Images\26 Cancel.png" />
+    <Resource Include="Images\26 Data Configuration.png" />
+    <Resource Include="Images\26 Delete Database.png" />
+    <Resource Include="Images\26 Export.png" />
+    <Resource Include="Images\26 Import.png" />
+    <Resource Include="Images\26 Ok.png" />
+    <Resource Include="Images\26 Refresh.png" />
+    <Resource Include="Images\26 Settings.png" />
+    <Resource Include="Images\26 SQL.png" />
+    <Resource Include="Images\26 Synchronize.png" />
+    <Resource Include="Images\26 Trash.png" />
+    <Resource Include="Images\database.png" />
+    <Resource Include="Images\datetime.png" />
+    <Resource Include="Images\number.png" />
+    <Resource Include="Images\БизнесПроцесс.png" />
+    <Resource Include="Images\ВинниПух.png" />
+    <Resource Include="Images\ВложеннаяТаблица.png" />
+    <Resource Include="Images\ВнешнийИсточникДанных.png" />
+    <Resource Include="Images\Документ.png" />
+    <Resource Include="Images\ЖурналДокументов.png" />
+    <Resource Include="Images\Задача.png" />
+    <Resource Include="Images\Записать.png" />
+    <Resource Include="Images\Измерение.png" />
+    <Resource Include="Images\Константа.png" />
+    <Resource Include="Images\Остановить.png" />
+    <Resource Include="Images\Перечисление.png" />
+    <Resource Include="Images\ПланВидовРасчета.png" />
+    <Resource Include="Images\ПланВидовХарактеристик.png" />
+    <Resource Include="Images\ПланОбмена.png" />
+    <Resource Include="Images\ПланСчетов.png" />
+    <Resource Include="Images\ПрочиеПользовательскиеНастройки.png" />
+    <Resource Include="Images\РегистрБухгалтерии.png" />
+    <Resource Include="Images\РегистрНакопления.png" />
+    <Resource Include="Images\РегистрРасчета.png" />
+    <Resource Include="Images\РегистрСведений.png" />
+    <Resource Include="Images\РегламентноеЗадание.png" />
+    <Resource Include="Images\Реквизит.png" />
+    <Resource Include="Images\Ресурс.png" />
+    <Resource Include="Images\СоздатьЭлементСписка.png" />
+    <Resource Include="Images\Справочник.png" />
+    <Resource Include="Images\СтандартныйРеквизит.png" />
+    <Resource Include="Images\УстановитьИнтервал.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

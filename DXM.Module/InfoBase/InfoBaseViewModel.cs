@@ -6,6 +6,7 @@ using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.Commands;
 using Zhichkin.Metadata.Model;
+using Zhichkin.Metadata.UI;
 using Zhichkin.Shell;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Windows;

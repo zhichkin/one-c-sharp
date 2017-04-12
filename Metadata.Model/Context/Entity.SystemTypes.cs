@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.ComponentModel;
 using System.Collections.Generic;
 
@@ -142,7 +143,10 @@ namespace Zhichkin.Metadata.Model
         [Description("OBJREF structure: type code (Int32) + identity value (GUID).")]
         public static readonly Entity ObjRef;
 
-        # endregion
+        #endregion
+
+        private static readonly Dictionary<Entity, object> Defaults;
+        private static readonly Dictionary<Type, Entity> CLRTypesMapping;
 
         static Entity()
         {
@@ -156,10 +160,50 @@ namespace Zhichkin.Metadata.Model
             {
                 field = typeof(Entity).GetField(item.name, BindingFlags.Public | BindingFlags.Static);
                 if (field == null) continue;
-                
+
                 type = new Entity(item.key, PersistentState.Virtual);
                 field.SetValue(null, type);
             }
+
+            Defaults = new Dictionary<Entity, object>()
+            {
+                { Entity.Boolean, false },
+                { Entity.Char, char.MinValue },
+                { Entity.SByte, (sbyte)0 },
+                { Entity.Byte, (byte)0 },
+                { Entity.Int16, (short)0 },
+                { Entity.UInt16, (ushort)0 },
+                { Entity.Int32, 0 },
+                { Entity.UInt32, (uint)0 },
+                { Entity.Int64, (long)0 },
+                { Entity.UInt64, (ulong)0 },
+                { Entity.Single, (float)0 },
+                { Entity.Double, 0D },
+                { Entity.Decimal, (decimal)0 },
+                { Entity.DateTime, new DateTime(2015, 9, 24, 1, 30, 0) },
+                { Entity.GUID, Guid.Empty },
+                { Entity.String, string.Empty }
+            };
+
+            CLRTypesMapping = new Dictionary<Type, Entity>()
+            {
+                { typeof(bool), Entity.Boolean },
+                { typeof(char), Entity.Char },
+                { typeof(sbyte), Entity.SByte },
+                { typeof(byte), Entity.Byte },
+                { typeof(short), Entity.Int16 },
+                { typeof(ushort), Entity.UInt16 },
+                { typeof(int), Entity.Int32 },
+                { typeof(uint), Entity.UInt32 },
+                { typeof(long), Entity.Int64 },
+                { typeof(ulong), Entity.UInt64 },
+                { typeof(float), Entity.Single },
+                { typeof(double), Entity.Double },
+                { typeof(decimal), Entity.Decimal },
+                { typeof(DateTime), Entity.DateTime },
+                { typeof(Guid), Entity.GUID },
+                { typeof(string), Entity.String }
+            };
         }
     }
 }
