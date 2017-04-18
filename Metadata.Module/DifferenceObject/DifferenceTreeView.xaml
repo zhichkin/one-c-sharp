@@ -305,9 +305,9 @@
                             </TextBlock.Style>
                         </TextBlock>
 
-                        <TextBlock Text="{Binding Path=Difference}" VerticalAlignment="Center">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
+                        <ListBox ItemsSource="{Binding Path=NewValues}" VerticalAlignment="Center">
+                            <ListBox.Style>
+                                <Style TargetType="ListBox">
                                     <Setter Property="Visibility" Value="Hidden" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Difference}" Value="Update">
@@ -315,8 +315,17 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                            </ListBox.Style>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Path=Key}"/>
+                                        <TextBlock Text=" => "/>
+                                        <TextBlock Text="{Binding Path=Value}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
                     </StackPanel>
                 </HierarchicalDataTemplate>

@@ -27,6 +27,7 @@ namespace Zhichkin.Metadata.UI
         {
             get
             {
+                if (metadata == null) return null;
                 return this.GetItems();
             }
         }
@@ -73,7 +74,7 @@ namespace Zhichkin.Metadata.UI
         private ReferenceProxy GetReturnValue()
         {
             if (this.SelectedItem == null) return null;
-            return new ReferenceProxy(metadata, new Guid(this.SelectedItem._IDRRef));
+            return new ReferenceProxy(metadata, this.SelectedItem.Ссылка.Identity);
         }
         private List<dynamic> GetItems()
         {

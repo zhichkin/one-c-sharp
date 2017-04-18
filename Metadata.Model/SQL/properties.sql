@@ -7,6 +7,7 @@ CREATE TABLE [metadata].[properties](
 	[name] [nvarchar](128) NOT NULL,
 	[entity] [uniqueidentifier] NOT NULL,
 	[purpose] [int] NOT NULL,
+	[ordinal] [int] NOT NULL,
  CONSTRAINT [PK_properties] PRIMARY KEY CLUSTERED 
 (
 	[key] ASC

@@ -26,6 +26,7 @@
             <BitmapImage x:Key="Icon_Property" UriSource="..\Images\Реквизит.png"/>
             <BitmapImage x:Key="Icon_Dimension" UriSource="..\Images\Измерение.png"/>
             <BitmapImage x:Key="Icon_Measure" UriSource="..\Images\Ресурс.png"/>
+            <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -55,15 +56,6 @@
                             </Image.Style>
                         </Image>
                         <TextBlock Text="{Binding Path=Name}" Margin="2" VerticalAlignment="Center"/>
-                        <!--<StackPanel.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Обновить" Command="{Binding RefreshViewModel}">
-                                    <MenuItem.Icon>
-                                        <Image Source="{StaticResource Icon_26_Refresh}" />
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                            </ContextMenu>
-                        </StackPanel.ContextMenu>-->
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Namespace}" ItemsSource="{Binding Path=Entities}">
@@ -111,6 +103,15 @@
                         </MultiBinding>
                     </HierarchicalDataTemplate.ItemsSource>
                     <StackPanel Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Свойства" Click="ShowProperties_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
@@ -153,15 +154,19 @@
                             </Image.Style>
                         </Image>
                         <TextBlock Text="{Binding Path=Name}" Margin="2"/>
-                        <!--<StackPanel.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Открыть список" Command="{Binding OpenClassListCommand}"/>
-                            </ContextMenu>
-                        </StackPanel.ContextMenu>-->
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Property}" ItemsSource="{Binding Path=Fields}">
                     <StackPanel Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Свойства" Click="ShowProperties_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Zhichkin.Metadata.ViewModels;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Metadata.Views
 {
@@ -48,6 +49,15 @@ namespace Zhichkin.Metadata.Views
                 if (item.SelectedItem == null) return;
                 viewModel.TreeViewDoubleClickCommand.Execute(item.SelectedItem);
             }
+        }
+
+        private void ShowProperties_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.ShowProperties(menu.DataContext);
         }
     }
 }

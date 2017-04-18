@@ -5,6 +5,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Controls;
 using Zhichkin.Metadata.Model;
+using Syncfusion.UI.Xaml.Grid;
 
 namespace Zhichkin.Metadata.UI
 {
@@ -16,17 +17,12 @@ namespace Zhichkin.Metadata.UI
             InitializeComponent();
             this.DataContext = ViewModel = new SelectReferenceObjectDialogViewModel();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            this.BuildColumns();
         }
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            BuildColumns();
+            if (e.PropertyName == "Items") BuildColumns();
         }
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            ViewModel.SelectedItem = e.NewValue;
-        }
-        private void TreeView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (ViewModel.SelectedItem == null) return;
             ViewModel.Confirm();
@@ -38,15 +34,13 @@ namespace Zhichkin.Metadata.UI
             Entity entity = ViewModel.Metadata;
             foreach (Property property in entity.Properties)
             {
-                foreach (Field field in property.Fields)
+                GridTextColumn column = new GridTextColumn
                 {
-                    DataGridTextColumn column = new DataGridTextColumn
-                    {
-                        Header = field.Name,
-                        Binding = new Binding(field.Name)
-                    };
-                    MainDataGrid.Columns.Add(column);
-                }
+                    AllowEditing = false,
+                    HeaderText = property.Name,
+                    DisplayBinding = new Binding(property.Name)
+                };
+                MainDataGrid.Columns.Add(column);
             }
         }
     }

@@ -10,16 +10,17 @@ namespace Zhichkin.Metadata.Model
     {
         public sealed class DataMapper : IDataMapper
         {
-            private const string SelectCommandText = @"SELECT [entity], [name], [purpose], [version] FROM [metadata].[properties] WHERE [key] = @key";
+            # region " SQL "
+            private const string SelectCommandText = @"SELECT [entity], [name], [purpose], [version], [ordinal] FROM [metadata].[properties] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [metadata].[properties] ([key], [entity], [name], [purpose]) " +
+                @"INSERT [metadata].[properties] ([key], [entity], [name], [purpose], [ordinal]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @entity, @name, @purpose); " +
+                @"VALUES (@key, @entity, @name, @purpose, @ordinal); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [metadata].[properties] SET [entity] = @entity, [name] = @name, [purpose] = @purpose " +
+                @"UPDATE [metadata].[properties] SET [entity] = @entity, [name] = @name, [purpose] = @purpose, [ordinal] = @ordinal " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
@@ -32,7 +33,8 @@ namespace Zhichkin.Metadata.Model
                 @"DELETE [metadata].[properties] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
-
+            # endregion
+            
             private readonly string ConnectionString;
             private readonly IReferenceObjectFactory Factory;
 
@@ -72,6 +74,7 @@ namespace Zhichkin.Metadata.Model
                         e.name    = (string)reader[1];
                         e.purpose = (PropertyPurpose)reader[2];
                         e.version = (byte[])reader[3];
+                        e.ordinal = reader.GetInt32(4);
 
                         ok = true;
                     }
@@ -81,7 +84,6 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new ApplicationException("Error executing select command.");
             }
-
             void IDataMapper.Insert(IPersistent entity)
             {
                 Property e = (Property)entity;
@@ -118,6 +120,11 @@ namespace Zhichkin.Metadata.Model
                     parameter.Value = (int)e.purpose;
                     command.Parameters.Add(parameter);
 
+                    parameter = new SqlParameter("ordinal", SqlDbType.Int);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.ordinal;
+                    command.Parameters.Add(parameter);
+
                     SqlDataReader reader = command.ExecuteReader();
 
                     if (reader.Read())
@@ -130,7 +137,6 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new ApplicationException("Error executing insert command.");
             }
-
             void IDataMapper.Update(IPersistent entity)
             {
                 Property e = (Property)entity;
@@ -172,6 +178,11 @@ namespace Zhichkin.Metadata.Model
                     parameter.Value = (int)e.purpose;
                     command.Parameters.Add(parameter);
 
+                    parameter = new SqlParameter("ordinal", SqlDbType.Int);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.ordinal;
+                    command.Parameters.Add(parameter);
+
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -196,7 +207,6 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new OptimisticConcurrencyException(e.state.ToString());
             }
-
             void IDataMapper.Delete(IPersistent entity)
             {
                 Property e = (Property)entity;

@@ -112,6 +112,10 @@ namespace Zhichkin.Metadata.Model
             {
                 difference.NewValues.Add("Code", source.Code);
             }
+            if (target.Alias != source.Alias)
+            {
+                difference.NewValues.Add("Alias", source.Alias);
+            }
             if (difference.NewValues.Count > 0) SetUpdateDifferenceType(difference);
 
             CompareLists<Property>(difference, target.Properties.ToList(), source.Properties.ToList());
@@ -124,6 +128,10 @@ namespace Zhichkin.Metadata.Model
             if (target.Purpose != source.Purpose)
             {
                 difference.NewValues.Add("Purpose", source.Purpose);
+            }
+            if (target.Ordinal != source.Ordinal)
+            {
+                difference.NewValues.Add("Ordinal", source.Ordinal);
             }
             if (difference.NewValues.Count > 0) SetUpdateDifferenceType(difference);
 

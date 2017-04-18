@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Dynamic;
-using Zhichkin.ORM;
+using System.Text;
 
 namespace Zhichkin.Metadata.Model
 {
@@ -30,28 +28,34 @@ namespace Zhichkin.Metadata.Model
         public List<dynamic> Select()
         {
             if (!_isReadyForUse) throw new InvalidOperationException("Call \"Build\" method first!");
-            QueryService service = new QueryService(_metadata.InfoBase.ConnectionString);
-            return service.Execute(_select);
+
+            DataTranslator translator = new DataTranslator(_metadata);
+
+            List<dynamic> result = new List<dynamic>();
+            using (SqlConnection connection = new SqlConnection(_metadata.InfoBase.ConnectionString))
+            using (SqlCommand command = new SqlCommand(_select, connection))
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        dynamic item = new ExpandoObject();
+                        translator.Translate(reader, (IDictionary<string, object>)item);
+                        result.Add(item);
+                    }
+                }
+            }
+            return result;
         }
         public ISqlCommandBuilder Build()
         {
             if (_isReadyForUse) return this;
-            if (_metadata.Namespace.Name == "Справочник")
-            {
-                BuildCatalogSelectStatement();
-            }
-            else if (_metadata.Namespace.Name == "Документ")
-            {
-                BuildDocumentSelectStatement();
-            }
-            else
-            {
-                throw new NotSupportedException("Unknown metadata!");
-            }
+            BuildSelectStatement();
             _isReadyForUse = true;
             return this;
         }
-        private void BuildCatalogSelectStatement()
+        private void BuildSelectStatement()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT ");
@@ -76,11 +80,6 @@ namespace Zhichkin.Metadata.Model
             //    if (counter > 0) sb.AppendFormat("[{0}] =  AND ");
             //    sb.Append("[" + field.Name + "]");
             //}
-            _select = sb.ToString();
-        }
-        private void BuildDocumentSelectStatement()
-        {
-            StringBuilder sb = new StringBuilder();
             _select = sb.ToString();
         }
     }

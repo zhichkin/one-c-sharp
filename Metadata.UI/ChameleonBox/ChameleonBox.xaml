@@ -176,11 +176,16 @@
             </DataTemplate>
 
             <DataTemplate x:Key="ReferenceObjectEditableTemplate">
-                <TextBlock VerticalAlignment="Center" Margin="5">
-                    <Hyperlink Click="SelectChameleonValueHyperlink_Click">
-                        <TextBlock Text="Выберите значение" FontWeight="DemiBold" />
-                    </Hyperlink>
-                </TextBlock>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink Click="SelectChameleonValueHyperlink_Click">
+                            <TextBlock Text="Выберите значение" FontWeight="DemiBold" />
+                        </Hyperlink>
+                    </TextBlock>
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand"
+                           ToolTip="Очистить значение" Margin="10,0,0,0"
+                           MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
+                </StackPanel>
             </DataTemplate>
 
         </ResourceDictionary>

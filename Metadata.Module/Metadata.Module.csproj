@@ -57,6 +57,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +71,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="DifferenceObject\DifferenceTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Entity\EntityView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Property\PropertyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -95,9 +104,17 @@
       <DependentUpon>DifferenceTreeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DifferenceObject\DifferenceTreeViewModel.cs" />
+    <Compile Include="Entity\EntityView.xaml.cs">
+      <DependentUpon>EntityView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityViewModel.cs" />
     <Compile Include="ExceptionsHandling.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="Notifications\SQLConnectionDialogNotification.cs" />
+    <Compile Include="Property\PropertyView.xaml.cs">
+      <DependentUpon>PropertyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Property\PropertyViewModel.cs" />
     <Compile Include="Services\IMetadataAdapter.cs" />
     <Compile Include="Services\SQLMetadataAdapter.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
@@ -219,6 +236,7 @@
   <ItemGroup>
     <Resource Include="Images\СтандартныйРеквизит.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.Metadata.Module.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>

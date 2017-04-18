@@ -9,9 +9,8 @@ namespace Zhichkin.Metadata.Model
     public sealed partial class InfoBase : EntityBase
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(InfoBase));
-
         private static readonly IMetadataService service = new MetadataService();
-
+        
         public InfoBase() : base(_mapper) { }
         public InfoBase(Guid identity) : base(_mapper, identity) { }
         public InfoBase(Guid identity, PersistentState state) : base(_mapper, identity, state) { }
@@ -56,5 +55,6 @@ namespace Zhichkin.Metadata.Model
                 return helper.ToString();
             }
         }
+        public Entity GetEntity(int typeCode) { return DataMapper.GetEntity(this, typeCode); }
     }
 }

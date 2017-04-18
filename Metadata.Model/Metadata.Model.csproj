@@ -44,10 +44,12 @@
   <ItemGroup>
     <Compile Include="Context\SqlCommandBuilder.cs" />
     <Compile Include="Difference\DifferenceObject.cs" />
+    <Compile Include="FieldPurpose.cs" />
     <Compile Include="Services\DifferenceService.cs" />
     <Compile Include="Difference\DifferenceType.cs" />
     <Compile Include="Difference\IDifferenceObject.cs" />
     <Compile Include="Services\IBinaryFormatter.cs" />
+    <Compile Include="Services\IDataTranslator.cs" />
     <Compile Include="Services\IDifferenceService.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Entity.DataMapper.cs" />

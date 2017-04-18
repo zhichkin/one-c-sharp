@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-51077902743
+7-2041647074
 
-27-1763277743
-74314339209
-DifferenceObject\DifferenceTreeView.xaml;Views\MetadataMainMenu.xaml;Views\SQLServerConnectionView.xaml;Views\MetadataSettingsView.xaml;Views\MetadataTreeView.xaml;
+31-796749201
+75-152117425
+DifferenceObject\DifferenceTreeView.xaml;Entity\EntityView.xaml;Property\PropertyView.xaml;Views\MetadataMainMenu.xaml;Views\SQLServerConnectionView.xaml;Views\MetadataSettingsView.xaml;Views\MetadataTreeView.xaml;
 
 True
 

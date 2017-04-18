@@ -1,8 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Xml;
 using System.Linq;
 using Zhichkin.Metadata.Model;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Configuration;
+using Zhichkin.Metadata.Notifications;
 
 namespace Zhichkin.Metadata.Services
 {
@@ -191,12 +195,14 @@ namespace Zhichkin.Metadata.Services
         {
             string code = reader.GetAttribute("code");
             string name = reader.GetAttribute("name");
-            
+            string alias = reader.GetAttribute("alias");
+
             if (string.IsNullOrEmpty(code) && string.IsNullOrEmpty(name)) return; // system table
             
             if (!string.IsNullOrEmpty(code)) // reference type
             {
                 context.Entity = context.TypeCodes[int.Parse(code)];
+                context.Entity.Alias = (alias == null ? string.Empty : alias);
                 context.Namespace = context.Entity.Namespace;
                 return;
             }
@@ -208,6 +214,7 @@ namespace Zhichkin.Metadata.Services
                 context.Entity = new Entity()
                 {
                     Name = name,
+                    Alias = (alias == null ? string.Empty : alias),
                     Namespace = context.Namespace
                 };
                 context.Namespace.Entities.Add(context.Entity);
@@ -217,6 +224,7 @@ namespace Zhichkin.Metadata.Services
                 Entity entity = new Entity()
                 {
                     Name = name,
+                    Alias = (alias == null ? string.Empty : alias),
                     Namespace = context.Namespace,
                     Owner = context.Entity
                 };
@@ -229,12 +237,14 @@ namespace Zhichkin.Metadata.Services
             if (context.Entity == null) return; // system table
             
             string name = reader.GetAttribute("name");
+            string ordinal = reader.GetAttribute("ordinal");
             string typeCodes = reader.GetAttribute("type");
             string purpose = reader.GetAttribute("purpose");
-
+            
             context.Property = new Property()
             {
                 Name = name,
+                Ordinal = int.Parse(ordinal),
                 Entity = context.Entity
             };
             context.Entity.Properties.Add(context.Property);
@@ -346,6 +356,40 @@ namespace Zhichkin.Metadata.Services
 
             context.Field.Property = property;
             property.Fields.Add(context.Field);
+        }
+
+        public InfoBase GetMetadata(string ProgID, SQLConnectionDialogNotification settings, string tempDirectory)
+        {
+            Type comType = Type.GetTypeFromProgID(ProgID, true); // V83.COMConnector
+            dynamic connector = Activator.CreateInstance(comType);
+            string connectionString = GetConnectionString(settings);
+            dynamic session = connector.Connect(connectionString);
+
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigurationWriter.epf");
+            string temp = Path.Combine(tempDirectory, "ConfigurationWriter.epf");
+            File.Copy(path, temp, true);
+            dynamic processor = session.ExternalDataProcessors.Create(temp);
+            string output = Path.Combine(tempDirectory, "configuration.xml");
+
+            processor.Write(output);
+            File.Delete(temp);
+
+            Marshal.ReleaseComObject(processor); processor = null;
+            Marshal.ReleaseComObject(session); session = null;
+            Marshal.ReleaseComObject(connector); connector = null;
+
+            InfoBase infoBase = new InfoBase();
+            this.Load(output, infoBase);
+            File.Delete(output);
+            return infoBase;
+        }
+        private string GetConnectionString(SQLConnectionDialogNotification settings)
+        {
+            return string.Format("Srvr=\"{0}\";Ref=\"{1}\";Usr=\"{2}\";Pwd=\"{3}\";",
+                settings.Server,
+                settings.Database,
+                settings.UserName,
+                settings.Password);
         }
     }
 }

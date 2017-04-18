@@ -133,7 +133,16 @@ namespace Zhichkin.Metadata.UI
             };
             this.SelectDataTypeDialog.Raise(confirmation, response =>
             {
-                if (response.Confirmed) this.OnDataTypeSelected(box, response.Content as Entity);
+                if (response.Confirmed)
+                {
+                    this.OnDataTypeSelected(box, response.Content as Entity);
+                }
+                else
+                {
+                    DataGridCell cell = box.GetParent<DataGridCell>();
+                    if (cell == null) return;
+                    cell.IsEditing = false;
+                }
             });
         }
         private void OnDataTypeSelected(ChameleonBox target, Entity type)
@@ -146,6 +155,10 @@ namespace Zhichkin.Metadata.UI
             }
             target.ChameleonValue = Entity.GetDefaultValue(type);
             UpdateSourceObjectValue(target);
+
+            DataGridCell cell = target.GetParent<DataGridCell>();
+            if (cell == null) return;
+            cell.IsEditing = false;
         }
         // DateTime
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -310,7 +323,16 @@ namespace Zhichkin.Metadata.UI
             Confirmation confirmation = new Confirmation() { Title = string.Empty, Content = type };
             this.SelectReferenceObjectDialog.Raise(confirmation, response =>
             {
-                if (response.Confirmed) this.OnReferenceObjectSelected(box, response.Content as ReferenceProxy);
+                if (response.Confirmed)
+                {
+                    this.OnReferenceObjectSelected(box, response.Content as ReferenceProxy);
+                }
+                else
+                {
+                    DataGridCell cell = box.GetParent<DataGridCell>();
+                    if (cell == null) return;
+                    cell.IsEditing = false;
+                }
             });
         }
         private void OnReferenceObjectSelected(ChameleonBox target, ReferenceProxy entity)
@@ -318,6 +340,10 @@ namespace Zhichkin.Metadata.UI
             target.ChameleonValue = entity;
             target.ChameleonType = entity.Type;
             UpdateSourceObjectValue(target);
+            
+            DataGridCell cell = target.GetParent<DataGridCell>();
+            if (cell == null) return;
+            cell.IsEditing = false;
         }
     }
 }

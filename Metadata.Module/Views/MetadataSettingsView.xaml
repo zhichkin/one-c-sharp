@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Настройки модуля Z-Metadata" FontWeight="DemiBold" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -37,5 +38,24 @@
             </TextBox.InputBindings>
         </TextBox>
         <Button Grid.Row="1" Grid.Column="2" Content="Проверить" Width="80" Margin="5,10,10,10" Command="{Binding CheckConnectionCommand}" />
+
+        <!-- -->
+        
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Служебный каталог:" FontWeight="DemiBold" Margin="10,10,5,10"
+                   VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MetadataCatalogSetting, Mode=TwoWay}"
+                 Margin="5,10,5,10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <TextBox.ToolTip>
+                <TextBlock>
+                    Служебный каталог для файлов Z-Metadata.
+                </TextBlock>
+            </TextBox.ToolTip>
+            <TextBox.InputBindings>
+                <KeyBinding Gesture="Enter"
+                            Command="{Binding UpdateTextBoxSourceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+
     </Grid>
 </UserControl>

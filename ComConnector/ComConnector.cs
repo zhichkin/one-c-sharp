@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+
 namespace Zhichkin
 {
     // Строка подключения к ИБ 1С (файловый вариант) "File=""C:\1CBase""";Usr=""login"";Pwd=""password"";";

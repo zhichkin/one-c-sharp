@@ -253,7 +253,52 @@ namespace Zhichkin.Metadata.Model
 
                 if (!ok) throw new ApplicationException("Error executing delete command.");
             }
-            
+
+            public static Entity GetEntity(InfoBase infoBase, int typeCode)
+            {
+                Entity entity = null;
+
+                IPersistentContext context = MetadataPersistentContext.Current;
+
+                using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandType = CommandType.Text;
+
+                    command.Parameters.AddWithValue("InfoBase", infoBase.identity);
+                    command.Parameters.AddWithValue("TypeCode", typeCode);
+
+                    command.CommandText =
+                        @"WITH
+                            namespaces ([owner], [key]) AS
+                            (
+	                            SELECT [owner], [key] FROM [metadata].[namespaces] WHERE [owner] = @InfoBase
+	                            UNION ALL
+	                            SELECT n.[owner], n.[key] FROM [metadata].[namespaces] AS n
+	                            INNER JOIN
+		                            namespaces AS anchor
+	                            ON anchor.[key] = n.[owner]
+                            )
+                        SELECT
+	                        e.[key]
+                        FROM
+	                        [metadata].[entities] AS e
+	                        INNER JOIN namespaces AS n
+	                        ON e.[namespace] = n.[key]
+                        WHERE
+	                        e.[code] = @TypeCode;";
+                    
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            entity = context.Factory.New<Entity>(reader.GetGuid(0));
+                        }
+                    }
+                }
+                return entity;
+            }
         }
     }
 }

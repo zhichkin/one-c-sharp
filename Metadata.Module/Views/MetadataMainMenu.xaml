@@ -16,6 +16,8 @@
             <BitmapImage x:Key="Icon_26_Kill" UriSource="..\Images\26 Cancel.png"/>
             <BitmapImage x:Key="Icon_26_Synchronize" UriSource="..\Images\26 Synchronize.png"/>
             <BitmapImage x:Key="Icon_26_Settings" UriSource="..\Images\26 Settings.png"/>
+            <BitmapImage x:Key="Icon_26_OpenSave" UriSource="..\Images\26 Accept Database.png"/>
+            <BitmapImage x:Key="Icon_26_SetupDatabase" UriSource="..\Images\26 Data Configuration.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -33,7 +35,16 @@
 
     <Grid>
         <Menu Margin="10,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <MenuItem Header="Метаданные">
+            <MenuItem>
+                
+                <MenuItem.Header>
+                    <TextBlock Text="Метаданные" VerticalAlignment="Center"/>
+                </MenuItem.Header>
+                
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource Icon_26_SetupDatabase}" />
+                </MenuItem.Icon>
+                
                 <MenuItem Header="Открыть" Command="{Binding OpenMetadataCommand}" CommandParameter="Open">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Add}" />
@@ -53,6 +64,11 @@
                 <MenuItem Header="Обновить" Command="{Binding UpdateMetadataCommand}" CommandParameter="Update">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_Synchronize}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Добавить" Command="{Binding AddMetadataCommand}" CommandParameter="Open">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource Icon_26_OpenSave}" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>

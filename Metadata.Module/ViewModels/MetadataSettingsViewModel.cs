@@ -18,12 +18,17 @@ namespace Zhichkin.Metadata.ViewModels
     {
         private readonly string moduleName = MetadataPersistentContext.Current.Name;
         private const string CONST_ModuleDialogsTitle = "Z-Metadata";
+        private const string CONST_MetadataCatalogSettingName = "MetadataCatalog";
+
+        private string _MetadataConnectionString = string.Empty;
+        private string _MetadataCatalogSetting = string.Empty;
 
         public MetadataSettingsViewModel()
         {
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
             this.CheckConnectionCommand = new DelegateCommand(this.OnCheckConnection);
             _MetadataConnectionString = ConfigurationManager.ConnectionStrings[moduleName].ConnectionString;
+            _MetadataCatalogSetting = ConfigurationManager.AppSettings[CONST_MetadataCatalogSettingName];
         }
         public ICommand CheckConnectionCommand { get; private set; }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
@@ -36,8 +41,7 @@ namespace Zhichkin.Metadata.ViewModels
             if (binding == null) return;
             binding.UpdateSource();
         }
-        
-        private string _MetadataConnectionString = string.Empty;
+                
         public string MetadataConnectionString
         {
             get { return _MetadataConnectionString; }
@@ -120,6 +124,46 @@ namespace Zhichkin.Metadata.ViewModels
                 error = error.InnerException;
             }
             return errorText;
+        }
+
+        public string MetadataCatalogSetting
+        {
+            get { return _MetadataCatalogSetting; }
+            set
+            {
+                try
+                {
+                    UpdateMetadataCatalogSetting(value);
+                    _MetadataCatalogSetting = value;
+                    OnPropertyChanged("MetadataCatalogSetting");
+                }
+                catch (Exception ex)
+                {
+                    Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+                }
+            }
+        }
+        private void UpdateMetadataCatalogSetting(string catalog)
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            AppSettingsSection settings = config.AppSettings;
+            KeyValueConfigurationElement setting = settings.Settings[CONST_MetadataCatalogSettingName];
+            if (setting == null)
+            {
+                settings.Settings.Add(CONST_MetadataCatalogSettingName, catalog);
+            }
+            else
+            {
+                setting.Value = catalog;
+            }
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
+
+            Z.Notify(new Notification
+            {
+                Title = CONST_ModuleDialogsTitle,
+                Content = string.Format("Настройка служебного каталога для модуля \"{0}\" выполнена.", moduleName)
+            });
         }
     }
 }

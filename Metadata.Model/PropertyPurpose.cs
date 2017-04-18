@@ -9,6 +9,8 @@
         /// <summary>The property is being used as a dimension.</summary>
         Dimension,
         /// <summary>The property is being used as a measure.</summary>
-        Measure
+        Measure,
+        /// <summary>This property is used to reference parent (adjacency list).</summary>
+        Hierarchy
     }
 }

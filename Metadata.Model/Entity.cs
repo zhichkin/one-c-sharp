@@ -39,6 +39,7 @@ namespace Zhichkin.Metadata.Model
         private Namespace _namespace = null; // Namespace
         private Entity owner = null; // Nesting, aggregation
         private Entity parent = null; // Inheritance
+        private string alias = string.Empty; // presentation in UI
 
         ///<summary>Type code of the entity</summary>
         public int Code { set { Set<int>(value, ref code); } get { return Get<int>(ref code); } }
@@ -47,6 +48,7 @@ namespace Zhichkin.Metadata.Model
         public Entity Owner { set { Set<Entity>(value, ref owner); } get { return Get<Entity>(ref owner); } }
         ///<summary>Inheritance: base entity reference</summary>
         public Entity Parent { set { Set<Entity>(value, ref parent); } get { return Get<Entity>(ref parent); } }
+        public string Alias { set { Set<string>(value, ref alias); } get { return Get<string>(ref alias); } }
         public string FullName { get { return string.Format("{0}.{1}", this.Namespace.Name, this.Name); } }
 
         public Table MainTable

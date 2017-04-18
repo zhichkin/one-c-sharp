@@ -10,17 +10,18 @@ namespace Zhichkin.Metadata.Model
     {
         public sealed class DataMapper : IDataMapper
         {
-            private const string SelectCommandText = @"SELECT [namespace], [owner], [parent], [name], [code], [version] FROM [metadata].[entities] WHERE [key] = @key";
+            #region " SQL "
+            private const string SelectCommandText = @"SELECT [namespace], [owner], [parent], [name], [code], [version], [alias] FROM [metadata].[entities] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [metadata].[entities] ([key], [namespace], [owner], [parent], [name], [code]) " +
+                @"INSERT [metadata].[entities] ([key], [namespace], [owner], [parent], [name], [code], [alias]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @namespace, @owner, @parent, @name, @code); " +
+                @"VALUES (@key, @namespace, @owner, @parent, @name, @code, @alias); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
                 @"UPDATE [metadata].[entities] SET [namespace] = @namespace, [owner] = @owner, [parent] = @parent, " +
-                @"[name] = @name, [code] = @code " +
+                @"[name] = @name, [code] = @code, [alias] = @alias " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
@@ -33,6 +34,7 @@ namespace Zhichkin.Metadata.Model
                 @"DELETE [metadata].[entities] WHERE [key] = @key " +
                 @"   AND ([version] = @version OR @version = 0x00000000); " + // taking into account deletion of the entities having virtual state
                 @"SELECT @@ROWCOUNT;";
+            #endregion
 
             private readonly string ConnectionString;
             private readonly IReferenceObjectFactory Factory;
@@ -76,6 +78,7 @@ namespace Zhichkin.Metadata.Model
                         e.name = (string)reader[3];
                         e.code = (int)reader[4];
                         e.version = (byte[])reader[5];
+                        e.alias = reader.GetString(6);
 
                         ok = true;
                     }
@@ -129,6 +132,11 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("code", SqlDbType.Int);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.code;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("alias", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.alias == null) ? string.Empty : e.alias;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -192,6 +200,11 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("code", SqlDbType.Int);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.code;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("alias", SqlDbType.NVarChar);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = (e.alias == null) ? string.Empty : e.alias;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -289,6 +302,7 @@ namespace Zhichkin.Metadata.Model
                                 entity.name = (string)reader[3];
                                 entity.code = (int)reader[4];
                                 entity.version = (byte[])reader[5];
+                                entity.alias = reader.GetString(6);
                                 entity.State = PersistentState.Original;
                             }
                         }

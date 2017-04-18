@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Win32;
 using System.Windows.Input;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Prism.Mvvm;
@@ -17,6 +16,7 @@ using System.Data.SqlClient;
 using Microsoft.Practices.Prism.Regions;
 using Zhichkin.Metadata.Commands;
 using Zhichkin.Metadata.Module;
+using System.Windows.Forms;
 
 namespace Zhichkin.Metadata.ViewModels
 {
@@ -43,6 +43,7 @@ namespace Zhichkin.Metadata.ViewModels
             KillMetadataCommand = new DelegateCommand(this.OnKillMetadata);
             UpdateMetadataCommand = new UpdateMetadataCommand<object>(this.OnUpdateMetadata, this.CanExecuteCommand);
             ShowSettingsCommand = new ShowSettingsCommand<object>(this.OnShowSettings, this.CanExecuteCommand);
+            AddMetadataCommand = new DelegateCommand(this.OnAddMetadata);
         }
 
         private MetadataTreeViewModel MetadataTreeViewModel
@@ -62,6 +63,7 @@ namespace Zhichkin.Metadata.ViewModels
         public ICommand KillMetadataCommand { get; private set; }
         public ICommand UpdateMetadataCommand { get; private set; }
         public ICommand ShowSettingsCommand { get; private set; }
+        public ICommand AddMetadataCommand { get; private set; }
 
         public InteractionRequest<SQLConnectionDialogNotification> SQLConnectionPopupRequest { get; private set; }
 
@@ -158,7 +160,7 @@ namespace Zhichkin.Metadata.ViewModels
             dialog.Filter = "Файлы XML(*.xml)|*.xml" + "|Все файлы (*.*)|*.* ";
             dialog.CheckFileExists = true;
             dialog.Multiselect = false;
-            if (dialog.ShowDialog() != true) return;
+            if (dialog.ShowDialog() != DialogResult.OK) return;
             if (MetadataTreeViewModel == null) return;
             try
             {
@@ -219,7 +221,7 @@ namespace Zhichkin.Metadata.ViewModels
             dialog.Filter = "Файлы XML(*.xml)|*.xml" + "|Все файлы (*.*)|*.* ";
             dialog.CheckFileExists = true;
             dialog.Multiselect = false;
-            if (dialog.ShowDialog() != true) return;
+            if (dialog.ShowDialog() != DialogResult.OK) return;
             if (MetadataTreeViewModel == null) return;
             try
             {
@@ -283,6 +285,70 @@ namespace Zhichkin.Metadata.ViewModels
             infoBase.UserName = helper.UserID;
             infoBase.Password = helper.Password;
             (new SQLMetadataAdapter()).Load(helper.ToString(), infoBase);
+        }
+
+        private void OnAddMetadata()
+        {
+            try
+            {
+                AddMetadata();
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = GetErrorText(ex) });
+            }
+        }
+        private void AddMetadata()
+        {
+            SQLConnectionDialogNotification appInfo = GetConnectionInfo();
+            if (appInfo == null) return;
+            SQLConnectionDialogNotification sqlInfo = GetConnectionInfo();
+            if (sqlInfo == null) return;
+            string temp = GetCatalogPath();
+            if (string.IsNullOrEmpty(temp)) return;
+
+            XMLMetadataAdapter adapter = new XMLMetadataAdapter();
+            string progID = "V83.COMConnector";
+            InfoBase infoBase = adapter.GetMetadata(progID, appInfo, temp);
+            ImportSQLMetadata(infoBase, sqlInfo);
+
+            MetadataTreeViewModel.InfoBases.Add(infoBase);
+
+            MetadataService service = new MetadataService();
+            service.Save(infoBase);
+            infoBase.OnPropertyChanged("State");
+        }
+        private SQLConnectionDialogNotification GetConnectionInfo()
+        {
+            SQLConnectionDialogNotification notification = new SQLConnectionDialogNotification()
+            {
+                Title = CONST_ModuleDialogsTitle,
+                Server = "",
+                Database = "",
+                UserName = "",
+                Password = ""
+            };
+            this.SQLConnectionPopupRequest.Raise(notification, response =>
+            {
+                if (response.Confirmed) notification = response;
+                else notification = null;
+            });
+            return notification;
+        }
+        private string GetFilePath()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Файлы XML(*.xml)|*.xml" + "|Все файлы (*.*)|*.* ";
+            dialog.CheckFileExists = true;
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog() != DialogResult.OK) return string.Empty;
+            return dialog.FileName;
+        }
+        private string GetCatalogPath()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() != DialogResult.OK) return string.Empty;
+            return dialog.SelectedPath;
         }
     }
 }

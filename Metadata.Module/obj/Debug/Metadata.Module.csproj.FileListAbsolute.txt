@@ -95,3 +95,7 @@ C:\Users\User\Desktop\Z\debug\Zhichkin.Metadata.Module.dll
 C:\Users\User\Desktop\Z\debug\Zhichkin.Metadata.Module.pdb
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\DifferenceObject\DifferenceTreeView.baml
 C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\DifferenceObject\DifferenceTreeView.g.cs
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Entity\EntityView.baml
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Entity\EntityView.g.cs
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Property\PropertyView.baml
+C:\Users\User\Desktop\Z\Metadata.Module\obj\Debug\Property\PropertyView.g.cs
