@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using Zhichkin.Metadata.Model;
 using Zhichkin.ORM;
+using System.Threading.Tasks;
 
 namespace Zhichkin.Metadata.UI
 {
@@ -15,6 +16,7 @@ namespace Zhichkin.Metadata.UI
     {
         private Entity metadata;
         private Confirmation notification;
+        private ISqlCommandBuilder commander;
 
         public SelectReferenceObjectDialogViewModel()
         {
@@ -64,6 +66,8 @@ namespace Zhichkin.Metadata.UI
                 this.notification = value as Confirmation;
                 if (this.notification == null) return;
                 metadata = this.notification.Content as Entity;
+                commander = new SqlCommandBuilder(metadata);
+                commander.Build();
                 this.OnPropertyChanged("Name");
                 this.OnPropertyChanged("Items");
             }
@@ -78,8 +82,16 @@ namespace Zhichkin.Metadata.UI
         }
         private List<dynamic> GetItems()
         {
-            ISqlCommandBuilder helper = new SqlCommandBuilder(metadata);
-            return helper.Build().Select();
+            return commander.Select();
         }
+        public async Task<List<dynamic>> GetItemsAsync(int pageNumber, int pageSize)
+        {
+            return commander.Select(pageNumber, pageSize);
+        }
+        public int GetItemsCount()
+        {
+            return commander.Count();
+        }
+
     }
 }

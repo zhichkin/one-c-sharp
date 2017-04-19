@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sf="clr-namespace:Syncfusion.UI.Xaml.Grid;assembly=Syncfusion.SfGrid.WPF"
+             xmlns:pg="clr-namespace:Syncfusion.UI.Xaml.Controls.DataPager;assembly=Syncfusion.SfGrid.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+    </UserControl.Resources>
+    
     <Grid MinWidth="300" MinHeight="400" MaxHeight="400">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -15,6 +20,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Path=Name}"
@@ -22,12 +28,19 @@
 
         <sf:SfDataGrid Grid.Row="1" Grid.Column="0" Margin="10,5,10,5" MaxWidth="1024"
                        x:Name="MainDataGrid"
-                       ItemsSource="{Binding Items}"
+                       ItemsSource="{Binding ElementName=MyDataPager, Path=PagedSource}"
                        SelectedItem="{Binding SelectedItem}"
                        AutoGenerateColumns="False"
                        MouseDoubleClick="DataGrid_MouseDoubleClick"/>
 
-        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" 
+        <pg:SfDataPager Grid.Row="2" Grid.Column="0"
+                        x:Name="MyDataPager"
+                        PageCount="100"
+                        PageSize="100"
+                        UseOnDemandPaging="True"
+                        OnDemandLoading="MyDataPager_OnDemandLoading"/>
+
+        <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" 
                     Margin="0,0,10,10" VerticalAlignment="Center" HorizontalAlignment="Right">
             <Button Content="Выбрать" Margin="0,0,5,0" Width="80" Height="25" Command="{Binding SelectCommand}" />
             <Button Content="Отменить" Margin="5,0,0,0" Width="80" Height="25" Command="{Binding CancelCommand}" />
