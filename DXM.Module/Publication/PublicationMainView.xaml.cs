@@ -2,9 +2,9 @@
 
 namespace Zhichkin.DXM.Module
 {
-    public partial class RoutingPropertiesView : UserControl
+    public partial class PublicationMainView : UserControl
     {
-        public RoutingPropertiesView(RoutingPropertiesViewModel viewModel)
+        public PublicationMainView(PublicationMainViewModel viewModel)
         {
             InitializeComponent();
             this.DataContext = viewModel;

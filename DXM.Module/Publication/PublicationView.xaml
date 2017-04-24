@@ -73,7 +73,7 @@
                         <TextBlock Margin="5" Text="Состав плана обмена" Style="{StaticResource SelectedTabTextStyle}" />
                     </StackPanel>
                 </TabItem.Header>
-                <ContentControl Content="{Binding Path=ArticlesListView}" Margin="10" />
+                <ContentControl Content="{Binding Path=PublicationMainView}" Margin="10" />
             </TabItem>
 
             <TabItem>
@@ -83,19 +83,6 @@
                     </StackPanel>
                 </TabItem.Header>
                 <TextBlock Text="Узлы плана обмена (подписчики на эту публикацию)" Margin="10"/>
-            </TabItem>
-            
-            <TabItem>
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal" ToolTip="Настройки фильтрации и маршрутизации">
-                        <TextBlock Margin="5" Style="{StaticResource SelectedTabTextStyle}" TextAlignment="Center">
-                            Настройки фильтрации
-                            <LineBreak/>
-                            и маршрутизации
-                        </TextBlock>
-                    </StackPanel>
-                </TabItem.Header>
-                <ContentControl Content="{Binding Path=PublicationPropertiesView}" Margin="10" />
             </TabItem>
 
         </TabControl>

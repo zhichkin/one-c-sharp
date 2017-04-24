@@ -1,37 +1,27 @@
-﻿using System;
-using System.IO;
+﻿using System.Collections.Generic;
 using Zhichkin.Metadata.Model;
 using Zhichkin.ORM;
 
 namespace Zhichkin.DXM.Model
 {
-    public enum PublicationPropertyPurpose
+    public sealed partial class ArticleFilter : ValueObject
     {
-        /// <summary>
-        /// Property is used to filter change tracking data for registration (publication level)
-        /// </summary>
-        Filtration,
-        /// <summary>
-        /// Property is used to route data messages containing change tracking data (subscriber level)
-        /// </summary>
-        Routing
-    }
+        private static readonly IDataMapper _mapper = DXMContext.Current.GetDataMapper(typeof(ArticleFilter));
 
-    public sealed partial class PublicationProperty : EntityBase
-    {
-        private static readonly IDataMapper _mapper = DXMContext.Current.GetDataMapper(typeof(PublicationProperty));
+        public static List<ArticleFilter> Select(Article article) { return DataMapper.Select(article); }
 
-        private Publication _owner = null;
+        private Article _article = null; private Article _article_old;
+        private Property _property = null; private Property _property_old;
+        private FilterOperator _operator = FilterOperator.Equal;
         private Entity _type = Entity.Empty;
         private object _value = null;
-        private PublicationPropertyPurpose _purpose = PublicationPropertyPurpose.Filtration;
 
-        public PublicationProperty() : base(_mapper) { }
-        public PublicationProperty(Guid identity) : base(_mapper, identity) { }
-        public PublicationProperty(Guid identity, PersistentState state) : base(_mapper, identity, state) { }
+        public ArticleFilter() : base(_mapper) { }
+        public ArticleFilter(PersistentState state) : base(_mapper, state) { }
 
-        public Publication Owner { set { Set<Publication>(value, ref _owner); } get { return Get<Publication>(ref _owner); } }
-        public PublicationPropertyPurpose Purpose { set { Set<PublicationPropertyPurpose>(value, ref _purpose); } get { return Get<PublicationPropertyPurpose>(ref _purpose); } }
+        public Article Article { set { Set<Article>(value, ref _article); } get { return Get<Article>(ref _article); } }
+        public Property Property { set { Set<Property>(value, ref _property); } get { return Get<Property>(ref _property); } }
+        public FilterOperator Operator { set { Set<FilterOperator>(value, ref _operator); } get { return Get<FilterOperator>(ref _operator); } }
         public Entity Type
         {
             get { return Get<Entity>(ref _type); }
@@ -70,6 +60,12 @@ namespace Zhichkin.DXM.Model
                 }
                 Set<object>(value, ref _value);
             }
+        }
+
+        protected override void UpdateKeyValues()
+        {
+            _article_old = _article;
+            _property_old = _property;
         }
     }
 }

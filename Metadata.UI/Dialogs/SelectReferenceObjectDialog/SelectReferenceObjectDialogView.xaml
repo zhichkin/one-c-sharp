@@ -5,13 +5,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sf="clr-namespace:Syncfusion.UI.Xaml.Grid;assembly=Syncfusion.SfGrid.WPF"
              xmlns:pg="clr-namespace:Syncfusion.UI.Xaml.Controls.DataPager;assembly=Syncfusion.SfGrid.WPF"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding SelectParametersDialog}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:SelectParametersDialogView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
     </UserControl.Resources>
-    
+
     <Grid MinWidth="300" MinHeight="400" MaxHeight="400">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -34,6 +49,7 @@
                        MouseDoubleClick="DataGrid_MouseDoubleClick"/>
 
         <pg:SfDataPager Grid.Row="2" Grid.Column="0"
+                        HorizontalAlignment="Center"
                         x:Name="MyDataPager"
                         PageCount="100"
                         PageSize="100"
@@ -43,6 +59,7 @@
         <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" 
                     Margin="0,0,10,10" VerticalAlignment="Center" HorizontalAlignment="Right">
             <Button Content="Выбрать" Margin="0,0,5,0" Width="80" Height="25" Command="{Binding SelectCommand}" />
+            <Button Content="Отбор" Margin="5,0,5,0" Width="80" Height="25" Command="{Binding FilterCommand}" />
             <Button Content="Отменить" Margin="5,0,0,0" Width="80" Height="25" Command="{Binding CancelCommand}" />
         </StackPanel>
         

@@ -3,12 +3,9 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Mvvm;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-using System.Windows.Controls;
-using Zhichkin.Metadata.Model;
-using Zhichkin.ORM;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Metadata.UI
 {
@@ -17,12 +14,17 @@ namespace Zhichkin.Metadata.UI
         private Entity metadata;
         private Confirmation notification;
         private ISqlCommandBuilder commander;
+        private List<FilterParameter> _filter;
 
         public SelectReferenceObjectDialogViewModel()
         {
             this.SelectCommand = new DelegateCommand(this.Confirm);
             this.CancelCommand = new DelegateCommand(this.Cancel);
+            this.FilterCommand = new DelegateCommand(this.Filter);
+            this.SelectParametersDialog = new InteractionRequest<Confirmation>();
         }
+        public ICommand FilterCommand { get; private set; }
+        public InteractionRequest<Confirmation> SelectParametersDialog { get; private set; }
         public Entity Metadata { get { return metadata; } }
         public string Name { get { return (metadata == null) ? string.Empty : metadata.FullName; } }
         public List<dynamic> Items
@@ -86,12 +88,28 @@ namespace Zhichkin.Metadata.UI
         }
         public async Task<List<dynamic>> GetItemsAsync(int pageNumber, int pageSize)
         {
-            return commander.Select(pageNumber, pageSize);
+            return commander.Select(pageNumber, pageSize, _filter);
         }
         public int GetItemsCount()
         {
             return commander.Count();
         }
 
+        private void Filter()
+        {
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Параметры отбора",
+                Content = metadata
+            };
+            this.SelectParametersDialog.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    _filter = response.Content as List<FilterParameter>;
+                    this.OnPropertyChanged("Filter");
+                }
+            });
+        }
     }
 }

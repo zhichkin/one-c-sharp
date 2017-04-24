@@ -98,6 +98,11 @@
     <Compile Include="ChameleonBox\ChameleonBox.xaml.cs">
       <DependentUpon>ChameleonBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\SelectParametersDialog\FilterParameterViewModel.cs" />
+    <Compile Include="Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml.cs">
+      <DependentUpon>SelectParametersDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SelectParametersDialog\SelectParametersDialogViewModel.cs" />
     <Compile Include="Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogViewModel.cs" />
     <Compile Include="Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml.cs">
       <DependentUpon>SelectReferenceObjectDialogView.xaml</DependentUpon>
@@ -129,6 +134,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ChameleonBox\ChameleonBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

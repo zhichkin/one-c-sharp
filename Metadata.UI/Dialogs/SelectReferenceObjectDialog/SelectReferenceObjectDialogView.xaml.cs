@@ -1,15 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using Syncfusion.Data;
+using Syncfusion.UI.Xaml.Controls.DataPager;
+using Syncfusion.UI.Xaml.Grid;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Controls;
 using Zhichkin.Metadata.Model;
-using Syncfusion.Data;
-using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.UI.Xaml.Controls.DataPager;
 
 namespace Zhichkin.Metadata.UI
 {
@@ -25,6 +22,7 @@ namespace Zhichkin.Metadata.UI
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Items") BuildColumns();
+            if (e.PropertyName == "Filter") ViewModel_FilterChanged();
         }
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -56,10 +54,15 @@ namespace Zhichkin.Metadata.UI
 
             int pageNumber = e.StartIndex / MyDataPager.PageSize + 1;
 
-            List<dynamic> list = await ViewModel.GetItemsAsync(pageNumber, e.PageSize);
+            List<dynamic> list = await ViewModel.GetItemsAsync(pageNumber, MyDataPager.PageSize);
             if (list.Count == 0) return;
-            MyDataPager.LoadDynamicItems(e.StartIndex, list);
-            (MyDataPager.PagedSource as PagedCollectionView).ResetCache(); // ResetCacheForPage(pageIndex)
+            MyDataPager.LoadDynamicItems(0, list);
+            (MyDataPager.PagedSource as PagedCollectionView).ResetCache();
+        }
+        private void ViewModel_FilterChanged()
+        {
+            MyDataPager_OnDemandLoading(MyDataPager, new OnDemandLoadingEventArgs());
+            MyDataPager.MoveToPage(0);
         }
     }
 }

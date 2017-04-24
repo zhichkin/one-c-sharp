@@ -36,6 +36,9 @@
                                         <DataTrigger Binding="{Binding Name}" Value="TypeSystem">
                                             <Setter Property="Source" Value="pack://application:,,,/Images/ПрочиеПользовательскиеНастройки.png"/>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="Перечисление">
+                                            <Setter Property="Source" Value="pack://application:,,,/Images/Перечисление.png"/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Name}" Value="Справочник">
                                             <Setter Property="Source" Value="pack://application:,,,/Images/Справочник.png"/>
                                         </DataTrigger>
@@ -55,6 +58,9 @@
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Namespace.Name}" Value="Перечисление">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Namespace.Name}" Value="Справочник">
                                             <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
                                         </DataTrigger>

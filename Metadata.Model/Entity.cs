@@ -114,7 +114,7 @@ namespace Zhichkin.Metadata.Model
             else if (this == Entity.Decimal) return typeof(decimal);
             else if (this == Entity.DateTime) return typeof(DateTime);
             else if (this == Entity.String) return typeof(string);
-            else if (this.TypeCode > 0) return typeof(object);
+            else if (this.Code > 0) return typeof(object);
             return null;
         }
     }

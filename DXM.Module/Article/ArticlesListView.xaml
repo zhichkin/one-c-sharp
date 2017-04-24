@@ -15,6 +15,7 @@
         <ResourceDictionary>
             <BitmapImage x:Key="Icon_Add" UriSource="..\Images\26 Add.png"/>
             <BitmapImage x:Key="Icon_Cancel" UriSource="..\Images\26 Cancel.png"/>
+            <BitmapImage x:Key="Icon_Enumeration" UriSource="..\Images\Перечисление.png"/>
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
             <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
             <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
@@ -30,32 +31,25 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-            <TextBlock Text="Состав плана обмена (статьи публикации)" FontWeight="DemiBold" VerticalAlignment="Center" />
-            <Button ToolTip="Редактировать список" Margin="10,0,0,0"
-                    Command="{Binding SelectArticlesCommand}">
-                <Image Source="{StaticResource Icon_Add}" />
-            </Button>
-        </StackPanel>
-
         <TreeView Grid.Row="1" Grid.Column="0" Margin="0,5,0,0"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  x:Name="ArticlesTreeView"
+                  MouseMove="ArticlesTreeView_MouseMove"
+                  PreviewMouseLeftButtonDown="ArticlesTreeView_PreviewMouseLeftButtonDown"
+                  SelectedItemChanged="ArticlesTreeView_SelectedItemChanged">
 
             <TreeView.Resources>
-                <DataTemplate DataType="{x:Type dxm:Article}">
+                <HierarchicalDataTemplate DataType="{x:Type dxm:Article}" ItemsSource="{Binding Entity.NestedEntities}">
                     <StackPanel Orientation="Horizontal">
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Entity.Owner.Namespace.Name}" Value="Справочник">
-                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Entity.Owner.Namespace.Name}" Value="Документ">
-                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="Перечисление">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="Справочник">
                                             <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
@@ -63,11 +57,36 @@
                                         <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="Документ">
                                             <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Entity.Owner.Namespace.Name}" Value="Справочник">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Entity.Owner.Namespace.Name}" Value="Документ">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="РегистрСведений">
                                             <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Entity.Namespace.Name}" Value="РегистрНакопления">
                                             <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Path=Name}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type md:Entity}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="2">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Owner.Namespace.Name}" Value="Справочник">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Owner.Namespace.Name}" Value="Документ">
+                                            <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

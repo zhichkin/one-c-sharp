@@ -40,12 +40,12 @@ namespace Zhichkin.Metadata.Model
             return this.Name.CompareTo(other.Name);
         }
 
-        public IDictionary<string, CustomSetting> CustomSettings
-        {
-            get
-            {
-                return CustomSetting.Select(this);
-            }
-        }
+        //public IDictionary<string, CustomSetting> CustomSettings
+        //{
+        //    get
+        //    {
+        //        return CustomSetting.Select(this);
+        //    }
+        //}
     }
 }

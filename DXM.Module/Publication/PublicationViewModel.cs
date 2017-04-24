@@ -20,9 +20,8 @@ namespace Zhichkin.DXM.Module
         private readonly IRegionManager _regionManager;
 
         private string _Name = string.Empty;
-        private ArticlesListView _ArticlesListView;
-        private PublicationPropertiesView _PublicationPropertiesView;
-
+        private PublicationMainView _PublicationMainView;
+        
         public PublicationViewModel(Publication model, IUnityContainer container, IRegionManager regionManager)
         {
             if (model == null) throw new ArgumentNullException("model");
@@ -37,14 +36,10 @@ namespace Zhichkin.DXM.Module
         {
             this.UpdateTextBoxSourceCommand = new DelegateCommand<object>(this.OnUpdateTextBoxSource);
             this.GoBackToInfoBaseViewCommand = new DelegateCommand(this.GoBackToInfoBaseView);
-            _ArticlesListView = (ArticlesListView)_container.Resolve(
-                typeof(ArticlesListView),
+            _PublicationMainView = (PublicationMainView)_container.Resolve(
+                typeof(PublicationMainView),
                 new ParameterOverride("publication", _publication)
-                    .OnType(typeof(ArticlesListViewModel)));
-            _PublicationPropertiesView = (PublicationPropertiesView)_container.Resolve(
-                typeof(PublicationPropertiesView),
-                new ParameterOverride("publication", _publication)
-                    .OnType(typeof(PublicationPropertiesViewModel)));
+                    .OnType(typeof(PublicationMainViewModel)));
         }
         public ICommand UpdateTextBoxSourceCommand { get; private set; }
         public ICommand GoBackToInfoBaseViewCommand { get; private set; }
@@ -78,7 +73,7 @@ namespace Zhichkin.DXM.Module
             }
         }
         public string InfoBaseName { get { return _publication.Publisher.Name; } }
-        public ArticlesListView ArticlesListView { get { return _ArticlesListView; } }
+        public PublicationMainView PublicationMainView { get { return _PublicationMainView; } }
         private void GoBackToInfoBaseView()
         {
             Z.ClearRightRegion(_regionManager);
@@ -91,6 +86,6 @@ namespace Zhichkin.DXM.Module
             if (view == null) return;
             rightRegion.Add(view);
         }
-        public PublicationPropertiesView PublicationPropertiesView { get { return _PublicationPropertiesView; } }
+        
     }
 }

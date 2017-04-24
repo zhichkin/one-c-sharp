@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-4192026270
+5-484287454
 
-171325732302
+20-730797415
 74-1197839793
-Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;
+Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;
 
-True
+False
 

@@ -1,12 +1,11 @@
 ﻿using System.Windows.Controls;
-using Zhichkin.Shell;
 
 namespace Zhichkin.DXM.Module
 {
-    public partial class FiltrationPropertiesView : UserControl
+    public partial class ArticleFiltersListView : UserControl
     {
-        private readonly FiltrationPropertiesViewModel _viewModel;
-        public FiltrationPropertiesView(FiltrationPropertiesViewModel viewModel)
+        private readonly ArticleFiltersListViewModel _viewModel;
+        public ArticleFiltersListView(ArticleFiltersListViewModel viewModel)
         {
             InitializeComponent();
             this.DataContext = _viewModel = viewModel;

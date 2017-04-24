@@ -42,6 +42,8 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\FilterOperator.cs" />
+    <Compile Include="Context\FilterParameter.cs" />
     <Compile Include="Context\SqlCommandBuilder.cs" />
     <Compile Include="Difference\DifferenceObject.cs" />
     <Compile Include="FieldPurpose.cs" />

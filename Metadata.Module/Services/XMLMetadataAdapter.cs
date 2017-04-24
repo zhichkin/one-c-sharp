@@ -68,7 +68,7 @@ namespace Zhichkin.Metadata.Services
                         }
                         else if (reader.Name == "Properties")
                         {
-                            context.Entity.Properties.Clear();
+                            //context.Entity.Properties.Clear();
                         }
                         else if (reader.Name == "Property")
                         {
@@ -89,6 +89,10 @@ namespace Zhichkin.Metadata.Services
                         else if (reader.Name == "Field")
                         {
                             Read_Field_Element(reader, context);
+                        }
+                        else if (reader.Name == "Value")
+                        {
+                            Read_Value_Element(reader, context);
                         }
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
@@ -357,7 +361,23 @@ namespace Zhichkin.Metadata.Services
             context.Field.Property = property;
             property.Fields.Add(context.Field);
         }
+        private void Read_Value_Element(XmlReader reader, AdapterContext context)
+        {
+            string order = reader.GetAttribute("order");
+            string name = reader.GetAttribute("name");
 
+            if (context.Entity == null) return;
+
+            Property property = new Property()
+            {
+                Name = name,
+                Ordinal = int.Parse(order),
+                Entity = context.Entity,
+                Purpose = PropertyPurpose.Property
+            };
+            property.Relations.Add(new Relation() { Entity = context.Entity, Property = property });
+            context.Entity.Properties.Add(property);
+        }
         public InfoBase GetMetadata(string ProgID, SQLConnectionDialogNotification settings, string tempDirectory)
         {
             Type comType = Type.GetTypeFromProgID(ProgID, true); // V83.COMConnector

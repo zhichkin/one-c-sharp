@@ -37,7 +37,8 @@ namespace Zhichkin.Metadata.UI
 
                 foreach (Namespace ns in infoBase.Namespaces)
                 {
-                    if (ns.Name == "Справочник" ||
+                    if (ns.Name == "Перечисление" ||
+                        ns.Name == "Справочник" ||
                         ns.Name == "Документ")
                     {
                         NamespaceViewModel facade = new NamespaceViewModel(ns);

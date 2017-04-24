@@ -42,6 +42,10 @@ namespace Zhichkin.Metadata.Model
                         sql = string.Format("SELECT [_Date_Time] FROM {0} WHERE [_IDRRef] = @key", _table_name);
                     }
                 }
+                else if (_owner.Namespace.Name == "Перечисление")
+                {
+                    sql = string.Format("SELECT [_EnumOrder] FROM {0} WHERE [_IDRRef] = @key", _table_name);
+                }
                 else
                 {
                     e._presentation = e.identity.ToString();
@@ -59,7 +63,21 @@ namespace Zhichkin.Metadata.Model
                         {
                             if (reader.Read())
                             {
-                                if (_owner.Namespace.Name == "Справочник")
+                                if (_owner.Namespace.Name == "Перечисление")
+                                {
+                                    e._presentation = e.identity.ToString();
+                                    int order = (int)reader.GetDecimal(0);
+                                    foreach (Property property in _owner.Properties)
+                                    {
+                                        int test = property.Ordinal - 1;
+                                        if (property.Fields.Count == 0 && test == order)
+                                        {
+                                            e._presentation = property.Name;
+                                            continue;
+                                        }
+                                    }
+                                }
+                                else if (_owner.Namespace.Name == "Справочник")
                                 {
                                     e._presentation = reader.GetString(0);
                                 }

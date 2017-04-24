@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="Zhichkin.Metadata.UI.SelectParametersDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="0" Grid.Column="0" Margin="10,5,10,5"
+                  ItemsSource="{Binding Parameters}"
+                  AutoGenerateColumns="False" HeadersVisibility="None"
+                  CanUserResizeColumns="True" CanUserAddRows="False">
+            <DataGrid.Columns>
+
+                <!-- UseMe -->
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                                <CheckBox IsChecked="{Binding UseMe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Name -->
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="{Binding Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Filter -->
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                                <ComboBox Width="130"
+                                          ItemsSource="{Binding FilterOperators}"
+                                          SelectedItem="{Binding SelectedFilterOperator,
+                                          UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <!-- Value -->
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ui:ChameleonBox ChameleonValue="{Binding Value}"
+                                             ChameleonType="{Binding Type}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ui:ChameleonBox MinWidth="150"
+                                             ChameleonValue="{Binding Value}"
+                                             ChameleonType="{Binding Type}"
+                                             InfoBase="{Binding InfoBase}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" 
+                    Margin="10,5,10,10" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <Button Content="Применить" Margin="0,0,5,0" Width="80" Height="25" Command="{Binding SelectCommand}"/>
+            <Button Content="Отменить" Margin="5,0,0,0" Width="80" Height="25" Command="{Binding CancelCommand}"/>
+        </StackPanel>
+        
+    </Grid>
+    
+</UserControl>

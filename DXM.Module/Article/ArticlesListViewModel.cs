@@ -76,6 +76,18 @@ namespace Zhichkin.DXM.Module
         public ObservableCollection<Article> AccumRegisters { get { return _AccumRegisters; } }
         public void OnDrop(Entity entity)
         {
+            if (entity == null) return;
+
+            if (entity.Owner != null)
+            {
+                Z.Notify(new Notification()
+                {
+                    Title = Utilities.PopupDialogsTitle,
+                    Content = "Подчинённый объект может быть добавлен только вместе с его родителем!"
+                });
+                return;
+            }
+
             if (_publication.Publisher != entity.InfoBase)
             {
                 Z.Notify(new Notification()
@@ -85,6 +97,7 @@ namespace Zhichkin.DXM.Module
                 });
                 return;
             }
+
             Article article = _publisherService.GetArticle(_publication, entity);
             if (article != null)
             {
@@ -95,6 +108,7 @@ namespace Zhichkin.DXM.Module
                     });
                 return;
             }
+
             article = _publisherService.Create(_publication, entity);
             if (article.Entity.Namespace.Name == "Справочник")
             {

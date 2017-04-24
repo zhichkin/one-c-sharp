@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Zhichkin.DXM.Module.FiltrationPropertiesView"
+﻿<UserControl x:Class="Zhichkin.DXM.Module.ArticleFiltersListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -29,49 +29,57 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="Фильтрация" FontWeight="DemiBold" FontSize="16" VerticalAlignment="Center" />
-            <Image Source="{StaticResource Icon_Add}" Cursor="Hand"  Margin="5,0,0,0"
-                   ToolTip="Добавить новое свойство фильтрации">
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,5">
+            <TextBlock Text="Фильтрация" FontWeight="DemiBold" FontSize="14" VerticalAlignment="Center" />
+            <Image Source="{StaticResource Icon_Add}" Cursor="Hand" Height="20" Margin="5,0,0,0"
+                   ToolTip="Добавить новый фильтр">
                 <Image.InputBindings>
-                    <MouseBinding Gesture="LeftClick" Command="{Binding CreatePropertyCommand}" />
+                    <MouseBinding Gesture="LeftClick" Command="{Binding CreateFilterCommand}" />
                 </Image.InputBindings>
             </Image>
         </StackPanel>
 
         <DataGrid Grid.Row="1" Grid.Column="0"
-                  ItemsSource="{Binding Properties}" SelectedItem="{Binding SelectedItem}"
-                  AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False">
+                  ItemsSource="{Binding Filters}" SelectedItem="{Binding SelectedItem}"
+                  AutoGenerateColumns="False" 
+                  CanUserResizeColumns="True" CanUserAddRows="False">
             <DataGrid.Columns>
                 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="Свойство" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                            <TextBlock Text="Свойство" FontWeight="DemiBold" VerticalAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Name}" Margin="5" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Path=Property.Name}" Margin="5" VerticalAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding Name, Mode=TwoWay}" VerticalAlignment="Center">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Gesture="Enter"
-                                                Command="{Binding DataContext.SetNamePropertyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
-                                </TextBox.InputBindings>
-                            </TextBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                
+
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="Значение" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                            <TextBlock Text="Условие" FontWeight="DemiBold" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                                <ComboBox Width="130"
+                                          ItemsSource="{Binding DataContext.FilterOperators,
+                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                          SelectedItem="{Binding Operator, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Значение" FontWeight="DemiBold" VerticalAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -84,7 +92,7 @@
                         <DataTemplate>
                             <ui:ChameleonBox ChameleonValue="{Binding Value}"
                                              ChameleonType="{Binding Type}"
-                                             InfoBase="{Binding Owner.Publisher}"/>
+                                             InfoBase="{Binding Article.Publication.Publisher}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
@@ -94,10 +102,10 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource Icon_Trash}" Cursor="Hand"
-                                       ToolTip="Удалить свойство фильтрации">
+                                       Height="20" ToolTip="Удалить свойство фильтрации">
                                     <Image.InputBindings>
                                         <MouseBinding Gesture="LeftClick"
-                                                      Command="{Binding DataContext.DeletePropertyCommand,
+                                                      Command="{Binding DataContext.DeleteFilterCommand,
                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                                       CommandParameter="{Binding Path=SelectedItem,
                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"/>

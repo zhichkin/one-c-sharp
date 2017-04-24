@@ -16,5 +16,5 @@ DEBUG;TRACE
 75-152117425
 DifferenceObject\DifferenceTreeView.xaml;Entity\EntityView.xaml;Property\PropertyView.xaml;Views\MetadataMainMenu.xaml;Views\SQLServerConnectionView.xaml;Views\MetadataSettingsView.xaml;Views\MetadataTreeView.xaml;
 
-True
+False
 

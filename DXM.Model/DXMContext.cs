@@ -31,12 +31,14 @@ namespace Zhichkin.DXM.Model
 
         private static void InitializeTypeCodes()
         {
+            // ReferenceObject
             typeCodes.Add(1, typeof(Publication));
             typeCodes.Add(2, typeof(Article));
-            typeCodes.Add(3, typeof(PublicationSubscriber));
-            typeCodes.Add(4, typeof(Subscription));
-            typeCodes.Add(5, typeof(Mapping));
-            typeCodes.Add(6, typeof(PublicationProperty));
+            typeCodes.Add(3, typeof(Subscription));
+            typeCodes.Add(4, typeof(Mapping));
+            // ValueObject
+            typeCodes.Add(-101, typeof(PublicationSubscriber));
+            typeCodes.Add(-102, typeof(ArticleFilter));
         }
 
         private static void InitializeDataMappers()
@@ -46,7 +48,7 @@ namespace Zhichkin.DXM.Model
             mappers.Add(typeof(PublicationSubscriber), new PublicationSubscriber.DataMapper(connectionString, factory));
             mappers.Add(typeof(Subscription), new Subscription.DataMapper(connectionString, factory));
             mappers.Add(typeof(Mapping), new Mapping.DataMapper(connectionString, factory));
-            mappers.Add(typeof(PublicationProperty), new PublicationProperty.DataMapper(connectionString, factory));
+            mappers.Add(typeof(ArticleFilter), new ArticleFilter.DataMapper(connectionString, factory));
         }
 
         public string Name { get { return name; } }

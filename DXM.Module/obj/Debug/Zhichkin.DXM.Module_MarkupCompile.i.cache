@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-8-1186078765
+7-643869360
 
-25584702020
+24908418195
 791124297654
-Article\ArticlesListView.xaml;InfoBase\InfoBaseView.xaml;Publication\RoutingPropertiesView.xaml;Publication\FiltrationPropertiesView.xaml;Publication\PublicationPropertiesView.xaml;Publication\PublicationView.xaml;Subscriber\SubscribersListView.xaml;Publication\PublicationsListView.xaml;
+Article\ArticlesListView.xaml;InfoBase\InfoBaseView.xaml;Article\ArticleFiltersListView.xaml;Publication\PublicationMainView.xaml;Publication\PublicationView.xaml;Subscriber\SubscribersListView.xaml;Publication\PublicationsListView.xaml;
 
 True
 

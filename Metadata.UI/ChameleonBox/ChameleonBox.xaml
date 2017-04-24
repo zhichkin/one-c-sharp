@@ -81,7 +81,7 @@
                             </Style>
                         </DatePicker.Resources>
                     </DatePicker>
-                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Height="20" Cursor="Hand" ToolTip="Очистить значение"
                            MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
                 </StackPanel>
             </DataTemplate>
@@ -100,7 +100,7 @@
                     <CheckBox IsChecked="{Binding ChameleonValue, Mode=OneWay,
                         RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
                               VerticalContentAlignment="Center" Checked="Boolean_CheckBox_Checked"/>
-                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Height="20" Cursor="Hand" ToolTip="Очистить значение"
                            MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp" Margin="20,0,0,0"/>
                 </StackPanel>
             </DataTemplate>
@@ -121,7 +121,7 @@
                         RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
                                TextAlignment="Right" VerticalContentAlignment="Center"
                              MinWidth="60" KeyDown="Int32_TextBox_KeyDown"/>
-                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Height="20" Cursor="Hand" ToolTip="Очистить значение"
                            MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
                 </StackPanel>
             </DataTemplate>
@@ -142,7 +142,7 @@
                         RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
                                TextAlignment="Right" VerticalContentAlignment="Center"
                              MinWidth="60" KeyDown="Decimal_TextBox_KeyDown"/>
-                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Height="20" Cursor="Hand" ToolTip="Очистить значение"
                            MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
                 </StackPanel>
             </DataTemplate>
@@ -161,7 +161,7 @@
                     <TextBox Text="{Binding ChameleonValue, Mode=OneWay,
                         RelativeSource={RelativeSource AncestorType={x:Type ui:ChameleonBox}}}"
                                MinWidth="100" VerticalContentAlignment="Center" KeyDown="String_TextBox_KeyDown"/>
-                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand" ToolTip="Очистить значение"
+                    <Image Source="pack://application:,,,/Images/26 Cancel.png" Height="20" Cursor="Hand" ToolTip="Очистить значение"
                            MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
                 </StackPanel>
             </DataTemplate>
@@ -183,7 +183,7 @@
                         </Hyperlink>
                     </TextBlock>
                     <Image Source="pack://application:,,,/Images/26 Cancel.png" Cursor="Hand"
-                           ToolTip="Очистить значение" Margin="10,0,0,0"
+                           ToolTip="Очистить значение" Margin="10,0,0,0" Height="20"
                            MouseLeftButtonUp="ClearChameleonValue_MouseLeftButtonUp"/>
                 </StackPanel>
             </DataTemplate>

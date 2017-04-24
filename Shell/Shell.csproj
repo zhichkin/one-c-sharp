@@ -221,6 +221,11 @@
     <Resource Include="Images\СтандартныйРеквизит.png" />
     <Resource Include="Images\УстановитьИнтервал.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Filter-26.png" />
+    <Resource Include="Images\FilterClear-26.png" />
+    <Resource Include="Images\FilterFilled-26.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
