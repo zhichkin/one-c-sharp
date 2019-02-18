@@ -46,3 +46,6 @@ C:\GitHub\Z\debug\Zhichkin.Hermes.UI.dll
 C:\GitHub\Z\debug\Zhichkin.Hermes.UI.pdb
 C:\GitHub\Z\Hermes.UI\obj\Debug\Query\QueryView.g.cs
 C:\GitHub\Z\Hermes.UI\obj\Debug\Query\QueryView.baml
+C:\GitHub\Z\Hermes.UI\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\GitHub\Z\Hermes.UI\obj\Debug\CaseWhenThen\CaseWhenThenView.g.cs
+C:\GitHub\Z\Hermes.UI\obj\Debug\CaseWhenThen\CaseWhenThenView.baml

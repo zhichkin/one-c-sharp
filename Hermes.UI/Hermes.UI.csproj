@@ -66,10 +66,19 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CaseWhenThen\CaseWhenThenView.xaml.cs">
+      <DependentUpon>CaseWhenThenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CaseWhenThen\CaseWhenThenViewModel.cs" />
+    <Compile Include="CaseWhenThen\FunctionTemplateSelector.cs" />
     <Compile Include="Query\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Query\QueryViewModel.cs" />
+    <Page Include="CaseWhenThen\CaseWhenThenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainMenu\MainMenuView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

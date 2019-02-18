@@ -3,10 +3,164 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Zhichkin.Hermes.UI"
+             xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock Text="{Binding Name}"/>
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <!--Visibility="{Binding IsExpanded, ElementName=Expander_SELECT, Converter={StaticResource BooleanToVisibilityConverter}}-->
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Expander Grid.Row="0" Name="Expander_SELECT" ExpandDirection="Down" IsExpanded="True">
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="SELECT" FontWeight="Bold"/>
+                    <TextBox Text="{Binding Name}" Margin="5,0,0,0">
+                        <TextBox.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Expander_SELECT, Path=IsExpanded}" Value="True">
+                                        <Setter Property="TextBlock.Visibility" Value="Hidden" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Expander_SELECT, Path=IsExpanded}" Value="False">
+                                        <Setter Property="TextBlock.Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </StackPanel>
+            </Expander.Header>
+            <StackPanel Orientation="Vertical" Margin="30,0,0,0">
+                <DataGrid ItemsSource="{Binding Fields}" Height="Auto" SelectedItem="{Binding SelectedItem}"
+                          AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False" HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn IsReadOnly="True">
+                                <DataGridTemplateColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="Alias" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.HeaderTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Alias}" Margin="5" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn IsReadOnly="True">
+                                <DataGridTemplateColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="Name" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.HeaderTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Name}" Margin="5" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn IsReadOnly="True">
+                                <DataGridTemplateColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="Use" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.HeaderTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding IsUsed, Mode=TwoWay}" Margin="5" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn IsReadOnly="True">
+                                <DataGridTemplateColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="Function" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.HeaderTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ui:CaseWhenThenView />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>                
+            </StackPanel>
+        </Expander>
+
+        <Expander Grid.Row="1" Name="Expander_FROM" ExpandDirection="Down" IsExpanded="True">
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="FROM" FontWeight="Bold"/>
+                </StackPanel>
+            </Expander.Header>
+            <StackPanel Orientation="Vertical" Margin="30,0,0,0">
+                <TextBlock Text="{Binding Name}"/>
+            </StackPanel>
+        </Expander>
+
+        <Expander Grid.Row="2" Name="Expander_WHERE" ExpandDirection="Down" IsExpanded="True">
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="WHERE" FontWeight="Bold"/>
+                </StackPanel>
+            </Expander.Header>
+            <TreeView ItemsSource="{Binding Path=WhereClause}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type ui:BinaryGroup}" ItemsSource="{Binding Path=Children}">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding Path=ExpressionType}" Margin="2" VerticalAlignment="Center"/>
+                            <DataGrid ItemsSource="{Binding Path=Conditions}" Height="Auto" SelectedItem="{Binding SelectedItem}"
+                                      AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False" HeadersVisibility="None">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=LeftExpression}" Margin="5" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=ExpressionType}" Margin="5" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=RightExpression}" Margin="5" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <!--<DataTemplate DataType="{x:Type local:ConditionalExpression}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=LeftExpression}" Margin="2" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=ExpressionType}" Margin="2" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=RightExpression}" Margin="2" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>-->
+                </TreeView.Resources>
+            </TreeView>
+        </Expander>
+
     </Grid>
+    </ScrollViewer>
 </UserControl>

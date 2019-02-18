@@ -109,4 +109,3 @@ C:\GitHub\Z\Shell\obj\Debug\Shell.csproj.GenerateResource.Cache
 C:\GitHub\Z\Shell\obj\Debug\Shell.csproj.CoreCompileInputs.cache
 C:\GitHub\Z\Shell\obj\Debug\z.exe
 C:\GitHub\Z\Shell\obj\Debug\z.pdb
-C:\GitHub\Z\Shell\obj\Debug\Shell.csprojResolveAssemblyReference.cache
