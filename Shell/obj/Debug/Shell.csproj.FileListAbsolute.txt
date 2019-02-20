@@ -95,3 +95,17 @@ C:\Users\User\Desktop\Z\Shell\obj\Debug\Zhichkin.Shell.Properties.Resources.reso
 C:\Users\User\Desktop\Z\Shell\obj\Debug\Shell.csproj.GenerateResource.Cache
 C:\Users\User\Desktop\Z\Shell\obj\Debug\z.exe
 C:\Users\User\Desktop\Z\Shell\obj\Debug\z.pdb
+C:\GitHub\Z\debug\z.exe.config
+C:\GitHub\Z\debug\z.exe
+C:\GitHub\Z\debug\z.pdb
+C:\GitHub\Z\Shell\obj\Debug\Shell.baml
+C:\GitHub\Z\Shell\obj\Debug\App.baml
+C:\GitHub\Z\Shell\obj\Debug\Shell.g.cs
+C:\GitHub\Z\Shell\obj\Debug\App.g.cs
+C:\GitHub\Z\Shell\obj\Debug\z_MarkupCompile.cache
+C:\GitHub\Z\Shell\obj\Debug\z.g.resources
+C:\GitHub\Z\Shell\obj\Debug\Zhichkin.Shell.Properties.Resources.resources
+C:\GitHub\Z\Shell\obj\Debug\Shell.csproj.GenerateResource.Cache
+C:\GitHub\Z\Shell\obj\Debug\Shell.csproj.CoreCompileInputs.cache
+C:\GitHub\Z\Shell\obj\Debug\z.exe
+C:\GitHub\Z\Shell\obj\Debug\z.pdb

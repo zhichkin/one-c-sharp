@@ -15,3 +15,9 @@ C:\Users\User\Desktop\Z\debug\Zhichkin.Metadata.Model.pdb
 C:\Users\User\Desktop\Z\Metadata.Model\obj\Debug\Metadata.Model.csprojResolveAssemblyReference.cache
 C:\Users\User\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.dll
 C:\Users\User\Desktop\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.pdb
+C:\GitHub\Z\debug\Zhichkin.Metadata.Model.dll
+C:\GitHub\Z\debug\Zhichkin.Metadata.Model.pdb
+C:\GitHub\Z\Metadata.Model\obj\Debug\Metadata.Model.csprojResolveAssemblyReference.cache
+C:\GitHub\Z\Metadata.Model\obj\Debug\Metadata.Model.csproj.CoreCompileInputs.cache
+C:\GitHub\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.dll
+C:\GitHub\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.pdb
