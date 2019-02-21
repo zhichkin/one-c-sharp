@@ -9,7 +9,10 @@
     <Grid>
         <Menu Margin="5,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <MenuItem Header="Hermes">
-                <MenuItem Header="Add new query" Command="{Binding AddNewQueryCommand}"/>
+                <MenuItem Header="Add new QUERY" Command="{Binding AddNewQueryCommand}"/>
+                <MenuItem Header="Add new SELECT statement" Command="{Binding AddNewSelectStatementCommand}"/>
+                <MenuItem Header="Add TABLE to select statement" Command="{Binding AddTableToSelectStatementCommand}"/>
+                <MenuItem Header="Change FROM orientation" Command="{Binding ChangeFromOrientationCommand}"/>
             </MenuItem>
         </Menu>
     </Grid>

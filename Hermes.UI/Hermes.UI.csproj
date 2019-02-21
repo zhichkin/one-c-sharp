@@ -71,10 +71,16 @@
     </Compile>
     <Compile Include="CaseWhenThen\CaseWhenThenViewModel.cs" />
     <Compile Include="CaseWhenThen\FunctionTemplateSelector.cs" />
+    <Compile Include="HermesModel.cs" />
+    <Compile Include="OrientationEnumConverter.cs" />
     <Compile Include="Query\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Query\QueryViewModel.cs" />
+    <Compile Include="Select\SelectView.xaml.cs">
+      <DependentUpon>SelectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Select\SelectViewModel.cs" />
     <Page Include="CaseWhenThen\CaseWhenThenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -88,6 +94,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Query\QueryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Select\SelectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
