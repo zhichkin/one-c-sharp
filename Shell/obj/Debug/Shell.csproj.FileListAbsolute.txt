@@ -128,7 +128,6 @@ C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\Shell.csprojAssemblyReference.cac
 C:\Zhichkin\Z\debug\z.exe.config
 C:\Zhichkin\Z\debug\z.exe
 C:\Zhichkin\Z\debug\z.pdb
-C:\Zhichkin\Z\Shell\obj\Debug\Shell.csprojAssemblyReference.cache
 C:\Zhichkin\Z\Shell\obj\Debug\Shell.baml
 C:\Zhichkin\Z\Shell\obj\Debug\App.baml
 C:\Zhichkin\Z\Shell\obj\Debug\Shell.g.cs

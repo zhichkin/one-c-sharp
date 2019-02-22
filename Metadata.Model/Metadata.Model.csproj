@@ -92,16 +92,16 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="SQL\create_database.sql" />
-    <Content Include="SQL\settings.sql" />
-    <Content Include="SQL\schema_metadata.sql" />
-    <Content Include="SQL\entities.sql" />
-    <Content Include="SQL\fields.sql" />
-    <Content Include="SQL\infobases.sql" />
-    <Content Include="SQL\namespaces.sql" />
-    <Content Include="SQL\properties.sql" />
-    <Content Include="SQL\relations.sql" />
-    <Content Include="SQL\tables.sql" />
+    <Content Include="SQL\00 - create_database.sql" />
+    <Content Include="SQL\09 - settings.sql" />
+    <Content Include="SQL\01 - schema_metadata.sql" />
+    <Content Include="SQL\04 - entities.sql" />
+    <Content Include="SQL\08 - fields.sql" />
+    <Content Include="SQL\02 - infobases.sql" />
+    <Content Include="SQL\03 - namespaces.sql" />
+    <Content Include="SQL\05 - properties.sql" />
+    <Content Include="SQL\06 - relations.sql" />
+    <Content Include="SQL\07 - tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

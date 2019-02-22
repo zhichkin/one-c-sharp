@@ -17,6 +17,7 @@ namespace Zhichkin.Hermes.UI
         }
         public SelectViewModel() { this.InitializeTestData(); }
         private bool _IsFromVertical = true;
+        private string _FromClauseDescription = "Tabular data source names ...";
         public bool IsFromVertical
         {
             get { return _IsFromVertical; }
@@ -24,6 +25,15 @@ namespace Zhichkin.Hermes.UI
             {
                 _IsFromVertical = value;
                 this.OnPropertyChanged("IsFromVertical");
+            }
+        }
+        public string FromClauseDescription
+        {
+            get { return _FromClauseDescription; }
+            private set
+            {
+                _FromClauseDescription = value;
+                this.OnPropertyChanged("FromClauseDescription");
             }
         }
         public ObservableCollection<TableField> Fields { get; private set; }
