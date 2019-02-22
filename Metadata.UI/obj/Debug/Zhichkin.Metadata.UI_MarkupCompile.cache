@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\
+C:\Zhichkin\Z\Metadata.UI\obj\Debug\
 Zhichkin.Metadata.UI
 none
 false
@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 5-484287454
 
-20-730797415
-74192816754
+16-684147720
+74-1206978150
 Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;
 
-True
+False
 

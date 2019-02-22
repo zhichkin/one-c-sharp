@@ -1,0 +1,7 @@
+C:\Zhichkin\Z\debug\Zhichkin.Metadata.Model.dll
+C:\Zhichkin\Z\debug\Zhichkin.Metadata.Model.pdb
+C:\Zhichkin\Z\Metadata.Model\obj\Debug\Metadata.Model.csprojAssemblyReference.cache
+C:\Zhichkin\Z\Metadata.Model\obj\Debug\Metadata.Model.csproj.CoreCompileInputs.cache
+C:\Zhichkin\Z\Metadata.Model\obj\Debug\Metadata.Model.csproj.CopyComplete
+C:\Zhichkin\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.dll
+C:\Zhichkin\Z\Metadata.Model\obj\Debug\Zhichkin.Metadata.Model.pdb

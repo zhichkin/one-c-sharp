@@ -54,9 +54,16 @@ namespace Zhichkin.Metadata.ViewModels
         private void RefreshInfoBases()
         {
             this.infoBases.Clear();
-            foreach (InfoBase infoBase in dataService.GetInfoBases())
+            try
             {
-                this.infoBases.Add(infoBase);
+                foreach (InfoBase infoBase in dataService.GetInfoBases())
+                {
+                    this.infoBases.Add(infoBase);
+                }
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = ExceptionsHandling.GetErrorText(ex) });
             }
         }
         public ObservableCollection<InfoBase> InfoBases

@@ -13,3 +13,9 @@ C:\GitHub\Z\debug\Zhichkin.ORM.pdb
 C:\GitHub\Z\orm\obj\Debug\ORM.csproj.CoreCompileInputs.cache
 C:\GitHub\Z\orm\obj\Debug\Zhichkin.ORM.dll
 C:\GitHub\Z\orm\obj\Debug\Zhichkin.ORM.pdb
+C:\Zhichkin\Z\debug\Zhichkin.ORM.dll
+C:\Zhichkin\Z\debug\Zhichkin.ORM.pdb
+C:\Zhichkin\Z\orm\obj\Debug\ORM.csprojAssemblyReference.cache
+C:\Zhichkin\Z\orm\obj\Debug\ORM.csproj.CoreCompileInputs.cache
+C:\Zhichkin\Z\orm\obj\Debug\Zhichkin.ORM.dll
+C:\Zhichkin\Z\orm\obj\Debug\Zhichkin.ORM.pdb
