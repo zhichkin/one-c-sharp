@@ -10,7 +10,6 @@
     <UserControl.Resources>
         <ui:OrientationEnumConverter x:Key="OrientationEnumConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <!--Visibility="{Binding IsExpanded, ElementName=Expander_SELECT, Converter={StaticResource BooleanToVisibilityConverter}}-->
     </UserControl.Resources>
 
     <Expander Name="Expander_SELECT" ExpandDirection="Down" IsExpanded="True">
@@ -107,24 +106,27 @@
                     </Expander.Header>
                     <ScrollViewer Margin="30,0,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding Tables}">
+                            <ItemsControl.ItemContainerStyle>
+                                <Style>
+                                    <Setter Property="FrameworkElement.Margin" Value="5"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel Orientation="{Binding IsFromVertical, Converter={StaticResource OrientationEnumConverter}}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <!--<DataTemplate DataType="{x:Type ui:UserTable}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Path=Alias}" Margin="5" VerticalAlignment="Center" />
-                                        <TextBlock Text="{Binding Path=Name}" Margin="5" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </DataTemplate>-->
+                            <ItemsControl.Resources>
                                 <DataTemplate DataType="{x:Type ui:SelectViewModel}">
-                                    <StackPanel>
-                                        <ui:SelectView />
+                                    <ui:SelectView />
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type ui:TableViewModel}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                        <TextBox Text="{Binding Alias}" />
+                                        <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
                                     </StackPanel>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
+                            </ItemsControl.Resources>
                         </ItemsControl>
                     </ScrollViewer>
                 </Expander>

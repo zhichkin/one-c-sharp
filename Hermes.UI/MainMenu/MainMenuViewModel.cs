@@ -84,6 +84,7 @@ namespace Zhichkin.Hermes.UI
         {
             if (query.QueryExpressions.Count == 0) return;
             SelectViewModel select = query.QueryExpressions[0];
+            select.Tables.Add(new TableViewModel() { Name = "Table-1", Alias = "T1" });
             select.Tables.Add(new SelectViewModel());
         }
         private void ChangeFromOrientation()

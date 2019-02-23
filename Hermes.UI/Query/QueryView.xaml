@@ -6,15 +6,16 @@
              xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                   VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <ItemsControl ItemsSource="{Binding QueryExpressions}"
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <ItemsControl.ItemTemplate>
+            <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type ui:SelectViewModel}">
                     <ui:SelectView />
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
+            </ItemsControl.Resources>
         </ItemsControl>
     </ScrollViewer>
 </UserControl>

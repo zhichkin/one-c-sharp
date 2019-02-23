@@ -91,3 +91,5 @@ C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.CoreCompileInputs.cache
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.CopyComplete
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.dll
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.pdb
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Parameter\ParameterView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Parameter\ParameterView.baml

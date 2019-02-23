@@ -124,7 +124,6 @@ C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\Shell.csproj.CoreCompileInputs.ca
 C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\Shell.csproj.CopyComplete
 C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\z.exe
 C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\z.pdb
-C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\Shell.csprojAssemblyReference.cache
 C:\Zhichkin\Z\debug\z.exe.config
 C:\Zhichkin\Z\debug\z.exe
 C:\Zhichkin\Z\debug\z.pdb
@@ -140,3 +139,4 @@ C:\Zhichkin\Z\Shell\obj\Debug\Shell.csproj.CoreCompileInputs.cache
 C:\Zhichkin\Z\Shell\obj\Debug\Shell.csproj.CopyComplete
 C:\Zhichkin\Z\Shell\obj\Debug\z.exe
 C:\Zhichkin\Z\Shell\obj\Debug\z.pdb
+C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\Shell.csprojAssemblyReference.cache

@@ -73,6 +73,10 @@
     <Compile Include="CaseWhenThen\FunctionTemplateSelector.cs" />
     <Compile Include="HermesModel.cs" />
     <Compile Include="OrientationEnumConverter.cs" />
+    <Compile Include="Parameter\ParameterView.xaml.cs">
+      <DependentUpon>ParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameter\ParameterViewModel.cs" />
     <Compile Include="Query\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
@@ -93,6 +97,10 @@
       <DependentUpon>MainMenuView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Parameter\ParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Query\QueryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,6 +135,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
+      <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
+      <Name>Metadata.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shell\Shell.csproj">
       <Project>{eaba3f61-1655-4431-912e-1380fdc7cbd8}</Project>
       <Name>Shell</Name>

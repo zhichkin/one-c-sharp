@@ -28,16 +28,16 @@ namespace Zhichkin.Hermes.UI
         public ObservableCollection<ConditionalExpression> Conditions { get; set; }
     }
 
-    public class TableDataSource : BindableBase
+    public class TableExpression : BindableBase
     {
-        public TableDataSource() { }
+        public TableExpression() { }
         public string Name { get; set; }
         public string Alias { get; set; }
     }
 
-    public class UserTable : TableDataSource
+    public class TableViewModel : TableExpression
     {
-        public UserTable() { }
+        public TableViewModel() { }
         public ObservableCollection<TableField> Fields { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class SelectViewModel : TableDataSource
+    public class SelectViewModel : TableExpression
     {
         private readonly IUnityContainer container;
 
@@ -37,13 +37,13 @@ namespace Zhichkin.Hermes.UI
             }
         }
         public ObservableCollection<TableField> Fields { get; private set; }
-        public ObservableCollection<TableDataSource> Tables { get; private set; }
+        public ObservableCollection<TableExpression> Tables { get; private set; }
         public ObservableCollection<BinaryExpression> WhereClause { get; private set; }
 
         private void InitializeTestData()
         {
             this.Name = "TestSelect";
-            this.Tables = new ObservableCollection<TableDataSource>();
+            this.Tables = new ObservableCollection<TableExpression>();
 
             Fields = new ObservableCollection<TableField>()
             {
