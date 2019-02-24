@@ -152,21 +152,40 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="True">
+                                            
+                                    <DataGridTemplateColumn IsReadOnly="True" Width="50">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding Path=ExpressionType}" Margin="5" VerticalAlignment="Center" />
-                                            </DataTemplate>
+                                                        <ComboBox SelectedItem="{Binding ExpressionType, UpdateSourceTrigger=PropertyChanged}"
+                                                                  VerticalContentAlignment="Center"
+                                                                  HorizontalContentAlignment="Center">
+                                                            <ComboBoxItem>
+                                                                <TextBlock Text="==" HorizontalAlignment="Center"/>
+                                                            </ComboBoxItem>
+                                                            <ComboBoxItem>
+                                                                <TextBlock Text="!=" HorizontalAlignment="Center"/>
+                                                            </ComboBoxItem>
+                                                            <ComboBoxItem>
+                                                                <TextBlock Text=">" HorizontalAlignment="Center"/>
+                                                            </ComboBoxItem>
+                                                            <ComboBoxItem>
+                                                                <TextBlock Text=">=" HorizontalAlignment="Center"/>
+                                                            </ComboBoxItem>
+                                                        </ComboBox>
+                                                    </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="True">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Path=RightExpression}" Margin="5" VerticalAlignment="Center" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
+
+                                            <DataGridTemplateColumn MinWidth="150">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox SelectedItem="{Binding RightExpression, UpdateSourceTrigger=PropertyChanged}"
+                                                                  ItemsSource="{Binding DataContext.QueryParameters, RelativeSource={RelativeSource AncestorType={x:Type ui:QueryView}}}"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                    
+                                        </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                     </HierarchicalDataTemplate>

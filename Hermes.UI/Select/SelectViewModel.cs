@@ -72,8 +72,8 @@ namespace Zhichkin.Hermes.UI
             {
                 new BinaryGroup("AND") { Conditions = new ObservableCollection<ConditionalExpression>()
                 {
-                    new ConditionalExpression("=") { LeftExpression = "Field_1", RightExpression = "1"},
-                    new ConditionalExpression("=") { LeftExpression = "Field_2", RightExpression = "2"}
+                    new ConditionalExpression("=") { LeftExpression = "Field_1" },
+                    new ConditionalExpression("=") { LeftExpression = "Field_2" }
                 }}
             };
 

@@ -1,17 +1,19 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Collections.ObjectModel;
-using Zhichkin.Metadata.Model;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class ParameterViewModel : BindableBase
+    public class ParameterViewModel : BindableBase, IParameter
     {
+        private readonly QueryViewModel _Query;
         private string _Name = "ParameterName";
-        private Entity _Type = null;
-        private object _Value = null;
+        private ITypeInfo _Type = null;
+        private object _Value = null; // ? can be a default value
 
-        public ParameterViewModel() { }
+        public ParameterViewModel(QueryViewModel query) { _Query = query; }
         
+        public QueryViewModel Query { get { return _Query; } }
         public string Name
         {
             get { return _Name; }
@@ -21,7 +23,7 @@ namespace Zhichkin.Hermes.UI
                 this.OnPropertyChanged("Name");
             }
         }
-        public Entity Type
+        public ITypeInfo Type
         {
             get { return _Type; }
             set
@@ -39,6 +41,11 @@ namespace Zhichkin.Hermes.UI
                 this.OnPropertyChanged("Value");
             }
         }
-        public ObservableCollection<TableField> Fields { get; set; }
+        //public ObservableCollection<TableField> Fields { get; set; } - class TableParameter : IParameter
+
+        public override string ToString()
+        {
+            return string.Format("@{0} ({1})", this.Name, this.Type.Name);
+        }
     }
 }

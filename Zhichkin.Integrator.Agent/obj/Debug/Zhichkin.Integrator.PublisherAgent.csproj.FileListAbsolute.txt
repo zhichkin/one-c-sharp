@@ -21,3 +21,13 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\bin\Debug\Zhichkin.Integrator.
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Agent\bin\Debug\Zhichkin.Integrator.Translator.pdb
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.exe
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.PublisherAgent.pdb
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.PublisherAgent.exe.config
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.PublisherAgent.exe
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.PublisherAgent.pdb
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.csprojAssemblyReference.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.ProjectInstaller.resources
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.csproj.GenerateResource.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.csproj.CopyComplete
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.exe
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Agent\obj\Debug\Zhichkin.Integrator.PublisherAgent.pdb

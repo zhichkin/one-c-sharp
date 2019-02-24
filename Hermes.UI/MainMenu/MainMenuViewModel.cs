@@ -68,6 +68,11 @@ namespace Zhichkin.Hermes.UI
             if (rightRegion == null) return;
 
             query = new QueryViewModel();
+            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter0", Type = new TypeInfo() { Code = 1, Name = "GUID" } });
+            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter1", Type = new TypeInfo() { Code = 2, Name = "Int32" } });
+            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter2", Type = new TypeInfo() { Code = 3, Name = "String" } });
+            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter3", Type = new TypeInfo() { Code = 4, Name = "Boolean" } });
+
             SelectViewModel select = new SelectViewModel(container);
             query.QueryExpressions.Add(select);
 

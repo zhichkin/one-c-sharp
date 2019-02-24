@@ -10,3 +10,10 @@ C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTrackin
 C:\Users\User\Desktop\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.pdb
 C:\Users\User\Desktop\Z\debug\Zhichkin.ChangeTracking.dll
 C:\Users\User\Desktop\Z\debug\Zhichkin.ChangeTracking.pdb
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.ChangeTracking.dll
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.ChangeTracking.pdb
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.csprojAssemblyReference.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.csproj.CopyComplete
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.dll
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.ChangeTracking\obj\Debug\Zhichkin.ChangeTracking.pdb

@@ -12,8 +12,10 @@ namespace Zhichkin.Hermes.UI
     {
         public QueryViewModel()
         {
+            this.QueryParameters = new ObservableCollection<ParameterViewModel>();
             this.QueryExpressions = new ObservableCollection<SelectViewModel>();
         }
+        public ObservableCollection<ParameterViewModel> QueryParameters { get; private set; }
         public ObservableCollection<SelectViewModel> QueryExpressions { get; private set; }
     }
 }

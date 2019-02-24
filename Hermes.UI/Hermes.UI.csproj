@@ -8,7 +8,7 @@
     <OutputType>library</OutputType>
     <RootNamespace>Zhichkin.Hermes.UI</RootNamespace>
     <AssemblyName>Zhichkin.Hermes.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -135,9 +135,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
-      <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
-      <Name>Metadata.Model</Name>
+    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Infrastructure.csproj">
+      <Project>{6a86e382-f7ed-43ff-be21-e2127eb8199a}</Project>
+      <Name>Hermes.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shell\Shell.csproj">
       <Project>{eaba3f61-1655-4431-912e-1380fdc7cbd8}</Project>

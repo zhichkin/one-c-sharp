@@ -14,3 +14,10 @@ C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Transl
 C:\Users\User\Desktop\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.pdb
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Translator.dll
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.csprojAssemblyReference.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.dll
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.Translator.dll
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.Translator.pdb
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Translator\obj\Debug\Zhichkin.Integrator.Translator.csproj.CopyComplete

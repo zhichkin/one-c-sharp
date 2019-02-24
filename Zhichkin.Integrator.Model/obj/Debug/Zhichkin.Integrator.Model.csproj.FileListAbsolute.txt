@@ -10,3 +10,10 @@ C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.
 C:\Users\User\Desktop\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.pdb
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Model.dll
 C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.Model.pdb
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.Model.dll
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.Model.pdb
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.csprojAssemblyReference.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.csproj.CopyComplete
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.dll
+C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator.Model\obj\Debug\Zhichkin.Integrator.Model.pdb
