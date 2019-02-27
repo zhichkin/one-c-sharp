@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\User\Desktop\GitHub\Z\DXM.Module\obj\Debug\
+C:\Zhichkin\Z\DXM.Module\obj\Debug\
 Zhichkin.DXM
 none
 false
@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 7-643869360
 
-20695214647
-1321493429533
+241329367844
+132-91843457
 Article\ArticlesListView.xaml;InfoBase\InfoBaseView.xaml;Article\ArticleFiltersListView.xaml;Publication\PublicationMainView.xaml;Publication\PublicationView.xaml;Subscriber\SubscribersListView.xaml;Publication\PublicationsListView.xaml;
 
-False
+True
 

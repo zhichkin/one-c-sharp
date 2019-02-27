@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\
 Zhichkin.Hermes.UI
 none
 false
@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 51774545143
 
-16-362360009
-1231891280103
+20271793188
+123314679081
 CaseWhenThen\CaseWhenThenView.xaml;MainMenu\MainMenuView.xaml;Parameter\ParameterView.xaml;Query\QueryView.xaml;Select\SelectView.xaml;
 
-False
+True
 
