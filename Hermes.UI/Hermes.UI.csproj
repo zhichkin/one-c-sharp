@@ -71,7 +71,15 @@
     </Compile>
     <Compile Include="CaseWhenThen\CaseWhenThenViewModel.cs" />
     <Compile Include="CaseWhenThen\FunctionTemplateSelector.cs" />
+    <Compile Include="Filter\FilterView.xaml.cs">
+      <DependentUpon>FilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filter\FilterViewModel.cs" />
     <Compile Include="HermesModel.cs" />
+    <Compile Include="Join\JoinView.xaml.cs">
+      <DependentUpon>JoinView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Join\JoinViewModel.cs" />
     <Compile Include="OrientationEnumConverter.cs" />
     <Compile Include="Parameter\ParameterView.xaml.cs">
       <DependentUpon>ParameterView.xaml</DependentUpon>
@@ -85,7 +93,19 @@
       <DependentUpon>SelectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Select\SelectViewModel.cs" />
+    <Compile Include="Table\TableView.xaml.cs">
+      <DependentUpon>TableView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Table\TableViewModel.cs" />
     <Page Include="CaseWhenThen\CaseWhenThenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filter\FilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Join\JoinView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,6 +126,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Select\SelectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Table\TableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

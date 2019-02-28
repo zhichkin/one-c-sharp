@@ -5,6 +5,7 @@ using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Zhichkin.Shell;
 
@@ -73,7 +74,8 @@ namespace Zhichkin.Hermes.UI
             query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter2", Type = new TypeInfo() { Code = 3, Name = "String" } });
             query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter3", Type = new TypeInfo() { Code = 4, Name = "Boolean" } });
 
-            SelectViewModel select = new SelectViewModel(container);
+            SelectViewModel select = new SelectViewModel();
+            InitializeTestData(select);
             query.QueryExpressions.Add(select);
 
             QueryView queryView = new QueryView(query);
@@ -82,7 +84,8 @@ namespace Zhichkin.Hermes.UI
         }
         private void AddNewSelectStatement()
         {
-            SelectViewModel select = new SelectViewModel(container);
+            SelectViewModel select = new SelectViewModel();
+            InitializeTestData(select);
             query.QueryExpressions.Add(select);
         }
         private void AddTableToSelectStatement()
@@ -90,6 +93,32 @@ namespace Zhichkin.Hermes.UI
             if (query.QueryExpressions.Count == 0) return;
             SelectViewModel select = query.QueryExpressions[0];
             select.Tables.Add(new TableViewModel() { Name = "Table-1", Alias = "T1" });
+
+            JoinViewModel join = new JoinViewModel() { JoinType = "LEFT JOIN" };
+            join.Table = new TableViewModel() { Name = "Table-2", Alias = "T2" };
+            join.Filter.BinaryExpressions.Add(new BinaryGroup("OR")
+            {
+                Children = new ObservableCollection<BinaryGroup>()
+                {
+                    new BinaryGroup("AND")
+                    {
+                        Conditions = new ObservableCollection<ConditionalExpression>()
+                        {
+                            new ConditionalExpression("=") { LeftExpression = "Field_1" },
+                            new ConditionalExpression("=") { LeftExpression = "Field_2" }
+                        }
+                    },
+                    new BinaryGroup("AND")
+                    {
+                        Conditions = new ObservableCollection<ConditionalExpression>()
+                        {
+                            new ConditionalExpression("=") { LeftExpression = "Field_3" },
+                            new ConditionalExpression("=") { LeftExpression = "Field_4" }
+                        }
+                    }
+                }
+            });
+            select.Tables.Add(join);
             select.Tables.Add(new SelectViewModel());
         }
         private void ChangeFromOrientation()
@@ -97,6 +126,23 @@ namespace Zhichkin.Hermes.UI
             if (query.QueryExpressions.Count == 0) return;
             SelectViewModel select = query.QueryExpressions[0];
             select.IsFromVertical = !select.IsFromVertical;
+        }
+
+        private void InitializeTestData(SelectViewModel select)
+        {
+            select.Name = "TestSelect";
+
+            select.Fields.Add(new TableField() { Alias = "F1", Name = "Field_1", IsUsed = true });
+            select.Fields.Add(new TableField() { Alias = "F2", Name = "Field_2", IsUsed = false });
+
+            select.Filter.BinaryExpressions.Add(new BinaryGroup("AND")
+            {
+                Conditions = new ObservableCollection<ConditionalExpression>()
+                {
+                    new ConditionalExpression("=") { LeftExpression = "Field_1" },
+                    new ConditionalExpression("=") { LeftExpression = "Field_2" }
+                }
+            });
         }
     }
 }

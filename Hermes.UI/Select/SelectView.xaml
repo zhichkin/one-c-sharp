@@ -117,14 +117,14 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type ui:TableViewModel}">
+                                    <ui:TableView />
+                                </DataTemplate>
                                 <DataTemplate DataType="{x:Type ui:SelectViewModel}">
                                     <ui:SelectView />
                                 </DataTemplate>
-                                <DataTemplate DataType="{x:Type ui:TableViewModel}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                                        <TextBox Text="{Binding Alias}" />
-                                        <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
-                                    </StackPanel>
+                                <DataTemplate DataType="{x:Type ui:JoinViewModel}">
+                                    <ui:JoinView />
                                 </DataTemplate>
                             </ItemsControl.Resources>
                         </ItemsControl>
@@ -137,68 +137,8 @@
                     <TextBlock Text="WHERE" FontWeight="Bold"/>
                 </StackPanel>
             </Expander.Header>
-            <TreeView ItemsSource="{Binding Path=WhereClause}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0">
-                <TreeView.Resources>
-                    <HierarchicalDataTemplate DataType="{x:Type ui:BinaryGroup}" ItemsSource="{Binding Path=Children}">
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Path=ExpressionType}" Margin="2" VerticalAlignment="Center"/>
-                            <DataGrid ItemsSource="{Binding Path=Conditions}" Height="Auto" SelectedItem="{Binding SelectedItem}"
-                                      AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False" HeadersVisibility="None">
-                                <DataGrid.Columns>
-                                    <DataGridTemplateColumn IsReadOnly="True">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Path=LeftExpression}" Margin="5" VerticalAlignment="Center" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                            
-                                    <DataGridTemplateColumn IsReadOnly="True" Width="50">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                        <ComboBox SelectedItem="{Binding ExpressionType, UpdateSourceTrigger=PropertyChanged}"
-                                                                  VerticalContentAlignment="Center"
-                                                                  HorizontalContentAlignment="Center">
-                                                            <ComboBoxItem>
-                                                                <TextBlock Text="==" HorizontalAlignment="Center"/>
-                                                            </ComboBoxItem>
-                                                            <ComboBoxItem>
-                                                                <TextBlock Text="!=" HorizontalAlignment="Center"/>
-                                                            </ComboBoxItem>
-                                                            <ComboBoxItem>
-                                                                <TextBlock Text=">" HorizontalAlignment="Center"/>
-                                                            </ComboBoxItem>
-                                                            <ComboBoxItem>
-                                                                <TextBlock Text=">=" HorizontalAlignment="Center"/>
-                                                            </ComboBoxItem>
-                                                        </ComboBox>
-                                                    </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn MinWidth="150">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <ComboBox SelectedItem="{Binding RightExpression, UpdateSourceTrigger=PropertyChanged}"
-                                                                  ItemsSource="{Binding DataContext.QueryParameters, RelativeSource={RelativeSource AncestorType={x:Type ui:QueryView}}}"/>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                    
-                                        </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                    <!--<DataTemplate DataType="{x:Type local:ConditionalExpression}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=LeftExpression}" Margin="2" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=ExpressionType}" Margin="2" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=RightExpression}" Margin="2" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </DataTemplate>-->
-                </TreeView.Resources>
-            </TreeView>
-        </Expander>
+                    <ui:FilterView DataContext="{Binding Filter}" />
+                </Expander>
 
     </Grid>
     </ScrollViewer>
