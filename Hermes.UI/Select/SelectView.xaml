@@ -120,7 +120,7 @@
                                 <DataTemplate DataType="{x:Type ui:TableViewModel}">
                                     <ui:TableView />
                                 </DataTemplate>
-                                <DataTemplate DataType="{x:Type ui:SelectViewModel}">
+                                <DataTemplate DataType="{x:Type ui:SelectExpression}">
                                     <ui:SelectView />
                                 </DataTemplate>
                                 <DataTemplate DataType="{x:Type ui:JoinViewModel}">

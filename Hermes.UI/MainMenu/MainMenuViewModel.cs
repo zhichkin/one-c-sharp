@@ -60,7 +60,7 @@ namespace Zhichkin.Hermes.UI
             }
         }
 
-        private QueryViewModel query;
+        private QueryExpression query;
         private void AddNewQuery()
         {
             //Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Hello from Hermes!" });
@@ -68,13 +68,13 @@ namespace Zhichkin.Hermes.UI
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;
 
-            query = new QueryViewModel();
-            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter0", Type = new TypeInfo() { Code = 1, Name = "GUID" } });
-            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter1", Type = new TypeInfo() { Code = 2, Name = "Int32" } });
-            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter2", Type = new TypeInfo() { Code = 3, Name = "String" } });
-            query.QueryParameters.Add(new ParameterViewModel(query) { Name = "Parameter3", Type = new TypeInfo() { Code = 4, Name = "Boolean" } });
+            query = new QueryExpression();
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter0", Type = new TypeInfo() { Code = 1, Name = "GUID" } });
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter1", Type = new TypeInfo() { Code = 2, Name = "Int32" } });
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new TypeInfo() { Code = 3, Name = "String" } });
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new TypeInfo() { Code = 4, Name = "Boolean" } });
 
-            SelectViewModel select = new SelectViewModel();
+            SelectExpression select = new SelectExpression();
             InitializeTestData(select);
             query.QueryExpressions.Add(select);
 
@@ -84,65 +84,49 @@ namespace Zhichkin.Hermes.UI
         }
         private void AddNewSelectStatement()
         {
-            SelectViewModel select = new SelectViewModel();
+            SelectExpression select = new SelectExpression();
             InitializeTestData(select);
             query.QueryExpressions.Add(select);
         }
         private void AddTableToSelectStatement()
         {
             if (query.QueryExpressions.Count == 0) return;
-            SelectViewModel select = query.QueryExpressions[0];
+            SelectExpression select = query.QueryExpressions[0];
             select.Tables.Add(new TableViewModel() { Name = "Table-1", Alias = "T1" });
 
             JoinViewModel join = new JoinViewModel() { JoinType = "LEFT JOIN" };
             join.Table = new TableViewModel() { Name = "Table-2", Alias = "T2" };
-            join.Filter.BinaryExpressions.Add(new BinaryGroup("OR")
-            {
-                Children = new ObservableCollection<BinaryGroup>()
-                {
-                    new BinaryGroup("AND")
-                    {
-                        Conditions = new ObservableCollection<ConditionalExpression>()
-                        {
-                            new ConditionalExpression("=") { LeftExpression = "Field_1" },
-                            new ConditionalExpression("=") { LeftExpression = "Field_2" }
-                        }
-                    },
-                    new BinaryGroup("AND")
-                    {
-                        Conditions = new ObservableCollection<ConditionalExpression>()
-                        {
-                            new ConditionalExpression("=") { LeftExpression = "Field_3" },
-                            new ConditionalExpression("=") { LeftExpression = "Field_4" }
-                        }
-                    }
-                }
-            });
+            FilterExpression filter = new FilterExpression(join) { FilterType = "OR" };
+            FilterExpression and_1 = new FilterExpression(join) { FilterType = "AND" };
+            and_1.Conditions.Add(new ConditionExpression(and_1) { LeftExpression = "Field_1" });
+            and_1.Conditions.Add(new ConditionExpression(and_1) { LeftExpression = "Field_2" });
+            filter.Children.Add(and_1);
+            FilterExpression and_2 = new FilterExpression(join) { FilterType = "AND" };
+            and_2.Conditions.Add(new ConditionExpression(and_2) { LeftExpression = "Field_3" });
+            and_2.Conditions.Add(new ConditionExpression(and_2) { LeftExpression = "Field_4" });
+            filter.Children.Add(and_2);
+            join.Filter.Children.Add(filter);
             select.Tables.Add(join);
-            select.Tables.Add(new SelectViewModel());
+            select.Tables.Add(new SelectExpression());
         }
         private void ChangeFromOrientation()
         {
             if (query.QueryExpressions.Count == 0) return;
-            SelectViewModel select = query.QueryExpressions[0];
+            SelectExpression select = query.QueryExpressions[0];
             select.IsFromVertical = !select.IsFromVertical;
         }
 
-        private void InitializeTestData(SelectViewModel select)
+        private void InitializeTestData(SelectExpression select)
         {
             select.Name = "TestSelect";
 
-            select.Fields.Add(new TableField() { Alias = "F1", Name = "Field_1", IsUsed = true });
-            select.Fields.Add(new TableField() { Alias = "F2", Name = "Field_2", IsUsed = false });
+            select.Fields.Add(new FieldExpression(select) { Alias = "F1" });
+            select.Fields.Add(new FieldExpression(select) { Alias = "F2" });
 
-            select.Filter.BinaryExpressions.Add(new BinaryGroup("AND")
-            {
-                Conditions = new ObservableCollection<ConditionalExpression>()
-                {
-                    new ConditionalExpression("=") { LeftExpression = "Field_1" },
-                    new ConditionalExpression("=") { LeftExpression = "Field_2" }
-                }
-            });
+            FilterExpression filter = new FilterExpression(select) { FilterType = "AND" };
+            filter.Conditions.Add(new ConditionExpression(filter) { LeftExpression = "Field_1" });
+            filter.Conditions.Add(new ConditionExpression(filter) { LeftExpression = "Field_2" });
+            select.Filter.Children.Add(filter);
         }
     }
 }

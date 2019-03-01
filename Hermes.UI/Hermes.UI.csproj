@@ -74,7 +74,7 @@
     <Compile Include="Filter\FilterView.xaml.cs">
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Filter\FilterViewModel.cs" />
+    <Compile Include="Filter\FilterExpression.cs" />
     <Compile Include="HermesModel.cs" />
     <Compile Include="Join\JoinView.xaml.cs">
       <DependentUpon>JoinView.xaml</DependentUpon>
@@ -84,19 +84,19 @@
     <Compile Include="Parameter\ParameterView.xaml.cs">
       <DependentUpon>ParameterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Parameter\ParameterViewModel.cs" />
+    <Compile Include="Parameter\ParameterExpression.cs" />
     <Compile Include="Query\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Query\QueryViewModel.cs" />
+    <Compile Include="Query\QueryExpression.cs" />
     <Compile Include="Select\SelectView.xaml.cs">
       <DependentUpon>SelectView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Select\SelectViewModel.cs" />
+    <Compile Include="Select\SelectExpression.cs" />
     <Compile Include="Table\TableView.xaml.cs">
       <DependentUpon>TableView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Table\TableViewModel.cs" />
+    <Compile Include="Table\TableExpression.cs" />
     <Page Include="CaseWhenThen\CaseWhenThenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -7,12 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <TreeView ItemsSource="{Binding BinaryExpressions}"
+    <!--
+    Here should be FilterExpression header with it's type and conditions !!!
+    TreeView is for the children !!!
+    That's why it's better to make yet another DataGrid control for Conditions !!!
+    -->
+    
+    <TreeView ItemsSource="{Binding Children}"
               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0">
         <TreeView.Resources>
-            <HierarchicalDataTemplate DataType="{x:Type ui:BinaryGroup}" ItemsSource="{Binding Path=Children}">
+            <HierarchicalDataTemplate DataType="{x:Type ui:FilterExpression}" ItemsSource="{Binding Path=Children}">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ExpressionType}" Margin="2" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Path=FilterType}" Margin="2" VerticalAlignment="Center"/>
                     <DataGrid ItemsSource="{Binding Path=Conditions}" Height="Auto" SelectedItem="{Binding SelectedItem}"
                                       AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False" HeadersVisibility="None">
                         <DataGrid.Columns>

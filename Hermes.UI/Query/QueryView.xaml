@@ -12,7 +12,7 @@
         <ItemsControl ItemsSource="{Binding QueryExpressions}"
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ItemsControl.Resources>
-                <DataTemplate DataType="{x:Type ui:SelectViewModel}">
+                <DataTemplate DataType="{x:Type ui:SelectExpression}">
                     <ui:SelectView />
                 </DataTemplate>
             </ItemsControl.Resources>

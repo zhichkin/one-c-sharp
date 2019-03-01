@@ -17,7 +17,7 @@ namespace Zhichkin.Hermes.UI
 {
     public partial class QueryView : UserControl
     {
-        public QueryView(QueryViewModel viewModel)
+        public QueryView(QueryExpression viewModel)
         {
             InitializeComponent();
             this.DataContext = viewModel;
