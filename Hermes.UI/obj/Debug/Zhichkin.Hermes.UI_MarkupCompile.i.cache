@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-9-260567240
+91763539861
 
-28-1091315675
+281036198471
 1231891280103
-CaseWhenThen\CaseWhenThenView.xaml;Filter\FilterView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;Parameter\ParameterView.xaml;Property\PropertyView.xaml;Query\QueryView.xaml;Select\SelectView.xaml;Entity\EntityView.xaml;
+CaseWhenThen\CaseWhenThenView.xaml;Function\BooleanExpressionView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;Parameter\ParameterView.xaml;Property\PropertyView.xaml;Query\QueryView.xaml;Select\SelectView.xaml;Entity\EntityView.xaml;
 
 True
 

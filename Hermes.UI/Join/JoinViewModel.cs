@@ -7,10 +7,10 @@ namespace Zhichkin.Hermes.UI
     {
         public JoinViewModel()
         {
-            this.Filter = new FilterExpression(this);
+            this.Filter = new BooleanExpression(this);
         }
         public string JoinType { get; set; }
         public TableExpression Table { get; set; }
-        public FilterExpression Filter { get; set; }
+        public BooleanExpression Filter { get; set; }
     }
 }

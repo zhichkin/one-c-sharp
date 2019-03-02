@@ -12,7 +12,7 @@ namespace Zhichkin.Hermes.UI
             this.Owner = owner;
             this.Fields = new ObservableCollection<PropertyExpression>();
             this.Tables = new ObservableCollection<TableExpression>();
-            this.Filter = new FilterExpression(this) { FilterType = "AND" };
+            this.Filter = new BooleanExpression(this) { FilterType = "AND" };
         }
         private bool _IsFromVertical = true;
         private string _FromClauseDescription = "Tabular data source names ...";
@@ -37,6 +37,6 @@ namespace Zhichkin.Hermes.UI
         public QueryExpression Owner { get; private set; }
         public ObservableCollection<PropertyExpression> Fields { get; private set; }
         public ObservableCollection<TableExpression> Tables { get; private set; }
-        public FilterExpression Filter { get; private set; }
+        public BooleanExpression Filter { get; private set; }
     }
 }

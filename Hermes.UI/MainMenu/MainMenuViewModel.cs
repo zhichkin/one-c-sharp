@@ -98,15 +98,21 @@ namespace Zhichkin.Hermes.UI
             join.Table = new EntityExpression(select) { Name = "Table-2", Alias = "T2" };
             join.Filter.FilterType = "OR";
 
-            FilterExpression and_1 = new FilterExpression(join) { FilterType = "AND" };
-            and_1.Conditions.Add(new ConditionExpression(and_1) { LeftExpression = "Field_1" });
-            and_1.Conditions.Add(new ConditionExpression(and_1) { LeftExpression = "Field_2" });
+            BooleanExpression and_1 = new BooleanExpression(join) { FilterType = "AND" };
+            and_1.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_1" });
+            and_1.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_2" });
             join.Filter.Children.Add(and_1);
 
-            FilterExpression and_2 = new FilterExpression(join) { FilterType = "AND" };
-            and_2.Conditions.Add(new ConditionExpression(and_2) { LeftExpression = "Field_3" });
-            and_2.Conditions.Add(new ConditionExpression(and_2) { LeftExpression = "Field_4" });
-            join.Filter.Children.Add(and_2);
+            BooleanExpression or_1 = new BooleanExpression(join) { FilterType = "OR" };
+            BooleanExpression and_2 = new BooleanExpression(join) { FilterType = "AND" };
+            and_2.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_3" });
+            and_2.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_4" });
+            BooleanExpression and_3 = new BooleanExpression(join) { FilterType = "AND" };
+            and_3.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_5" });
+            and_3.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_6" });
+            or_1.Children.Add(and_2);
+            or_1.Children.Add(and_3);
+            join.Filter.Children.Add(or_1);
 
             select.Tables.Add(join);
 
@@ -126,8 +132,8 @@ namespace Zhichkin.Hermes.UI
             select.Fields.Add(new PropertyExpression(select) { Alias = "F1" });
             select.Fields.Add(new PropertyExpression(select) { Alias = "F2" });
 
-            select.Filter.Conditions.Add(new ConditionExpression(select.Filter) { LeftExpression = "Field_1" });
-            select.Filter.Conditions.Add(new ConditionExpression(select.Filter) { LeftExpression = "Field_2" });
+            select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_1" });
+            select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_2" });
         }
     }
 }

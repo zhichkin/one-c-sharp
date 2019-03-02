@@ -71,10 +71,10 @@
     </Compile>
     <Compile Include="CaseWhenThen\CaseWhenThenViewModel.cs" />
     <Compile Include="CaseWhenThen\FunctionTemplateSelector.cs" />
-    <Compile Include="Filter\FilterView.xaml.cs">
-      <DependentUpon>FilterView.xaml</DependentUpon>
+    <Compile Include="Function\BooleanExpressionView.xaml.cs">
+      <DependentUpon>BooleanExpressionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Filter\FilterExpression.cs" />
+    <Compile Include="Function\BooleanExpression.cs" />
     <Compile Include="HermesModel.cs" />
     <Compile Include="Join\JoinView.xaml.cs">
       <DependentUpon>JoinView.xaml</DependentUpon>
@@ -105,7 +105,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Filter\FilterView.xaml">
+    <Page Include="Function\BooleanExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
