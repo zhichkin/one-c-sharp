@@ -93,9 +93,9 @@ C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.dll
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.pdb
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Parameter\ParameterView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Parameter\ParameterView.baml
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Table\TableView.g.cs
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Table\TableView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Filter\FilterView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Filter\FilterView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Entity\EntityView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Entity\EntityView.baml

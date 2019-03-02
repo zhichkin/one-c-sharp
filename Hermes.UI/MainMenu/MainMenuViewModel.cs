@@ -74,7 +74,7 @@ namespace Zhichkin.Hermes.UI
             query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new TypeInfo() { Code = 3, Name = "String" } });
             query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new TypeInfo() { Code = 4, Name = "Boolean" } });
 
-            SelectExpression select = new SelectExpression();
+            SelectExpression select = new SelectExpression(query);
             InitializeTestData(select);
             query.QueryExpressions.Add(select);
 
@@ -84,7 +84,7 @@ namespace Zhichkin.Hermes.UI
         }
         private void AddNewSelectStatement()
         {
-            SelectExpression select = new SelectExpression();
+            SelectExpression select = new SelectExpression(query);
             InitializeTestData(select);
             query.QueryExpressions.Add(select);
         }
@@ -92,22 +92,25 @@ namespace Zhichkin.Hermes.UI
         {
             if (query.QueryExpressions.Count == 0) return;
             SelectExpression select = query.QueryExpressions[0];
-            select.Tables.Add(new TableViewModel() { Name = "Table-1", Alias = "T1" });
+            select.Tables.Add(new EntityExpression(select) { Name = "Table-1", Alias = "T1" });
 
             JoinViewModel join = new JoinViewModel() { JoinType = "LEFT JOIN" };
-            join.Table = new TableViewModel() { Name = "Table-2", Alias = "T2" };
-            FilterExpression filter = new FilterExpression(join) { FilterType = "OR" };
+            join.Table = new EntityExpression(select) { Name = "Table-2", Alias = "T2" };
+            join.Filter.FilterType = "OR";
+
             FilterExpression and_1 = new FilterExpression(join) { FilterType = "AND" };
             and_1.Conditions.Add(new ConditionExpression(and_1) { LeftExpression = "Field_1" });
             and_1.Conditions.Add(new ConditionExpression(and_1) { LeftExpression = "Field_2" });
-            filter.Children.Add(and_1);
+            join.Filter.Children.Add(and_1);
+
             FilterExpression and_2 = new FilterExpression(join) { FilterType = "AND" };
             and_2.Conditions.Add(new ConditionExpression(and_2) { LeftExpression = "Field_3" });
             and_2.Conditions.Add(new ConditionExpression(and_2) { LeftExpression = "Field_4" });
-            filter.Children.Add(and_2);
-            join.Filter.Children.Add(filter);
+            join.Filter.Children.Add(and_2);
+
             select.Tables.Add(join);
-            select.Tables.Add(new SelectExpression());
+
+            select.Tables.Add(new SelectExpression(query));
         }
         private void ChangeFromOrientation()
         {
@@ -118,15 +121,13 @@ namespace Zhichkin.Hermes.UI
 
         private void InitializeTestData(SelectExpression select)
         {
-            select.Name = "TestSelect";
+            select.Alias = "TestSelect";
 
             select.Fields.Add(new FieldExpression(select) { Alias = "F1" });
             select.Fields.Add(new FieldExpression(select) { Alias = "F2" });
 
-            FilterExpression filter = new FilterExpression(select) { FilterType = "AND" };
-            filter.Conditions.Add(new ConditionExpression(filter) { LeftExpression = "Field_1" });
-            filter.Conditions.Add(new ConditionExpression(filter) { LeftExpression = "Field_2" });
-            select.Filter.Children.Add(filter);
+            select.Filter.Conditions.Add(new ConditionExpression(select.Filter) { LeftExpression = "Field_1" });
+            select.Filter.Conditions.Add(new ConditionExpression(select.Filter) { LeftExpression = "Field_2" });
         }
     }
 }

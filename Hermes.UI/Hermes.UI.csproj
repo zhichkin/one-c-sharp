@@ -93,10 +93,10 @@
       <DependentUpon>SelectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Select\SelectExpression.cs" />
-    <Compile Include="Table\TableView.xaml.cs">
-      <DependentUpon>TableView.xaml</DependentUpon>
+    <Compile Include="Entity\EntityView.xaml.cs">
+      <DependentUpon>EntityView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Table\TableExpression.cs" />
+    <Compile Include="Entity\EntityExpression.cs" />
     <Page Include="CaseWhenThen\CaseWhenThenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,7 +129,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Table\TableView.xaml">
+    <Page Include="Entity\EntityView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -20,11 +20,7 @@ namespace Zhichkin.Hermes.UI
 
 
 
-    public class EntityExpression : BindableBase
-    {
-        public EntityExpression() { }
-        public string Name { get; set; }
-    }
+    
     public class PropertyExpression : BindableBase
     {
         public PropertyExpression(EntityExpression owner) { this.Owner = owner; }

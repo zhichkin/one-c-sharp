@@ -9,10 +9,10 @@
 
     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
         <TextBlock Text="{Binding JoinType}" FontWeight="Bold"/>
-        <ui:TableView DataContext="{Binding Table}" Margin="15,0,0,0"/>
+        <ui:EntityView DataContext="{Binding Table}" Margin="15,0,0,0"/>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="ON" FontWeight="Bold" Margin="0,3,0,0"/>
-            <ui:FilterView DataContext="{Binding Filter}"/>
+            <TextBlock Text="ON" FontWeight="Bold" />
+            <ui:FilterView DataContext="{Binding Filter}" Margin="10,0,0,0"/>
         </StackPanel>
     </StackPanel>
 
