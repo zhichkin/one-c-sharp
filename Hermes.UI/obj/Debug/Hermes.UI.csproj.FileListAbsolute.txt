@@ -99,3 +99,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Filter\FilterView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Entity\EntityView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Entity\EntityView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Property\PropertyView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Property\PropertyView.baml

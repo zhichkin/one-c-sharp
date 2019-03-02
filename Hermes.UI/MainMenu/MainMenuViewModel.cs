@@ -123,8 +123,8 @@ namespace Zhichkin.Hermes.UI
         {
             select.Alias = "TestSelect";
 
-            select.Fields.Add(new FieldExpression(select) { Alias = "F1" });
-            select.Fields.Add(new FieldExpression(select) { Alias = "F2" });
+            select.Fields.Add(new PropertyExpression(select) { Alias = "F1" });
+            select.Fields.Add(new PropertyExpression(select) { Alias = "F2" });
 
             select.Filter.Conditions.Add(new ConditionExpression(select.Filter) { LeftExpression = "Field_1" });
             select.Filter.Conditions.Add(new ConditionExpression(select.Filter) { LeftExpression = "Field_2" });

@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-8-819736126
+9-260567240
 
-22-213427513
+241238362684
 1231891280103
-CaseWhenThen\CaseWhenThenView.xaml;Filter\FilterView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;Parameter\ParameterView.xaml;Query\QueryView.xaml;Select\SelectView.xaml;Entity\EntityView.xaml;
+CaseWhenThen\CaseWhenThenView.xaml;Filter\FilterView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;Parameter\ParameterView.xaml;Property\PropertyView.xaml;Query\QueryView.xaml;Select\SelectView.xaml;Entity\EntityView.xaml;
 
 False
 

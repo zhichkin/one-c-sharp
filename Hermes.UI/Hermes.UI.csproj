@@ -85,6 +85,10 @@
       <DependentUpon>ParameterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parameter\ParameterExpression.cs" />
+    <Compile Include="Property\PropertyExpression.cs" />
+    <Compile Include="Property\PropertyView.xaml.cs">
+      <DependentUpon>PropertyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Query\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
@@ -118,6 +122,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Parameter\ParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Property\PropertyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
