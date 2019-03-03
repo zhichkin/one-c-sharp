@@ -74,7 +74,7 @@ namespace Zhichkin.Hermes.UI
             query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new TypeInfo() { Code = 3, Name = "String" } });
             query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new TypeInfo() { Code = 4, Name = "Boolean" } });
 
-            SelectExpression select = new SelectExpression(query);
+            SelectExpression select = new SelectExpression(null);
             InitializeTestData(select);
             query.QueryExpressions.Add(select);
 
@@ -84,7 +84,7 @@ namespace Zhichkin.Hermes.UI
         }
         private void AddNewSelectStatement()
         {
-            SelectExpression select = new SelectExpression(query);
+            SelectExpression select = new SelectExpression(null);
             InitializeTestData(select);
             query.QueryExpressions.Add(select);
         }
@@ -94,7 +94,7 @@ namespace Zhichkin.Hermes.UI
             SelectExpression select = query.QueryExpressions[0];
             select.Tables.Add(new EntityExpression(select) { Name = "Table-1", Alias = "T1" });
 
-            JoinViewModel join = new JoinViewModel() { JoinType = "LEFT JOIN" };
+            JoinExpression join = new JoinExpression(select) { JoinType = "LEFT JOIN" };
             join.Table = new EntityExpression(select) { Name = "Table-2", Alias = "T2" };
             join.Filter.FilterType = "OR";
 
@@ -116,7 +116,7 @@ namespace Zhichkin.Hermes.UI
 
             select.Tables.Add(join);
 
-            select.Tables.Add(new SelectExpression(query));
+            select.Tables.Add(new SelectExpression(select));
         }
         private void ChangeFromOrientation()
         {
@@ -129,8 +129,7 @@ namespace Zhichkin.Hermes.UI
         {
             select.Alias = "TestSelect";
 
-            select.Fields.Add(new PropertyExpression(select) { Alias = "F1" });
-            select.Fields.Add(new PropertyExpression(select) { Alias = "F2" });
+            select.Fields = HermesUI.GetTestEntityFields(select);
 
             select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_1" });
             select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_2" });

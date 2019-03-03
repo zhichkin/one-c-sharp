@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Zhichkin.Hermes.UI.Parameter
+namespace Zhichkin.Hermes.UI
 {
     /// <summary>
     /// Interaction logic for ParameterView.xaml

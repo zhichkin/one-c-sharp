@@ -7,10 +7,8 @@ namespace Zhichkin.Hermes.UI
 {
     public class SelectExpression : TableExpression
     {
-        public SelectExpression(QueryExpression owner)
+        public SelectExpression(TableExpression owner) : base(owner)
         {
-            this.Owner = owner;
-            this.Fields = new ObservableCollection<PropertyExpression>();
             this.Tables = new ObservableCollection<TableExpression>();
             this.Filter = new BooleanExpression(this) { FilterType = "AND" };
         }
@@ -34,9 +32,7 @@ namespace Zhichkin.Hermes.UI
                 this.OnPropertyChanged("FromClauseDescription");
             }
         }
-        public QueryExpression Owner { get; private set; }
-        public ObservableCollection<PropertyExpression> Fields { get; private set; }
-        public ObservableCollection<TableExpression> Tables { get; private set; }
-        public BooleanExpression Filter { get; private set; }
+        public ObservableCollection<TableExpression> Tables { get; set; }
+        public BooleanExpression Filter { get; set; }
     }
 }

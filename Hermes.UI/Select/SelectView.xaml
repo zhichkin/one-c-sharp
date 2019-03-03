@@ -30,7 +30,15 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <DataGrid ItemsSource="{Binding Fields}" Grid.Row="0" Margin="30,0,0,0" Height="Auto" SelectedItem="{Binding SelectedItem}"
+                <ItemsControl Grid.Row="0" ItemsSource="{Binding Fields}" Margin="30,0,0,0">
+                    <ItemsControl.Resources>
+                        <DataTemplate DataType="{x:Type ui:PropertyExpression}">
+                            <ui:PropertyView/>
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                </ItemsControl>
+
+                <!--<DataGrid ItemsSource="{Binding Fields}" Grid.Row="0" Margin="30,0,0,0" Height="Auto" SelectedItem="{Binding SelectedItem}"
                           AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False" HeadersVisibility="Column">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn IsReadOnly="True">
@@ -82,7 +90,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
-                </DataGrid>
+                </DataGrid>-->
 
                 <Expander Grid.Row="1" Name="Expander_FROM" ExpandDirection="Down" IsExpanded="True">
                     <Expander.Header>
@@ -123,7 +131,7 @@
                                 <DataTemplate DataType="{x:Type ui:SelectExpression}">
                                     <ui:SelectView />
                                 </DataTemplate>
-                                <DataTemplate DataType="{x:Type ui:JoinViewModel}">
+                                <DataTemplate DataType="{x:Type ui:JoinExpression}">
                                     <ui:JoinView />
                                 </DataTemplate>
                             </ItemsControl.Resources>
