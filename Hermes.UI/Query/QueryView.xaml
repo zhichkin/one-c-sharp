@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+    <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10"
                   VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <ItemsControl ItemsSource="{Binding QueryExpressions}"
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch">

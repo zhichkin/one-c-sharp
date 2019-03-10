@@ -127,7 +127,7 @@ namespace Zhichkin.Hermes.UI
 
         private void InitializeTestData(SelectExpression select)
         {
-            select.Alias = "TestSelect";
+            select.Alias = "<type alias here>";
 
             //select.Fields = HermesUI.GetTestEntityFields(select);
 

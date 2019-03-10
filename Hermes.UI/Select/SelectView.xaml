@@ -17,7 +17,18 @@
         <Expander.Header>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="SELECT" FontWeight="Bold" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Alias}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                <Border BorderThickness="1" Margin="5,0,0,0">
+                    <Border.BorderBrush>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Rectangle StrokeDashArray="2 2" Stroke="Gray" StrokeThickness="1"
+                  Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                  Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Border.BorderBrush>
+                    <TextBox Text="{Binding Alias}" VerticalContentAlignment="Center" BorderThickness="0"/>
+                </Border>
                 <Button Content="+" Command="{Binding AddPropertyCommand}" Margin="5,0,0,0" VerticalContentAlignment="Center" /> 
             </StackPanel>
         </Expander.Header>

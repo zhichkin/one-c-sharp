@@ -57,8 +57,8 @@ namespace Zhichkin.Hermes.UI
             TableExpression table = new EntityExpression(viewModel)
             {
                 Name = item.Name,
-                Namespace = item.Namespace,
-                Alias = string.Format("{0}_{1}", item.Name, item.TypeCode.ToString())
+                Alias = item.Name,
+                Namespace = item.Namespace
             };
             foreach (IPropertyInfo p in item.Properties)
             {

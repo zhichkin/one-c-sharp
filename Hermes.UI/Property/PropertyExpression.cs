@@ -7,10 +7,20 @@ namespace Zhichkin.Hermes.UI
     public class PropertyExpression : FunctionExpression
     {
         public PropertyExpression(TableExpression owner) : base(owner) { }
-        public string Alias { get; set; }
+        
         public FunctionExpression Function { get; set; }
         public string FullName { get { return string.Format("{0}.{1}", this.Owner.Alias, this.Name); } }
 
+        private string _Alias;
+        public string Alias
+        {
+            get { return _Alias; }
+            set
+            {
+                _Alias = value;
+                OnPropertyChanged("Alias");
+            }
+        }
         private TableExpression _Table;
         public TableExpression Table
         {
@@ -28,6 +38,7 @@ namespace Zhichkin.Hermes.UI
             set
             {
                 _Field = value;
+                this.Alias = _Field?.Name;
                 OnPropertyChanged("Field");
             }
         }
