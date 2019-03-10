@@ -4,7 +4,7 @@ using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public abstract class EntityBase : ReferenceObject, IComparable, IEntityInfo
+    public abstract class EntityBase : ReferenceObject, IComparable
     {
         private static int typeCode = 0;
 

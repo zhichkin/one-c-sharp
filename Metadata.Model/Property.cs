@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Services;
 
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class Property : EntityBase
+    public sealed partial class Property : EntityBase, IPropertyInfo
     {
         private static readonly IReferenceObjectFactory factory = MetadataPersistentContext.Current.Factory;
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Property));
@@ -49,5 +50,7 @@ namespace Zhichkin.Metadata.Model
                     });
             }
         }
+
+        IEntityInfo IPropertyInfo.Entity { get { return this.Entity; } set { this.Entity = (Entity)value; } }
     }
 }

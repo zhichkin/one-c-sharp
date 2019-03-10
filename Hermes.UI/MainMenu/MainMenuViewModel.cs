@@ -129,7 +129,7 @@ namespace Zhichkin.Hermes.UI
         {
             select.Alias = "TestSelect";
 
-            select.Fields = HermesUI.GetTestEntityFields(select);
+            //select.Fields = HermesUI.GetTestEntityFields(select);
 
             select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_1" });
             select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_2" });

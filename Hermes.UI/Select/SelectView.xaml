@@ -18,6 +18,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="SELECT" FontWeight="Bold" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Alias}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                <Button Content="+" Command="{Binding AddPropertyCommand}" Margin="5,0,0,0" VerticalContentAlignment="Center" /> 
             </StackPanel>
         </Expander.Header>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -34,7 +35,7 @@
                 <ItemsControl Grid.Row="0" ItemsSource="{Binding Fields}" Margin="30,0,0,0">
                     <ItemsControl.Resources>
                         <DataTemplate DataType="{x:Type ui:PropertyExpression}">
-                            <ui:PropertyView/>
+                            <ui:PropertyView Margin="0,0,0,5"/>
                         </DataTemplate>
                     </ItemsControl.Resources>
                 </ItemsControl>

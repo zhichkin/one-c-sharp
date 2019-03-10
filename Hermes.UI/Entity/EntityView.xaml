@@ -9,7 +9,7 @@
     
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
         <TextBox Text="{Binding Alias}" />
-        <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
+        <TextBlock Text="{Binding FullName}" Margin="5,0,0,0" />
     </StackPanel>
     
 </UserControl>

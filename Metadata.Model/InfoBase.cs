@@ -3,10 +3,11 @@ using System.Data.SqlClient;
 using Zhichkin.ORM;
 using Zhichkin.Metadata.Services;
 using System.Collections.Generic;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class InfoBase : EntityBase
+    public sealed partial class InfoBase : EntityBase, IInfoBaseInfo
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(InfoBase));
         private static readonly IMetadataService service = new MetadataService();

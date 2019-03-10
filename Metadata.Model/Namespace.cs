@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Services;
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class Namespace : EntityBase
+    public sealed partial class Namespace : EntityBase, INamespaceInfo
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Namespace));
 
@@ -49,6 +50,15 @@ namespace Zhichkin.Metadata.Model
                 if (this.state == PersistentState.New) return entities;
                 if (entities.Count > 0) return entities;
                 return service.GetChildren<Namespace, Entity>(this, "namespace");
+            }
+        }
+
+        IInfoBaseInfo INamespaceInfo.InfoBase { get { return this.InfoBase; } }
+        INamespaceInfo INamespaceInfo.Namespace
+        {
+            get
+            {
+                return (this.Owner is Namespace) ? (INamespaceInfo)this.Owner : null;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Collections.ObjectModel;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -19,6 +20,7 @@ namespace Zhichkin.Hermes.UI
     {
         public EntityExpression(TableExpression owner) : base(owner) { }
         public string Name { get; set; }
-        public override ObservableCollection<PropertyExpression> Fields { get { return HermesUI.GetTestEntityFields(this); } }
+        public INamespaceInfo Namespace { get; set; }
+        public string FullName { get { return string.Format("{0}.{1}", this.Namespace?.Name, this.Name); } }
     }
 }
