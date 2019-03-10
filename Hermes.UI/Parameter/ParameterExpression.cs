@@ -8,7 +8,7 @@ namespace Zhichkin.Hermes.UI
     {
         private readonly QueryExpression _Query;
         private string _Name = "ParameterName";
-        private ITypeInfo _Type = null;
+        private IEntityInfo _Type = null;
         private object _Value = null; // ? can be a default value
 
         public ParameterExpression(QueryExpression query) { _Query = query; }
@@ -23,7 +23,7 @@ namespace Zhichkin.Hermes.UI
                 this.OnPropertyChanged("Name");
             }
         }
-        public ITypeInfo Type
+        public IEntityInfo Type
         {
             get { return _Type; }
             set

@@ -69,10 +69,10 @@ namespace Zhichkin.Hermes.UI
             if (rightRegion == null) return;
 
             query = new QueryExpression();
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter0", Type = new TypeInfo() { Code = 1, Name = "GUID" } });
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter1", Type = new TypeInfo() { Code = 2, Name = "Int32" } });
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new TypeInfo() { Code = 3, Name = "String" } });
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new TypeInfo() { Code = 4, Name = "Boolean" } });
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter0", Type = new EntityInfo(1) { Name = "GUID" } });
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter1", Type = new EntityInfo(2) { Name = "Int32" } });
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new EntityInfo(3) { Name = "String" } });
+            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new EntityInfo(4) { Name = "Boolean" } });
 
             SelectExpression select = new SelectExpression(null);
             InitializeTestData(select);
@@ -94,7 +94,7 @@ namespace Zhichkin.Hermes.UI
             SelectExpression select = query.QueryExpressions[0];
             select.Tables.Add(new EntityExpression(select) { Name = "Table-1", Alias = "T1" });
 
-            JoinExpression join = new JoinExpression(select) { JoinType = "LEFT JOIN" };
+            JoinExpression join = new JoinExpression(select) { JoinType = "LEFT JOIN", Alias = "J1" };
             join.Table = new EntityExpression(select) { Name = "Table-2", Alias = "T2" };
             join.Filter.FilterType = "OR";
 
@@ -116,7 +116,7 @@ namespace Zhichkin.Hermes.UI
 
             select.Tables.Add(join);
 
-            select.Tables.Add(new SelectExpression(select));
+            select.Tables.Add(new SelectExpression(select) { Alias = "S1" });
         }
         private void ChangeFromOrientation()
         {

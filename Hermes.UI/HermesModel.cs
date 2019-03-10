@@ -4,9 +4,10 @@ using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class TypeInfo : ITypeInfo
+    public class EntityInfo : IEntityInfo
     {
-        public int Code { get; set; }
+        public EntityInfo(int typeCode) { this.TypeCode = typeCode; }
+        public int TypeCode { get; private set; }
         public string Name { get; set; }
     }
 }

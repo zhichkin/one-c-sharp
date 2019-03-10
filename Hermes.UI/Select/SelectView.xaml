@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             AllowDrop="True" DragEnter="View_DragEnter" DragLeave="View_DragLeave" Drop="View_Drop">
 
     <UserControl.Resources>
         <ui:OrientationEnumConverter x:Key="OrientationEnumConverter"/>

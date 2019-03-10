@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -10,22 +11,24 @@ namespace Zhichkin.Hermes.UI
         public FunctionExpression Function { get; set; }
         public string FullName { get { return string.Format("{0}.{1}", this.Owner.Alias, this.Name); } }
 
-        // used to handle property selection from ComboBox
-        public PropertyExpression PropertySelected
+        private TableExpression _Table;
+        public TableExpression Table
         {
+            get { return _Table; }
             set
             {
-                this.Name = value.Name;
-                this.Alias = string.Empty;
-                OnPropertyChanged("Alias");
-                OnPropertyChanged("FullName");
+                _Table = value;
+                OnPropertyChanged("Table");
             }
         }
-        public ObservableCollection<FunctionExpression> AvailablePropertiesForSelection
+        private PropertyExpression _Field;
+        public PropertyExpression Field
         {
-            get
+            get { return _Field; }
+            set
             {
-                return HermesUI.GetAvailablePropertiesForSelection(this.Owner);
+                _Field = value;
+                OnPropertyChanged("Field");
             }
         }
     }

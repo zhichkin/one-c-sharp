@@ -6,7 +6,7 @@ namespace Zhichkin.Hermes.UI
     public class FunctionExpression : BindableBase
     {
         public FunctionExpression(TableExpression owner) { this.Owner = owner; }
-        public TableExpression Owner { get; private set; }
+        public TableExpression Owner { get; set; }
         public string Name { get; set; }
     }
     

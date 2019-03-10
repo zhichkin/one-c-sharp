@@ -1,11 +1,10 @@
 ﻿using System;
+using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.ORM;
-using Zhichkin.Metadata.Services;
-using System.Collections.Generic;
 
 namespace Zhichkin.Metadata.Model
 {
-    public abstract class EntityBase : ReferenceObject, IComparable
+    public abstract class EntityBase : ReferenceObject, IComparable, IEntityInfo
     {
         private static int typeCode = 0;
 

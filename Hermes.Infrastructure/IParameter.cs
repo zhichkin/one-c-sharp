@@ -7,7 +7,7 @@ namespace Zhichkin.Hermes.Infrastructure
     public interface IParameter
     {
         string Name { get; set; }
-        ITypeInfo Type { get; set; }
+        IEntityInfo Type { get; set; }
         object Value { get; set; }
     }
 }

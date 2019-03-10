@@ -86,6 +86,10 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Infrastructure.csproj">
+      <Project>{6a86e382-f7ed-43ff-be21-e2127eb8199a}</Project>
+      <Name>Hermes.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\orm\ORM.csproj">
       <Project>{431d3f9f-2134-4e49-bfa3-66a629492389}</Project>
       <Name>ORM</Name>
