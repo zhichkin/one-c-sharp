@@ -52,5 +52,29 @@ namespace Zhichkin.Metadata.Model
         }
 
         IEntityInfo IPropertyInfo.Entity { get { return this.Entity; } set { this.Entity = (Entity)value; } }
+        IList<IFieldInfo> IPropertyInfo.Fields
+        {
+            get
+            {
+                List<IFieldInfo> list = new List<IFieldInfo>();
+                foreach (Field f in this.Fields)
+                {
+                    list.Add(f);
+                }
+                return list;
+            }
+        }
+        IList<IEntityInfo> IPropertyInfo.Types
+        {
+            get
+            {
+                List<IEntityInfo> list = new List<IEntityInfo>();
+                foreach (Relation r in this.Relations)
+                {
+                    list.Add(r.Entity);
+                }
+                return list;
+            }
+        }
     }
 }

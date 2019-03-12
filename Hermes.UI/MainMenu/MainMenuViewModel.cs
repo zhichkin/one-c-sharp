@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI

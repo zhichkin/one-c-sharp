@@ -1,0 +1,12 @@
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Services.deps.json
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Services.dll
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Services.pdb
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Infrastructure.dll
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Infrastructure.pdb
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Hermes.Services.csprojAssemblyReference.cache
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Hermes.Services.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Hermes.Services.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Hermes.Services.AssemblyInfo.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Hermes.Services.csproj.CopyComplete
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Zhichkin.Hermes.Services.dll
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Zhichkin.Hermes.Services.pdb

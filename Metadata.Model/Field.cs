@@ -6,10 +6,11 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 
 using Zhichkin.ORM;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class Field : EntityBase
+    public sealed partial class Field : EntityBase, IFieldInfo
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Field));
 
@@ -38,5 +39,8 @@ namespace Zhichkin.Metadata.Model
         public bool IsNullable { set { Set<bool>(value, ref is_nullable); } get { return Get<bool>(ref is_nullable); } }
         public bool IsPrimaryKey { set { Set<bool>(value, ref is_primary_key); } get { return Get<bool>(ref is_primary_key); } }
         public byte KeyOrdinal { set { Set<byte>(value, ref key_ordinal); } get { return Get<byte>(ref key_ordinal); } }
+
+        ITableInfo IFieldInfo.Table { get { return this.Table; } set { this.Table = (Table)value; } }
+        IPropertyInfo IFieldInfo.Property { get { return this.Property; } set { this.Property = (Property)value; } }
     }
 }

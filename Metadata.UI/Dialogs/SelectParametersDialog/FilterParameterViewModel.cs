@@ -19,8 +19,7 @@ namespace Zhichkin.Metadata.UI
         };
 
         private object _value;
-        private bool _useMe;
-
+        
         public bool UseMe { get; set; }
         public InfoBase InfoBase { set; get; }
         public string Name { set; get; }

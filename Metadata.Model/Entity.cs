@@ -31,7 +31,7 @@ namespace Zhichkin.Metadata.Model
             return value;
         }
         public static Entity Select(Guid identity) { return DataMapper.Select(identity); }
-        
+
         public Entity() : base(_mapper) { }
         public Entity(Guid identity) : base(_mapper, identity) { }
         public Entity(Guid identity, PersistentState state) : base(_mapper, identity, state) { }
@@ -119,7 +119,7 @@ namespace Zhichkin.Metadata.Model
             return null;
         }
 
-        INamespaceInfo IEntityInfo.Namespace { get { return this.Namespace; }set { this.Namespace = (Namespace)value; } }
+        INamespaceInfo IEntityInfo.Namespace { get { return this.Namespace; } set { this.Namespace = (Namespace)value; } }
         IList<IPropertyInfo> IEntityInfo.Properties
         {
             get
@@ -132,5 +132,19 @@ namespace Zhichkin.Metadata.Model
                 return list;
             }
         }
+        IEntityInfo IEntityInfo.Owner { get { return this.Owner; } set { this.Owner = (Entity)value; } }
+        IList<ITableInfo> IEntityInfo.Tables
+        {
+            get
+            {
+                List<ITableInfo> list = new List<ITableInfo>();
+                foreach (Table t in this.Tables)
+                {
+                    list.Add(t);
+                }
+                return list;
+            }
+        }
+
     }
 }

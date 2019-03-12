@@ -2,6 +2,7 @@
 using Zhichkin.Metadata.Model;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Metadata.Services
 {

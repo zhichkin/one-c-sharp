@@ -75,8 +75,6 @@
       <DependentUpon>BooleanExpressionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Function\BooleanExpression.cs" />
-    <Compile Include="HermesServices.cs" />
-    <Compile Include="HermesModel.cs" />
     <Compile Include="Join\JoinView.xaml.cs">
       <DependentUpon>JoinView.xaml</DependentUpon>
     </Compile>

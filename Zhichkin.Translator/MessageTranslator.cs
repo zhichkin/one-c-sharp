@@ -6,6 +6,7 @@ using Zhichkin.Integrator.Model;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Integrator.Translator
 {

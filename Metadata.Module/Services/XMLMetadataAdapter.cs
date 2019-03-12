@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Configuration;
 using Zhichkin.Metadata.Notifications;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Metadata.Services
 {

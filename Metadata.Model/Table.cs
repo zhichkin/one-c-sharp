@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Services;
 
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class Table : EntityBase
+    public sealed partial class Table : EntityBase, ITableInfo
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Table));
         private static readonly IMetadataService service = new MetadataService();
@@ -46,6 +47,20 @@ namespace Zhichkin.Metadata.Model
                     tableName = string.Format("[{0}].[{1}]", this.Schema, this.Name);
                 }
                 return tableName;
+            }
+        }
+
+        IEntityInfo ITableInfo.Entity { get { return this.Entity; } set { this.Entity = (Entity)value; } }
+        IList<IFieldInfo> ITableInfo.Fields
+        {
+            get
+            {
+                List<IFieldInfo> list = new List<IFieldInfo>();
+                foreach (Field f in this.Fields)
+                {
+                    list.Add(f);
+                }
+                return list;
             }
         }
     }

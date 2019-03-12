@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Zhichkin.ChangeTracking;
+using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Model;
 using M = Zhichkin.Metadata.Model;
 

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Metadata.Services
 {

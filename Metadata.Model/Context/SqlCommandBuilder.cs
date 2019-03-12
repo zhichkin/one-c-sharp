@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model
