@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Zhichkin.Hermes.Infrastructure;
+using Zhichkin.Hermes.Services;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -32,6 +33,7 @@ namespace Zhichkin.Hermes.UI
             this.AddNewSelectStatementCommand = new DelegateCommand(this.AddNewSelectStatement);
             this.AddTableToSelectStatementCommand = new DelegateCommand(this.AddTableToSelectStatement);
             this.ChangeFromOrientationCommand = new DelegateCommand(this.ChangeFromOrientation);
+            this.BuildMetadataTreeCommand = new DelegateCommand(this.BuildMetadataTree);
         }
         private string GetErrorText(Exception ex)
         {
@@ -48,6 +50,7 @@ namespace Zhichkin.Hermes.UI
         public ICommand AddNewSelectStatementCommand { get; private set; }
         public ICommand AddTableToSelectStatementCommand { get; private set; }
         public ICommand ChangeFromOrientationCommand { get; private set; }
+        public ICommand BuildMetadataTreeCommand { get; private set; }
         
         private void ErrorProneCommand()
         {
@@ -134,6 +137,22 @@ namespace Zhichkin.Hermes.UI
 
             select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_1" });
             select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_2" });
+        }
+
+        private void BuildMetadataTree()
+        {
+            DocumentsTreeService service = new DocumentsTreeService();
+            MetadataTreeNode root = (MetadataTreeNode)service.BuildDocumentsTree(null);
+
+            Z.ClearRightRegion(this.regionManager);
+            IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
+            if (rightRegion == null) return;
+
+            MetadataTreeViewModel model = new MetadataTreeViewModel();
+            model.Nodes.Add(root);
+            MetadataTreeView view = new MetadataTreeView();
+            view.DataContext = model;
+            rightRegion.Add(view);
         }
     }
 }

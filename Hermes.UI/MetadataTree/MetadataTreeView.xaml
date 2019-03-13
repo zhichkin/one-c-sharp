@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="Zhichkin.Hermes.UI.MetadataTreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
+             xmlns:model="clr-namespace:Zhichkin.Hermes.Infrastructure;assembly=Zhichkin.Hermes.Infrastructure"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
+            <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
+            <BitmapImage x:Key="Icon_Enumeration" UriSource="..\Images\Перечисление.png"/>
+            <BitmapImage x:Key="Icon_Charecteristic" UriSource="..\Images\ПланВидовХарактеристик.png"/>
+            <BitmapImage x:Key="Icon_Accounts" UriSource="..\Images\ПланСчетов.png"/>
+            <BitmapImage x:Key="Icon_InfoRegister" UriSource="..\Images\РегистрСведений.png"/>
+            <BitmapImage x:Key="Icon_AccumRegister" UriSource="..\Images\РегистрНакопления.png"/>
+            <BitmapImage x:Key="Icon_AccountsRegister" UriSource="..\Images\РегистрБухгалтерии.png"/>
+            <BitmapImage x:Key="Icon_TablePart" UriSource="..\Images\ВложеннаяТаблица.png"/>
+            <BitmapImage x:Key="Icon_System" UriSource="..\Images\СтандартныйРеквизит.png"/>
+            <BitmapImage x:Key="Icon_Property" UriSource="..\Images\Реквизит.png"/>
+            <BitmapImage x:Key="Icon_Dimension" UriSource="..\Images\Измерение.png"/>
+            <BitmapImage x:Key="Icon_Measure" UriSource="..\Images\Ресурс.png"/>
+            <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <TreeView ItemsSource="{Binding Path=Nodes}" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TreeView.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type model:MetadataTreeNode}" ItemsSource="{Binding Path=Children}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Image>
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Setters>
+                                        <Setter Property="Source" Value="{StaticResource Icon_TablePart}"/>
+                                    </Style.Setters>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="Справочник">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="Документ">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="ПланВидовХарактеристик">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="ПланСчетов">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="РегистрСведений">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="РегистрНакопления">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="РегистрБухгалтерии">
+                                            <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                        </DataTrigger>
+                                        
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="Справочник" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="Документ" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="ПланВидовХарактеристик" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Charecteristic}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="ПланСчетов" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_Accounts}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="РегистрСведений" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_InfoRegister}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="РегистрНакопления" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccumRegister}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="РегистрБухгалтерии" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Source" Value="{StaticResource Icon_AccountsRegister}"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Path=Name}"/>
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding Path=Filter.Conditions}" Margin="15,0,0,0">
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type model:ComparisonExpression}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{StaticResource Icon_Property}"/>
+                                    <TextBlock Text="{Binding Path=LeftExpression.Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=Filter.Conditions.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                    </ItemsControl>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+        </TreeView.Resources>
+    </TreeView>
+
+</UserControl>

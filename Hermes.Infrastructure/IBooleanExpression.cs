@@ -31,7 +31,7 @@ namespace Zhichkin.Hermes.Infrastructure
     {
         BooleanExpressionType ExpressionType { get; set; }
     }
-    public interface IBooleanGroupExpression : IBooleanExpression
+    public interface IBooleanTreeExpression : IBooleanExpression
     {
         IBooleanExpression Parent { get; set; }
         IList<IBooleanExpression> Children { get; set; }
@@ -41,5 +41,36 @@ namespace Zhichkin.Hermes.Infrastructure
     {
         IFunctionExpression LeftExpression { get; set; }
         IFunctionExpression RightExpression { get; set; }
+    }
+
+    public class BooleanExpression : IBooleanTreeExpression
+    {
+        public BooleanExpression()
+        {
+            this.Conditions = new List<IComparisonExpression>();
+        }
+        public string Name { get; set; }
+        public BooleanExpressionType ExpressionType { get; set; }
+        public IBooleanExpression Parent { get; set; }
+        public IList<IBooleanExpression> Children { get; set; }
+        public IList<IComparisonExpression> Conditions { get; set; }
+        public object Evaluate(params object[] parameters) { throw new NotImplementedException(); }
+    }
+    public class PropertyExpression : IPropertyExpression
+    {
+        public PropertyExpression() { }
+        public string Name { get; set; }
+        public IPropertyInfo PropertyInfo { get; set; }
+        public object Evaluate(params object[] parameters) { throw new NotImplementedException(); }
+    }
+
+    public class ComparisonExpression : IComparisonExpression
+    {
+        public ComparisonExpression() { }
+        public string Name { get; set; }
+        public IFunctionExpression LeftExpression { get; set; }
+        public IFunctionExpression RightExpression { get; set; }
+        public BooleanExpressionType ExpressionType { get; set; }
+        public object Evaluate(params object[] parameters) { throw new NotImplementedException(); }
     }
 }

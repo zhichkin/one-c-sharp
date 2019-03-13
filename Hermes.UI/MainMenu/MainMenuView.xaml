@@ -13,6 +13,8 @@
                 <MenuItem Header="Add new SELECT statement" Command="{Binding AddNewSelectStatementCommand}"/>
                 <MenuItem Header="Add TABLE to select statement" Command="{Binding AddTableToSelectStatementCommand}"/>
                 <MenuItem Header="Change FROM orientation" Command="{Binding ChangeFromOrientationCommand}"/>
+                <Separator/>
+                <MenuItem Header="Build metadata tree" Command="{Binding BuildMetadataTreeCommand}"/>
             </MenuItem>
         </Menu>
     </Grid>

@@ -57,6 +57,9 @@
       <Name>Shell</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.Hermes.Module.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>

@@ -101,3 +101,6 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Property\PropertyView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Property\PropertyView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Function\BooleanExpressionView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Function\BooleanExpressionView.baml
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Hermes.UI.dll.config
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.baml
