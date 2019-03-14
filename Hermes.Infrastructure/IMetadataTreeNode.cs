@@ -12,6 +12,7 @@ namespace Zhichkin.Hermes.Infrastructure
         IMetadataInfo MetadataInfo { get; set; }
         IBooleanExpression Filter { get; set; }
         IFunctionExpression Function { get; set; }
+        int Count { get; set; }
     }
     public sealed class MetadataTreeNode : IMetadataTreeNode
     {

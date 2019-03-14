@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -170,7 +171,7 @@ namespace Zhichkin.Hermes.Services
                             sw.Elapsed.TotalSeconds.ToString());
                         notifyStateCallback(message);
                         WriteToLog(message);
-                        await Task.Delay(100);
+                        await Task.Delay(100); // 1/10 секунды
                     }
                 }
             }
@@ -272,6 +273,9 @@ namespace Zhichkin.Hermes.Services
 
             string table_name = ((Entity)root.MetadataInfo).MainTable.Name;
 
+            DateTime start_of_period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
+            start_of_period = start_of_period.AddYears(2000); // fuck 1C !!!
+
             StringBuilder query = new StringBuilder();
             query.Append("SELECT [_IDRRef] FROM [" + table_name + "] WHERE [_Date_Time] >= @_Date_Time;");
 
@@ -281,7 +285,7 @@ namespace Zhichkin.Hermes.Services
                 connection.Open();
                 command.CommandType = CommandType.Text;
                 command.CommandText = query.ToString();
-                command.Parameters.AddWithValue("_Date_Time", period.AddYears(2000)); // fuck 1C !!!
+                command.Parameters.AddWithValue("_Date_Time", start_of_period); 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -293,7 +297,7 @@ namespace Zhichkin.Hermes.Services
             }
             root.Count = keys.Count;
 
-            WriteToLog("Priod = " + period.ToString("dd.MM.yyyy hh:mm:ss"));
+            WriteToLog("Priod = " + start_of_period.ToString("dd.MM.yyyy HH:mm:ss.ffff", CultureInfo.InvariantCulture));
             WriteToLog(query.ToString());
             WriteToLog("Count = " + root.Count.ToString() + Environment.NewLine);
 

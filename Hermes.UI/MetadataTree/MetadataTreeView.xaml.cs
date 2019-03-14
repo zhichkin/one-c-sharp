@@ -84,12 +84,32 @@ namespace Zhichkin.Hermes.UI
         public void DocumentsTreeIsBuilt(MetadataTreeNode root)
         {
             if (root == null) return;
+
+            RemoveZeroCountNodes(root);
+
             Dispatcher.Invoke(() =>
             {
                 MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
                 if (viewModel == null) return;
                 viewModel.Nodes.Add(root);
             });
+        }
+        private void RemoveZeroCountNodes(IMetadataTreeNode root)
+        {
+            int index = 0;
+            while (index < root.Children.Count)
+            {
+                IMetadataTreeNode node = root.Children[index];
+                if (node.Count == 0)
+                {
+                    root.Children.RemoveAt(index);
+                }
+                else
+                {
+                    RemoveZeroCountNodes(node);
+                    index++;
+                }
+            }
         }
     }
 }
