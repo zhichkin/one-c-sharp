@@ -6,6 +6,7 @@ using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Hermes.Services;
@@ -141,15 +142,11 @@ namespace Zhichkin.Hermes.UI
 
         private void BuildMetadataTree()
         {
-            DocumentsTreeService service = new DocumentsTreeService();
-            MetadataTreeNode root = (MetadataTreeNode)service.BuildDocumentsTree(null);
-
             Z.ClearRightRegion(this.regionManager);
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;
 
             MetadataTreeViewModel model = new MetadataTreeViewModel();
-            model.Nodes.Add(root);
             MetadataTreeView view = new MetadataTreeView();
             view.DataContext = model;
             rightRegion.Add(view);

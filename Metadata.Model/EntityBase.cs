@@ -16,7 +16,7 @@ namespace Zhichkin.Metadata.Model
 
         public string Name { set { Set<string>(value, ref name); } get { return Get<string>(ref name); } }
 
-        public int TypeCode
+        public virtual int TypeCode
         {
             get
             {

@@ -25,5 +25,7 @@ namespace Zhichkin.Hermes.Infrastructure
         public IMetadataInfo MetadataInfo { get; set; }
         public IBooleanExpression Filter { get; set; }
         public IFunctionExpression Function { get; set; }
+        public int Count { get; set; }
+        public List<Guid> Keys { get; set; }
     }
 }

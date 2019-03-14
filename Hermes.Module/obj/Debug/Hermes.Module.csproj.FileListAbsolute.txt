@@ -45,3 +45,4 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.Module\obj\Debug\Hermes.Module.csproj.Core
 C:\Users\User\Desktop\GitHub\Z\Hermes.Module\obj\Debug\Hermes.Module.csproj.CopyComplete
 C:\Users\User\Desktop\GitHub\Z\Hermes.Module\obj\Debug\Zhichkin.Hermes.Module.dll
 C:\Users\User\Desktop\GitHub\Z\Hermes.Module\obj\Debug\Zhichkin.Hermes.Module.pdb
+C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Hermes.Module.dll.config
