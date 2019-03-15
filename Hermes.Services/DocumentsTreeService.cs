@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Model;
@@ -312,5 +311,238 @@ namespace Zhichkin.Hermes.Services
                 writer.Close();
             }
         }
+
+        public async Task FindForeignReferences(MetadataTreeNode node)
+        {
+            IEntityInfo info = node.MetadataInfo as IEntityInfo;
+            if (info == null) return;
+
+            Entity entity = (Entity)info;
+            List<Property> fkeys = GetForeignKeyProperties(entity);
+            string query = BuildForeignKeysQueryText(node, entity, fkeys);
+
+            await Task.Delay(1);
+        }
+        private List<Property> GetForeignKeyProperties(Entity entity)
+        {
+            List<Property> list = new List<Property>();
+
+            foreach (Property property in entity.Properties)
+            {
+                foreach (Field field in property.Fields)
+                {
+                    if (field.Purpose == FieldPurpose.Object)
+                    {
+                        list.Add(property);
+                        break;
+                    }
+                }
+            }
+
+            return list;
+        }
+        private string BuildForeignKeysQueryText(MetadataTreeNode node, Entity entity, List<Property> properties)
+        {
+            string table_name = entity.MainTable.Name;
+            string where_clause = BuildWhereClause(node);
+            string field_names = BuildFieldNamesText(properties);
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("WITH CTE{0} ({1}) AS", table_name, field_names));
+            query.AppendLine("(");
+            query.AppendLine(string.Format("SELECT {0} FROM [{1}]", field_names, table_name));
+            query.AppendLine(where_clause);
+            query.AppendLine(")");
+
+            for (int i = 0; i < properties.Count; i++)
+            {
+                query.AppendLine(BuildForeignKeyQueryText(entity, properties[i]));
+                if (properties.Count > 1 && i < properties.Count - 1)
+                {
+                    query.AppendLine("UNION");
+                }
+            }
+            query.Append(";");
+
+            return query.ToString();
+        }
+        private string BuildFieldNamesText(List<Property> properties)
+        {
+            StringBuilder field_names = new StringBuilder();
+            foreach (Property property in properties)
+            {
+                if (property.Fields.Count == 1)
+                {
+                    if (field_names.Length > 0)
+                    {
+                        field_names.Append(", ");
+                    }
+                    field_names.Append(string.Format("[{0}]", property.Fields[0].Name));
+                }
+                else
+                {
+                    foreach (Field field in property.Fields)
+                    {
+                        if (field.Purpose == FieldPurpose.Object || field.Purpose == FieldPurpose.Locator || field.Purpose == FieldPurpose.TypeCode)
+                        {
+                            if (field_names.Length > 0)
+                            {
+                                field_names.Append(", ");
+                            }
+                            field_names.Append(string.Format("[{0}]", field.Name));
+                        }
+                    }
+                }
+            }
+            return field_names.ToString();
+        }
+        private string BuildWhereClause(MetadataTreeNode node)
+        {
+            if (!(node.Filter.ExpressionType == BooleanExpressionType.OR || node.Filter.ExpressionType == BooleanExpressionType.AND))
+            {
+                return string.Empty;
+            }
+            StringBuilder where = new StringBuilder("WHERE ");
+
+            MetadataTreeNode parent = GetParent(node);
+            string keys_list_table = BuildParentEntityKeysTableQueryText(parent);
+
+            BooleanExpression filter = (BooleanExpression)node.Filter;
+            foreach (IComparisonExpression condition in filter.Conditions)
+            {
+                Property property = (Property)((PropertyExpression)condition.LeftExpression).PropertyInfo;
+            }
+
+
+            return where.ToString();
+        }
+        private string BuildForeignKeyQueryText(Entity entity, Property property)
+        {
+            StringBuilder query = new StringBuilder();
+
+            string type_code = entity.Code.ToString();
+            string table_name = entity.MainTable.Name;
+
+            if (property.Fields.Count == 1)
+            {
+                query.Append(string.Format(
+                    "SELECT {0} AS [TYPE_CODE], [{1}] AS [FK_VALUE] FROM CTE{2} WHERE [{1}] > 0x00000000000000000000000000000000",
+                    type_code, property.Fields[0].Name, table_name));
+            }
+            else
+            {
+                string value_name = string.Empty;
+                string locator_name = string.Empty;
+                string type_code_name = string.Empty;
+                foreach (Field field in property.Fields)
+                {
+                    switch (field.Purpose)
+                    {
+                        case FieldPurpose.Object: { value_name = field.Name; break; }
+                        case FieldPurpose.Locator: { locator_name = field.Name; break; }
+                        case FieldPurpose.TypeCode: { type_code_name = field.Name; break; }
+                    }
+                }
+                if (locator_name == string.Empty)
+                {
+                    query.Append(string.Format(
+                        "SELECT CAST([{0}] AS int) AS [TYPE_CODE], [{1}] AS [FK_VALUE] FROM CTE{2} WHERE [{0}] > 0x00000000 AND [{1}] > 0x00000000000000000000000000000000",
+                        type_code_name, value_name, table_name));
+                }
+                else
+                {
+                    query.Append(string.Format(
+                        "SELECT CAST([{0}] AS int) AS [TYPE_CODE], [{1}] AS [FK_VALUE] FROM CTE{2} WHERE [{3}] = 0x08  AND [{0}] > 0x00000000 AND [{1}] > 0x00000000000000000000000000000000",
+                        type_code_name, value_name, table_name, locator_name));
+                }
+            }
+
+            return query.ToString();
+        }
+        private MetadataTreeNode GetParent(MetadataTreeNode node)
+        {
+            MetadataTreeNode root = node;
+            while (root.Parent != null)
+            {
+                root = (MetadataTreeNode)root.Parent;
+            }
+            return root;
+        }
+        private string BuildParentEntityKeysTableQueryText(MetadataTreeNode node)
+        {
+            StringBuilder queryText = new StringBuilder();
+            queryText.Append("DECLARE @KeysListXML nvarchar(max) = '<list>");
+            foreach (Guid key in node.Keys)
+            {
+                queryText.AppendFormat("<item key=\"{0}\"/>", key.ToString());
+            }
+            queryText.AppendLine("</list>';");
+            queryText.AppendLine("DECLARE @xml xml = CAST(@KeysListXML AS xml);");
+            queryText.AppendLine("DECLARE @KeysListTable TABLE([key] binary(16) PRIMARY KEY);");
+            queryText.AppendLine("INSERT @KeysListTable([key])");
+            queryText.AppendLine("SELECT");
+            queryText.AppendLine("list.[item].value('@key', 'uniqueidentifier')");
+            queryText.AppendLine("FROM @xml.nodes('list/item') AS list([item]);");
+            return queryText.ToString();
+        }
+        private string BuildSelectEntityQueryText(Entity entity, Property property)
+        {
+            string table_name = entity.MainTable.Name;
+
+            string where_filter = "";
+            if (property.Fields.Count == 1)
+            {
+                where_filter = string.Format("S.[{0}] = T.[key]", property.Fields[0].Name);
+            }
+            else
+            {
+                string value_name = "";
+                string locator_name = "";
+                string type_code_name = "";
+                int type_code = entity.Code;
+                foreach (IFieldInfo field in property.Fields)
+                {
+                    switch (field.Purpose)
+                    {
+                        case FieldPurpose.Object: { value_name = field.Name; break; }
+                        case FieldPurpose.Locator: { locator_name = field.Name; break; }
+                        case FieldPurpose.TypeCode: { type_code_name = field.Name; break; }
+                    }
+                }
+                if (locator_name == string.Empty)
+                {
+                    where_filter = string.Format("S.[{0}] = CAST({1} AS binary(4)) AND S.[{2}] = T.[key]",
+                        type_code_name, type_code, value_name);
+                }
+                else
+                {
+                    where_filter = string.Format("S.[{0}] = 0x08 AND S.[{1}] = CAST({2} AS binary(4)) AND S.[{3}] = T.[key]",
+                        locator_name, type_code_name, type_code, value_name);
+                }
+            }
+
+            string select_statement = string.Format("SELECT {fields_to_select} FROM [{0}] AS S INNER JOIN @KeysListTable AS T ON {1};", table_name, where_filter);
+
+            return select_statement;
+        }
     }
 }
+
+// 0x00000000000000000000000000000000
+// '00000000-0000-0000-0000-000000000000'
+
+// SELECT [key] INTO #ParentKeysTable FROM [parent table used to filter child tables];
+// CREATE CLUSTERED INDEX cx ON #ParentKeysTable([key]);
+// SELECT * FROM #ParentKeysTable;
+
+//DECLARE @ParentKeysTable TABLE([key] uniqueidentifier PRIMARY KEY);
+//INSERT @ParentKeysTable([key]) VALUES('00000000-0000-0000-0000-0000FFFFFFF2'), ('00000000-0000-0000-0000-0000FFFFFFF3');
+
+//WITH CTE(fields to look up foreign keys from child table) AS
+//(
+//    SELECT [fk properties referencing some outer entity] FROM [child_table] AS C INNER JOIN @ParentKeysTable AS P ON C.[fk child property 1] = P.[key] -- select for each fk property
+//    UNION (?) ALL -- instead of UNION can be WHERE with OR syntax used ...
+//    SELECT [fk properties referencing some outer entity] FROM [child_table] AS C INNER JOIN @ParentKeysTable AS P ON C.[fk child property 2] = P.[key] -- select for each fk property
+//)
+//SELECT F1 AS TYPE_CODE, F2 AS FK_VALUE FROM CTE WHERE F0 = 0x08 AND F1 > 0 AND F2 > 0
+//UNION ALL
+//SELECT F3 AS TYPE_CODE, F4 AS FK_VALUE FROM CTE;
