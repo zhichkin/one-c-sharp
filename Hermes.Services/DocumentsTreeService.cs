@@ -4,13 +4,17 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Model;
+using Zhichkin.Metadata.Services;
 using Zhichkin.ORM;
+
+//System.Dynamic.Runtime
 
 namespace Zhichkin.Hermes.Services
 {
@@ -26,10 +30,25 @@ namespace Zhichkin.Hermes.Services
             connection_string = ConfigurationManager.ConnectionStrings[CONST_ConnectionStringName].ConnectionString;
             temporary_catalog = ConfigurationManager.AppSettings[CONST_MetadataCatalogSettingName];
         }
-
+        private string GetErrorText(Exception ex)
+        {
+            string errorText = string.Empty;
+            Exception error = ex;
+            while (error != null)
+            {
+                errorText += (errorText == string.Empty) ? error.Message : Environment.NewLine + error.Message;
+                error = error.InnerException;
+            }
+            return errorText;
+        }
+        public Dictionary<string, object> Parameters { get; } = new Dictionary<string, object>();
+        
         public async Task BuildDocumentsTree(IEntityInfo document, DateTime period, Action<string> notifyStateCallback, Action<MetadataTreeNode> workIsDoneCallback)
         {
             if (document == null) throw new ArgumentNullException("document");
+
+            this.Parameters.Clear();
+            this.Parameters.Add("Period", period);
 
             MetadataTreeNode root = new MetadataTreeNode()
             {
@@ -40,14 +59,56 @@ namespace Zhichkin.Hermes.Services
             string message = "Start: " + DateTime.Now.ToUniversalTime();
             WriteToLog(message);
             notifyStateCallback(message);
-            await FillChildren(root, period, notifyStateCallback);
+            await FillChildren(root, notifyStateCallback);
             message = "End: " + DateTime.Now.ToUniversalTime();
             WriteToLog(message);
             notifyStateCallback(message);
             notifyStateCallback("");
+
+            RemoveZeroCountNodes(root);
             workIsDoneCallback(root);
+
+            try
+            {
+                CreateExchangeTable();
+                //await RegisterEntityReferencesForExchange(root); !!!
+                await RegisterForeignReferencesForExchange(root);
+                List<dynamic> list = SelectExchangeInfo((InfoBase)document.Namespace.InfoBase);
+                foreach (dynamic item in list)
+                {
+                    MetadataTreeNode node = new MetadataTreeNode()
+                    {
+                        Name = item.Entity.Name,
+                        Count = item.Count,
+                        MetadataInfo = item.Entity
+                    };
+                    workIsDoneCallback(node);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteToLog(GetErrorText(ex));
+            }
         }
-        private async Task FillChildren(MetadataTreeNode parent, DateTime period, Action<string> notifyStateCallback)
+        private void RemoveZeroCountNodes(IMetadataTreeNode root)
+        {
+            int index = 0;
+            while (index < root.Children.Count)
+            {
+                IMetadataTreeNode node = root.Children[index];
+                if (node.Count == 0)
+                {
+                    root.Children.RemoveAt(index);
+                }
+                else
+                {
+                    RemoveZeroCountNodes(node);
+                    index++;
+                }
+            }
+        }
+
+        private async Task FillChildren(MetadataTreeNode parent, Action<string> notifyStateCallback)
         {
             if (!(parent.MetadataInfo is IEntityInfo)) return;
 
@@ -156,12 +217,12 @@ namespace Zhichkin.Hermes.Services
                         if (current_nested_node == null)
                         {
                             ((BooleanExpression)current_entity_node.Filter).Conditions.Add(ce);
-                            CountDocuments(current_entity_node, current_property, period);
+                            CountDocuments(current_entity_node, current_property);
                         }
                         else
                         {
                             ((BooleanExpression)current_nested_node.Filter).Conditions.Add(ce);
-                            CountDocuments(current_nested_node, current_property, period);
+                            CountDocuments(current_nested_node, current_property);
                         }
                         sw.Stop();
                         
@@ -176,7 +237,7 @@ namespace Zhichkin.Hermes.Services
             }
             await Task.Delay(1);
         }
-        private void CountDocuments(MetadataTreeNode node, IPropertyInfo property, DateTime period)
+        private void CountDocuments(MetadataTreeNode node, IPropertyInfo property)
         {
             if (property.Fields == null || property.Fields.Count == 0)
             {
@@ -189,7 +250,7 @@ namespace Zhichkin.Hermes.Services
 
             MetadataTreeNode root = node;
             while (root.Parent != null) { root = (MetadataTreeNode)root.Parent; }
-            if (root.Keys == null) { root.Keys = GetRootKeys(root, period); }
+            if (root.Keys == null) { root.Keys = GetRootKeys(root); }
             if (root.Keys.Count == 0) return;
             
             StringBuilder queryText = new StringBuilder();
@@ -266,8 +327,10 @@ namespace Zhichkin.Hermes.Services
                 }
             }
         }
-        private List<Guid> GetRootKeys(MetadataTreeNode root, DateTime period)
+        private List<Guid> GetRootKeys(MetadataTreeNode root)
         {
+            DateTime period = (DateTime)this.Parameters["Period"];
+
             List<Guid> keys = new List<Guid>();
 
             string table_name = ((Entity)root.MetadataInfo).MainTable.Name;
@@ -312,23 +375,157 @@ namespace Zhichkin.Hermes.Services
             }
         }
 
-        public async Task FindForeignReferences(MetadataTreeNode node)
+        public async Task RegisterEntityReferencesForExchange(MetadataTreeNode node)
         {
-            IEntityInfo info = node.MetadataInfo as IEntityInfo;
-            if (info == null) return;
+            //TODO: оптимизация постоянного получения значений родительских ключей
+            await Task.Delay(1);
+        }
 
-            Entity entity = (Entity)info;
-            List<Property> fkeys = GetForeignKeyProperties(entity);
-            string query = BuildForeignKeysQueryText(node, entity, fkeys);
+        private void CreateExchangeTable()
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(@"IF(NOT OBJECT_ID(N'[dbo].[Z_ExchangeTable]') IS NULL) DROP TABLE Z_ExchangeTable");
+            query.AppendLine(@"CREATE TABLE Z_ExchangeTable(TYPE_CODE int, FK_VALUE binary(16));");
+            query.AppendLine(@"CREATE CLUSTERED INDEX CX_Z_ExchangeTable ON Z_ExchangeTable(TYPE_CODE, FK_VALUE);");
+            query.Append(@"CREATE INDEX IX_Z_ExchangeTable ON Z_ExchangeTable(FK_VALUE);");
+
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                int rowsAffected = command.ExecuteNonQuery();
+            }
+        }
+        private List<dynamic> SelectExchangeInfo(InfoBase infoBase)
+        {
+            List<dynamic> list = new List<dynamic>();
+
+            StringBuilder query = new StringBuilder();
+            query.Append("SELECT TYPE_CODE, COUNT(FK_VALUE) AS [FK_COUNT] FROM Z_ExchangeTable GROUP BY TYPE_CODE;");
+
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    IPersistentContext context = MetadataPersistentContext.Current;
+                    MetadataService service = new MetadataService();
+                    while (reader.Read())
+                    {
+                        dynamic item = new ExpandoObject();
+                        Entity entity = service.GetEntityInfo(infoBase, (int)reader[0]);
+                        int count = (int)reader[1];
+                        ((IDictionary<string, object>)item).Add("Entity", entity);
+                        ((IDictionary<string, object>)item).Add("Count", count);
+                        list.Add(item);
+                    }
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Процедура отбирает объекты узла данных,
+        /// по настроенному для него фильтру,
+        /// а затем регистрирует внешние ссылки его свойств для обмена.
+        /// Важно: свойства, используемые для фильтрации,
+        /// не используются для поиска внешних объектов!
+        /// </summary>
+        /// <param name="node">
+        /// Узел данных, для объектов которого
+        /// необходимо выполнить регистрацию
+        /// внешних ссылок для обмена.
+        /// </param>
+        /// <returns></returns>
+        public async Task RegisterForeignReferencesForExchange(MetadataTreeNode node)
+        {
+            Entity entity = node.MetadataInfo as Entity;
+            if (entity == null) { throw new ArgumentNullException("node"); }
+
+            Entity parent = null;
+            MetadataTreeNode parent_node = GetParentNode(node);
+            if (parent_node != null) { parent = parent_node.MetadataInfo as Entity; }
+            List<Guid> parent_keys = GetParentKeys(node);
+            List<Property> filter_properties = GetFilterProperties(node);
+            List<Property> foreign_references = GetForeignKeyProperties(entity, filter_properties);
+
+            string query = BuildSelectForeignKeysScript(parent, entity, filter_properties, parent_keys, foreign_references);
+
+            DateTime period = (DateTime)this.Parameters["Period"];
+            period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
+            period = period.AddYears(2000); // fuck 1C !!!
+
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                if (parent_node == null)
+                {
+                    command.Parameters.AddWithValue("_Date_Time", period);
+                }
+                int rowsAffected = command.ExecuteNonQuery();
+            }
 
             await Task.Delay(1);
         }
-        private List<Property> GetForeignKeyProperties(Entity entity)
+        private MetadataTreeNode GetParentNode(MetadataTreeNode node)
+        {
+            IMetadataTreeNode parent = node.Parent;
+            while (parent != null)
+            {
+                if (!(parent.MetadataInfo is INamespaceInfo))
+                {
+                    break;
+                }
+                parent = parent.Parent;
+            }
+            return (parent as MetadataTreeNode);
+        }
+        private List<Property> GetFilterProperties(MetadataTreeNode node)
+        {
+            List<Property> list = new List<Property>();
+
+            BooleanExpression filter = node.Filter as BooleanExpression;
+            if (filter == null || filter.Conditions.Count == 0)
+            {
+                return list;
+            }
+
+            foreach (IComparisonExpression condition in filter.Conditions)
+            {
+                PropertyExpression expression = condition.LeftExpression as PropertyExpression;
+                list.Add((Property)expression.PropertyInfo);
+            }
+
+            return list;
+        }
+        private List<Property> GetForeignKeyProperties(Entity entity, List<Property> filter_properties)
         {
             List<Property> list = new List<Property>();
 
             foreach (Property property in entity.Properties)
             {
+                //if (property.Purpose == PropertyPurpose.System) continue;
+                if (property.Name == "Ссылка") continue;
+
+                bool isFilterProperty = false;
+                foreach (Property filter in filter_properties)
+                {
+                    if (property == filter)
+                    {
+                        isFilterProperty = true;
+                        break;
+                    }
+                }
+                if (isFilterProperty) continue;
+
                 foreach (Field field in property.Fields)
                 {
                     if (field.Purpose == FieldPurpose.Object)
@@ -341,188 +538,305 @@ namespace Zhichkin.Hermes.Services
 
             return list;
         }
-        private string BuildForeignKeysQueryText(MetadataTreeNode node, Entity entity, List<Property> properties)
-        {
-            string table_name = entity.MainTable.Name;
-            string where_clause = BuildWhereClause(node);
-            string field_names = BuildFieldNamesText(properties);
-            StringBuilder query = new StringBuilder();
-            query.AppendLine(string.Format("WITH CTE{0} ({1}) AS", table_name, field_names));
-            query.AppendLine("(");
-            query.AppendLine(string.Format("SELECT {0} FROM [{1}]", field_names, table_name));
-            query.AppendLine(where_clause);
-            query.AppendLine(")");
 
-            for (int i = 0; i < properties.Count; i++)
+        private List<Guid> GetParentKeys(MetadataTreeNode node)
+        {
+            if (node == null) { throw new ArgumentNullException("node"); }
+
+            MetadataTreeNode parent = GetParentNode(node);
+            if (parent == null) { return null; }
+            if (parent.Keys != null) { return parent.Keys; }
+            if (parent.Parent == null)
             {
-                query.AppendLine(BuildForeignKeyQueryText(entity, properties[i]));
-                if (properties.Count > 1 && i < properties.Count - 1)
-                {
-                    query.AppendLine("UNION");
-                }
+                parent.Keys = GetRootKeys(parent);
+                return parent.Keys;
             }
-            query.Append(";");
 
-            return query.ToString();
-        }
-        private string BuildFieldNamesText(List<Property> properties)
-        {
-            StringBuilder field_names = new StringBuilder();
-            foreach (Property property in properties)
+            List<Guid> parent_keys = null;
+            while (parent_keys == null)
             {
-                if (property.Fields.Count == 1)
+                parent_keys = GetParentKeys(parent);
+            }
+
+            List<Guid> keys = new List<Guid>();
+
+            Entity entity = parent.MetadataInfo as Entity;
+            Entity source = node.MetadataInfo as Entity;
+            List<Property> filters = GetFilterProperties(node);
+            
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(BuildKeysTableQueryScript(parent_keys));
+            query.Append(BuildSelectParentKeysScript(source, filters, entity));
+
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (field_names.Length > 0)
+                    while (reader.Read())
                     {
-                        field_names.Append(", ");
-                    }
-                    field_names.Append(string.Format("[{0}]", property.Fields[0].Name));
-                }
-                else
-                {
-                    foreach (Field field in property.Fields)
-                    {
-                        if (field.Purpose == FieldPurpose.Object || field.Purpose == FieldPurpose.Locator || field.Purpose == FieldPurpose.TypeCode)
-                        {
-                            if (field_names.Length > 0)
-                            {
-                                field_names.Append(", ");
-                            }
-                            field_names.Append(string.Format("[{0}]", field.Name));
-                        }
+                        keys.Add(new Guid((byte[])reader[0]));
                     }
                 }
             }
-            return field_names.ToString();
+
+            return keys;
         }
-        private string BuildWhereClause(MetadataTreeNode node)
+        private string BuildKeysTableQueryScript(List<Guid> keys)
         {
-            if (!(node.Filter.ExpressionType == BooleanExpressionType.OR || node.Filter.ExpressionType == BooleanExpressionType.AND))
+            StringBuilder script = new StringBuilder();
+            script.Append("DECLARE @KeysListXML nvarchar(max) = '<list>");
+            foreach (Guid key in keys)
             {
-                return string.Empty;
+                script.AppendFormat("<item key=\"{0}\"/>", key.ToString());
             }
-            StringBuilder where = new StringBuilder("WHERE ");
-
-            MetadataTreeNode parent = GetParent(node);
-            string keys_list_table = BuildParentEntityKeysTableQueryText(parent);
-
-            BooleanExpression filter = (BooleanExpression)node.Filter;
-            foreach (IComparisonExpression condition in filter.Conditions)
-            {
-                Property property = (Property)((PropertyExpression)condition.LeftExpression).PropertyInfo;
-            }
-
-
-            return where.ToString();
+            script.AppendLine("</list>';");
+            script.AppendLine("DECLARE @xml xml = CAST(@KeysListXML AS xml);");
+            script.AppendLine("DECLARE @KeysTable TABLE([key] binary(16) PRIMARY KEY);");
+            script.AppendLine("INSERT @KeysTable([key])");
+            script.AppendLine("SELECT");
+            script.AppendLine("list.[item].value('@key', 'uniqueidentifier')");
+            script.AppendLine("FROM @xml.nodes('list/item') AS list([item]);");
+            return script.ToString();
         }
-        private string BuildForeignKeyQueryText(Entity entity, Property property)
+        private string BuildSelectParentKeysScript(Entity source, List<Property> filters, Entity parent)
         {
-            StringBuilder query = new StringBuilder();
-
-            string type_code = entity.Code.ToString();
-            string table_name = entity.MainTable.Name;
+            StringBuilder script = new StringBuilder();
+            for (int i = 0; i < filters.Count; i++)
+            {
+                script.AppendLine(BuildSelectParentKeysForOnePropertyScript(source, filters[i], parent));
+                if (filters.Count > 1 && i < filters.Count - 1)
+                {
+                    script.AppendLine("UNION");
+                }
+            }
+            script.Append(";");
+            return script.ToString();
+        }
+        private string BuildSelectParentKeysForOnePropertyScript(Entity source, Property filter, Entity parent)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append("SELECT [_IDRRef] FROM [");
+            script.Append(source.MainTable.Name);
+            script.Append("] AS T INNER JOIN @KeysTable AS K ON ");
+            script.Append(BuildFilterQueryScript(filter, "T", parent.Code));
+            script.Append(";");
+            return script.ToString();
+        }
+        private string BuildFilterQueryScript(Property property, string tableAlias, int typeCode)
+        {
+            StringBuilder script = new StringBuilder();
 
             if (property.Fields.Count == 1)
             {
-                query.Append(string.Format(
-                    "SELECT {0} AS [TYPE_CODE], [{1}] AS [FK_VALUE] FROM CTE{2} WHERE [{1}] > 0x00000000000000000000000000000000",
-                    type_code, property.Fields[0].Name, table_name));
+                script.Append(string.Format("{0}.[{1}] = K.[key]", tableAlias, property.Fields[0].Name));
             }
             else
             {
-                string value_name = string.Empty;
-                string locator_name = string.Empty;
-                string type_code_name = string.Empty;
-                foreach (Field field in property.Fields)
-                {
-                    switch (field.Purpose)
-                    {
-                        case FieldPurpose.Object: { value_name = field.Name; break; }
-                        case FieldPurpose.Locator: { locator_name = field.Name; break; }
-                        case FieldPurpose.TypeCode: { type_code_name = field.Name; break; }
-                    }
-                }
-                if (locator_name == string.Empty)
-                {
-                    query.Append(string.Format(
-                        "SELECT CAST([{0}] AS int) AS [TYPE_CODE], [{1}] AS [FK_VALUE] FROM CTE{2} WHERE [{0}] > 0x00000000 AND [{1}] > 0x00000000000000000000000000000000",
-                        type_code_name, value_name, table_name));
-                }
-                else
-                {
-                    query.Append(string.Format(
-                        "SELECT CAST([{0}] AS int) AS [TYPE_CODE], [{1}] AS [FK_VALUE] FROM CTE{2} WHERE [{3}] = 0x08  AND [{0}] > 0x00000000 AND [{1}] > 0x00000000000000000000000000000000",
-                        type_code_name, value_name, table_name, locator_name));
-                }
-            }
-
-            return query.ToString();
-        }
-        private MetadataTreeNode GetParent(MetadataTreeNode node)
-        {
-            MetadataTreeNode root = node;
-            while (root.Parent != null)
-            {
-                root = (MetadataTreeNode)root.Parent;
-            }
-            return root;
-        }
-        private string BuildParentEntityKeysTableQueryText(MetadataTreeNode node)
-        {
-            StringBuilder queryText = new StringBuilder();
-            queryText.Append("DECLARE @KeysListXML nvarchar(max) = '<list>");
-            foreach (Guid key in node.Keys)
-            {
-                queryText.AppendFormat("<item key=\"{0}\"/>", key.ToString());
-            }
-            queryText.AppendLine("</list>';");
-            queryText.AppendLine("DECLARE @xml xml = CAST(@KeysListXML AS xml);");
-            queryText.AppendLine("DECLARE @KeysListTable TABLE([key] binary(16) PRIMARY KEY);");
-            queryText.AppendLine("INSERT @KeysListTable([key])");
-            queryText.AppendLine("SELECT");
-            queryText.AppendLine("list.[item].value('@key', 'uniqueidentifier')");
-            queryText.AppendLine("FROM @xml.nodes('list/item') AS list([item]);");
-            return queryText.ToString();
-        }
-        private string BuildSelectEntityQueryText(Entity entity, Property property)
-        {
-            string table_name = entity.MainTable.Name;
-
-            string where_filter = "";
-            if (property.Fields.Count == 1)
-            {
-                where_filter = string.Format("S.[{0}] = T.[key]", property.Fields[0].Name);
-            }
-            else
-            {
-                string value_name = "";
-                string locator_name = "";
-                string type_code_name = "";
-                int type_code = entity.Code;
+                string object_field = string.Empty;
+                string locator_field = string.Empty;
+                string type_code_field = string.Empty;
                 foreach (IFieldInfo field in property.Fields)
                 {
                     switch (field.Purpose)
                     {
-                        case FieldPurpose.Object: { value_name = field.Name; break; }
-                        case FieldPurpose.Locator: { locator_name = field.Name; break; }
-                        case FieldPurpose.TypeCode: { type_code_name = field.Name; break; }
+                        case FieldPurpose.Object: { object_field = field.Name; break; }
+                        case FieldPurpose.Locator: { locator_field = field.Name; break; }
+                        case FieldPurpose.TypeCode: { type_code_field = field.Name; break; }
                     }
                 }
-                if (locator_name == string.Empty)
+                if (locator_field == string.Empty)
                 {
-                    where_filter = string.Format("S.[{0}] = CAST({1} AS binary(4)) AND S.[{2}] = T.[key]",
-                        type_code_name, type_code, value_name);
+                    script.Append(string.Format(
+                        "{0}.[{1}] = CAST({2} AS binary(4)) AND {0}.[{3}] = K.[key]",
+                        tableAlias, type_code_field, typeCode, object_field));
                 }
                 else
                 {
-                    where_filter = string.Format("S.[{0}] = 0x08 AND S.[{1}] = CAST({2} AS binary(4)) AND S.[{3}] = T.[key]",
-                        locator_name, type_code_name, type_code, value_name);
+                    script.Append(string.Format(
+                        "{0}.[{1}] = 0x08 AND {0}.[{2}] = CAST({3} AS binary(4)) AND {0}.[{4}] = K.[key]",
+                        tableAlias, locator_field, type_code_field, typeCode, object_field));
                 }
             }
 
-            string select_statement = string.Format("SELECT {fields_to_select} FROM [{0}] AS S INNER JOIN @KeysListTable AS T ON {1};", table_name, where_filter);
+            return script.ToString();
+        }
 
-            return select_statement;
+        private string BuildSelectForeignKeysScript(Entity parent, Entity source, List<Property> filters, List<Guid> keys, List<Property> foreiners)
+        {
+            if (parent == null)
+            {
+                return SelectForeignKeysFromRootScript(source, foreiners);
+            }
+            else
+            {
+                return SelectForeignKeysFromChildScript(parent, source, filters, keys, foreiners);
+            }
+        }
+        private string SelectForeignKeysFromRootScript(Entity source, List<Property> foreiners)
+        {
+            StringBuilder script = new StringBuilder();
+            string fields = SelectFieldsScript(foreiners);
+            script.AppendLine(string.Format("WITH CTE ({0}) AS", fields));
+            script.AppendLine("(");
+            script.AppendLine(string.Format("SELECT {0} FROM [{1}] WHERE [_Date_Time] >= @_Date_Time",
+                fields, source.MainTable.Name));
+            script.AppendLine(")");
+            //script.Append(SelectForeignKeysFromEntityScript(foreiners));
+            script.Append(MergeForeignKeysFromEntityToExchangeTableScript(foreiners));
+            script.Append(";");
+            return script.ToString();
+        }
+        private string SelectFieldsScript(List<Property> properties)
+        {
+            StringBuilder script = new StringBuilder();
+            foreach (Property property in properties)
+            {
+                if (script.Length > 0) { script.Append(", "); }
+                script.Append(FieldsForOnePropertyScript(property));
+            }
+            return script.ToString();
+        }
+        private string FieldsForOnePropertyScript(Property property)
+        {
+            StringBuilder script = new StringBuilder();
+            if (property.Fields.Count == 1)
+            {
+                script.Append("[");
+                script.Append(property.Fields[0].Name);
+                script.Append("]");
+            }
+            else
+            {
+                foreach (Field field in property.Fields)
+                {
+                    if (field.Purpose == FieldPurpose.Object || field.Purpose == FieldPurpose.Locator || field.Purpose == FieldPurpose.TypeCode)
+                    {
+                        if (script.Length > 0) { script.Append(", "); }
+                        script.Append("[");
+                        script.Append(field.Name);
+                        script.Append("]");
+                    }
+                }
+            }
+            return script.ToString();
+        }
+        private string SelectForeignKeysFromEntityScript(List<Property> foreiners)
+        {
+            StringBuilder script = new StringBuilder();
+            for (int i = 0; i < foreiners.Count; i++)
+            {
+                script.AppendLine(SelectForeignKeysForOnePropertyScript(foreiners[i]));
+                if (foreiners.Count > 1 && i < foreiners.Count - 1)
+                {
+                    script.AppendLine("UNION");
+                }
+            }
+            return script.ToString();
+        }
+        private string SelectForeignKeysForOnePropertyScript(Property property)
+        {
+            StringBuilder script = new StringBuilder();
+
+            if (property.Fields.Count == 1)
+            {
+                script.Append("SELECT ");
+                script.Append(property.Relations[0].Entity.Code.ToString());
+                script.Append(" AS [TYPE_CODE], [");
+                script.Append(property.Fields[0].Name);
+                script.Append("] AS [FK_VALUE] FROM CTE WHERE [");
+                script.Append(property.Fields[0].Name);
+                script.Append("] > 0x00000000000000000000000000000000");
+            }
+            else
+            {
+                string object_field = string.Empty;
+                string locator_field = string.Empty;
+                string type_code_field = string.Empty;
+                foreach (Field field in property.Fields)
+                {
+                    switch (field.Purpose)
+                    {
+                        case FieldPurpose.Object: { object_field = field.Name; break; }
+                        case FieldPurpose.Locator: { locator_field = field.Name; break; }
+                        case FieldPurpose.TypeCode: { type_code_field = field.Name; break; }
+                    }
+                }
+                script.Append("SELECT CAST([");
+                script.Append(type_code_field);
+                script.Append("] AS int) AS [TYPE_CODE], [");
+                script.Append(object_field);
+                script.Append("] AS [FK_VALUE] FROM CTE WHERE [");
+                script.Append(type_code_field);
+                script.Append("] > 0x00000000 AND [");
+                script.Append(object_field);
+                script.Append("] > 0x00000000000000000000000000000000");
+                if (locator_field != string.Empty)
+                {
+                    script.Append(" AND [");
+                    script.Append(locator_field);
+                    script.Append("] = 0x08");
+                }
+            }
+
+            return script.ToString();
+        }
+        private string SelectForeignKeysFromChildScript(Entity parent, Entity source, List<Property> filters, List<Guid> keys, List<Property> foreiners)
+        {
+            if (parent == null) throw new ArgumentNullException("parent");
+
+            StringBuilder script = new StringBuilder();
+            script.AppendLine(BuildKeysTableQueryScript(keys));
+            script.AppendLine("WITH CTE (");
+            script.Append(SelectFieldsScript(foreiners));
+            script.AppendLine(") AS");
+            script.AppendLine("(");
+            script.AppendLine(SelectRecordsFromChildUsingFilters(parent, source, filters, foreiners));
+            script.AppendLine(")");
+            //script.Append(SelectForeignKeysFromEntityScript(foreiners));
+            script.Append(MergeForeignKeysFromEntityToExchangeTableScript(foreiners));
+            script.Append(";");
+            return script.ToString();
+        }
+        private string SelectRecordsFromChildUsingFilters(Entity parent, Entity source, List<Property> filters, List<Property> foreiners)
+        {
+            StringBuilder script = new StringBuilder();
+            for (int i = 0; i < filters.Count; i++)
+            {
+                script.AppendLine(SelectRecordsFromChildUsingOneFilter(parent, source, filters[i], foreiners));
+                if (filters.Count > 1 && i < filters.Count - 1)
+                {
+                    script.AppendLine("UNION ALL");
+                }
+            }
+            return script.ToString();
+        }
+        private string SelectRecordsFromChildUsingOneFilter(Entity parent, Entity source, Property filter, List<Property> foreiners)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append("SELECT ");
+            script.Append(SelectFieldsScript(foreiners));
+            script.Append(" FROM [");
+            script.Append(source.MainTable.Name);
+            script.Append("] AS C INNER JOIN @KeysTable AS K ON ");
+            script.Append(BuildFilterQueryScript(filter, "C", parent.Code));
+            return script.ToString();
+        }
+        private string MergeForeignKeysFromEntityToExchangeTableScript(List<Property> foreiners)
+        {
+            StringBuilder script = new StringBuilder();
+            script.AppendLine("MERGE Z_ExchangeTable AS target");
+            script.AppendLine("USING");
+            script.AppendLine("(");
+            script.AppendLine(SelectForeignKeysFromEntityScript(foreiners));
+            script.AppendLine(") AS source(TYPE_CODE, FK_VALUE)");
+            script.AppendLine("ON (target.TYPE_CODE = source.TYPE_CODE AND target.FK_VALUE = source.FK_VALUE)");
+            script.AppendLine("WHEN NOT MATCHED THEN");
+            script.AppendLine("INSERT (TYPE_CODE, FK_VALUE) VALUES (source.TYPE_CODE, source.FK_VALUE)");
+            return script.ToString();
         }
     }
 }

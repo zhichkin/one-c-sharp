@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v2.0/",
-    "signature": "a3bb8c4c4f6db1f8e0b8d3f3db74bf2523f8a390"
+    "signature": "08fa19fac19039a0f6c5ebcad56adcd81f4d2e14"
   },
   "compilationOptions": {},
   "targets": {
@@ -10,6 +10,7 @@
       "Zhichkin.Hermes.Services/1.0.0": {
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Microsoft.CSharp": "4.5.0",
           "NETStandard.Library": "2.0.3",
           "System.Configuration.ConfigurationManager": "4.5.0",
           "System.Data.SqlClient": "4.6.0",
@@ -17,6 +18,14 @@
         },
         "runtime": {
           "Zhichkin.Hermes.Services.dll": {}
+        }
+      },
+      "Microsoft.CSharp/4.5.0": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.CSharp.dll": {
+            "assemblyVersion": "4.0.4.0",
+            "fileVersion": "4.6.26515.6"
+          }
         }
       },
       "Microsoft.NETCore.Platforms/1.1.0": {},
@@ -210,6 +219,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Microsoft.CSharp/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EGoBmf3Na2ppbhPePDE9PlX81r1HuOZH5twBrq7couJZiPTjUnD3648balerQJO6EJ8Sj+43+XuRwQ7r+3tE3w==",
+      "path": "microsoft.csharp/4.5.0",
+      "hashPath": "microsoft.csharp.4.5.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",

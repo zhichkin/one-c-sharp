@@ -4,6 +4,7 @@ using Zhichkin.Metadata.Model;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Transactions;
+using System.Text;
 
 namespace Zhichkin.Metadata.Services
 {
@@ -382,6 +383,34 @@ namespace Zhichkin.Metadata.Services
                 return "AND [owner] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier)"; // filter by nested entities
             }
             return string.Empty;
+        }
+
+        public Entity GetEntityInfo(InfoBase infoBase, int code)
+        {
+            Entity info = null;
+
+            IPersistentContext context = MetadataPersistentContext.Current;
+            QueryService service = new QueryService(context.ConnectionString);
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("WITH namespaces([key], [owner]) AS");
+            sql.AppendLine("(");
+            sql.Append("SELECT [key], [owner] FROM [metadata].[namespaces] WHERE [owner] = '");
+            sql.Append(infoBase.Identity.ToString());
+            sql.AppendLine("'");
+            sql.AppendLine("UNION ALL");
+            sql.AppendLine("SELECT n.[key], n.[owner] FROM [metadata].[namespaces] AS n");
+            sql.AppendLine("INNER JOIN namespaces AS anchor ON anchor.[key] = n.[owner]");
+            sql.AppendLine(")");
+            sql.AppendLine("SELECT e.[key], e.[name] FROM [metadata].[entities] AS e");
+            sql.AppendLine("INNER JOIN namespaces AS n");
+            sql.Append("ON e.[namespace] = n.[key] AND e.[code] = ");
+            sql.Append(code.ToString());
+            sql.Append(";");
+            foreach (dynamic item in service.Execute(sql.ToString()))
+            {
+                info = context.Factory.New<Entity>((Guid)item.key);
+            }
+            return info;
         }
     }
 }

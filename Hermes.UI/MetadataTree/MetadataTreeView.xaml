@@ -56,6 +56,9 @@
                                                 <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="Документ">
                                                     <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="Перечисление">
+                                                    <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                                </DataTrigger>
                                                 <DataTrigger Binding="{Binding MetadataInfo.Name}" Value="ПланВидовХарактеристик">
                                                     <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
                                                 </DataTrigger>
@@ -85,6 +88,13 @@
                                                         <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="Документ" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter Property="Source" Value="{StaticResource Icon_Document}"/>
+                                                </MultiDataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding MetadataInfo.Owner}" Value="{x:Null}" />
+                                                        <Condition Binding="{Binding MetadataInfo.Namespace.Name}" Value="Перечисление" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
                                                 </MultiDataTrigger>
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
