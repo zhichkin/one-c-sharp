@@ -30,6 +30,15 @@ namespace Zhichkin.Hermes.Services
             connection_string = ConfigurationManager.ConnectionStrings[CONST_ConnectionStringName].ConnectionString;
             temporary_catalog = ConfigurationManager.AppSettings[CONST_MetadataCatalogSettingName];
         }
+        private void WriteToLog(string entry)
+        {
+            string path = Path.Combine(temporary_catalog, "log.txt");
+            using (StreamWriter writer = new StreamWriter(path, true))
+            {
+                writer.WriteLine(entry);
+                writer.Close();
+            }
+        }
         private string GetErrorText(Exception ex)
         {
             string errorText = string.Empty;
@@ -42,7 +51,15 @@ namespace Zhichkin.Hermes.Services
             return errorText;
         }
         public Dictionary<string, object> Parameters { get; } = new Dictionary<string, object>();
-        
+
+        /// <summary>
+        /// Процедура формирует дерево ссылок на дочерние объекты.
+        /// </summary>
+        /// <param name="node">
+        /// Корневой узел данных, для объекта которого
+        /// необходимо выполнить формирование дерева ссылок.
+        /// </param>
+        /// <returns></returns>
         public async Task BuildDocumentsTree(IEntityInfo document, DateTime period, Action<string> notifyStateCallback, Action<MetadataTreeNode> workIsDoneCallback)
         {
             if (document == null) throw new ArgumentNullException("document");
@@ -60,35 +77,13 @@ namespace Zhichkin.Hermes.Services
             WriteToLog(message);
             notifyStateCallback(message);
             await FillChildren(root, notifyStateCallback);
-            message = "End: " + DateTime.Now.ToUniversalTime();
-            WriteToLog(message);
-            notifyStateCallback(message);
-            notifyStateCallback("");
-
+            
             RemoveZeroCountNodes(root);
             workIsDoneCallback(root);
 
-            try
-            {
-                CreateExchangeTable();
-                //await RegisterEntityReferencesForExchange(root); !!!
-                await RegisterForeignReferencesForExchange(root);
-                List<dynamic> list = SelectExchangeInfo((InfoBase)document.Namespace.InfoBase);
-                foreach (dynamic item in list)
-                {
-                    MetadataTreeNode node = new MetadataTreeNode()
-                    {
-                        Name = item.Entity.Name,
-                        Count = item.Count,
-                        MetadataInfo = item.Entity
-                    };
-                    workIsDoneCallback(node);
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteToLog(GetErrorText(ex));
-            }
+            message = "End: " + DateTime.Now.ToUniversalTime();
+            WriteToLog(message);
+            notifyStateCallback(message);
         }
         private void RemoveZeroCountNodes(IMetadataTreeNode root)
         {
@@ -107,7 +102,6 @@ namespace Zhichkin.Hermes.Services
                 }
             }
         }
-
         private async Task FillChildren(MetadataTreeNode parent, Action<string> notifyStateCallback)
         {
             if (!(parent.MetadataInfo is IEntityInfo)) return;
@@ -365,29 +359,176 @@ namespace Zhichkin.Hermes.Services
 
             return keys;
         }
-        private void WriteToLog(string entry)
+
+        /// <summary>
+        /// Регистрация корневых и внешних ссылок для обмена
+        /// </summary>
+        /// <param name="node">
+        /// Корневой узел данных
+        /// </param>
+        /// <returns>
+        /// Список зарегистрированных ссылок по типам объектов и их количество
+        /// </returns>
+        public List<MetadataTreeNode> RegisterEntitiesForExchange(MetadataTreeNode root)
         {
-            string path = Path.Combine(temporary_catalog, "log.txt");
-            using (StreamWriter writer = new StreamWriter(path, true))
+            WriteToLog("Start (RegisterEntitiesForExchange): " + DateTime.Now.ToUniversalTime());
+            try
             {
-                writer.WriteLine(entry);
-                writer.Close();
+                CreateExchangeTable();
+                RegisterAllEntitiesForExchange(root);
+            }
+            catch (Exception ex)
+            {
+                WriteToLog(GetErrorText(ex));
+                WriteToLog(ex.StackTrace);
+            }
+            WriteToLog("End (RegisterEntitiesForExchange): " + DateTime.Now.ToUniversalTime());
+            return GetExchangeInfo(((Entity)root.MetadataInfo).InfoBase);
+        }
+        private void RegisterAllEntitiesForExchange(MetadataTreeNode node)
+        {
+            Entity entity = node.MetadataInfo as Entity;
+            if (entity == null)
+            {
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    RegisterAllEntitiesForExchange(child);
+                }
+            }
+            else
+            {
+                string name = entity.Namespace.Name;
+                if (name == "Перечисление" || name == "ПланСчетов" || name == "ПланВидовХарактеристик") { return; }
+
+                // РегистрСведений РегистрНакопления РегистрБухгалтерии
+
+                if (entity.Owner == null)
+                {
+                    if (name == "Справочник" || name == "Документ")
+                    {
+                        RegisterEntityReferencesForExchange(node);
+                    }
+                }
+                RegisterForeignReferencesForExchange(node);
+
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    RegisterAllEntitiesForExchange(child);
+                }
             }
         }
-
-        public async Task RegisterEntityReferencesForExchange(MetadataTreeNode node)
+        private List<MetadataTreeNode> GetExchangeInfo(InfoBase infoBase)
         {
-            //TODO: оптимизация постоянного получения значений родительских ключей
-            await Task.Delay(1);
+            List<MetadataTreeNode> result = new List<MetadataTreeNode>();
+            List<dynamic> list = SelectExchangeInfo(infoBase);
+            foreach (dynamic item in list)
+            {
+                MetadataTreeNode node = new MetadataTreeNode()
+                {
+                    Name = item.Entity.Name,
+                    Count = item.Count,
+                    MetadataInfo = item.Entity
+                };
+                result.Add(node);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Процедура отбирает объекты узла данных,
+        /// по настроенному для него фильтру,
+        /// а затем регистрирует ссылки этих объектов для обмена.
+        /// </summary>
+        /// <param name="node">
+        /// Узел данных, для объектов которого
+        /// необходимо выполнить регистрацию
+        /// ссылок для обмена.
+        /// </param>
+        /// <returns></returns>
+        public void RegisterEntityReferencesForExchange(MetadataTreeNode node)
+        {
+            Entity entity = node.MetadataInfo as Entity;
+            if (entity == null) { throw new ArgumentNullException("node"); }
+
+            List<Guid> keys = GetNodeKeys(node);
+            if (keys.Count == 0) return;
+
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(BuildKeysTableQueryScript(keys));
+            query.Append(MergeEntityKeysIntoExchangeTableScript(entity));
+
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                int rowsAffected = command.ExecuteNonQuery();
+                WriteToLog("*** " + entity.FullName + " = " + rowsAffected.ToString());
+            }
+        }
+        private List<Guid> GetNodeKeys(MetadataTreeNode node)
+        {
+            if (node == null) { throw new ArgumentNullException("node"); }
+            if (node.Keys != null) { return node.Keys; }
+
+            MetadataTreeNode parent = GetParentNode(node);
+            if (parent == null)
+            {
+                node.Keys = GetRootKeys(node);
+                return node.Keys;
+            }
+
+            List<Guid> parent_keys = GetNodeKeys(parent);
+
+            node.Keys = new List<Guid>();
+
+            Entity entity = parent.MetadataInfo as Entity;
+            Entity source = node.MetadataInfo as Entity;
+            List<Property> filters = GetFilterProperties(node);
+
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(BuildKeysTableQueryScript(parent_keys));
+            query.Append(BuildSelectParentKeysScript(source, filters, entity));
+
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        node.Keys.Add(new Guid((byte[])reader[0]));
+                    }
+                }
+            }
+
+            return node.Keys;
+        }
+        private string MergeEntityKeysIntoExchangeTableScript(Entity entity)
+        {
+            StringBuilder script = new StringBuilder();
+            script.AppendLine("MERGE Z_ExchangeTable AS target");
+            script.AppendLine("USING");
+            script.AppendLine("(");
+            script.AppendLine("SELECT " + entity.Code.ToString() + ", [key] FROM @KeysTable");
+            script.AppendLine(") AS source(TYPE_CODE, REF_VALUE)");
+            script.AppendLine("ON (target.TYPE_CODE = source.TYPE_CODE AND target.REF_VALUE = source.REF_VALUE)");
+            script.AppendLine("WHEN NOT MATCHED THEN");
+            script.Append("INSERT (TYPE_CODE, REF_VALUE) VALUES (source.TYPE_CODE, source.REF_VALUE);");
+            return script.ToString();
         }
 
         private void CreateExchangeTable()
         {
             StringBuilder query = new StringBuilder();
             query.AppendLine(@"IF(NOT OBJECT_ID(N'[dbo].[Z_ExchangeTable]') IS NULL) DROP TABLE Z_ExchangeTable");
-            query.AppendLine(@"CREATE TABLE Z_ExchangeTable(TYPE_CODE int, FK_VALUE binary(16));");
-            query.AppendLine(@"CREATE CLUSTERED INDEX CX_Z_ExchangeTable ON Z_ExchangeTable(TYPE_CODE, FK_VALUE);");
-            query.Append(@"CREATE INDEX IX_Z_ExchangeTable ON Z_ExchangeTable(FK_VALUE);");
+            query.AppendLine(@"CREATE TABLE Z_ExchangeTable(TYPE_CODE int, REF_VALUE binary(16));");
+            query.AppendLine(@"CREATE CLUSTERED INDEX CX_Z_ExchangeTable ON Z_ExchangeTable(TYPE_CODE, REF_VALUE);");
+            query.Append(@"CREATE INDEX IX_Z_ExchangeTable ON Z_ExchangeTable(REF_VALUE);");
 
             using (SqlConnection connection = new SqlConnection(connection_string))
             using (SqlCommand command = connection.CreateCommand())
@@ -403,7 +544,7 @@ namespace Zhichkin.Hermes.Services
             List<dynamic> list = new List<dynamic>();
 
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT TYPE_CODE, COUNT(FK_VALUE) AS [FK_COUNT] FROM Z_ExchangeTable GROUP BY TYPE_CODE;");
+            query.Append("SELECT TYPE_CODE, COUNT(REF_VALUE) AS [REF_COUNT] FROM Z_ExchangeTable GROUP BY TYPE_CODE;");
 
             using (SqlConnection connection = new SqlConnection(connection_string))
             using (SqlCommand command = connection.CreateCommand())
@@ -442,7 +583,7 @@ namespace Zhichkin.Hermes.Services
         /// внешних ссылок для обмена.
         /// </param>
         /// <returns></returns>
-        public async Task RegisterForeignReferencesForExchange(MetadataTreeNode node)
+        public void RegisterForeignReferencesForExchange(MetadataTreeNode node)
         {
             Entity entity = node.MetadataInfo as Entity;
             if (entity == null) { throw new ArgumentNullException("node"); }
@@ -453,6 +594,9 @@ namespace Zhichkin.Hermes.Services
             List<Guid> parent_keys = GetParentKeys(node);
             List<Property> filter_properties = GetFilterProperties(node);
             List<Property> foreign_references = GetForeignKeyProperties(entity, filter_properties);
+
+            if (filter_properties.Count == 0) { return; /* TODO: нужен отбор ссылок по табличной части !!! */ }
+            if (foreign_references.Count == 0) { return; }
 
             string query = BuildSelectForeignKeysScript(parent, entity, filter_properties, parent_keys, foreign_references);
 
@@ -470,10 +614,19 @@ namespace Zhichkin.Hermes.Services
                 {
                     command.Parameters.AddWithValue("_Date_Time", period);
                 }
-                int rowsAffected = command.ExecuteNonQuery();
+                try
+                {
+                    int rowsAffected = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    WriteToLog(entity.FullName);
+                    WriteToLog("Filters count = " + filter_properties.Count.ToString());
+                    WriteToLog("Foreiners count = " + foreign_references.Count.ToString());
+                    WriteToLog(query.ToString());
+                    throw;
+                }
             }
-
-            await Task.Delay(1);
         }
         private MetadataTreeNode GetParentNode(MetadataTreeNode node)
         {
@@ -798,7 +951,6 @@ namespace Zhichkin.Hermes.Services
             script.AppendLine(")");
             //script.Append(SelectForeignKeysFromEntityScript(foreiners));
             script.Append(MergeForeignKeysFromEntityToExchangeTableScript(foreiners));
-            script.Append(";");
             return script.ToString();
         }
         private string SelectRecordsFromChildUsingFilters(Entity parent, Entity source, List<Property> filters, List<Property> foreiners)
@@ -833,9 +985,9 @@ namespace Zhichkin.Hermes.Services
             script.AppendLine("(");
             script.AppendLine(SelectForeignKeysFromEntityScript(foreiners));
             script.AppendLine(") AS source(TYPE_CODE, FK_VALUE)");
-            script.AppendLine("ON (target.TYPE_CODE = source.TYPE_CODE AND target.FK_VALUE = source.FK_VALUE)");
+            script.AppendLine("ON (target.TYPE_CODE = source.TYPE_CODE AND target.REF_VALUE = source.FK_VALUE)");
             script.AppendLine("WHEN NOT MATCHED THEN");
-            script.AppendLine("INSERT (TYPE_CODE, FK_VALUE) VALUES (source.TYPE_CODE, source.FK_VALUE)");
+            script.AppendLine("INSERT (TYPE_CODE, REF_VALUE) VALUES (source.TYPE_CODE, source.FK_VALUE);");
             return script.ToString();
         }
     }
@@ -843,20 +995,3 @@ namespace Zhichkin.Hermes.Services
 
 // 0x00000000000000000000000000000000
 // '00000000-0000-0000-0000-000000000000'
-
-// SELECT [key] INTO #ParentKeysTable FROM [parent table used to filter child tables];
-// CREATE CLUSTERED INDEX cx ON #ParentKeysTable([key]);
-// SELECT * FROM #ParentKeysTable;
-
-//DECLARE @ParentKeysTable TABLE([key] uniqueidentifier PRIMARY KEY);
-//INSERT @ParentKeysTable([key]) VALUES('00000000-0000-0000-0000-0000FFFFFFF2'), ('00000000-0000-0000-0000-0000FFFFFFF3');
-
-//WITH CTE(fields to look up foreign keys from child table) AS
-//(
-//    SELECT [fk properties referencing some outer entity] FROM [child_table] AS C INNER JOIN @ParentKeysTable AS P ON C.[fk child property 1] = P.[key] -- select for each fk property
-//    UNION (?) ALL -- instead of UNION can be WHERE with OR syntax used ...
-//    SELECT [fk properties referencing some outer entity] FROM [child_table] AS C INNER JOIN @ParentKeysTable AS P ON C.[fk child property 2] = P.[key] -- select for each fk property
-//)
-//SELECT F1 AS TYPE_CODE, F2 AS FK_VALUE FROM CTE WHERE F0 = 0x08 AND F1 > 0 AND F2 > 0
-//UNION ALL
-//SELECT F3 AS TYPE_CODE, F4 AS FK_VALUE FROM CTE;

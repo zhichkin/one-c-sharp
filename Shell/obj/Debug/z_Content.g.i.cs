@@ -8,8 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/filter-26.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/filterclear-26.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/filterfilled-26.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("32_bot_icon.ico")]
 
 

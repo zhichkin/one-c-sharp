@@ -52,6 +52,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>32_bot_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Practices.Prism.Composition, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Composition.5.0.0\lib\NET45\Microsoft.Practices.Prism.Composition.dll</HintPath>
@@ -226,6 +229,12 @@
     <Resource Include="Images\Filter-26.png" />
     <Resource Include="Images\FilterClear-26.png" />
     <Resource Include="Images\FilterFilled-26.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\32 Bot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="32_bot_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
