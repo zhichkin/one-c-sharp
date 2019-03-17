@@ -4,11 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
+             xmlns:zui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
              xmlns:model="clr-namespace:Zhichkin.Hermes.Infrastructure;assembly=Zhichkin.Hermes.Infrastructure"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              AllowDrop="True" DragEnter="View_DragEnter" DragLeave="View_DragLeave" Drop="View_Drop">
-    
+
+    <i:Interaction.Triggers>
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding SelectReferenceObjectDialog}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <zui:SelectReferenceObjectDialogView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
+    </i:Interaction.Triggers>
+
     <UserControl.Resources>
         <ResourceDictionary>
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
@@ -36,8 +53,18 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <ComboBox ItemsSource="{Binding InfoBases}" Width="200" HorizontalAlignment="Left"
+                      SelectedItem="{Binding SourceInfoBase, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Зарегистрировать ссылки для обмена" Command="{Binding RegisterEntitiesForExchangeCommand}" Margin="5,0,0,0"/>
+            <Label Content="{Binding DepartmentName}" Margin="5,0,0,0" MinWidth="120"/>
+            <Button Content="..." Command="{Binding SelectEntityReferenceCommand}" Margin="5,0,0,0" Width="25"/>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">

@@ -76,6 +76,7 @@
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -205,6 +206,18 @@
       <Project>{ca3fdd8a-695c-4a87-b09e-c63e5aafb5b1}</Project>
       <Name>Hermes.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
+      <Project>{810EE1AA-BDDE-4657-9029-EB00A061D3F2}</Project>
+      <Name>Metadata.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metadata.UI\Metadata.UI.csproj">
+      <Project>{4fcf0512-bb1b-48ac-b335-aa903edc770a}</Project>
+      <Name>Metadata.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\orm\ORM.csproj">
+      <Project>{431d3f9f-2134-4e49-bfa3-66a629492389}</Project>
+      <Name>ORM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shell\Shell.csproj">
       <Project>{eaba3f61-1655-4431-912e-1380fdc7cbd8}</Project>
       <Name>Shell</Name>
@@ -251,6 +264,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\УстановитьИнтервал.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПланСчетов.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

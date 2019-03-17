@@ -53,11 +53,14 @@ namespace Zhichkin.Hermes.UI
 
             MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
             if (viewModel == null) return;
+            viewModel.Nodes.Clear();
 
             try
             {
                 DocumentsTreeService service = new DocumentsTreeService();
-                Task task = service.BuildDocumentsTree(item, viewModel.SelectedDate, SetStateText, DocumentsTreeIsBuilt);
+                service.Parameters.Add("Period", viewModel.SelectedDate);
+                service.Parameters.Add("Department", viewModel.Department.Identity);
+                Task task = service.BuildDocumentsTree(item, SetStateText, DocumentsTreeIsBuilt);
             }
             catch (Exception ex)
             {

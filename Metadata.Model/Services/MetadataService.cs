@@ -412,5 +412,34 @@ namespace Zhichkin.Metadata.Services
             }
             return info;
         }
+        public Entity GetEntityInfo(InfoBase infoBase, string namespaceName, string entityName)
+        {
+            Entity info = null;
+
+            IPersistentContext context = MetadataPersistentContext.Current;
+            QueryService service = new QueryService(context.ConnectionString);
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("WITH namespaces([key], [owner], [name]) AS");
+            sql.AppendLine("(");
+            sql.Append("SELECT [key], [owner], [name] FROM [metadata].[namespaces] WHERE [owner] = '");
+            sql.Append(infoBase.Identity.ToString());
+            sql.AppendLine("'");
+            sql.AppendLine("UNION ALL");
+            sql.AppendLine("SELECT n.[key], n.[owner], n.[name] FROM [metadata].[namespaces] AS n");
+            sql.AppendLine("INNER JOIN namespaces AS anchor ON anchor.[key] = n.[owner]");
+            sql.AppendLine(")");
+            sql.AppendLine("SELECT e.[key], e.[name] FROM [metadata].[entities] AS e");
+            sql.AppendLine("INNER JOIN namespaces AS n");
+            sql.Append("ON e.[namespace] = n.[key] AND n.[name] = N'");
+            sql.Append(namespaceName);
+            sql.Append("' AND e.[name] = N'");
+            sql.Append(entityName);
+            sql.Append("';");
+            foreach (dynamic item in service.Execute(sql.ToString()))
+            {
+                info = context.Factory.New<Entity>((Guid)item.key);
+            }
+            return info;
+        }
     }
 }

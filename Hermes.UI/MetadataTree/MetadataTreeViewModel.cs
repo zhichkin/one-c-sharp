@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Hermes.Services;
+using Zhichkin.Metadata.Model;
+using Zhichkin.Metadata.Services;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -19,11 +21,35 @@ namespace Zhichkin.Hermes.UI
             this.SelectedDate = DateTime.Now;
             this.Nodes = new ObservableCollection<MetadataTreeNode>();
             this.StateList = new ObservableCollection<string>();
+            this.SelectReferenceObjectDialog = new InteractionRequest<Confirmation>();
+            this.SelectEntityReferenceCommand = new DelegateCommand(this.SelectEntityReference);
             this.RegisterEntitiesForExchangeCommand = new DelegateCommand(this.RegisterEntitiesForExchange);
         }
+        public ICommand SelectEntityReferenceCommand { get; private set; }
         public ICommand RegisterEntitiesForExchangeCommand { get; private set; }
+        public InteractionRequest<Confirmation> SelectReferenceObjectDialog { get; private set; }
         public ObservableCollection<MetadataTreeNode> Nodes { get; set; }
+        public List<InfoBase> InfoBases
+        {
+            get
+            {
+                MetadataService service = new MetadataService();
+                return service.GetInfoBases();
+            }
+        }
+        public InfoBase SourceInfoBase { get; set; }
         public DateTime SelectedDate { get; set; }
+        private string _DepartmentName = "Выберите филиал ...";
+        public ReferenceProxy Department { get; set; }
+        public string DepartmentName
+        {
+            get { return _DepartmentName; }
+            set
+            {
+                _DepartmentName = value;
+                OnPropertyChanged("DepartmentName");
+            }
+        }
         public void SetStateText(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -35,6 +61,16 @@ namespace Zhichkin.Hermes.UI
         public ObservableCollection<string> StateList { get; }
         private void RegisterEntitiesForExchange()
         {
+            if (this.SourceInfoBase == null)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Не выбрана информационная база данных!" });
+                return;
+            }
+            if (this.Department == null)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Не выбран филиал!" });
+                return;
+            }
             if (this.Nodes.Count == 0)
             {
                 Z.Notify(new Notification { Title = "Hermes", Content = "Не выбран узел данных!" });
@@ -42,12 +78,46 @@ namespace Zhichkin.Hermes.UI
             }
             DocumentsTreeService service = new DocumentsTreeService();
             service.Parameters.Add("Period", this.SelectedDate);
+            service.Parameters.Add("Department", this.Department.Identity);
             List<MetadataTreeNode> result = service.RegisterEntitiesForExchange(this.Nodes[0]);
             foreach (MetadataTreeNode node in result)
             {
                 this.Nodes.Add(node);
             }
             Z.Notify(new Notification { Title = "Hermes", Content = "Регистрация ссылок для обмена выполнена." });
+        }
+        private void SelectEntityReference()
+        {
+            if (this.SourceInfoBase == null)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Не выбрана информационная база данных!" });
+                return;
+            }
+            MetadataService service = new MetadataService();
+            Entity entity = service.GetEntityInfo(this.SourceInfoBase, "Справочник", "яФилиалы");
+            Confirmation confirmation = new Confirmation() { Title = string.Empty, Content = entity };
+            this.SelectReferenceObjectDialog.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    this.Department = response.Content as ReferenceProxy;
+                    if (this.Department != null)
+                    {
+                        this.DepartmentName = this.Department.ToString();
+                    }
+                }
+            });
+        }
+        public void OnMetadataTreeViewItemSelected(object item)
+        {
+            try
+            {
+                InfoBase infoBase = item as InfoBase;
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = ex.Message });
+            }
         }
     }
 }

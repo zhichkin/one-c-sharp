@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 5-484287454
 
-201281141217
+16-684147720
 1291508075823
 Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;
 
-True
+False
 

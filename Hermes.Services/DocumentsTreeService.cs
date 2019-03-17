@@ -60,12 +60,9 @@ namespace Zhichkin.Hermes.Services
         /// необходимо выполнить формирование дерева ссылок.
         /// </param>
         /// <returns></returns>
-        public async Task BuildDocumentsTree(IEntityInfo document, DateTime period, Action<string> notifyStateCallback, Action<MetadataTreeNode> workIsDoneCallback)
+        public async Task BuildDocumentsTree(IEntityInfo document, Action<string> notifyStateCallback, Action<MetadataTreeNode> workIsDoneCallback)
         {
             if (document == null) throw new ArgumentNullException("document");
-
-            this.Parameters.Clear();
-            this.Parameters.Add("Period", period);
 
             MetadataTreeNode root = new MetadataTreeNode()
             {
@@ -324,7 +321,8 @@ namespace Zhichkin.Hermes.Services
         private List<Guid> GetRootKeys(MetadataTreeNode root)
         {
             DateTime period = (DateTime)this.Parameters["Period"];
-
+            Guid department = (Guid)this.Parameters["Department"];
+            
             List<Guid> keys = new List<Guid>();
 
             string table_name = ((Entity)root.MetadataInfo).MainTable.Name;
@@ -332,8 +330,11 @@ namespace Zhichkin.Hermes.Services
             DateTime start_of_period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
             start_of_period = start_of_period.AddYears(2000); // fuck 1C !!!
 
+            string filterName = GetDepartmentFieldName((Entity)root.MetadataInfo);
+
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT [_IDRRef] FROM [" + table_name + "] WHERE [_Date_Time] >= @_Date_Time;");
+            query.Append("SELECT [_IDRRef] FROM [" + table_name + "] WHERE [_Date_Time] >= @_Date_Time ");
+            query.Append("AND [" + filterName + "] = @Department;");
 
             using (SqlConnection connection = new SqlConnection(connection_string))
             using (SqlCommand command = connection.CreateCommand())
@@ -341,7 +342,8 @@ namespace Zhichkin.Hermes.Services
                 connection.Open();
                 command.CommandType = CommandType.Text;
                 command.CommandText = query.ToString();
-                command.Parameters.AddWithValue("_Date_Time", start_of_period); 
+                command.Parameters.AddWithValue("_Date_Time", start_of_period);
+                command.Parameters.AddWithValue("Department", department.ToByteArray());
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -603,6 +605,7 @@ namespace Zhichkin.Hermes.Services
             DateTime period = (DateTime)this.Parameters["Period"];
             period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
             period = period.AddYears(2000); // fuck 1C !!!
+            Guid department = (Guid)this.Parameters["Department"];
 
             using (SqlConnection connection = new SqlConnection(connection_string))
             using (SqlCommand command = connection.CreateCommand())
@@ -613,6 +616,7 @@ namespace Zhichkin.Hermes.Services
                 if (parent_node == null)
                 {
                     command.Parameters.AddWithValue("_Date_Time", period);
+                    command.Parameters.AddWithValue("Department", department.ToByteArray());
                 }
                 try
                 {
@@ -831,12 +835,15 @@ namespace Zhichkin.Hermes.Services
         }
         private string SelectForeignKeysFromRootScript(Entity source, List<Property> foreiners)
         {
+            string filterName = GetDepartmentFieldName(source);
+
             StringBuilder script = new StringBuilder();
             string fields = SelectFieldsScript(foreiners);
             script.AppendLine(string.Format("WITH CTE ({0}) AS", fields));
             script.AppendLine("(");
-            script.AppendLine(string.Format("SELECT {0} FROM [{1}] WHERE [_Date_Time] >= @_Date_Time",
+            script.Append(string.Format("SELECT {0} FROM [{1}] WHERE [_Date_Time] >= @_Date_Time",
                 fields, source.MainTable.Name));
+            script.Append(" AND [" + filterName + "] = @Department");
             script.AppendLine(")");
             //script.Append(SelectForeignKeysFromEntityScript(foreiners));
             script.Append(MergeForeignKeysFromEntityToExchangeTableScript(foreiners));
@@ -989,6 +996,19 @@ namespace Zhichkin.Hermes.Services
             script.AppendLine("WHEN NOT MATCHED THEN");
             script.AppendLine("INSERT (TYPE_CODE, REF_VALUE) VALUES (source.TYPE_CODE, source.FK_VALUE);");
             return script.ToString();
+        }
+
+        //
+        private string GetDepartmentFieldName(Entity entity)
+        {
+            if (entity.Name != "яЗаявкаПеревозчику") { return string.Empty; }
+            foreach (Property property in entity.Properties)
+            {
+                if (property.Name != "Филиал") continue;
+                if (property.Fields.Count == 0) { return string.Empty; }
+                return property.Fields[0].Name;
+            }
+            return string.Empty;
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Windows.Input;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Hermes.Services;
+using Zhichkin.Metadata.Model;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -147,6 +148,7 @@ namespace Zhichkin.Hermes.UI
             if (rightRegion == null) return;
 
             MetadataTreeViewModel model = new MetadataTreeViewModel();
+            //this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(model.OnMetadataTreeViewItemSelected, true);
             MetadataTreeView view = new MetadataTreeView();
             view.DataContext = model;
             rightRegion.Add(view);
