@@ -513,7 +513,9 @@ namespace Zhichkin.Hermes.Services
         private string MergeEntityKeysIntoExchangeTableScript(Entity entity)
         {
             StringBuilder script = new StringBuilder();
-            script.AppendLine("MERGE Z_ExchangeTable AS target");
+            script.Append("MERGE ");
+            script.Append(GetExchangeTableName());
+            script.AppendLine(" AS target");
             script.AppendLine("USING");
             script.AppendLine("(");
             script.AppendLine("SELECT " + entity.Code.ToString() + ", [key] FROM @KeysTable");
@@ -527,10 +529,20 @@ namespace Zhichkin.Hermes.Services
         private void CreateExchangeTable()
         {
             StringBuilder query = new StringBuilder();
-            query.AppendLine(@"IF(NOT OBJECT_ID(N'[dbo].[Z_ExchangeTable]') IS NULL) DROP TABLE Z_ExchangeTable");
-            query.AppendLine(@"CREATE TABLE Z_ExchangeTable(TYPE_CODE int, REF_VALUE binary(16));");
-            query.AppendLine(@"CREATE CLUSTERED INDEX CX_Z_ExchangeTable ON Z_ExchangeTable(TYPE_CODE, REF_VALUE);");
-            query.Append(@"CREATE INDEX IX_Z_ExchangeTable ON Z_ExchangeTable(REF_VALUE);");
+            query.Append(@"IF(NOT OBJECT_ID(N'");
+            query.Append(GetExchangeTableName());
+            query.Append("') IS NULL) DROP TABLE ");
+            query.Append(GetExchangeTableName());
+            query.AppendLine(";");
+            query.Append(@"CREATE TABLE ");
+            query.Append(GetExchangeTableName());
+            query.AppendLine(" (TYPE_CODE int, REF_VALUE binary(16));");
+            query.AppendLine(@"CREATE CLUSTERED INDEX CX_Z_ExchangeTable ON ");
+            query.Append(GetExchangeTableName());
+            query.AppendLine("(TYPE_CODE, REF_VALUE);");
+            query.Append(@"CREATE INDEX IX_Z_ExchangeTable ON ");
+            query.Append(GetExchangeTableName());
+            query.Append("(REF_VALUE);");
 
             using (SqlConnection connection = new SqlConnection(connection_string))
             using (SqlCommand command = connection.CreateCommand())
@@ -546,7 +558,9 @@ namespace Zhichkin.Hermes.Services
             List<dynamic> list = new List<dynamic>();
 
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT TYPE_CODE, COUNT(REF_VALUE) AS [REF_COUNT] FROM Z_ExchangeTable GROUP BY TYPE_CODE;");
+            query.Append("SELECT TYPE_CODE, COUNT(REF_VALUE) AS [REF_COUNT] FROM ");
+            query.Append(GetExchangeTableName());
+            query.Append(" GROUP BY TYPE_CODE;");
 
             using (SqlConnection connection = new SqlConnection(connection_string))
             using (SqlCommand command = connection.CreateCommand())
@@ -987,7 +1001,9 @@ namespace Zhichkin.Hermes.Services
         private string MergeForeignKeysFromEntityToExchangeTableScript(List<Property> foreiners)
         {
             StringBuilder script = new StringBuilder();
-            script.AppendLine("MERGE Z_ExchangeTable AS target");
+            script.Append("MERGE ");
+            script.Append(GetExchangeTableName());
+            script.AppendLine(" AS target");
             script.AppendLine("USING");
             script.AppendLine("(");
             script.AppendLine(SelectForeignKeysFromEntityScript(foreiners));
@@ -1009,6 +1025,189 @@ namespace Zhichkin.Hermes.Services
                 return property.Fields[0].Name;
             }
             return string.Empty;
+        }
+        //
+
+        public void SendDataToTargetInfoBase()
+        {
+            InfoBase source = (InfoBase)this.Parameters["SourceInfoBase"];
+            InfoBase target = (InfoBase)this.Parameters["TargetInfoBase"];
+
+            List<Entity> list = GetEnitiesToExport(source);
+
+            MetadataService service = new MetadataService();
+            foreach (Entity sourceEntity in list)
+            {
+                if (sourceEntity.Namespace.Name == "Документ" || sourceEntity.Namespace.Name == "Справочник")
+                {
+                    Entity targetEntity = service.GetEntityInfo(target, sourceEntity.Namespace.Name, sourceEntity.Name);
+                    if (targetEntity == null)
+                    {
+                        WriteToLog("Target entity not found: " + target.Name + ", " + sourceEntity.Namespace.Name + ", " + sourceEntity.Name);
+                        continue;
+                    }
+                    try
+                    {
+                        int rowsAffected = SendEntitiesToTargetInfoBase(source, target, sourceEntity, targetEntity);
+                        // TODO: logging and reporting progress
+                        WriteToLog(rowsAffected.ToString() + " references of " + sourceEntity.Namespace.Name + "." + sourceEntity.Name +
+                            " have been sent to " + targetEntity.Name + " from " + source.Database + " to " + target.Database);
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteToLog(ex.Message);
+                    }
+                }
+            }
+
+            // TODO: clear exchange table
+        }
+        private List<Entity> GetEnitiesToExport(InfoBase source)
+        {
+            List<Entity> list = new List<Entity>();
+
+            StringBuilder query = new StringBuilder();
+            query.Append("SELECT DISTINCT [TYPE_CODE] FROM ");
+            query.Append(GetExchangeTableName());
+            query.Append(" ORDER BY [TYPE_CODE];");
+
+            MetadataService service = new MetadataService();
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Entity entity = service.GetEntityInfo(source, reader.GetInt32(0));
+                        list.Add(entity);
+                    }
+                }
+            }
+            return list;
+        }
+        private int SendEntitiesToTargetInfoBase(InfoBase source, InfoBase target, Entity sourceEntity, Entity targetEntity)
+        {
+            int rowsAffected = 0;
+            string query = MergeSourceWithTargetScript(source, sourceEntity, target, targetEntity);
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query;
+                try
+                {
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    WriteToLog(query);
+                    WriteToLog(ex.Message);
+                    throw;
+                }
+            }
+            return rowsAffected;
+        }
+        private string AllFieldsScript(Entity entity, string alias)
+        {
+            StringBuilder script = new StringBuilder();
+            foreach (Property property in entity.Properties)
+            {
+                foreach (Field field in property.Fields)
+                {
+                    if (field.TypeName == "timestamp" || field.TypeName == "version") continue;
+                    if (script.Length > 0) { script.Append(", "); }
+                    if (alias != string.Empty)
+                    {
+                        script.Append(alias);
+                        script.Append(".");
+                    }
+                    script.Append("[");
+                    script.Append(field.Name);
+                    script.Append("]");
+                }
+            }
+            return script.ToString();
+        }
+        private string SelectSourceEntityScript(InfoBase source, Entity entity)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append("SELECT ");
+            script.Append(AllFieldsScript(entity, string.Empty));
+            script.Append(" FROM [");
+            script.Append(source.Database);
+            script.Append("].[dbo].[");
+            script.Append(entity.MainTable.Name);
+            script.Append("] AS E INNER JOIN ");
+            script.Append(GetExchangeTableName());
+            script.Append(" AS T ON E.[_IDRRef] = T.[REF_VALUE] AND T.[TYPE_CODE] = ");
+            script.Append(entity.Code.ToString());
+            return script.ToString();
+        }
+        private string InsertTargetEntityScript(InfoBase target, Entity targetEntity, string alias, Entity sourceEntity)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append("INSERT ");
+            script.Append("(");
+            script.Append(AllFieldsScript(targetEntity, string.Empty));
+            script.AppendLine(")");
+            script.Append("VALUES (");
+            script.Append(AllFieldsScript(sourceEntity, alias));
+            script.Append(")");
+            return script.ToString();
+        }
+        private string MergeSourceWithTargetScript(InfoBase source, Entity sourceEntity, InfoBase target, Entity targetEntity)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append("MERGE [");
+            script.Append(target.Database);
+            script.Append("].[dbo].[");
+            script.Append(targetEntity.MainTable.Name);
+            script.AppendLine("] AS target");
+            script.AppendLine("USING");
+            script.AppendLine("(");
+            script.AppendLine(SelectSourceEntityScript(source, sourceEntity));
+            script.AppendLine(")");
+            script.Append("AS source(");
+            script.Append(AllFieldsScript(sourceEntity, string.Empty));
+            script.AppendLine(")");
+            script.AppendLine("ON (target.[_IDRRef] = source.[_IDRRef])");
+            script.AppendLine("WHEN NOT MATCHED THEN");
+            script.AppendLine(InsertTargetEntityScript(target, targetEntity, "source", sourceEntity));
+            script.Append(";");
+            return script.ToString();
+        }
+        private Entity GetEntityByName(InfoBase infoBase, string namespaceName, string entityName)
+        {
+            Entity result = null;
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "[dbo].[get_entity_by_name]";
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("infobase", infoBase.Identity);
+                command.Parameters.AddWithValue("namespace_name", namespaceName);
+                command.Parameters.AddWithValue("entity_name", entityName);
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        result = context.Factory.New<Entity>(reader.GetGuid(0));
+                    }
+                }
+            }
+            return result;
+        }
+        private string GetExchangeTableName()
+        {
+            return "[Z].[dbo].[Z_ExchangeTable]";
         }
     }
 }

@@ -21,10 +21,12 @@ namespace Zhichkin.Hermes.UI
             this.SelectedDate = DateTime.Now;
             this.Nodes = new ObservableCollection<MetadataTreeNode>();
             this.StateList = new ObservableCollection<string>();
+            this.ExchangeDataCommand = new DelegateCommand(this.ExchangeData);
             this.SelectReferenceObjectDialog = new InteractionRequest<Confirmation>();
             this.SelectEntityReferenceCommand = new DelegateCommand(this.SelectEntityReference);
             this.RegisterEntitiesForExchangeCommand = new DelegateCommand(this.RegisterEntitiesForExchange);
         }
+        public ICommand ExchangeDataCommand { get; private set; }
         public ICommand SelectEntityReferenceCommand { get; private set; }
         public ICommand RegisterEntitiesForExchangeCommand { get; private set; }
         public InteractionRequest<Confirmation> SelectReferenceObjectDialog { get; private set; }
@@ -38,6 +40,7 @@ namespace Zhichkin.Hermes.UI
             }
         }
         public InfoBase SourceInfoBase { get; set; }
+        public InfoBase TargetInfoBase { get; set; }
         public DateTime SelectedDate { get; set; }
         private string _DepartmentName = "Выберите филиал ...";
         public ReferenceProxy Department { get; set; }
@@ -118,6 +121,30 @@ namespace Zhichkin.Hermes.UI
             {
                 Z.Notify(new Notification { Title = "Hermes", Content = ex.Message });
             }
+        }
+
+        public void ExchangeData()
+        {
+            if (this.SourceInfoBase == null)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Не выбран источник данных!" });
+                return;
+            }
+            if (this.TargetInfoBase == null)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Не выбран приёмник данных!" });
+                return;
+            }
+            if (this.SourceInfoBase == this.TargetInfoBase)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Источник и приёмник не могут быть равны!" });
+                return;
+            }
+            DocumentsTreeService service = new DocumentsTreeService();
+            service.Parameters.Add("SourceInfoBase", this.SourceInfoBase);
+            service.Parameters.Add("TargetInfoBase", this.TargetInfoBase);
+            service.SendDataToTargetInfoBase();
+            Z.Notify(new Notification { Title = "Hermes", Content = "Обмен данными выполнен." });
         }
     }
 }

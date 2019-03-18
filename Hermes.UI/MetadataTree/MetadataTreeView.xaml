@@ -53,18 +53,41 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <ComboBox ItemsSource="{Binding InfoBases}" Width="200" HorizontalAlignment="Left"
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Источник:" Width="70"/>
+                    <ComboBox ItemsSource="{Binding InfoBases}" Width="200" HorizontalAlignment="Left"
                       SelectedItem="{Binding SourceInfoBase, UpdateSourceTrigger=PropertyChanged}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="Зарегистрировать ссылки для обмена" Command="{Binding RegisterEntitiesForExchangeCommand}" Margin="5,0,0,0"/>
-            <Label Content="{Binding DepartmentName}" Margin="5,0,0,0" MinWidth="120"/>
-            <Button Content="..." Command="{Binding SelectEntityReferenceCommand}" Margin="5,0,0,0" Width="25"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Приёмник:" Width="70"/>
+                    <ComboBox ItemsSource="{Binding InfoBases}" Width="200" HorizontalAlignment="Left"
+                      SelectedItem="{Binding TargetInfoBase, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="{Binding DepartmentName}" Margin="5,0,0,0" MinWidth="120" Height="20" VerticalContentAlignment="Center"/>
+                    <Button Content="..." Command="{Binding SelectEntityReferenceCommand}" Margin="5,0,0,0" Height="20" Width="25"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                <Button Content="Зарегистрировать ссылки для обмена" Command="{Binding RegisterEntitiesForExchangeCommand}"/>
+                <Button Content="Выполнить обмен данными" Command="{Binding ExchangeDataCommand}"/>
+            </StackPanel>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
