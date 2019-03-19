@@ -12,7 +12,6 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Zh
 C:\Zhichkin\Z\debug\netstandard2.0\Zhichkin.Hermes.Infrastructure.deps.json
 C:\Zhichkin\Z\debug\netstandard2.0\Zhichkin.Hermes.Infrastructure.dll
 C:\Zhichkin\Z\debug\netstandard2.0\Zhichkin.Hermes.Infrastructure.pdb
-C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Infrastructure.csprojAssemblyReference.cache
 C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Infrastructure.csproj.CoreCompileInputs.cache
 C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Infrastructure.AssemblyInfoInputs.cache
 C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Infrastructure.AssemblyInfo.cs

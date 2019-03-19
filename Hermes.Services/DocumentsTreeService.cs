@@ -8,13 +8,11 @@ using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
 using Zhichkin.ORM;
-
-//System.Dynamic.Runtime
+using System.Linq;
 
 namespace Zhichkin.Hermes.Services
 {
@@ -60,7 +58,7 @@ namespace Zhichkin.Hermes.Services
         /// необходимо выполнить формирование дерева ссылок.
         /// </param>
         /// <returns></returns>
-        public async Task BuildDocumentsTree(IEntityInfo document, Action<string> notifyStateCallback, Action<MetadataTreeNode> workIsDoneCallback)
+        public void BuildDocumentsTree(IEntityInfo document, Action<string> notifyStateCallback, Action<MetadataTreeNode> workIsDoneCallback)
         {
             if (document == null) throw new ArgumentNullException("document");
 
@@ -72,15 +70,13 @@ namespace Zhichkin.Hermes.Services
 
             string message = "Start: " + DateTime.Now.ToUniversalTime();
             WriteToLog(message);
-            notifyStateCallback(message);
-            await FillChildren(root, notifyStateCallback);
+            FillChildren(root, notifyStateCallback);
             
             RemoveZeroCountNodes(root);
             workIsDoneCallback(root);
 
             message = "End: " + DateTime.Now.ToUniversalTime();
             WriteToLog(message);
-            notifyStateCallback(message);
         }
         private void RemoveZeroCountNodes(IMetadataTreeNode root)
         {
@@ -99,7 +95,7 @@ namespace Zhichkin.Hermes.Services
                 }
             }
         }
-        private async Task FillChildren(MetadataTreeNode parent, Action<string> notifyStateCallback)
+        private void FillChildren(MetadataTreeNode parent, Action<string> notifyStateCallback)
         {
             if (!(parent.MetadataInfo is IEntityInfo)) return;
 
@@ -220,13 +216,10 @@ namespace Zhichkin.Hermes.Services
                         string message = string.Format("{0}.{1}.{2} = {3} seconds",
                             current_ns.Name, current_property.Entity.Name, current_property.Name,
                             sw.Elapsed.TotalSeconds.ToString());
-                        notifyStateCallback(message);
                         WriteToLog(message);
-                        await Task.Delay(100); // 1/10 секунды
                     }
                 }
             }
-            await Task.Delay(1);
         }
         private void CountDocuments(MetadataTreeNode node, IPropertyInfo property)
         {
@@ -1048,10 +1041,20 @@ namespace Zhichkin.Hermes.Services
                     }
                     try
                     {
-                        int rowsAffected = SendEntitiesToTargetInfoBase(source, target, sourceEntity, targetEntity);
+                        int rowsAffected = SendEntityToTargetInfoBase(source, target, sourceEntity, targetEntity);
                         // TODO: logging and reporting progress
                         WriteToLog(rowsAffected.ToString() + " references of " + sourceEntity.Namespace.Name + "." + sourceEntity.Name +
                             " have been sent to " + targetEntity.Name + " from " + source.Database + " to " + target.Database);
+
+                        foreach (Entity nestedSource in sourceEntity.NestedEntities)
+                        {
+                            Entity nestedTarget = targetEntity.NestedEntities.Where((e) => e.Name == nestedSource.Name).FirstOrDefault();
+                            if (nestedTarget == null) continue;
+
+                            rowsAffected = SendEntityToTargetInfoBase(source, target, nestedSource, nestedTarget);
+                            WriteToLog(rowsAffected.ToString() + " records of " + nestedSource.Namespace.Name + "." + nestedSource.Name +
+                                " have been sent to " + nestedTarget.Name + " from " + source.Database + " to " + target.Database);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1089,7 +1092,7 @@ namespace Zhichkin.Hermes.Services
             }
             return list;
         }
-        private int SendEntitiesToTargetInfoBase(InfoBase source, InfoBase target, Entity sourceEntity, Entity targetEntity)
+        private int SendEntityToTargetInfoBase(InfoBase source, InfoBase target, Entity sourceEntity, Entity targetEntity)
         {
             int rowsAffected = 0;
             string query = MergeSourceWithTargetScript(source, sourceEntity, target, targetEntity);
@@ -1145,8 +1148,10 @@ namespace Zhichkin.Hermes.Services
             script.Append(entity.MainTable.Name);
             script.Append("] AS E INNER JOIN ");
             script.Append(GetExchangeTableName());
-            script.Append(" AS T ON E.[_IDRRef] = T.[REF_VALUE] AND T.[TYPE_CODE] = ");
-            script.Append(entity.Code.ToString());
+            script.Append(" AS T ON E.[");
+            script.Append(GetReferenceFieldName(entity));
+            script.Append("] = T.[REF_VALUE] AND T.[TYPE_CODE] = ");
+            script.Append(GetReferenceTypeCode(entity).ToString());
             return script.ToString();
         }
         private string InsertTargetEntityScript(InfoBase target, Entity targetEntity, string alias, Entity sourceEntity)
@@ -1176,9 +1181,13 @@ namespace Zhichkin.Hermes.Services
             script.Append("AS source(");
             script.Append(AllFieldsScript(sourceEntity, string.Empty));
             script.AppendLine(")");
-            script.AppendLine("ON (target.[_IDRRef] = source.[_IDRRef])");
+            script.Append("ON (target.[");
+            script.Append(GetReferenceFieldName(targetEntity));
+            script.Append("] = source.[");
+            script.Append(GetReferenceFieldName(sourceEntity));
+            script.AppendLine("])");
             script.AppendLine("WHEN NOT MATCHED THEN");
-            script.AppendLine(InsertTargetEntityScript(target, targetEntity, "source", sourceEntity));
+            script.Append(InsertTargetEntityScript(target, targetEntity, "source", sourceEntity));
             script.Append(";");
             return script.ToString();
         }
@@ -1208,6 +1217,22 @@ namespace Zhichkin.Hermes.Services
         private string GetExchangeTableName()
         {
             return "[Z].[dbo].[Z_ExchangeTable]";
+        }
+        private string GetReferenceFieldName(Entity entity)
+        {
+            if (entity.Owner != null)
+            {
+                return entity.Owner.MainTable.Name + "_IDRRef";
+            }
+            return "_IDRRef";
+        }
+        private int GetReferenceTypeCode(Entity entity)
+        {
+            if (entity.Owner != null)
+            {
+                return entity.Owner.Code;
+            }
+            return entity.Code;
         }
     }
 }

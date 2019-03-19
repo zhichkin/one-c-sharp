@@ -60,7 +60,7 @@ namespace Zhichkin.Hermes.UI
                 DocumentsTreeService service = new DocumentsTreeService();
                 service.Parameters.Add("Period", viewModel.SelectedDate);
                 service.Parameters.Add("Department", viewModel.Department.Identity);
-                Task task = service.BuildDocumentsTree(item, SetStateText, DocumentsTreeIsBuilt);
+                service.BuildDocumentsTree(item, SetStateText, DocumentsTreeIsBuilt);
             }
             catch (Exception ex)
             {
