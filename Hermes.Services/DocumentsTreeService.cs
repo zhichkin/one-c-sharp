@@ -58,25 +58,47 @@ namespace Zhichkin.Hermes.Services
         /// необходимо выполнить формирование дерева ссылок.
         /// </param>
         /// <returns></returns>
-        public void BuildDocumentsTree(IEntityInfo document, Action<string> notifyStateCallback, Action<MetadataTreeNode> workIsDoneCallback)
+        public void BuildDocumentsTree(Entity entity, IProgress<MetadataTreeNode> progress)
         {
-            if (document == null) throw new ArgumentNullException("document");
+            if (entity == null) throw new ArgumentNullException("entity");
 
             MetadataTreeNode root = new MetadataTreeNode()
             {
-                Name = document.Name,
-                MetadataInfo = document
+                Name = entity.Name,
+                MetadataInfo = entity
             };
 
-            string message = "Start: " + DateTime.Now.ToUniversalTime();
+            // 1. Построение предварительного дерева узлов данных
+            string message = "START < BuildDocumentsTree > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             WriteToLog(message);
-            FillChildren(root, notifyStateCallback);
-            
-            RemoveZeroCountNodes(root);
-            workIsDoneCallback(root);
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            FillChildren(root);
+            //RemoveZeroCountNodes(root);
+            sw.Stop();
+            message = "END < BuildDocumentsTree > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
+            WriteToLog(message);
 
-            message = "End: " + DateTime.Now.ToUniversalTime();
+            // 2. Создание таблицы регистрации ссылок
+            CreateReferencesRegisterTable();
+
+            sw = new Stopwatch();
+            sw.Start();
+            message = "START < RegisterNodeReferences > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             WriteToLog(message);
+
+            // 3. Регистрация и подсчёт существующих ссылок согласно построенному дереву и его настройкам
+            RegisterAllEntitiesForExchange(root);
+            
+            sw.Stop();
+            message = "END < RegisterNodeReferences > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
+            WriteToLog(message);
+
+            //RemoveZeroCountNodes(root);
+
+            progress.Report(root);
         }
         private void RemoveZeroCountNodes(IMetadataTreeNode root)
         {
@@ -95,7 +117,7 @@ namespace Zhichkin.Hermes.Services
                 }
             }
         }
-        private void FillChildren(MetadataTreeNode parent, Action<string> notifyStateCallback)
+        private void FillChildren(MetadataTreeNode parent)
         {
             if (!(parent.MetadataInfo is IEntityInfo)) return;
 
@@ -199,24 +221,16 @@ namespace Zhichkin.Hermes.Services
                             RightExpression = null
                         };
 
-                        Stopwatch sw = new Stopwatch();
-                        sw.Start();
                         if (current_nested_node == null)
                         {
                             ((BooleanExpression)current_entity_node.Filter).Conditions.Add(ce);
-                            CountDocuments(current_entity_node, current_property);
+                            //CountDocuments(current_entity_node, current_property);
                         }
                         else
                         {
                             ((BooleanExpression)current_nested_node.Filter).Conditions.Add(ce);
-                            CountDocuments(current_nested_node, current_property);
+                            //CountDocuments(current_nested_node, current_property);
                         }
-                        sw.Stop();
-                        
-                        string message = string.Format("{0}.{1}.{2} = {3} seconds",
-                            current_ns.Name, current_property.Entity.Name, current_property.Name,
-                            sw.Elapsed.TotalSeconds.ToString());
-                        WriteToLog(message);
                     }
                 }
             }
@@ -395,16 +409,17 @@ namespace Zhichkin.Hermes.Services
                 string name = entity.Namespace.Name;
                 if (name == "Перечисление" || name == "ПланСчетов" || name == "ПланВидовХарактеристик") { return; }
 
-                // РегистрСведений РегистрНакопления РегистрБухгалтерии
+                // TODO : РегистрСведений РегистрНакопления РегистрБухгалтерии !!!
 
                 if (entity.Owner == null)
                 {
                     if (name == "Справочник" || name == "Документ")
                     {
-                        RegisterEntityReferencesForExchange(node);
+                        RegisterNodeReferences(node);
+                        //RegisterEntityReferencesForExchange(node);
                     }
                 }
-                RegisterForeignReferencesForExchange(node);
+                // TODO : RegisterForeignReferencesForExchange(node); !!!
 
                 foreach (MetadataTreeNode child in node.Children)
                 {
@@ -652,57 +667,7 @@ namespace Zhichkin.Hermes.Services
             }
             return (parent as MetadataTreeNode);
         }
-        private List<Property> GetFilterProperties(MetadataTreeNode node)
-        {
-            List<Property> list = new List<Property>();
-
-            BooleanExpression filter = node.Filter as BooleanExpression;
-            if (filter == null || filter.Conditions.Count == 0)
-            {
-                return list;
-            }
-
-            foreach (IComparisonExpression condition in filter.Conditions)
-            {
-                PropertyExpression expression = condition.LeftExpression as PropertyExpression;
-                list.Add((Property)expression.PropertyInfo);
-            }
-
-            return list;
-        }
-        private List<Property> GetForeignKeyProperties(Entity entity, List<Property> filter_properties)
-        {
-            List<Property> list = new List<Property>();
-
-            foreach (Property property in entity.Properties)
-            {
-                //if (property.Purpose == PropertyPurpose.System) continue;
-                if (property.Name == "Ссылка") continue;
-
-                bool isFilterProperty = false;
-                foreach (Property filter in filter_properties)
-                {
-                    if (property == filter)
-                    {
-                        isFilterProperty = true;
-                        break;
-                    }
-                }
-                if (isFilterProperty) continue;
-
-                foreach (Field field in property.Fields)
-                {
-                    if (field.Purpose == FieldPurpose.Object)
-                    {
-                        list.Add(property);
-                        break;
-                    }
-                }
-            }
-
-            return list;
-        }
-
+        
         private List<Guid> GetParentKeys(MetadataTreeNode node)
         {
             if (node == null) { throw new ArgumentNullException("node"); }
@@ -1233,6 +1198,282 @@ namespace Zhichkin.Hermes.Services
                 return entity.Owner.Code;
             }
             return entity.Code;
+        }
+
+        // v2
+        private List<Property> GetFilterProperties(MetadataTreeNode node)
+        {
+            List<Property> list = new List<Property>();
+
+            BooleanExpression filter = node.Filter as BooleanExpression;
+            if (filter == null || filter.Conditions.Count == 0)
+            {
+                return list;
+            }
+
+            foreach (IComparisonExpression condition in filter.Conditions)
+            {
+                PropertyExpression expression = condition.LeftExpression as PropertyExpression;
+                list.Add((Property)expression.PropertyInfo);
+            }
+
+            return list;
+        }
+        private List<Property> GetForeignKeyProperties(Entity entity, List<Property> filter_properties)
+        {
+            List<Property> list = new List<Property>();
+
+            foreach (Property property in entity.Properties)
+            {
+                //if (property.Purpose == PropertyPurpose.System) continue;
+                if (property.Name == "Ссылка") continue;
+
+                bool isFilterProperty = false;
+                foreach (Property filter in filter_properties)
+                {
+                    if (property == filter)
+                    {
+                        isFilterProperty = true;
+                        break;
+                    }
+                }
+                if (isFilterProperty) continue;
+
+                foreach (Field field in property.Fields)
+                {
+                    if (field.Purpose == FieldPurpose.Object)
+                    {
+                        list.Add(property);
+                        break;
+                    }
+                }
+            }
+
+            return list;
+        }
+        private string GetReferencesRegisterTableName()
+        {
+            return "[Z].[dbo].[Z_ReferencesRegisterTable]";
+        }
+        private void CreateReferencesRegisterTable()
+        {
+            string table_name = GetReferencesRegisterTableName();
+
+            StringBuilder query = new StringBuilder();
+            query.Append("IF (NOT OBJECT_ID(N'");
+            query.Append(table_name);
+            query.Append("') IS NULL) DROP TABLE ");
+            query.Append(table_name);
+            query.AppendLine(";");
+            query.Append("CREATE TABLE ");
+            query.Append(table_name);
+            query.AppendLine(" (NODE uniqueidentifier, ENTITY uniqueidentifier, OBJ_REF binary(16));");
+            query.Append(@"CREATE INDEX IX_ReferencesRegisterTable_NODE ON ");
+            query.Append(table_name);
+            query.AppendLine(" (NODE);");
+            query.Append("CREATE INDEX IX_ReferencesRegisterTable_ENTITY ON ");
+            query.Append(table_name);
+            query.Append(" (ENTITY, OBJ_REF);");
+            
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                int rowsAffected = command.ExecuteNonQuery();
+            }
+        }
+        private void RegisterRootNodeReferences(MetadataTreeNode root)
+        {
+            DateTime period = (DateTime)this.Parameters["Period"];
+            Guid department = (Guid)this.Parameters["Department"];
+
+            Entity entity = (Entity)root.MetadataInfo;
+
+            string table_name = string.Format("[{0}].[dbo].[{1}]", entity.InfoBase.Database, entity.MainTable.Name);
+            DateTime start_of_period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
+            start_of_period = start_of_period.AddYears(2000); // fuck 1C !!!
+            string branch = entity.Properties.Where((p) => p.Name == "Филиал").First().Fields[0].Name;
+
+            StringBuilder query = new StringBuilder();
+            query.Append("MERGE ");
+            query.Append(GetReferencesRegisterTableName());
+            query.AppendLine(" AS target");
+            query.AppendLine("USING");
+            query.AppendLine("(");
+            query.Append("SELECT [_IDRRef] FROM ");
+            query.Append(table_name);
+            query.Append(" WHERE [_Date_Time] >= @period ");
+            query.Append("AND [");
+            query.Append(branch);
+            query.AppendLine("] = @branch");
+            query.AppendLine(")");
+            query.AppendLine("AS source([_IDRRef])");
+            query.AppendLine("ON (target.[NODE] = @node AND target.[ENTITY] = @entity AND target.[OBJ_REF] = source.[_IDRRef])");
+            query.AppendLine("WHEN NOT MATCHED THEN");
+            query.Append("INSERT ([NODE], [ENTITY], [OBJ_REF]) VALUES (@node, @entity, source.[_IDRRef]);");
+
+            int rowsAffected = 0;
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                command.Parameters.AddWithValue("node", root.Identity);
+                command.Parameters.AddWithValue("entity", entity.Identity);
+                command.Parameters.AddWithValue("period", start_of_period);
+                command.Parameters.AddWithValue("branch", department.ToByteArray());
+                rowsAffected = command.ExecuteNonQuery();
+            }
+            root.Count = rowsAffected;
+
+            WriteToLog("Priod = " + start_of_period.ToString("dd.MM.yyyy HH:mm:ss.ffff", CultureInfo.InvariantCulture));
+            WriteToLog(query.ToString());
+            WriteToLog("Count = " + root.Count.ToString() + Environment.NewLine);
+        }
+
+        // !!! =)
+        public void RegisterNodeReferences(MetadataTreeNode node)
+        {
+            if (node.MetadataInfo is Namespace) throw new ArgumentException("Namespace can not register references", "node");
+
+            if (node.Parent == null)
+            {
+                RegisterRootNodeReferences(node); // TODO: make references search by node's filter expression
+                return;
+            }
+
+            Entity sourceEntity = (Entity)node.MetadataInfo;
+            if (sourceEntity.Owner != null) throw new ArgumentException("Nested entity can not register references", "node");
+
+            MetadataTreeNode parentNode = GetParentNode(node);
+            if (parentNode == null) throw new ApplicationException("Parent node is not found");
+            
+            Entity parentEntity = (Entity)parentNode.MetadataInfo;
+            if (parentEntity == null) throw new ApplicationException("Node's entity can not be null");
+
+            List<Property> filters = GetFilterProperties(node); // node's entity properties holding references to parent node's entity
+
+            string referenceFieldName = GetReferenceFieldName(sourceEntity);
+            string targetTable = GetReferencesRegisterTableName();
+            
+            StringBuilder query = new StringBuilder();
+            query.Append("MERGE ");
+            query.Append(targetTable);
+            query.AppendLine(" AS target");
+            query.AppendLine("USING");
+            query.AppendLine("(");
+            query.AppendLine(SelectNodeReferencesScript(sourceEntity, filters, parentEntity));
+            query.AppendLine(")");
+            query.Append("AS source([");
+            query.Append(referenceFieldName);
+            query.AppendLine("])");
+            query.Append("ON (target.[NODE] = @sourceNode AND target.[ENTITY] = @sourceEntity AND target.[OBJ_REF] = source.[");
+            query.Append(referenceFieldName);
+            query.AppendLine("])");
+            query.AppendLine("WHEN NOT MATCHED THEN");
+            query.Append("INSERT ([NODE], [ENTITY], [OBJ_REF]) VALUES (@sourceNode, @sourceEntity, source.[");
+            query.Append(referenceFieldName);
+            query.Append("]);");
+
+            int rowsAffected = 0;
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                command.Parameters.AddWithValue("parentNode", parentNode.Identity);
+                command.Parameters.AddWithValue("parentEntity", parentEntity.Identity);
+                command.Parameters.AddWithValue("sourceNode", node.Identity);
+                command.Parameters.AddWithValue("sourceEntity", sourceEntity.Identity);
+                try
+                {
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    WriteToLog("--------------------------");
+                    WriteToLog("< RegisterNodeReferences >");
+                    WriteToLog(query.ToString());
+                    WriteToLog(GetErrorText(ex));
+                    WriteToLog(ex.StackTrace);
+                    throw;
+                }
+            }
+            node.Count = rowsAffected;
+
+            WriteToLog("--------------------------");
+            WriteToLog("< RegisterNodeReferences >");
+            WriteToLog(query.ToString());
+            WriteToLog("Rows affected = " + rowsAffected.ToString() + Environment.NewLine + Environment.NewLine);
+        }
+        private string SelectNodeReferencesScript(Entity source, List<Property> filters, Entity parent)
+        {
+            StringBuilder script = new StringBuilder();
+            for (int i = 0; i < filters.Count; i++)
+            {
+                script.AppendLine(SelectNodeReferencesByOneFilterScript(source, filters[i], parent));
+                if (filters.Count > 1 && i < filters.Count - 1)
+                {
+                    script.AppendLine("UNION");
+                }
+            }
+            return script.ToString();
+        }
+        private string SelectNodeReferencesByOneFilterScript(Entity source, Property filter, Entity parent)
+        {
+            string sourceTable = string.Format("[{0}].[dbo].[{1}]", source.InfoBase.Database, source.MainTable.Name);
+
+            StringBuilder script = new StringBuilder();
+            script.Append("SELECT [");
+            script.Append(GetReferenceFieldName(source));
+            script.Append("] FROM ");
+            script.Append(sourceTable);
+            script.Append(" AS S INNER JOIN ");
+            script.Append(GetReferencesRegisterTableName());
+            script.AppendLine(" AS T ON");
+            script.Append("T.[NODE] = @parentNode AND T.[ENTITY] = @parentEntity AND ");
+            script.Append(NodeReferencesFilterScript(filter, parent, "S", "T"));
+            script.Append(";");
+            return script.ToString();
+        }
+        private string NodeReferencesFilterScript(Property property, Entity parentEntity, string sourceTableAlias, string targetTableAlias)
+        {
+            StringBuilder script = new StringBuilder();
+
+            if (property.Fields.Count == 1)
+            {
+                script.Append(string.Format("{0}.[{1}] = {2}.[OBJ_REF]", sourceTableAlias, property.Fields[0].Name, targetTableAlias));
+            }
+            else
+            {
+                string object_field = string.Empty;
+                string locator_field = string.Empty;
+                string type_code_field = string.Empty;
+                foreach (IFieldInfo field in property.Fields)
+                {
+                    switch (field.Purpose)
+                    {
+                        case FieldPurpose.Object: { object_field = field.Name; break; }
+                        case FieldPurpose.Locator: { locator_field = field.Name; break; }
+                        case FieldPurpose.TypeCode: { type_code_field = field.Name; break; }
+                    }
+                }
+
+                script.Append(string.Format(
+                        "{0}.[{1}] = CAST({2} AS binary(4)) AND {0}.[{3}] = {4}.[OBJ_REF]",
+                        sourceTableAlias, type_code_field, parentEntity.Code, object_field, targetTableAlias));
+
+                if (locator_field != string.Empty)
+                {
+                    script.Append(string.Format(" AND {0}.[{1}] = 0x08", sourceTableAlias, locator_field));
+                }
+            }
+
+            return script.ToString();
         }
     }
 }

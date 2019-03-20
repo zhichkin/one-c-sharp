@@ -146,5 +146,26 @@ namespace Zhichkin.Hermes.UI
             service.SendDataToTargetInfoBase();
             Z.Notify(new Notification { Title = "Hermes", Content = "Обмен данными выполнен." });
         }
+
+        public void BuildDataNodesTree(Entity entity)
+        {
+            try
+            {
+                this.Nodes.Clear();
+                DocumentsTreeService service = new DocumentsTreeService();
+                service.Parameters.Add("Period", this.SelectedDate);
+                service.Parameters.Add("Department", this.Department.Identity);
+                service.BuildDocumentsTree(entity, new Progress<MetadataTreeNode>(OnDataNodesTreeBuilt));
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) });
+                return;
+            }
+        }
+        public void OnDataNodesTreeBuilt(MetadataTreeNode node)
+        {
+            this.Nodes.Add(node);
+        }
     }
 }

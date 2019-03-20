@@ -18,8 +18,10 @@ namespace Zhichkin.Hermes.Infrastructure
     {
         public MetadataTreeNode()
         {
+            this.Identity = Guid.NewGuid();
             this.Children = new List<IMetadataTreeNode>();
         }
+        public Guid Identity { get; }
         public string Name { get; set; }
         public IMetadataTreeNode Parent { get; set; }
         public IList<IMetadataTreeNode> Children { get; }

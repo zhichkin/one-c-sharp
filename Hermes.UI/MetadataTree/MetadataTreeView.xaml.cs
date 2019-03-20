@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Hermes.Services;
+using Zhichkin.Metadata.Model;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -48,25 +49,27 @@ namespace Zhichkin.Hermes.UI
             if (data == null) return;
             SetDefaultBackground(sender);
 
-            IEntityInfo item = data as IEntityInfo;
-            if (item == null) return;
+            Entity entity = data as Entity;
+            if (entity == null) return;
 
             MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
             if (viewModel == null) return;
-            viewModel.Nodes.Clear();
+            viewModel.BuildDataNodesTree(entity);
+            //viewModel.Nodes.Clear();
+            Z.Notify(new Notification { Title = "Hermes", Content = "Узлы данных сформированы." });
 
-            try
-            {
-                DocumentsTreeService service = new DocumentsTreeService();
-                service.Parameters.Add("Period", viewModel.SelectedDate);
-                service.Parameters.Add("Department", viewModel.Department.Identity);
-                service.BuildDocumentsTree(item, SetStateText, DocumentsTreeIsBuilt);
-            }
-            catch (Exception ex)
-            {
-                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) });
-                return;
-            }
+            //try
+            //{
+            //    DocumentsTreeService service = new DocumentsTreeService();
+            //    service.Parameters.Add("Period", viewModel.SelectedDate);
+            //    service.Parameters.Add("Department", viewModel.Department.Identity);
+            //    service.BuildDocumentsTree(item, SetStateText, DocumentsTreeIsBuilt);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) });
+            //    return;
+            //}
         }
         public void SetStateText(string text)
         {
