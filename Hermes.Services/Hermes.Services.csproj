@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Infrastructure.csproj" />
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj" />
+    <ProjectReference Include="..\orm\ORM.csproj" />
   </ItemGroup>
 
   <ItemGroup>

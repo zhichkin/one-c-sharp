@@ -7,12 +7,12 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
 using Zhichkin.ORM;
-using System.Linq;
 
 namespace Zhichkin.Hermes.Services
 {
@@ -399,6 +399,7 @@ namespace Zhichkin.Hermes.Services
             Entity entity = node.MetadataInfo as Entity;
             if (entity == null)
             {
+                // Namespace's child nodes
                 foreach (MetadataTreeNode child in node.Children)
                 {
                     RegisterAllEntitiesForExchange(child);
@@ -406,18 +407,27 @@ namespace Zhichkin.Hermes.Services
             }
             else
             {
-                string name = entity.Namespace.Name;
-                if (name == "Перечисление" || name == "ПланСчетов" || name == "ПланВидовХарактеристик") { return; }
+                string namespaceName = entity.Namespace.Name;
+                if (entity.Owner == null)
+                {
+                    namespaceName = entity.Namespace.Name;
+                }
+                else // nested entity
+                {
+                    namespaceName = entity.Owner.Namespace.Name;
+                }
+
+                if (namespaceName == "Перечисление"
+                    || namespaceName == "ПланСчетов"
+                    || namespaceName == "ПланВидовХарактеристик") { return; }
 
                 // TODO : РегистрСведений РегистрНакопления РегистрБухгалтерии !!!
 
-                if (entity.Owner == null)
+                if (namespaceName == "Справочник" || namespaceName == "Документ")
                 {
-                    if (name == "Справочник" || name == "Документ")
-                    {
-                        RegisterNodeReferences(node);
-                        //RegisterEntityReferencesForExchange(node);
-                    }
+                    // including nested entities
+                    RegisterNodeReferences(node);
+                    //RegisterEntityReferencesForExchange(node);
                 }
                 // TODO : RegisterForeignReferencesForExchange(node); !!!
 
@@ -1346,15 +1356,27 @@ namespace Zhichkin.Hermes.Services
             }
 
             Entity sourceEntity = (Entity)node.MetadataInfo;
-            if (sourceEntity.Owner != null) throw new ArgumentException("Nested entity can not register references", "node");
 
-            MetadataTreeNode parentNode = GetParentNode(node);
+            MetadataTreeNode parentNode = (sourceEntity.Owner == null)
+                ? GetParentNode(node)
+                : GetParentNode((MetadataTreeNode)node.Parent);
+
             if (parentNode == null) throw new ApplicationException("Parent node is not found");
             
             Entity parentEntity = (Entity)parentNode.MetadataInfo;
             if (parentEntity == null) throw new ApplicationException("Node's entity can not be null");
 
             List<Property> filters = GetFilterProperties(node); // node's entity properties holding references to parent node's entity
+            if (filters.Count == 0)
+            {
+                WriteToLog("--------------------------");
+                WriteToLog("< RegisterNodeReferences >");
+                WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+                WriteToLog("Parent: " + parentEntity.Namespace.Name + "." + parentEntity.Name);
+                WriteToLog("None filter property is found");
+                WriteToLog(Environment.NewLine);
+                return; // look into nested entities
+            }
 
             string referenceFieldName = GetReferenceFieldName(sourceEntity);
             string targetTable = GetReferencesRegisterTableName();
@@ -1365,7 +1387,7 @@ namespace Zhichkin.Hermes.Services
             query.AppendLine(" AS target");
             query.AppendLine("USING");
             query.AppendLine("(");
-            query.AppendLine(SelectNodeReferencesScript(sourceEntity, filters, parentEntity));
+            query.Append(SelectNodeReferencesScript(sourceEntity, filters, parentEntity));
             query.AppendLine(")");
             query.Append("AS source([");
             query.Append(referenceFieldName);
@@ -1387,8 +1409,22 @@ namespace Zhichkin.Hermes.Services
                 command.CommandText = query.ToString();
                 command.Parameters.AddWithValue("parentNode", parentNode.Identity);
                 command.Parameters.AddWithValue("parentEntity", parentEntity.Identity);
-                command.Parameters.AddWithValue("sourceNode", node.Identity);
-                command.Parameters.AddWithValue("sourceEntity", sourceEntity.Identity);
+                if (sourceEntity.Owner == null)
+                {
+                    command.Parameters.AddWithValue("sourceNode", node.Identity);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("sourceNode", ((MetadataTreeNode)node.Parent).Identity);
+                }
+                if (sourceEntity.Owner == null)
+                {
+                    command.Parameters.AddWithValue("sourceEntity", sourceEntity.Identity);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("sourceEntity", sourceEntity.Owner.Identity);
+                }
                 try
                 {
                     rowsAffected = command.ExecuteNonQuery();
@@ -1397,18 +1433,31 @@ namespace Zhichkin.Hermes.Services
                 {
                     WriteToLog("--------------------------");
                     WriteToLog("< RegisterNodeReferences >");
+                    WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+                    WriteToLog("Parent: " + parentEntity.Namespace.Name + "." + parentEntity.Name);
                     WriteToLog(query.ToString());
                     WriteToLog(GetErrorText(ex));
                     WriteToLog(ex.StackTrace);
+                    WriteToLog(Environment.NewLine);
                     throw;
                 }
             }
             node.Count = rowsAffected;
+            if (sourceEntity.Owner != null)
+            {
+                node.Parent.Count += rowsAffected;
+            }
 
             WriteToLog("--------------------------");
             WriteToLog("< RegisterNodeReferences >");
+            WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+            WriteToLog("Parent: " + parentEntity.Namespace.Name + "." + parentEntity.Name);
+            foreach (Property filter in filters)
+            {
+                WriteToLog(" - " + filter.Name);
+            }
             WriteToLog(query.ToString());
-            WriteToLog("Rows affected = " + rowsAffected.ToString() + Environment.NewLine + Environment.NewLine);
+            WriteToLog("Rows affected = " + rowsAffected.ToString() + Environment.NewLine);
         }
         private string SelectNodeReferencesScript(Entity source, List<Property> filters, Entity parent)
         {
@@ -1437,7 +1486,6 @@ namespace Zhichkin.Hermes.Services
             script.AppendLine(" AS T ON");
             script.Append("T.[NODE] = @parentNode AND T.[ENTITY] = @parentEntity AND ");
             script.Append(NodeReferencesFilterScript(filter, parent, "S", "T"));
-            script.Append(";");
             return script.ToString();
         }
         private string NodeReferencesFilterScript(Property property, Entity parentEntity, string sourceTableAlias, string targetTableAlias)
