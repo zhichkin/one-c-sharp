@@ -80,8 +80,8 @@ namespace Zhichkin.Hermes.UI
                 return;
             }
             DocumentsTreeService service = new DocumentsTreeService();
-            service.Parameters.Add("Period", this.SelectedDate);
-            service.Parameters.Add("Department", this.Department.Identity);
+            //service.Parameters.Add("Period", this.SelectedDate);
+            //service.Parameters.Add("Department", this.Department.Identity);
             List<MetadataTreeNode> result = service.RegisterEntitiesForExchange(this.Nodes[0]);
             foreach (MetadataTreeNode node in result)
             {
@@ -143,8 +143,15 @@ namespace Zhichkin.Hermes.UI
             DocumentsTreeService service = new DocumentsTreeService();
             service.Parameters.Add("SourceInfoBase", this.SourceInfoBase);
             service.Parameters.Add("TargetInfoBase", this.TargetInfoBase);
-            service.SendDataToTargetInfoBase();
-            Z.Notify(new Notification { Title = "Hermes", Content = "Обмен данными выполнен." });
+            try
+            {
+                service.SendDataToTargetInfoBase();
+                Z.Notify(new Notification { Title = "Hermes", Content = "Обмен данными выполнен." });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) + Environment.NewLine + ex.StackTrace });
+            }
         }
 
         public void BuildDataNodesTree(Entity entity)
@@ -159,7 +166,7 @@ namespace Zhichkin.Hermes.UI
             }
             catch (Exception ex)
             {
-                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) });
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) + Environment.NewLine + ex.StackTrace });
                 return;
             }
         }

@@ -380,18 +380,6 @@ namespace Zhichkin.Hermes.Services
         /// </returns>
         public List<MetadataTreeNode> RegisterEntitiesForExchange(MetadataTreeNode root)
         {
-            WriteToLog("Start (RegisterEntitiesForExchange): " + DateTime.Now.ToUniversalTime());
-            try
-            {
-                CreateExchangeTable();
-                RegisterAllEntitiesForExchange(root);
-            }
-            catch (Exception ex)
-            {
-                WriteToLog(GetErrorText(ex));
-                WriteToLog(ex.StackTrace);
-            }
-            WriteToLog("End (RegisterEntitiesForExchange): " + DateTime.Now.ToUniversalTime());
             return GetExchangeInfo(((Entity)root.MetadataInfo).InfoBase);
         }
         private void RegisterAllEntitiesForExchange(MetadataTreeNode node)
@@ -405,7 +393,7 @@ namespace Zhichkin.Hermes.Services
                     RegisterAllEntitiesForExchange(child);
                 }
             }
-            else
+            else // different kind of entities
             {
                 string namespaceName = entity.Namespace.Name;
                 if (entity.Owner == null)
@@ -419,17 +407,20 @@ namespace Zhichkin.Hermes.Services
 
                 if (namespaceName == "Перечисление"
                     || namespaceName == "ПланСчетов"
-                    || namespaceName == "ПланВидовХарактеристик") { return; }
-
-                // TODO : РегистрСведений РегистрНакопления РегистрБухгалтерии !!!
+                    || namespaceName == "ПланВидовХарактеристик"
+                    || namespaceName == "РегистрБухгалтерии") { return; }
 
                 if (namespaceName == "Справочник" || namespaceName == "Документ")
                 {
                     // including nested entities
                     RegisterNodeReferences(node);
-                    //RegisterEntityReferencesForExchange(node);
                 }
-                // TODO : RegisterForeignReferencesForExchange(node); !!!
+                else
+                {
+                    // TODO : регистрация на выгрузку для РегистрСведений РегистрНакопления РегистрБухгалтерии ?
+                }
+
+                RegisterNodeForeignReferences(node);
 
                 foreach (MetadataTreeNode child in node.Children)
                 {
@@ -465,28 +456,7 @@ namespace Zhichkin.Hermes.Services
         /// ссылок для обмена.
         /// </param>
         /// <returns></returns>
-        public void RegisterEntityReferencesForExchange(MetadataTreeNode node)
-        {
-            Entity entity = node.MetadataInfo as Entity;
-            if (entity == null) { throw new ArgumentNullException("node"); }
-
-            List<Guid> keys = GetNodeKeys(node);
-            if (keys.Count == 0) return;
-
-            StringBuilder query = new StringBuilder();
-            query.AppendLine(BuildKeysTableQueryScript(keys));
-            query.Append(MergeEntityKeysIntoExchangeTableScript(entity));
-
-            using (SqlConnection connection = new SqlConnection(connection_string))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = query.ToString();
-                int rowsAffected = command.ExecuteNonQuery();
-                WriteToLog("*** " + entity.FullName + " = " + rowsAffected.ToString());
-            }
-        }
+        
         private List<Guid> GetNodeKeys(MetadataTreeNode node)
         {
             if (node == null) { throw new ArgumentNullException("node"); }
@@ -528,57 +498,15 @@ namespace Zhichkin.Hermes.Services
 
             return node.Keys;
         }
-        private string MergeEntityKeysIntoExchangeTableScript(Entity entity)
-        {
-            StringBuilder script = new StringBuilder();
-            script.Append("MERGE ");
-            script.Append(GetExchangeTableName());
-            script.AppendLine(" AS target");
-            script.AppendLine("USING");
-            script.AppendLine("(");
-            script.AppendLine("SELECT " + entity.Code.ToString() + ", [key] FROM @KeysTable");
-            script.AppendLine(") AS source(TYPE_CODE, REF_VALUE)");
-            script.AppendLine("ON (target.TYPE_CODE = source.TYPE_CODE AND target.REF_VALUE = source.REF_VALUE)");
-            script.AppendLine("WHEN NOT MATCHED THEN");
-            script.Append("INSERT (TYPE_CODE, REF_VALUE) VALUES (source.TYPE_CODE, source.REF_VALUE);");
-            return script.ToString();
-        }
-
-        private void CreateExchangeTable()
-        {
-            StringBuilder query = new StringBuilder();
-            query.Append(@"IF(NOT OBJECT_ID(N'");
-            query.Append(GetExchangeTableName());
-            query.Append("') IS NULL) DROP TABLE ");
-            query.Append(GetExchangeTableName());
-            query.AppendLine(";");
-            query.Append(@"CREATE TABLE ");
-            query.Append(GetExchangeTableName());
-            query.AppendLine(" (TYPE_CODE int, REF_VALUE binary(16));");
-            query.AppendLine(@"CREATE CLUSTERED INDEX CX_Z_ExchangeTable ON ");
-            query.Append(GetExchangeTableName());
-            query.AppendLine("(TYPE_CODE, REF_VALUE);");
-            query.Append(@"CREATE INDEX IX_Z_ExchangeTable ON ");
-            query.Append(GetExchangeTableName());
-            query.Append("(REF_VALUE);");
-
-            using (SqlConnection connection = new SqlConnection(connection_string))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = query.ToString();
-                int rowsAffected = command.ExecuteNonQuery();
-            }
-        }
+        
         private List<dynamic> SelectExchangeInfo(InfoBase infoBase)
         {
             List<dynamic> list = new List<dynamic>();
 
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT TYPE_CODE, COUNT(REF_VALUE) AS [REF_COUNT] FROM ");
-            query.Append(GetExchangeTableName());
-            query.Append(" GROUP BY TYPE_CODE;");
+            query.Append("SELECT [ENTITY], COUNT([OBJ_REF]) FROM ");
+            query.Append(GetReferencesRegisterTableName());
+            query.Append(" GROUP BY [ENTITY] ORDER BY [ENTITY];");
 
             using (SqlConnection connection = new SqlConnection(connection_string))
             using (SqlCommand command = connection.CreateCommand())
@@ -603,67 +531,7 @@ namespace Zhichkin.Hermes.Services
             }
             return list;
         }
-
-        /// <summary>
-        /// Процедура отбирает объекты узла данных,
-        /// по настроенному для него фильтру,
-        /// а затем регистрирует внешние ссылки его свойств для обмена.
-        /// Важно: свойства, используемые для фильтрации,
-        /// не используются для поиска внешних объектов!
-        /// </summary>
-        /// <param name="node">
-        /// Узел данных, для объектов которого
-        /// необходимо выполнить регистрацию
-        /// внешних ссылок для обмена.
-        /// </param>
-        /// <returns></returns>
-        public void RegisterForeignReferencesForExchange(MetadataTreeNode node)
-        {
-            Entity entity = node.MetadataInfo as Entity;
-            if (entity == null) { throw new ArgumentNullException("node"); }
-
-            Entity parent = null;
-            MetadataTreeNode parent_node = GetParentNode(node);
-            if (parent_node != null) { parent = parent_node.MetadataInfo as Entity; }
-            List<Guid> parent_keys = GetParentKeys(node);
-            List<Property> filter_properties = GetFilterProperties(node);
-            List<Property> foreign_references = GetForeignKeyProperties(entity, filter_properties);
-
-            if (filter_properties.Count == 0) { return; /* TODO: нужен отбор ссылок по табличной части !!! */ }
-            if (foreign_references.Count == 0) { return; }
-
-            string query = BuildSelectForeignKeysScript(parent, entity, filter_properties, parent_keys, foreign_references);
-
-            DateTime period = (DateTime)this.Parameters["Period"];
-            period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
-            period = period.AddYears(2000); // fuck 1C !!!
-            Guid department = (Guid)this.Parameters["Department"];
-
-            using (SqlConnection connection = new SqlConnection(connection_string))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = query.ToString();
-                if (parent_node == null)
-                {
-                    command.Parameters.AddWithValue("_Date_Time", period);
-                    command.Parameters.AddWithValue("Department", department.ToByteArray());
-                }
-                try
-                {
-                    int rowsAffected = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    WriteToLog(entity.FullName);
-                    WriteToLog("Filters count = " + filter_properties.Count.ToString());
-                    WriteToLog("Foreiners count = " + foreign_references.Count.ToString());
-                    WriteToLog(query.ToString());
-                    throw;
-                }
-            }
-        }
+        
         private MetadataTreeNode GetParentNode(MetadataTreeNode node)
         {
             IMetadataTreeNode parent = node.Parent;
@@ -804,7 +672,7 @@ namespace Zhichkin.Hermes.Services
             return script.ToString();
         }
 
-        private string BuildSelectForeignKeysScript(Entity parent, Entity source, List<Property> filters, List<Guid> keys, List<Property> foreiners)
+        private string BuildSelectForeignKeysScript(Entity parent, Entity source, List<Property> filters, List<Property> foreiners)
         {
             if (parent == null)
             {
@@ -812,22 +680,21 @@ namespace Zhichkin.Hermes.Services
             }
             else
             {
-                return SelectForeignKeysFromChildScript(parent, source, filters, keys, foreiners);
+                return SelectForeignKeysFromChildScript(parent, source, filters, foreiners);
             }
         }
         private string SelectForeignKeysFromRootScript(Entity source, List<Property> foreiners)
         {
             string filterName = GetDepartmentFieldName(source);
+            string sourceTable = string.Format("[{0}].[dbo].[{1}]", source.InfoBase.Database, source.MainTable.Name);
 
             StringBuilder script = new StringBuilder();
             string fields = SelectFieldsScript(foreiners);
             script.AppendLine(string.Format("WITH CTE ({0}) AS", fields));
             script.AppendLine("(");
-            script.Append(string.Format("SELECT {0} FROM [{1}] WHERE [_Date_Time] >= @_Date_Time",
-                fields, source.MainTable.Name));
-            script.Append(" AND [" + filterName + "] = @Department");
+            script.Append(string.Format("SELECT {0} FROM {1} WHERE [_Date_Time] >= @period", fields, sourceTable));
+            script.Append(" AND [" + filterName + "] = @branch");
             script.AppendLine(")");
-            //script.Append(SelectForeignKeysFromEntityScript(foreiners));
             script.Append(MergeForeignKeysFromEntityToExchangeTableScript(foreiners));
             script.Append(";");
             return script.ToString();
@@ -893,7 +760,7 @@ namespace Zhichkin.Hermes.Services
                 script.Append(property.Fields[0].Name);
                 script.Append("] > 0x00000000000000000000000000000000");
             }
-            else
+            else // составной тип данных
             {
                 string object_field = string.Empty;
                 string locator_field = string.Empty;
@@ -907,15 +774,35 @@ namespace Zhichkin.Hermes.Services
                         case FieldPurpose.TypeCode: { type_code_field = field.Name; break; }
                     }
                 }
-                script.Append("SELECT CAST([");
-                script.Append(type_code_field);
-                script.Append("] AS int) AS [TYPE_CODE], [");
-                script.Append(object_field);
-                script.Append("] AS [FK_VALUE] FROM CTE WHERE [");
-                script.Append(type_code_field);
-                script.Append("] > 0x00000000 AND [");
-                script.Append(object_field);
-                script.Append("] > 0x00000000000000000000000000000000");
+                if (type_code_field == string.Empty) // в составном типе есть только один ссылочный тип
+                {
+                    script.Append("SELECT ");
+                    foreach (Relation relation in property.Relations)
+                    {
+                        if (relation.Entity.Code > 0) // пользовательский тип данных, в данном случае только ссылочный может быть
+                        {
+                            script.Append(relation.Entity.Code.ToString());
+                            break;
+                        }
+                    }
+                    script.Append(" AS [TYPE_CODE], [");
+                    script.Append(object_field);
+                    script.Append("] AS [FK_VALUE] FROM CTE WHERE [");
+                    script.Append(object_field);
+                    script.Append("] > 0x00000000000000000000000000000000");
+                }
+                else
+                {
+                    script.Append("SELECT CAST([");
+                    script.Append(type_code_field);
+                    script.Append("] AS int) AS [TYPE_CODE], [");
+                    script.Append(object_field);
+                    script.Append("] AS [FK_VALUE] FROM CTE WHERE [");
+                    script.Append(type_code_field);
+                    script.Append("] > 0x00000000 AND [");
+                    script.Append(object_field);
+                    script.Append("] > 0x00000000000000000000000000000000");
+                }
                 if (locator_field != string.Empty)
                 {
                     script.Append(" AND [");
@@ -926,28 +813,26 @@ namespace Zhichkin.Hermes.Services
 
             return script.ToString();
         }
-        private string SelectForeignKeysFromChildScript(Entity parent, Entity source, List<Property> filters, List<Guid> keys, List<Property> foreiners)
+        private string SelectForeignKeysFromChildScript(Entity parent, Entity source, List<Property> filters, List<Property> foreiners)
         {
             if (parent == null) throw new ArgumentNullException("parent");
 
             StringBuilder script = new StringBuilder();
-            script.AppendLine(BuildKeysTableQueryScript(keys));
             script.AppendLine("WITH CTE (");
             script.Append(SelectFieldsScript(foreiners));
             script.AppendLine(") AS");
             script.AppendLine("(");
-            script.AppendLine(SelectRecordsFromChildUsingFilters(parent, source, filters, foreiners));
+            script.AppendLine(SelectNodeForeignReferencesScript(parent, source, filters, foreiners));
             script.AppendLine(")");
-            //script.Append(SelectForeignKeysFromEntityScript(foreiners));
             script.Append(MergeForeignKeysFromEntityToExchangeTableScript(foreiners));
             return script.ToString();
         }
-        private string SelectRecordsFromChildUsingFilters(Entity parent, Entity source, List<Property> filters, List<Property> foreiners)
+        private string SelectNodeForeignReferencesScript(Entity parent, Entity source, List<Property> filters, List<Property> foreiners)
         {
             StringBuilder script = new StringBuilder();
             for (int i = 0; i < filters.Count; i++)
             {
-                script.AppendLine(SelectRecordsFromChildUsingOneFilter(parent, source, filters[i], foreiners));
+                script.AppendLine(SelectNodeForeignReferencesByOneFilterScript(parent, source, filters[i], foreiners));
                 if (filters.Count > 1 && i < filters.Count - 1)
                 {
                     script.AppendLine("UNION ALL");
@@ -955,44 +840,42 @@ namespace Zhichkin.Hermes.Services
             }
             return script.ToString();
         }
-        private string SelectRecordsFromChildUsingOneFilter(Entity parent, Entity source, Property filter, List<Property> foreiners)
+        private string SelectNodeForeignReferencesByOneFilterScript(Entity parent, Entity source, Property filter, List<Property> foreiners)
         {
+            string sourceTable = string.Format("[{0}].[dbo].[{1}]", source.InfoBase.Database, source.MainTable.Name);
+
             StringBuilder script = new StringBuilder();
             script.Append("SELECT ");
             script.Append(SelectFieldsScript(foreiners));
-            script.Append(" FROM [");
-            script.Append(source.MainTable.Name);
-            script.Append("] AS C INNER JOIN @KeysTable AS K ON ");
-            script.Append(BuildFilterQueryScript(filter, "C", parent.Code));
+            script.Append(" FROM ");
+            script.Append(sourceTable);
+            script.Append(" AS S INNER JOIN ");
+            script.Append(GetReferencesRegisterTableName());
+            script.AppendLine(" AS T ON");
+            script.Append("T.[NODE] = @parentNode AND T.[ENTITY] = @parentEntity AND ");
+            script.Append(NodeReferencesFilterScript(filter, parent, "S", "T"));
             return script.ToString();
         }
         private string MergeForeignKeysFromEntityToExchangeTableScript(List<Property> foreiners)
         {
             StringBuilder script = new StringBuilder();
             script.Append("MERGE ");
-            script.Append(GetExchangeTableName());
+            script.Append(GetReferencesRegisterTableName());
             script.AppendLine(" AS target");
             script.AppendLine("USING");
             script.AppendLine("(");
             script.AppendLine(SelectForeignKeysFromEntityScript(foreiners));
             script.AppendLine(") AS source(TYPE_CODE, FK_VALUE)");
-            script.AppendLine("ON (target.TYPE_CODE = source.TYPE_CODE AND target.REF_VALUE = source.FK_VALUE)");
+            script.AppendLine("ON (target.[NODE] = @sourceNode AND target.[ENTITY] = source.TYPE_CODE AND target.[OBJ_REF] = source.FK_VALUE)");
             script.AppendLine("WHEN NOT MATCHED THEN");
-            script.AppendLine("INSERT (TYPE_CODE, REF_VALUE) VALUES (source.TYPE_CODE, source.FK_VALUE);");
+            script.AppendLine("INSERT ([NODE], [ENTITY], [OBJ_REF]) VALUES (@sourceNode, source.TYPE_CODE, source.FK_VALUE);");
             return script.ToString();
         }
 
         //
         private string GetDepartmentFieldName(Entity entity)
         {
-            if (entity.Name != "яЗаявкаПеревозчику") { return string.Empty; }
-            foreach (Property property in entity.Properties)
-            {
-                if (property.Name != "Филиал") continue;
-                if (property.Fields.Count == 0) { return string.Empty; }
-                return property.Fields[0].Name;
-            }
-            return string.Empty;
+            return entity.Properties.Where((p) => p.Name == "Филиал").First().Fields[0].Name;
         }
         //
 
@@ -1002,6 +885,9 @@ namespace Zhichkin.Hermes.Services
             InfoBase target = (InfoBase)this.Parameters["TargetInfoBase"];
 
             List<Entity> list = GetEnitiesToExport(source);
+            if (list.Count == 0) return;
+
+            CreateTypeCodesCorrespondenceFucntion(list, target);
 
             MetadataService service = new MetadataService();
             foreach (Entity sourceEntity in list)
@@ -1014,26 +900,13 @@ namespace Zhichkin.Hermes.Services
                         WriteToLog("Target entity not found: " + target.Name + ", " + sourceEntity.Namespace.Name + ", " + sourceEntity.Name);
                         continue;
                     }
-                    try
-                    {
-                        int rowsAffected = SendEntityToTargetInfoBase(source, target, sourceEntity, targetEntity);
-                        // TODO: logging and reporting progress
-                        WriteToLog(rowsAffected.ToString() + " references of " + sourceEntity.Namespace.Name + "." + sourceEntity.Name +
-                            " have been sent to " + targetEntity.Name + " from " + source.Database + " to " + target.Database);
 
-                        foreach (Entity nestedSource in sourceEntity.NestedEntities)
-                        {
-                            Entity nestedTarget = targetEntity.NestedEntities.Where((e) => e.Name == nestedSource.Name).FirstOrDefault();
-                            if (nestedTarget == null) continue;
-
-                            rowsAffected = SendEntityToTargetInfoBase(source, target, nestedSource, nestedTarget);
-                            WriteToLog(rowsAffected.ToString() + " records of " + nestedSource.Namespace.Name + "." + nestedSource.Name +
-                                " have been sent to " + nestedTarget.Name + " from " + source.Database + " to " + target.Database);
-                        }
-                    }
-                    catch (Exception ex)
+                    int rowsAffected = SendEntityToTargetInfoBase(source, target, sourceEntity, targetEntity);
+                    foreach (Entity nestedSource in sourceEntity.NestedEntities)
                     {
-                        WriteToLog(ex.Message);
+                        Entity nestedTarget = targetEntity.NestedEntities.Where((e) => e.Name == nestedSource.Name).FirstOrDefault();
+                        if (nestedTarget == null) continue;
+                        rowsAffected = SendEntityToTargetInfoBase(source, target, nestedSource, nestedTarget);
                     }
                 }
             }
@@ -1045,9 +918,9 @@ namespace Zhichkin.Hermes.Services
             List<Entity> list = new List<Entity>();
 
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT DISTINCT [TYPE_CODE] FROM ");
-            query.Append(GetExchangeTableName());
-            query.Append(" ORDER BY [TYPE_CODE];");
+            query.Append("SELECT DISTINCT [ENTITY] FROM ");
+            query.Append(GetReferencesRegisterTableName());
+            query.Append(" ORDER BY [ENTITY];");
 
             MetadataService service = new MetadataService();
             using (SqlConnection connection = new SqlConnection(connection_string))
@@ -1084,11 +957,25 @@ namespace Zhichkin.Hermes.Services
                 }
                 catch (Exception ex)
                 {
+                    WriteToLog("------------------------------");
+                    WriteToLog("< SendEntityToTargetInfoBase >");
+                    WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+                    WriteToLog("Target: " + targetEntity.Namespace.Name + "." + ((targetEntity.Owner == null) ? "" : targetEntity.Owner.Name + ".") + targetEntity.Name);
                     WriteToLog(query);
-                    WriteToLog(ex.Message);
+                    WriteToLog(GetErrorText(ex));
+                    WriteToLog(ex.StackTrace);
+                    WriteToLog(Environment.NewLine);
                     throw;
                 }
             }
+
+            WriteToLog("------------------------------");
+            WriteToLog("< SendEntityToTargetInfoBase >");
+            WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+            WriteToLog("Target: " + targetEntity.Namespace.Name + "." + ((targetEntity.Owner == null) ? "" : targetEntity.Owner.Name + ".") + targetEntity.Name);
+            WriteToLog(query);
+            WriteToLog("Rows affected = " + rowsAffected.ToString() + Environment.NewLine);
+
             return rowsAffected;
         }
         private string AllFieldsScript(Entity entity, string alias)
@@ -1098,6 +985,7 @@ namespace Zhichkin.Hermes.Services
             {
                 foreach (Field field in property.Fields)
                 {
+                    // TODO : add to Field class IsAutoGenerated property !!!
                     if (field.TypeName == "timestamp" || field.TypeName == "version") continue;
                     if (script.Length > 0) { script.Append(", "); }
                     if (alias != string.Empty)
@@ -1112,6 +1000,38 @@ namespace Zhichkin.Hermes.Services
             }
             return script.ToString();
         }
+        private string InsertTargetValuesScript(Entity entity, string alias)
+        {
+            string functionName = GetTypeCodesCorrespondenceFucntionName();
+            StringBuilder script = new StringBuilder();
+            foreach (Property property in entity.Properties)
+            {
+                foreach (Field field in property.Fields)
+                {
+                    // TODO : add to Field class IsAutoGenerated property !!!
+                    if (field.TypeName == "timestamp" || field.TypeName == "version") continue;
+                    if (script.Length > 0) { script.Append(", "); }
+                    if (field.Purpose == FieldPurpose.TypeCode)
+                    {
+                        script.Append(functionName);
+                        script.Append("(");
+                    }
+                    if (alias != string.Empty)
+                    {
+                        script.Append(alias);
+                        script.Append(".");
+                    }
+                    script.Append("[");
+                    script.Append(field.Name);
+                    script.Append("]");
+                    if (field.Purpose == FieldPurpose.TypeCode)
+                    {
+                        script.Append(")");
+                    }
+                }
+            }
+            return script.ToString();
+        }
         private string SelectSourceEntityScript(InfoBase source, Entity entity)
         {
             StringBuilder script = new StringBuilder();
@@ -1122,10 +1042,10 @@ namespace Zhichkin.Hermes.Services
             script.Append("].[dbo].[");
             script.Append(entity.MainTable.Name);
             script.Append("] AS E INNER JOIN ");
-            script.Append(GetExchangeTableName());
+            script.Append("(SELECT DISTINCT [ENTITY], [OBJ_REF] FROM " + GetReferencesRegisterTableName() + ")");
             script.Append(" AS T ON E.[");
             script.Append(GetReferenceFieldName(entity));
-            script.Append("] = T.[REF_VALUE] AND T.[TYPE_CODE] = ");
+            script.Append("] = T.[OBJ_REF] AND T.[ENTITY] = ");
             script.Append(GetReferenceTypeCode(entity).ToString());
             return script.ToString();
         }
@@ -1137,8 +1057,57 @@ namespace Zhichkin.Hermes.Services
             script.Append(AllFieldsScript(targetEntity, string.Empty));
             script.AppendLine(")");
             script.Append("VALUES (");
-            script.Append(AllFieldsScript(sourceEntity, alias));
+            script.Append(InsertTargetValuesScript(sourceEntity, alias));
             script.Append(")");
+            return script.ToString();
+        }
+        private string UpdateTargetEntityScript(InfoBase target, Entity targetEntity, string alias, Entity sourceEntity)
+        {
+            StringBuilder script = new StringBuilder();
+            script.AppendLine("UPDATE SET");
+            script.Append(UpdateTargetValuesScript(targetEntity, sourceEntity, alias));
+            return script.ToString();
+        }
+        private string UpdateTargetValuesScript(Entity targetEntity, Entity sourceEntity, string alias)
+        {
+            string functionName = GetTypeCodesCorrespondenceFucntionName();
+            StringBuilder script = new StringBuilder();
+            foreach (Property targetProperty in targetEntity.Properties)
+            {
+                Property sourceProperty = sourceEntity.Properties.Where((p) => p.Name == targetProperty.Name).First();
+
+                foreach (Field targetField in targetProperty.Fields)
+                {
+                    // TODO : add to Field class IsAutoGenerated property !!!
+                    if (targetField.TypeName == "timestamp" || targetField.TypeName == "version") continue;
+
+                    // TODO : filter out primary key fields - they are not needed by update statement !
+
+                    Field sourceField = sourceProperty.Fields.Where((f) => f.Purpose == targetField.Purpose).First();
+
+                    if (script.Length > 0) { script.Append(", "); }
+                    script.Append("[");
+                    script.Append(targetField.Name);
+                    script.Append("] = ");
+                    if (targetField.Purpose == FieldPurpose.TypeCode)
+                    {
+                        script.Append(functionName);
+                        script.Append("(");
+                    }
+                    if (alias != string.Empty)
+                    {
+                        script.Append(alias);
+                        script.Append(".");
+                    }
+                    script.Append("[");
+                    script.Append(sourceField.Name);
+                    script.Append("]");
+                    if (targetField.Purpose == FieldPurpose.TypeCode)
+                    {
+                        script.Append(")");
+                    }
+                }
+            }
             return script.ToString();
         }
         private string MergeSourceWithTargetScript(InfoBase source, Entity sourceEntity, InfoBase target, Entity targetEntity)
@@ -1156,14 +1125,68 @@ namespace Zhichkin.Hermes.Services
             script.Append("AS source(");
             script.Append(AllFieldsScript(sourceEntity, string.Empty));
             script.AppendLine(")");
-            script.Append("ON (target.[");
-            script.Append(GetReferenceFieldName(targetEntity));
-            script.Append("] = source.[");
-            script.Append(GetReferenceFieldName(sourceEntity));
-            script.AppendLine("])");
+            script.AppendLine("ON");
+            script.AppendLine(MergeSourceWithTargetConditionsScript(sourceEntity, targetEntity));
+            script.AppendLine("WHEN MATCHED THEN");
+            script.AppendLine(UpdateTargetEntityScript(target, targetEntity, "source", sourceEntity));
             script.AppendLine("WHEN NOT MATCHED THEN");
             script.Append(InsertTargetEntityScript(target, targetEntity, "source", sourceEntity));
             script.Append(";");
+            return script.ToString();
+        }
+        private List<Property> GetPrimaryKeyProperties(Entity entity)
+        {
+            List<Property> list = new List<Property>();
+            foreach (Property property in entity.Properties)
+            {
+                foreach (Field field in property.Fields)
+                {
+                    if (field.IsPrimaryKey)
+                    {
+                        list.Add(property);
+                        break;
+                    }
+                }
+            }
+            return list;
+        }
+        private string MergeSourceWithTargetConditionsScript(Entity sourceEntity, Entity targetEntity)
+        {
+            string functionName = GetTypeCodesCorrespondenceFucntionName();
+            List<Property> sourcePrimaryKey = GetPrimaryKeyProperties(sourceEntity);
+            List<Property> targetPrimaryKey = GetPrimaryKeyProperties(targetEntity);
+
+            StringBuilder script = new StringBuilder();
+            foreach (Property targetProperty in targetPrimaryKey)
+            {
+                Property sourceProperty = sourcePrimaryKey.Where((p) => p.Name == targetProperty.Name).First();
+
+                foreach (Field targetField in targetProperty.Fields)
+                {
+                    Field sourceField = sourceProperty.Fields.Where((f) => f.Purpose == targetField.Purpose).First();
+
+                    if (script.Length > 0) { script.Append(" AND "); }
+
+                    script.Append("target.[");
+                    script.Append(targetField.Name);
+                    script.Append("] = ");
+
+                    if (targetField.Purpose == FieldPurpose.TypeCode)
+                    {
+                        script.Append(functionName);
+                        script.Append(" (");
+                    }
+
+                    script.Append("source.[");
+                    script.Append(sourceField.Name);
+                    script.Append("]");
+
+                    if (targetField.Purpose == FieldPurpose.TypeCode)
+                    {
+                        script.Append(")");
+                    }
+                }
+            }
             return script.ToString();
         }
         private Entity GetEntityByName(InfoBase infoBase, string namespaceName, string entityName)
@@ -1189,10 +1212,7 @@ namespace Zhichkin.Hermes.Services
             }
             return result;
         }
-        private string GetExchangeTableName()
-        {
-            return "[Z].[dbo].[Z_ExchangeTable]";
-        }
+        
         private string GetReferenceFieldName(Entity entity)
         {
             if (entity.Owner != null)
@@ -1237,6 +1257,7 @@ namespace Zhichkin.Hermes.Services
             {
                 //if (property.Purpose == PropertyPurpose.System) continue;
                 if (property.Name == "Ссылка") continue;
+                if (property.Relations.Count == 0) continue; // так может случиться, что я не поддерживаю некоторые ссылочные типы данных, например ПланВидовРасчетаСсылка
 
                 bool isFilterProperty = false;
                 foreach (Property filter in filter_properties)
@@ -1277,7 +1298,7 @@ namespace Zhichkin.Hermes.Services
             query.AppendLine(";");
             query.Append("CREATE TABLE ");
             query.Append(table_name);
-            query.AppendLine(" (NODE uniqueidentifier, ENTITY uniqueidentifier, OBJ_REF binary(16));");
+            query.AppendLine(" (NODE uniqueidentifier, ENTITY int, OBJ_REF binary(16));");
             query.Append(@"CREATE INDEX IX_ReferencesRegisterTable_NODE ON ");
             query.Append(table_name);
             query.AppendLine(" (NODE);");
@@ -1304,7 +1325,7 @@ namespace Zhichkin.Hermes.Services
             string table_name = string.Format("[{0}].[dbo].[{1}]", entity.InfoBase.Database, entity.MainTable.Name);
             DateTime start_of_period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
             start_of_period = start_of_period.AddYears(2000); // fuck 1C !!!
-            string branch = entity.Properties.Where((p) => p.Name == "Филиал").First().Fields[0].Name;
+            string branch = GetDepartmentFieldName(entity);
 
             StringBuilder query = new StringBuilder();
             query.Append("MERGE ");
@@ -1332,7 +1353,7 @@ namespace Zhichkin.Hermes.Services
                 command.CommandType = CommandType.Text;
                 command.CommandText = query.ToString();
                 command.Parameters.AddWithValue("node", root.Identity);
-                command.Parameters.AddWithValue("entity", entity.Identity);
+                command.Parameters.AddWithValue("entity", entity.Code);
                 command.Parameters.AddWithValue("period", start_of_period);
                 command.Parameters.AddWithValue("branch", department.ToByteArray());
                 rowsAffected = command.ExecuteNonQuery();
@@ -1408,7 +1429,7 @@ namespace Zhichkin.Hermes.Services
                 command.CommandType = CommandType.Text;
                 command.CommandText = query.ToString();
                 command.Parameters.AddWithValue("parentNode", parentNode.Identity);
-                command.Parameters.AddWithValue("parentEntity", parentEntity.Identity);
+                command.Parameters.AddWithValue("parentEntity", parentEntity.Code);
                 if (sourceEntity.Owner == null)
                 {
                     command.Parameters.AddWithValue("sourceNode", node.Identity);
@@ -1419,11 +1440,11 @@ namespace Zhichkin.Hermes.Services
                 }
                 if (sourceEntity.Owner == null)
                 {
-                    command.Parameters.AddWithValue("sourceEntity", sourceEntity.Identity);
+                    command.Parameters.AddWithValue("sourceEntity", sourceEntity.Code);
                 }
                 else
                 {
-                    command.Parameters.AddWithValue("sourceEntity", sourceEntity.Owner.Identity);
+                    command.Parameters.AddWithValue("sourceEntity", sourceEntity.Owner.Code);
                 }
                 try
                 {
@@ -1522,6 +1543,172 @@ namespace Zhichkin.Hermes.Services
             }
 
             return script.ToString();
+        }
+
+        /// <summary>
+        /// Процедура отбирает объекты узла данных,
+        /// по настроенному для него фильтру,
+        /// а затем регистрирует внешние ссылки его свойств для обмена.
+        /// Важно: свойства, используемые для фильтрации,
+        /// не используются для поиска внешних объектов!
+        /// </summary>
+        /// <param name="node">
+        /// Узел данных, для объектов которого
+        /// необходимо выполнить регистрацию
+        /// внешних ссылок для обмена.
+        /// </param>
+        /// <returns></returns>
+        public void RegisterNodeForeignReferences(MetadataTreeNode node)
+        {
+            Entity sourceEntity = node.MetadataInfo as Entity;
+            if (sourceEntity == null) { throw new ArgumentOutOfRangeException("node"); }
+
+            MetadataTreeNode parentNode = (sourceEntity.Owner == null)
+                ? GetParentNode(node)
+                : GetParentNode((MetadataTreeNode)node.Parent);
+            Entity parentEntity = (parentNode == null) ? null : (Entity)parentNode.MetadataInfo;
+
+            List<Property> filters = GetFilterProperties(node);
+            List<Property> foreigners = GetForeignKeyProperties(sourceEntity, filters);
+
+            if (filters.Count == 0 && parentNode != null)
+            {
+                WriteToLog("--------------------------");
+                WriteToLog("< RegisterNodeForeignReferences >");
+                WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+                WriteToLog("Parent: " + ((parentEntity == null) ? "none" : parentEntity.Namespace.Name + "." + parentEntity.Name));
+                WriteToLog("None filter property is found");
+                WriteToLog(Environment.NewLine);
+                return;
+            }
+            if (foreigners.Count == 0)
+            {
+                WriteToLog("--------------------------");
+                WriteToLog("< RegisterNodeForeignReferences >");
+                WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+                WriteToLog("Parent: " + ((parentEntity == null) ? "none" : parentEntity.Namespace.Name + "." + parentEntity.Name));
+                WriteToLog("None foreign reference property is found");
+                WriteToLog(Environment.NewLine);
+                return;
+            }
+
+            string query = BuildSelectForeignKeysScript(parentEntity, sourceEntity, filters, foreigners);
+
+            DateTime period = (DateTime)this.Parameters["Period"];
+            period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
+            period = period.AddYears(2000); // fuck 1C !!!
+            Guid department = (Guid)this.Parameters["Department"];
+
+            int rowsAffected = 0;
+            using (SqlConnection connection = new SqlConnection(connection_string))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query.ToString();
+                command.Parameters.AddWithValue("sourceNode", Guid.Empty);
+                if (parentNode == null)
+                {
+                    command.Parameters.AddWithValue("period", period);
+                    command.Parameters.AddWithValue("branch", department.ToByteArray());
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("parentNode", parentNode.Identity);
+                    command.Parameters.AddWithValue("parentEntity", parentEntity.Code);
+                }
+                
+                try
+                {
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    WriteToLog("--------------------------");
+                    WriteToLog("< RegisterNodeForeignReferences >");
+                    WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+                    WriteToLog("Parent: " + ((parentEntity == null) ? "none" : parentEntity.Namespace.Name + "." + parentEntity.Name));
+                    WriteToLog(query.ToString());
+                    WriteToLog(GetErrorText(ex));
+                    WriteToLog(ex.StackTrace);
+                    WriteToLog(Environment.NewLine);
+                    throw;
+                }
+
+                WriteToLog("---------------------------------");
+                WriteToLog("< RegisterNodeForeignReferences >");
+                WriteToLog("Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name);
+                WriteToLog("Parent: " + ((parentEntity == null) ? "none" : parentEntity.Namespace.Name + "." + parentEntity.Name));
+                foreach (Property filter in filters)
+                {
+                    WriteToLog(" pk " + filter.Name);
+                }
+                foreach (Property foreiner in foreigners)
+                {
+                    WriteToLog(" fk " + foreiner.Name);
+                }
+                WriteToLog(query.ToString());
+                WriteToLog("Rows affected = " + rowsAffected.ToString() + Environment.NewLine);
+            }
+        }
+
+        private string GetTypeCodesCorrespondenceFucntionName()
+        {
+            return "[dbo].[Z_GetTargetTypeCode]";
+        }
+        private void CreateTypeCodesCorrespondenceFucntion(List<Entity> sourceEntities, InfoBase targetInfoBase)
+        {
+            MetadataService service = new MetadataService();
+            StringBuilder script = new StringBuilder();
+            List<string> commands = new List<string>();
+
+            string functionName = GetTypeCodesCorrespondenceFucntionName();
+
+            script.AppendLine("USE [Z];");
+            //script.AppendLine("GO");
+            commands.Add(script.ToString());
+
+            script.Clear();
+            script.AppendLine("IF OBJECT_ID(N'" + functionName + "', N'FN') IS NOT NULL DROP FUNCTION " + functionName + ";");
+            //script.AppendLine("GO");
+            commands.Add(script.ToString());
+
+            script.Clear();
+            script.AppendLine("CREATE FUNCTION " + functionName + " (@sourceTypeCode binary(4))");
+            script.AppendLine("RETURNS binary(4)");
+            script.AppendLine("AS");
+            script.AppendLine("BEGIN");
+            script.AppendLine("DECLARE @targetTypeCode binary(4);");
+            script.AppendLine("SELECT @targetTypeCode = (CASE");
+            foreach (Entity sourceEntity in sourceEntities)
+            {
+                int sourceTypeCode = sourceEntity.Code;
+                int targetTypeCode = service.GetEntityInfo(targetInfoBase, sourceEntity.Namespace.Name, sourceEntity.Name).Code;
+                script.Append("WHEN CAST(@sourceTypeCode AS int) = ");
+                script.Append(sourceTypeCode.ToString());
+                script.Append(" THEN CAST(");
+                script.Append(targetTypeCode.ToString());
+                script.AppendLine(" AS binary(4))");
+            }
+            script.AppendLine("ELSE 0x00000000");
+            script.AppendLine("END);");
+            script.AppendLine("RETURN @targetTypeCode;");
+            script.AppendLine("END;");
+            //script.AppendLine("GO");
+            commands.Add(script.ToString());
+
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                foreach (string sql in commands)
+                {
+                    command.CommandText = sql;
+                    int rowsAffected = command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
