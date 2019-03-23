@@ -80,7 +80,11 @@ namespace Zhichkin.Hermes.Services
                 + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
             WriteToLog(message);
 
-            // 2. Создание таблицы регистрации ссылок
+            // 2. Дополнение предварительного дерева недостающими табличными частями справчоников и документов
+            //    для обеспечения регистрации внешних ссылок всего агрегата
+            CompleteMetadataTreeNode(root);
+
+            // 3. Создание таблицы регистрации ссылок
             CreateReferencesRegisterTable();
 
             sw = new Stopwatch();
@@ -88,7 +92,7 @@ namespace Zhichkin.Hermes.Services
             message = "START < RegisterNodeReferences > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             WriteToLog(message);
 
-            // 3. Регистрация и подсчёт существующих ссылок согласно построенному дереву и его настройкам
+            // 4. Регистрация и подсчёт существующих ссылок согласно построенному дереву и его настройкам
             RegisterAllEntitiesForExchange(root);
             
             sw.Stop();
@@ -231,6 +235,65 @@ namespace Zhichkin.Hermes.Services
                             ((BooleanExpression)current_nested_node.Filter).Conditions.Add(ce);
                             //CountDocuments(current_nested_node, current_property);
                         }
+                    }
+                }
+            }
+        }
+        private void CompleteMetadataTreeNode(MetadataTreeNode node)
+        {
+            Entity entity = node.MetadataInfo as Entity;
+            if (entity == null)
+            {
+                // Namespace's child nodes
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    CompleteMetadataTreeNode(child);
+                }
+            }
+            else // different kind of entities
+            {
+                if (entity.Owner != null) { return; }
+
+                string namespaceName = entity.Namespace.Name;
+
+                if (namespaceName == "Справочник" || namespaceName == "Документ")
+                {
+                    foreach (Entity nestedEntity in entity.NestedEntities)
+                    {
+                        IMetadataTreeNode child = node.Children.Where((c) => c.Name == nestedEntity.Name).FirstOrDefault();
+                        if (child == null)
+                        {
+                            Property filterProperty = nestedEntity.Properties.Where((p) => p.Name == "Ссылка").First();
+                            PropertyExpression px = new PropertyExpression()
+                            {
+                                Name = "Ссылка",
+                                PropertyInfo = filterProperty
+                            };
+                            ComparisonExpression ce = new ComparisonExpression()
+                            {
+                                Name = BooleanExpressionType.Equal.ToString(),
+                                ExpressionType = BooleanExpressionType.Equal,
+                                LeftExpression = px,
+                                RightExpression = null
+                            };
+                            child = new MetadataTreeNode()
+                            {
+                                Name = nestedEntity.Name,
+                                Parent = node,
+                                MetadataInfo = nestedEntity,
+                                Filter = new BooleanExpression()
+                                {
+                                    ExpressionType = BooleanExpressionType.OR
+                                }
+                            };
+                            ((BooleanExpression)child.Filter).Conditions.Add(ce);
+                            node.Children.Add(child);
+                        }
+                    }
+
+                    foreach (MetadataTreeNode child in node.Children)
+                    {
+                        CompleteMetadataTreeNode(child);
                     }
                 }
             }
@@ -1382,7 +1445,16 @@ namespace Zhichkin.Hermes.Services
                 ? GetParentNode(node)
                 : GetParentNode((MetadataTreeNode)node.Parent);
 
-            if (parentNode == null) throw new ApplicationException("Parent node is not found");
+            // this is nested entities of the root entity which references has been already registered
+            if (parentNode == null && sourceEntity.Owner != null) { return; }
+
+            if (parentNode == null)
+            {
+                string message = "Parent node is not found"
+                    + Environment.NewLine
+                    + "Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name;
+                throw new ApplicationException(message);
+            }
             
             Entity parentEntity = (Entity)parentNode.MetadataInfo;
             if (parentEntity == null) throw new ApplicationException("Node's entity can not be null");
@@ -1570,6 +1642,14 @@ namespace Zhichkin.Hermes.Services
 
             List<Property> filters = GetFilterProperties(node);
             List<Property> foreigners = GetForeignKeyProperties(sourceEntity, filters);
+
+            if (sourceEntity.Owner != null
+                && filters.Where((f) => f.Name == "Ссылка").FirstOrDefault() != null)
+            //&& sourceEntity.Owner == filters.Where((f) => f.Name == "Ссылка").FirstOrDefault().Entity)
+            {
+                parentNode = (MetadataTreeNode)node.Parent;
+                parentEntity = (Entity)parentNode.MetadataInfo;
+            }
 
             if (filters.Count == 0 && parentNode != null)
             {
