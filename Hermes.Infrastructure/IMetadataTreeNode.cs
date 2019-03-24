@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Zhichkin.Hermes.Infrastructure
@@ -8,7 +9,7 @@ namespace Zhichkin.Hermes.Infrastructure
     {
         string Name { get; set; }
         IMetadataTreeNode Parent { get; set; }
-        IList<IMetadataTreeNode> Children { get; }
+        ObservableCollection<IMetadataTreeNode> Children { get; }
         IMetadataInfo MetadataInfo { get; set; }
         IBooleanExpression Filter { get; set; }
         IFunctionExpression Function { get; set; }
@@ -19,12 +20,12 @@ namespace Zhichkin.Hermes.Infrastructure
         public MetadataTreeNode()
         {
             this.Identity = Guid.NewGuid();
-            this.Children = new List<IMetadataTreeNode>();
+            this.Children = new ObservableCollection<IMetadataTreeNode>();
         }
         public Guid Identity { get; }
         public string Name { get; set; }
         public IMetadataTreeNode Parent { get; set; }
-        public IList<IMetadataTreeNode> Children { get; }
+        public ObservableCollection<IMetadataTreeNode> Children { get; }
         public IMetadataInfo MetadataInfo { get; set; }
         public IBooleanExpression Filter { get; set; }
         public IFunctionExpression Function { get; set; }

@@ -20,13 +20,13 @@ namespace Zhichkin.Hermes.Services
     {
         private const string CONST_ConnectionStringName = "TEST";
         private const string CONST_MetadataCatalogSettingName = "MetadataCatalog";
-        private string connection_string;
         private string temporary_catalog;
+        //private string connection_string;
 
         public DocumentsTreeService()
         {
-            connection_string = ConfigurationManager.ConnectionStrings[CONST_ConnectionStringName].ConnectionString;
             temporary_catalog = ConfigurationManager.AppSettings[CONST_MetadataCatalogSettingName];
+            //connection_string = ConfigurationManager.ConnectionStrings[CONST_ConnectionStringName].ConnectionString;
         }
         private void WriteToLog(string entry)
         {
@@ -73,53 +73,15 @@ namespace Zhichkin.Hermes.Services
             WriteToLog(message);
             Stopwatch sw = new Stopwatch();
             sw.Start();
+
             FillChildren(root);
-            //RemoveZeroCountNodes(root);
+            
             sw.Stop();
             message = "END < BuildDocumentsTree > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
                 + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
             WriteToLog(message);
 
-            // 2. Дополнение предварительного дерева недостающими табличными частями справчоников и документов
-            //    для обеспечения регистрации внешних ссылок всего агрегата
-            CompleteMetadataTreeNode(root);
-
-            // 3. Создание таблицы регистрации ссылок
-            CreateReferencesRegisterTable();
-
-            sw = new Stopwatch();
-            sw.Start();
-            message = "START < RegisterNodeReferences > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-            WriteToLog(message);
-
-            // 4. Регистрация и подсчёт существующих ссылок согласно построенному дереву и его настройкам
-            RegisterAllEntitiesForExchange(root);
-            
-            sw.Stop();
-            message = "END < RegisterNodeReferences > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
-                + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
-            WriteToLog(message);
-
-            //RemoveZeroCountNodes(root);
-
             progress.Report(root);
-        }
-        private void RemoveZeroCountNodes(IMetadataTreeNode root)
-        {
-            int index = 0;
-            while (index < root.Children.Count)
-            {
-                IMetadataTreeNode node = root.Children[index];
-                if (node.Count == 0)
-                {
-                    root.Children.RemoveAt(index);
-                }
-                else
-                {
-                    RemoveZeroCountNodes(node);
-                    index++;
-                }
-            }
         }
         private void FillChildren(MetadataTreeNode parent)
         {
@@ -239,259 +201,12 @@ namespace Zhichkin.Hermes.Services
                 }
             }
         }
-        private void CompleteMetadataTreeNode(MetadataTreeNode node)
-        {
-            Entity entity = node.MetadataInfo as Entity;
-            if (entity == null)
-            {
-                // Namespace's child nodes
-                foreach (MetadataTreeNode child in node.Children)
-                {
-                    CompleteMetadataTreeNode(child);
-                }
-            }
-            else // different kind of entities
-            {
-                if (entity.Owner != null) { return; }
-
-                string namespaceName = entity.Namespace.Name;
-
-                if (namespaceName == "Справочник" || namespaceName == "Документ")
-                {
-                    foreach (Entity nestedEntity in entity.NestedEntities)
-                    {
-                        IMetadataTreeNode child = node.Children.Where((c) => c.Name == nestedEntity.Name).FirstOrDefault();
-                        if (child == null)
-                        {
-                            Property filterProperty = nestedEntity.Properties.Where((p) => p.Name == "Ссылка").First();
-                            PropertyExpression px = new PropertyExpression()
-                            {
-                                Name = "Ссылка",
-                                PropertyInfo = filterProperty
-                            };
-                            ComparisonExpression ce = new ComparisonExpression()
-                            {
-                                Name = BooleanExpressionType.Equal.ToString(),
-                                ExpressionType = BooleanExpressionType.Equal,
-                                LeftExpression = px,
-                                RightExpression = null
-                            };
-                            child = new MetadataTreeNode()
-                            {
-                                Name = nestedEntity.Name,
-                                Parent = node,
-                                MetadataInfo = nestedEntity,
-                                Filter = new BooleanExpression()
-                                {
-                                    ExpressionType = BooleanExpressionType.OR
-                                }
-                            };
-                            ((BooleanExpression)child.Filter).Conditions.Add(ce);
-                            node.Children.Add(child);
-                        }
-                    }
-
-                    foreach (MetadataTreeNode child in node.Children)
-                    {
-                        CompleteMetadataTreeNode(child);
-                    }
-                }
-            }
-        }
-        private void CountDocuments(MetadataTreeNode node, IPropertyInfo property)
-        {
-            if (property.Fields == null || property.Fields.Count == 0)
-            {
-                return;
-            }
-            foreach (IFieldInfo field in property.Fields)
-            {
-                if (string.IsNullOrWhiteSpace(field.Name)) return;
-            }
-
-            MetadataTreeNode root = node;
-            while (root.Parent != null) { root = (MetadataTreeNode)root.Parent; }
-            if (root.Keys == null) { root.Keys = GetRootKeys(root); }
-            if (root.Keys.Count == 0) return;
-            
-            StringBuilder queryText = new StringBuilder();
-            queryText.Append("DECLARE @OrdersXML nvarchar(max) = '");
-            queryText.Append("<list>");
-            foreach (Guid key in root.Keys)
-            {
-                queryText.AppendFormat("<item key=\"{0}\"/>", key.ToString());
-            }
-            queryText.AppendLine("</list>';");
-            queryText.AppendLine("DECLARE @xml xml = CAST(@OrdersXML AS xml);");
-            queryText.AppendLine("DECLARE @Orders TABLE([key] binary(16) NOT NULL);");
-            queryText.AppendLine("INSERT @Orders([key])");
-            queryText.AppendLine("SELECT");
-            queryText.AppendLine("list.[item].value('@key', 'uniqueidentifier')");
-            queryText.AppendLine("FROM @xml.nodes('list/item') AS list([item]);");
-            
-            string table_name = ((Entity)property.Entity).MainTable.Name;
-
-            string where_filter = "";
-            if (property.Fields.Count == 1)
-            {
-                where_filter = string.Format("S.[{0}] = T.[key]", property.Fields[0].Name);
-            }
-            else
-            {
-                string value_name = "";
-                string locator_name = "";
-                string type_code_name = "";
-                int type_code = ((Entity)root.MetadataInfo).Code;
-                foreach (IFieldInfo field in property.Fields)
-                {
-                    switch (field.Purpose)
-                    {
-                        case FieldPurpose.Object: { value_name = field.Name; break; }
-                        case FieldPurpose.Locator: { locator_name = field.Name; break; }
-                        case FieldPurpose.TypeCode: { type_code_name = field.Name; break; }
-                    }
-                }
-                if (locator_name == string.Empty)
-                {
-                    where_filter = string.Format("S.[{0}] = CAST({1} AS binary(4)) AND S.[{2}] = T.[key]",
-                        type_code_name, type_code, value_name);
-                }
-                else
-                {
-                    where_filter = string.Format("S.[{0}] = 0x08 AND S.[{1}] = CAST({2} AS binary(4)) AND S.[{3}] = T.[key]",
-                        locator_name, type_code_name, type_code, value_name);
-                }
-            }
-            string select_statement = string.Format("SELECT COUNT(*) FROM [{0}] AS S INNER JOIN @Orders AS T ON {1};", table_name, where_filter);
-            queryText.Append(select_statement);
-            WriteToLog(select_statement + Environment.NewLine);
-
-            using (SqlConnection connection = new SqlConnection(connection_string))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = queryText.ToString();
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        int count = (int)reader[0];
-                        node.Count += count;
-                        MetadataTreeNode next_node_up = (MetadataTreeNode)node.Parent;
-                        while (next_node_up != null && next_node_up != root)
-                        {
-                            next_node_up.Count += count;
-                            next_node_up = (MetadataTreeNode)next_node_up.Parent;
-                        }
-                    }
-                }
-            }
-        }
-        private List<Guid> GetRootKeys(MetadataTreeNode root)
-        {
-            DateTime period = (DateTime)this.Parameters["Period"];
-            Guid department = (Guid)this.Parameters["Department"];
-            
-            List<Guid> keys = new List<Guid>();
-
-            string table_name = ((Entity)root.MetadataInfo).MainTable.Name;
-
-            DateTime start_of_period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
-            start_of_period = start_of_period.AddYears(2000); // fuck 1C !!!
-
-            string filterName = GetDepartmentFieldName((Entity)root.MetadataInfo);
-
-            StringBuilder query = new StringBuilder();
-            query.Append("SELECT [_IDRRef] FROM [" + table_name + "] WHERE [_Date_Time] >= @_Date_Time ");
-            query.Append("AND [" + filterName + "] = @Department;");
-
-            using (SqlConnection connection = new SqlConnection(connection_string))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = query.ToString();
-                command.Parameters.AddWithValue("_Date_Time", start_of_period);
-                command.Parameters.AddWithValue("Department", department.ToByteArray());
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Guid key = new Guid((byte[])reader[0]);
-                        keys.Add(key);
-                    }
-                }
-            }
-            root.Count = keys.Count;
-
-            WriteToLog("Priod = " + start_of_period.ToString("dd.MM.yyyy HH:mm:ss.ffff", CultureInfo.InvariantCulture));
-            WriteToLog(query.ToString());
-            WriteToLog("Count = " + root.Count.ToString() + Environment.NewLine);
-
-            return keys;
-        }
-
-        /// <summary>
-        /// Регистрация корневых и внешних ссылок для обмена
-        /// </summary>
-        /// <param name="node">
-        /// Корневой узел данных
-        /// </param>
-        /// <returns>
-        /// Список зарегистрированных ссылок по типам объектов и их количество
-        /// </returns>
+        
         public List<MetadataTreeNode> RegisterEntitiesForExchange(MetadataTreeNode root)
         {
             return GetExchangeInfo(((Entity)root.MetadataInfo).InfoBase);
         }
-        private void RegisterAllEntitiesForExchange(MetadataTreeNode node)
-        {
-            Entity entity = node.MetadataInfo as Entity;
-            if (entity == null)
-            {
-                // Namespace's child nodes
-                foreach (MetadataTreeNode child in node.Children)
-                {
-                    RegisterAllEntitiesForExchange(child);
-                }
-            }
-            else // different kind of entities
-            {
-                string namespaceName = entity.Namespace.Name;
-                if (entity.Owner == null)
-                {
-                    namespaceName = entity.Namespace.Name;
-                }
-                else // nested entity
-                {
-                    namespaceName = entity.Owner.Namespace.Name;
-                }
-
-                if (namespaceName == "Перечисление"
-                    || namespaceName == "ПланСчетов"
-                    || namespaceName == "ПланВидовХарактеристик"
-                    || namespaceName == "РегистрБухгалтерии") { return; }
-
-                if (namespaceName == "Справочник" || namespaceName == "Документ")
-                {
-                    // including nested entities
-                    RegisterNodeReferences(node);
-                }
-                else
-                {
-                    // TODO : регистрация на выгрузку для РегистрСведений РегистрНакопления РегистрБухгалтерии ?
-                }
-
-                RegisterNodeForeignReferences(node);
-
-                foreach (MetadataTreeNode child in node.Children)
-                {
-                    RegisterAllEntitiesForExchange(child);
-                }
-            }
-        }
-        private List<MetadataTreeNode> GetExchangeInfo(InfoBase infoBase)
+        public List<MetadataTreeNode> GetExchangeInfo(InfoBase infoBase)
         {
             List<MetadataTreeNode> result = new List<MetadataTreeNode>();
             List<dynamic> list = SelectExchangeInfo(infoBase);
@@ -507,61 +222,6 @@ namespace Zhichkin.Hermes.Services
             }
             return result;
         }
-
-        /// <summary>
-        /// Процедура отбирает объекты узла данных,
-        /// по настроенному для него фильтру,
-        /// а затем регистрирует ссылки этих объектов для обмена.
-        /// </summary>
-        /// <param name="node">
-        /// Узел данных, для объектов которого
-        /// необходимо выполнить регистрацию
-        /// ссылок для обмена.
-        /// </param>
-        /// <returns></returns>
-        
-        private List<Guid> GetNodeKeys(MetadataTreeNode node)
-        {
-            if (node == null) { throw new ArgumentNullException("node"); }
-            if (node.Keys != null) { return node.Keys; }
-
-            MetadataTreeNode parent = GetParentNode(node);
-            if (parent == null)
-            {
-                node.Keys = GetRootKeys(node);
-                return node.Keys;
-            }
-
-            List<Guid> parent_keys = GetNodeKeys(parent);
-
-            node.Keys = new List<Guid>();
-
-            Entity entity = parent.MetadataInfo as Entity;
-            Entity source = node.MetadataInfo as Entity;
-            List<Property> filters = GetFilterProperties(node);
-
-            StringBuilder query = new StringBuilder();
-            query.AppendLine(BuildKeysTableQueryScript(parent_keys));
-            query.Append(BuildSelectParentKeysScript(source, filters, entity));
-
-            using (SqlConnection connection = new SqlConnection(connection_string))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = query.ToString();
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        node.Keys.Add(new Guid((byte[])reader[0]));
-                    }
-                }
-            }
-
-            return node.Keys;
-        }
-        
         private List<dynamic> SelectExchangeInfo(InfoBase infoBase)
         {
             List<dynamic> list = new List<dynamic>();
@@ -571,7 +231,8 @@ namespace Zhichkin.Hermes.Services
             query.Append(GetReferencesRegisterTableName());
             query.Append(" GROUP BY [ENTITY] ORDER BY [ENTITY];");
 
-            using (SqlConnection connection = new SqlConnection(connection_string))
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -579,7 +240,6 @@ namespace Zhichkin.Hermes.Services
                 command.CommandText = query.ToString();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    IPersistentContext context = MetadataPersistentContext.Current;
                     MetadataService service = new MetadataService();
                     while (reader.Read())
                     {
@@ -594,9 +254,10 @@ namespace Zhichkin.Hermes.Services
             }
             return list;
         }
-        
+
         private MetadataTreeNode GetParentNode(MetadataTreeNode node)
         {
+            // поиск осуществляется до первой сущности
             IMetadataTreeNode parent = node.Parent;
             while (parent != null)
             {
@@ -609,52 +270,6 @@ namespace Zhichkin.Hermes.Services
             return (parent as MetadataTreeNode);
         }
         
-        private List<Guid> GetParentKeys(MetadataTreeNode node)
-        {
-            if (node == null) { throw new ArgumentNullException("node"); }
-
-            MetadataTreeNode parent = GetParentNode(node);
-            if (parent == null) { return null; }
-            if (parent.Keys != null) { return parent.Keys; }
-            if (parent.Parent == null)
-            {
-                parent.Keys = GetRootKeys(parent);
-                return parent.Keys;
-            }
-
-            List<Guid> parent_keys = null;
-            while (parent_keys == null)
-            {
-                parent_keys = GetParentKeys(parent);
-            }
-
-            List<Guid> keys = new List<Guid>();
-
-            Entity entity = parent.MetadataInfo as Entity;
-            Entity source = node.MetadataInfo as Entity;
-            List<Property> filters = GetFilterProperties(node);
-            
-            StringBuilder query = new StringBuilder();
-            query.AppendLine(BuildKeysTableQueryScript(parent_keys));
-            query.Append(BuildSelectParentKeysScript(source, filters, entity));
-
-            using (SqlConnection connection = new SqlConnection(connection_string))
-            using (SqlCommand command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = query.ToString();
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        keys.Add(new Guid((byte[])reader[0]));
-                    }
-                }
-            }
-
-            return keys;
-        }
         private string BuildKeysTableQueryScript(List<Guid> keys)
         {
             StringBuilder script = new StringBuilder();
@@ -986,7 +601,8 @@ namespace Zhichkin.Hermes.Services
             query.Append(" ORDER BY [ENTITY];");
 
             MetadataService service = new MetadataService();
-            using (SqlConnection connection = new SqlConnection(connection_string))
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -1368,8 +984,9 @@ namespace Zhichkin.Hermes.Services
             query.Append("CREATE INDEX IX_ReferencesRegisterTable_ENTITY ON ");
             query.Append(table_name);
             query.Append(" (ENTITY, OBJ_REF);");
-            
-            using (SqlConnection connection = new SqlConnection(connection_string))
+
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -1409,7 +1026,8 @@ namespace Zhichkin.Hermes.Services
             query.Append("INSERT ([NODE], [ENTITY], [OBJ_REF]) VALUES (@node, @entity, source.[_IDRRef]);");
 
             int rowsAffected = 0;
-            using (SqlConnection connection = new SqlConnection(connection_string))
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -1428,8 +1046,78 @@ namespace Zhichkin.Hermes.Services
             WriteToLog("Count = " + root.Count.ToString() + Environment.NewLine);
         }
 
-        // !!! =)
-        public void RegisterNodeReferences(MetadataTreeNode node)
+        /// <summary>
+        /// Процедура отбирает объекты узла данных,
+        /// по настроенному для него фильтру,
+        /// а затем регистрирует ссылки этих объектов для обмена.
+        /// </summary>
+        /// <param name="node">
+        /// Узел данных, для объектов которого
+        /// необходимо выполнить регистрацию
+        /// ссылок для обмена.
+        /// </param>
+        /// <returns></returns>
+        public void RegisterNodesReferencesForExchange(MetadataTreeNode root, IProgress<MetadataTreeNode> progress)
+        {
+            CreateReferencesRegisterTable();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            string message = "START < RegisterNodesReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            WriteToLog(message);
+
+            RegisterNodesReferences(root);
+            RemoveZeroCountNodes(root);
+            CompleteMetadataTreeNode(root);
+
+            sw.Stop();
+            message = "END < RegisterNodesReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
+            WriteToLog(message);
+
+            progress.Report(root);
+        }
+        private void RegisterNodesReferences(MetadataTreeNode node)
+        {
+            Entity entity = node.MetadataInfo as Entity;
+            if (entity == null)
+            {
+                // Namespace's child nodes
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    RegisterNodesReferences(child);
+                }
+            }
+            else // all other kind of entities
+            {
+                string namespaceName = entity.Namespace.Name;
+                if (entity.Owner == null)
+                {
+                    namespaceName = entity.Namespace.Name;
+                }
+                else // nested entity
+                {
+                    namespaceName = entity.Owner.Namespace.Name;
+                }
+
+                if (namespaceName == "Перечисление"
+                    || namespaceName == "ПланСчетов"
+                    || namespaceName == "ПланВидовХарактеристик"
+                    || namespaceName == "РегистрБухгалтерии") { return; }
+
+                if (namespaceName == "Справочник" || namespaceName == "Документ")
+                {
+                    // including nested entities
+                    RegisterNodeReferences(node);
+                }
+
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    RegisterNodesReferences(child);
+                }
+            }
+        }
+        private void RegisterNodeReferences(MetadataTreeNode node)
         {
             if (node.MetadataInfo is Namespace) throw new ArgumentException("Namespace can not register references", "node");
 
@@ -1494,7 +1182,8 @@ namespace Zhichkin.Hermes.Services
             query.Append("]);");
 
             int rowsAffected = 0;
-            using (SqlConnection connection = new SqlConnection(connection_string))
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -1536,10 +1225,7 @@ namespace Zhichkin.Hermes.Services
                 }
             }
             node.Count = rowsAffected;
-            if (sourceEntity.Owner != null)
-            {
-                node.Parent.Count += rowsAffected;
-            }
+            CountUpNodeReferences(node);
 
             WriteToLog("--------------------------");
             WriteToLog("< RegisterNodeReferences >");
@@ -1616,6 +1302,114 @@ namespace Zhichkin.Hermes.Services
 
             return script.ToString();
         }
+        private void RemoveZeroCountNodes(IMetadataTreeNode root)
+        {
+            int index = 0;
+            while (index < root.Children.Count)
+            {
+                IMetadataTreeNode node = root.Children[index];
+                if (node.Count == 0)
+                {
+                    Entity entity = node.MetadataInfo as Entity;
+                    if (entity == null) // Namespace
+                    {
+                        RemoveZeroCountNodes(node);
+                        if (node.Children.Count == 0)
+                        {
+                            root.Children.RemoveAt(index);
+                        }
+                        else
+                        {
+                            index++;
+                        }
+                    }
+                    else if (entity.Namespace.Name == "РегистрСведений"
+                        || entity.Namespace.Name == "РегистрНакопления"
+                        || entity.Namespace.Name == "РегистрБухгалтерии")
+                    {
+                        index++;
+                    }
+                    else
+                    {
+                        root.Children.RemoveAt(index);
+                    }
+                }
+                else
+                {
+                    RemoveZeroCountNodes(node);
+                    index++;
+                }
+            }
+        }
+        private void CountUpNodeReferences(MetadataTreeNode node)
+        {
+            MetadataTreeNode next_node_up = (MetadataTreeNode)node.Parent;
+            while (next_node_up != null)
+            {
+                next_node_up.Count += node.Count;
+                if (next_node_up.MetadataInfo is Namespace) { break; }
+                next_node_up = (MetadataTreeNode)next_node_up.Parent;
+            }
+        }
+        private void CompleteMetadataTreeNode(MetadataTreeNode node)
+        {
+            Entity entity = node.MetadataInfo as Entity;
+            if (entity == null)
+            {
+                // Namespace's child nodes
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    CompleteMetadataTreeNode(child);
+                }
+            }
+            else // different kind of entities
+            {
+                if (entity.Owner != null) { return; }
+
+                string namespaceName = entity.Namespace.Name;
+
+                if (namespaceName == "Справочник" || namespaceName == "Документ")
+                {
+                    foreach (Entity nestedEntity in entity.NestedEntities)
+                    {
+                        IMetadataTreeNode child = node.Children.Where((c) => c.Name == nestedEntity.Name).FirstOrDefault();
+                        if (child == null)
+                        {
+                            Property filterProperty = nestedEntity.Properties.Where((p) => p.Name == "Ссылка").First();
+                            PropertyExpression px = new PropertyExpression()
+                            {
+                                Name = "Ссылка",
+                                PropertyInfo = filterProperty
+                            };
+                            ComparisonExpression ce = new ComparisonExpression()
+                            {
+                                Name = BooleanExpressionType.Equal.ToString(),
+                                ExpressionType = BooleanExpressionType.Equal,
+                                LeftExpression = px,
+                                RightExpression = null
+                            };
+                            child = new MetadataTreeNode()
+                            {
+                                Name = nestedEntity.Name,
+                                Parent = node,
+                                MetadataInfo = nestedEntity,
+                                Filter = new BooleanExpression()
+                                {
+                                    ExpressionType = BooleanExpressionType.OR
+                                }
+                            };
+                            ((BooleanExpression)child.Filter).Conditions.Add(ce);
+                            node.Children.Add(child);
+                        }
+                    }
+
+                    foreach (MetadataTreeNode child in node.Children)
+                    {
+                        CompleteMetadataTreeNode(child);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Процедура отбирает объекты узла данных,
@@ -1630,6 +1424,58 @@ namespace Zhichkin.Hermes.Services
         /// внешних ссылок для обмена.
         /// </param>
         /// <returns></returns>
+        public void RegisterNodesForeignReferencesForExchange(MetadataTreeNode root, IProgress<MetadataTreeNode> progress)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            string message = "START < RegisterNodesForeignReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            WriteToLog(message);
+
+            RegisterNodesForeignReferences(root);
+
+            sw.Stop();
+            message = "END < RegisterNodesForeignReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
+            WriteToLog(message);
+
+            progress.Report(root);
+        }
+        private void RegisterNodesForeignReferences(MetadataTreeNode node)
+        {
+            Entity entity = node.MetadataInfo as Entity;
+            if (entity == null)
+            {
+                // Namespace's child nodes
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    RegisterNodesForeignReferences(child);
+                }
+            }
+            else // all other kind of entities
+            {
+                string namespaceName = entity.Namespace.Name;
+                if (entity.Owner == null)
+                {
+                    namespaceName = entity.Namespace.Name;
+                }
+                else // nested entity
+                {
+                    namespaceName = entity.Owner.Namespace.Name;
+                }
+
+                if (namespaceName == "Перечисление"
+                    || namespaceName == "ПланСчетов"
+                    || namespaceName == "ПланВидовХарактеристик"
+                    || namespaceName == "РегистрБухгалтерии") { return; }
+
+                RegisterNodeForeignReferences(node);
+
+                foreach (MetadataTreeNode child in node.Children)
+                {
+                    RegisterNodesForeignReferences(child);
+                }
+            }
+        }
         public void RegisterNodeForeignReferences(MetadataTreeNode node)
         {
             Entity sourceEntity = node.MetadataInfo as Entity;
@@ -1680,7 +1526,8 @@ namespace Zhichkin.Hermes.Services
             Guid department = (Guid)this.Parameters["Department"];
 
             int rowsAffected = 0;
-            using (SqlConnection connection = new SqlConnection(connection_string))
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();

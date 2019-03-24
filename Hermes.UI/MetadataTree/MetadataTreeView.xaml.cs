@@ -54,22 +54,10 @@ namespace Zhichkin.Hermes.UI
 
             MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
             if (viewModel == null) return;
-            viewModel.BuildDataNodesTree(entity);
-            //viewModel.Nodes.Clear();
-            Z.Notify(new Notification { Title = "Hermes", Content = "Узлы данных сформированы." });
 
-            //try
-            //{
-            //    DocumentsTreeService service = new DocumentsTreeService();
-            //    service.Parameters.Add("Period", viewModel.SelectedDate);
-            //    service.Parameters.Add("Department", viewModel.Department.Identity);
-            //    service.BuildDocumentsTree(item, SetStateText, DocumentsTreeIsBuilt);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) });
-            //    return;
-            //}
+            viewModel.BuildDataNodesTree(entity);
+
+            Z.Notify(new Notification { Title = "Hermes", Content = "Узлы данных сформированы." });
         }
         public void SetStateText(string text)
         {
@@ -97,6 +85,13 @@ namespace Zhichkin.Hermes.UI
                 if (viewModel == null) return;
                 viewModel.Nodes.Add(root);
             });
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            viewModel.SelectedNode = (MetadataTreeNode)e.NewValue;
         }
     }
 }

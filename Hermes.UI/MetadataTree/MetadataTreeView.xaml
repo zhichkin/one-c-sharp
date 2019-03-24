@@ -7,6 +7,7 @@
              xmlns:zui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
              xmlns:model="clr-namespace:Zhichkin.Hermes.Infrastructure;assembly=Zhichkin.Hermes.Infrastructure"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -23,6 +24,14 @@
                 </shell:CustomPopupWindowAction>
             </i:EventTrigger.Actions>
         </i:EventTrigger>
+
+        <!--<i:EventTrigger EventName="SelectedItemChanged">
+            <pi:InvokeCommandAction
+                Command="{Binding TreeViewSelectedItemChanged,
+                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}"
+                CommandParameter="{Binding SelectedItem,
+                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}" />
+        </i:EventTrigger>-->
 
     </i:Interaction.Triggers>
 
@@ -80,18 +89,23 @@
             <StackPanel Orientation="Vertical">
                 <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="{Binding DepartmentName}" Margin="5,0,0,0" MinWidth="120" Height="20" VerticalContentAlignment="Center"/>
-                    <Button Content="..." Command="{Binding SelectEntityReferenceCommand}" Margin="5,0,0,0" Height="20" Width="25"/>
+                    <Label Content="{Binding DepartmentName}" Margin="5,0,0,0" MinWidth="120" Height="25" VerticalContentAlignment="Center"/>
+                    <Button Content="..." Command="{Binding SelectEntityReferenceCommand}" Margin="5,0,0,0" Height="25" Width="25"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="5,0,0,0">
-                <Button Content="Зарегистрировать ссылки для обмена" Command="{Binding RegisterEntitiesForExchangeCommand}"/>
-                <Button Content="Выполнить обмен данными" Command="{Binding ExchangeDataCommand}"/>
+                <Button Content="1. Зарегистрировать ссылки" Command="{Binding RegisterNodesReferencesForExchangeCommand}"/>
+                <Button Content="1.5. Добавить дочерние узлы" Command="{Binding BuildDependentNodesCommand}"/>
+                <Button Content="2. Зарегистрировать внешние ссылки" Command="{Binding RegisterNodesForeignReferencesForExchangeCommand}"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                <Button Content="3. Показать ссылки для обмена" Command="{Binding RegisterEntitiesForExchangeCommand}"/>
+                <Button Content="4. Выполнить обмен данными" Command="{Binding ExchangeDataCommand}"/>
             </StackPanel>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <TreeView ItemsSource="{Binding Path=Nodes}" >
+            <TreeView ItemsSource="{Binding Path=Nodes}" SelectedItemChanged="TreeView_SelectedItemChanged">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type model:MetadataTreeNode}" ItemsSource="{Binding Path=Children}">
                         <StackPanel Orientation="Vertical">
