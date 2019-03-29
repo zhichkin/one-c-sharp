@@ -571,10 +571,30 @@ namespace Zhichkin.Hermes.Services
             CreateReferencesCorrespondenceTable();
             CreateReferencesCorrespondenceFucntion();
             FillReferencesCorrespondenceTable(list, target);
-            Entity crutch = source
+
+            #region "Регистрация предопределённых элементов"
+
+            Entity ВидыРеестровОплат = source
                 .Namespaces.Where((n) => n.Name == "Справочник").First()
                 .Entities.Where((e) => e.Name == "ВидыРеестровОплат").First();
-            FillReferencesCorrespondenceTable(new List<Entity>() { crutch }, target);
+            FillReferencesCorrespondenceTable(new List<Entity>() { ВидыРеестровОплат }, target);
+
+            Entity ВидыКонтактнойИнформации = source
+                .Namespaces.Where((n) => n.Name == "Справочник").First()
+                .Entities.Where((e) => e.Name == "ВидыКонтактнойИнформации").First();
+            FillReferencesCorrespondenceTable(new List<Entity>() { ВидыКонтактнойИнформации }, target);
+
+            Entity СтраныМира = source
+                .Namespaces.Where((n) => n.Name == "Справочник").First()
+                .Entities.Where((e) => e.Name == "СтраныМира").First();
+            FillReferencesCorrespondenceTable(new List<Entity>() { СтраныМира }, target);
+
+            Entity ПланСчетовХозрасчетный = source
+                .Namespaces.Where((n) => n.Name == "ПланСчетов").First()
+                .Entities.Where((e) => e.Name == "Хозрасчетный").First();
+            FillReferencesCorrespondenceTable(new List<Entity>() { ПланСчетовХозрасчетный }, target);
+
+            #endregion
 
             MetadataService service = new MetadataService();
             foreach (Entity sourceEntity in list)
@@ -1728,7 +1748,7 @@ namespace Zhichkin.Hermes.Services
             MetadataService service = new MetadataService();
             foreach (Entity sourceEntity in sourceEntities)
             {
-                if (sourceEntity.Namespace.Name != "Справочник") { continue; }
+                if (sourceEntity.Namespace.Name != "Справочник" && sourceEntity.Namespace.Name != "ПланСчетов") { continue; }
                 if (CountPredefinedReferences(sourceEntity) == 0) { continue; }
 
                 Entity targetEntity = service.GetEntityInfo(targetInfoBase, sourceEntity.Namespace.Name, sourceEntity.Name);

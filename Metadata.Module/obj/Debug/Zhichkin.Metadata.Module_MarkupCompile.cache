@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\User\Desktop\GitHub\Z\Metadata.Module\obj\Debug\
+C:\Zhichkin\Z\Metadata.Module\obj\Debug\
 Zhichkin.Metadata
 none
 false
@@ -12,8 +12,8 @@ DEBUG;TRACE
 
 7-2041647074
 
-311215189431
-130-657254495
+31-115946309
+130-1046543220
 DifferenceObject\DifferenceTreeView.xaml;Entity\EntityView.xaml;Property\PropertyView.xaml;Views\MetadataMainMenu.xaml;Views\SQLServerConnectionView.xaml;Views\MetadataSettingsView.xaml;Views\MetadataTreeView.xaml;
 
 True

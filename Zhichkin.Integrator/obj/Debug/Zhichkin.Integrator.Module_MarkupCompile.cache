@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\User\Desktop\GitHub\Z\Zhichkin.Integrator\obj\Debug\
+C:\Zhichkin\Z\Zhichkin.Integrator\obj\Debug\
 Zhichkin.Integrator
 none
 false
@@ -12,8 +12,8 @@ DEBUG;TRACE
 
 9791944384
 
-28-772330339
-1352887425
+28-2103466079
+135-1233723031
 Views\IntegratorSettingsView.xaml;Views\MetadataEntitySelectionView.xaml;Views\AggregateItemsListView.xaml;Views\TranslationRulesListView.xaml;Views\SubscriptionView.xaml;Views\PublisherView.xaml;Views\InfoBaseView.xaml;Views\IntegratorMainMenuView.xaml;Views\SubscriptionsListView.xaml;
 
 True
