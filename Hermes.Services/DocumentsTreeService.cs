@@ -214,6 +214,7 @@ namespace Zhichkin.Hermes.Services
             {
                 MetadataTreeNode node = new MetadataTreeNode()
                 {
+                    Identity = Guid.Empty,
                     Name = item.Entity.Name,
                     Count = item.Count,
                     MetadataInfo = item.Entity
@@ -1860,6 +1861,51 @@ namespace Zhichkin.Hermes.Services
         }
 
         #endregion
+
+        public void RegisterCurrentNodeReferencesForExchange(MetadataTreeNode node, IProgress<MetadataTreeNode> progress)
+        {
+            if (node.Parent == null)
+            {
+                throw new ArgumentNullException("node.Parent == null");
+            }
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            string message = "START < RegisterCurrentNodeReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            WriteToLog(message);
+
+            RegisterNodesReferences(node);
+            RemoveZeroCountNodes(node);
+            CompleteMetadataTreeNode(node);
+
+            sw.Stop();
+            message = "END < RegisterCurrentNodeReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
+            WriteToLog(message);
+
+            progress.Report(node);
+        }
+        public void RegisterCurrentNodeForeignReferencesForExchange(MetadataTreeNode node, IProgress<MetadataTreeNode> progress)
+        {
+            if (node.Parent == null)
+            {
+                throw new ArgumentNullException("node.Parent == null");
+            }
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            string message = "START < RegisterCurrentNodeForeignReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            WriteToLog(message);
+
+            RegisterNodesForeignReferences(node);
+
+            sw.Stop();
+            message = "END < RegisterCurrentNodeForeignReferencesForExchange > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
+            WriteToLog(message);
+
+            progress.Report(node);
+        }
     }
 }
 

@@ -101,6 +101,9 @@
             <StackPanel Orientation="Vertical" Margin="5,0,0,0">
                 <Button Content="3. Показать ссылки для обмена" Command="{Binding RegisterEntitiesForExchangeCommand}"/>
                 <Button Content="4. Выполнить обмен данными" Command="{Binding ExchangeDataCommand}"/>
+                <Button Content="N.0. Удалить текущий узел" Command="{Binding RemoveCurrentNodeCommand}"/>
+                <Button Content="N.1. Регистрация ссылок для текущего узла" Command="{Binding RegisterCurrentNodeReferencesCommand}"/>
+                <Button Content="N.2. Регистрация внешних ссылок для текущего узла" Command="{Binding RegisterCurrentNodeForeignReferencesCommand}"/>
             </StackPanel>
         </StackPanel>
 

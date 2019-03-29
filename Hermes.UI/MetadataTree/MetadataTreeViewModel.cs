@@ -30,6 +30,10 @@ namespace Zhichkin.Hermes.UI
             this.RegisterNodesReferencesForExchangeCommand = new DelegateCommand(this.OnRegisterNodesReferencesForExchange);
             this.RegisterNodesForeignReferencesForExchangeCommand = new DelegateCommand(this.OnRegisterNodesForeignReferencesForExchange);
             this.ExchangeDataCommand = new DelegateCommand(this.ExchangeData);
+
+            this.RemoveCurrentNodeCommand = new DelegateCommand(this.OnRemoveCurrentNode);
+            this.RegisterCurrentNodeReferencesCommand = new DelegateCommand(this.OnRegisterCurrentNodeReferences);
+            this.RegisterCurrentNodeForeignReferencesCommand = new DelegateCommand(this.OnRegisterCurrentNodeForeignReferences);
         }
         public ICommand ExchangeDataCommand { get; private set; }
         public ICommand SelectEntityReferenceCommand { get; private set; }
@@ -37,6 +41,11 @@ namespace Zhichkin.Hermes.UI
         public ICommand RegisterEntitiesForExchangeCommand { get; private set; }
         public ICommand RegisterNodesReferencesForExchangeCommand { get; private set; }
         public ICommand RegisterNodesForeignReferencesForExchangeCommand { get; private set; }
+
+        public ICommand RemoveCurrentNodeCommand { get; private set; }
+        public ICommand RegisterCurrentNodeReferencesCommand { get; private set; }
+        public ICommand RegisterCurrentNodeForeignReferencesCommand { get; private set; }
+
         public InteractionRequest<Confirmation> SelectReferenceObjectDialog { get; private set; }
         public ObservableCollection<MetadataTreeNode> Nodes { get; set; }
         public List<InfoBase> InfoBases
@@ -281,6 +290,50 @@ namespace Zhichkin.Hermes.UI
         private void OnNodesForeignReferencesRegistered(MetadataTreeNode root)
         {
             Z.Notify(new Notification { Title = "Hermes", Content = "Внешние ссылки зарегистрированы." });
+        }
+
+        private void OnRemoveCurrentNode()
+        {
+            try
+            {
+                this.SelectedNode.Parent.Children.Remove(this.SelectedNode);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) + Environment.NewLine + ex.StackTrace });
+            }
+        }
+        private void OnRegisterCurrentNodeReferences()
+        {
+            DocumentsTreeService service = new DocumentsTreeService();
+            try
+            {
+                service.RegisterCurrentNodeReferencesForExchange(this.SelectedNode, new Progress<MetadataTreeNode>(ReportProgress));
+                Z.Notify(new Notification { Title = "Hermes", Content = "Ссылки зарегистрированы." });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) + Environment.NewLine + ex.StackTrace });
+            }
+        }
+        private void OnRegisterCurrentNodeForeignReferences()
+        {
+            DocumentsTreeService service = new DocumentsTreeService();
+            service.Parameters.Add("Period", this.SelectedDate);
+            service.Parameters.Add("Department", this.Department.Identity);
+            try
+            {
+                service.RegisterCurrentNodeForeignReferencesForExchange(this.SelectedNode, new Progress<MetadataTreeNode>(ReportProgress));
+                Z.Notify(new Notification { Title = "Hermes", Content = "Внешние ссылки зарегистрированы." });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) + Environment.NewLine + ex.StackTrace });
+            }
+        }
+        private void ReportProgress(MetadataTreeNode node)
+        {
+
         }
     }
 }
