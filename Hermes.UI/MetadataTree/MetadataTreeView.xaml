@@ -94,16 +94,18 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                <Button Content="0. Создать таблицы соответствий" Command="{Binding CreateCorrespondenceTablesCommand}"/>
                 <Button Content="1. Зарегистрировать ссылки" Command="{Binding RegisterNodesReferencesForExchangeCommand}"/>
-                <Button Content="1.5. Добавить дочерние узлы" Command="{Binding BuildDependentNodesCommand}"/>
                 <Button Content="2. Зарегистрировать внешние ссылки" Command="{Binding RegisterNodesForeignReferencesForExchangeCommand}"/>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Margin="5,0,0,0">
                 <Button Content="3. Показать ссылки для обмена" Command="{Binding RegisterEntitiesForExchangeCommand}"/>
                 <Button Content="4. Выполнить обмен данными" Command="{Binding ExchangeDataCommand}"/>
-                <Button Content="N.0. Удалить текущий узел" Command="{Binding RemoveCurrentNodeCommand}"/>
-                <Button Content="N.1. Регистрация ссылок для текущего узла" Command="{Binding RegisterCurrentNodeReferencesCommand}"/>
-                <Button Content="N.2. Регистрация внешних ссылок для текущего узла" Command="{Binding RegisterCurrentNodeForeignReferencesCommand}"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                <Button Content="Добавить дочерние узлы" Command="{Binding BuildDependentNodesCommand}"/>
+                <Button Content="Удалить текущий узел" Command="{Binding RemoveCurrentNodeCommand}"/>
+                <Button Content="Регистрация ссылок для текущего узла" Command="{Binding RegisterCurrentNodeReferencesCommand}"/>
+                <Button Content="Регистрация внешних ссылок для текущего узла" Command="{Binding RegisterCurrentNodeForeignReferencesCommand}"/>
+                <Button Content="Перенести регистры для текущего узла" Command="{Binding SendNodeRegistersToTargetCommand}"/>
             </StackPanel>
         </StackPanel>
 

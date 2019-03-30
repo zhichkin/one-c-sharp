@@ -34,6 +34,8 @@ namespace Zhichkin.Hermes.UI
             this.RemoveCurrentNodeCommand = new DelegateCommand(this.OnRemoveCurrentNode);
             this.RegisterCurrentNodeReferencesCommand = new DelegateCommand(this.OnRegisterCurrentNodeReferences);
             this.RegisterCurrentNodeForeignReferencesCommand = new DelegateCommand(this.OnRegisterCurrentNodeForeignReferences);
+            this.SendNodeRegistersToTargetCommand = new DelegateCommand(this.OnSendNodeRegistersToTarget);
+            this.CreateCorrespondenceTablesCommand = new DelegateCommand(this.OnCreateCorrespondenceTables);
         }
         public ICommand ExchangeDataCommand { get; private set; }
         public ICommand SelectEntityReferenceCommand { get; private set; }
@@ -45,6 +47,8 @@ namespace Zhichkin.Hermes.UI
         public ICommand RemoveCurrentNodeCommand { get; private set; }
         public ICommand RegisterCurrentNodeReferencesCommand { get; private set; }
         public ICommand RegisterCurrentNodeForeignReferencesCommand { get; private set; }
+        public ICommand SendNodeRegistersToTargetCommand { get; private set; }
+        public ICommand CreateCorrespondenceTablesCommand { get; private set; }
 
         public InteractionRequest<Confirmation> SelectReferenceObjectDialog { get; private set; }
         public ObservableCollection<MetadataTreeNode> Nodes { get; set; }
@@ -325,6 +329,36 @@ namespace Zhichkin.Hermes.UI
             {
                 service.RegisterCurrentNodeForeignReferencesForExchange(this.SelectedNode, new Progress<MetadataTreeNode>(ReportProgress));
                 Z.Notify(new Notification { Title = "Hermes", Content = "Внешние ссылки зарегистрированы." });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) + Environment.NewLine + ex.StackTrace });
+            }
+        }
+        private void OnSendNodeRegistersToTarget()
+        {
+            DocumentsTreeService service = new DocumentsTreeService();
+            service.Parameters.Add("SourceInfoBase", this.SourceInfoBase);
+            service.Parameters.Add("TargetInfoBase", this.TargetInfoBase);
+            try
+            {
+                service.SendNodeRegistersToTarget(this.SelectedNode, new Progress<MetadataTreeNode>(ReportProgress));
+                Z.Notify(new Notification { Title = "Hermes", Content = "Перенос данных узла выполнен" });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = Z.GetErrorText(ex) + Environment.NewLine + ex.StackTrace });
+            }
+        }
+        private void OnCreateCorrespondenceTables()
+        {
+            DocumentsTreeService service = new DocumentsTreeService();
+            service.Parameters.Add("SourceInfoBase", this.SourceInfoBase);
+            service.Parameters.Add("TargetInfoBase", this.TargetInfoBase);
+            try
+            {
+                service.CreateCorrespondenceTablesAndFunctions();
+                Z.Notify(new Notification { Title = "Hermes", Content = "Таблицы соответствий созданы" });
             }
             catch (Exception ex)
             {

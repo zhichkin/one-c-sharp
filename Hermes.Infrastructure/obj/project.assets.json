@@ -30,12 +30,11 @@
   },
   "libraries": {
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
+      "sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/netstandard1.0/_._",
@@ -179,23 +178,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Zhichkin\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Zhichkin\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj",
       "projectName": "Zhichkin.Hermes.Infrastructure",
-      "projectPath": "C:\\Zhichkin\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\Zhichkin\\.nuget\\packages\\",
-      "outputPath": "C:\\Zhichkin\\Z\\Hermes.Infrastructure\\obj\\",
+      "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Zhichkin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

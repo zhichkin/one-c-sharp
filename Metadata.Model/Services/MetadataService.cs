@@ -434,7 +434,7 @@ namespace Zhichkin.Metadata.Services
             sql.Append(namespaceName);
             sql.Append("' AND e.[name] = N'");
             sql.Append(entityName);
-            sql.Append("';");
+            sql.Append("' AND e.[owner] = '00000000-0000-0000-0000-000000000000';");
             foreach (dynamic item in service.Execute(sql.ToString()))
             {
                 info = context.Factory.New<Entity>((Guid)item.key);
