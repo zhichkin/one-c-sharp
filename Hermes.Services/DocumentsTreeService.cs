@@ -562,6 +562,10 @@ namespace Zhichkin.Hermes.Services
         {
             return source.Namespaces.Where((n) => n.Name == "Справочник").FirstOrDefault();
         }
+        private Namespace GetDocumentsNamespace(InfoBase source)
+        {
+            return source.Namespaces.Where((n) => n.Name == "Документ").FirstOrDefault();
+        }
         private Namespace GetAccountsNamespace(InfoBase source)
         {
             return source.Namespaces.Where((n) => n.Name == "ПланСчетов").FirstOrDefault();
@@ -651,6 +655,12 @@ namespace Zhichkin.Hermes.Services
             script.Append("CAST(@sourceTypeCode AS binary(4)), CAST(@targetTypeCode AS binary(4)));");
 
             Namespace sourceNamespace = GetCatalogsNamespace(sourceInfoBase);
+            if (sourceNamespace != null)
+            {
+                FillTypeCodesCorrespondenceTableForOneNamespace(sourceNamespace, targetInfoBase, script.ToString());
+            }
+
+            sourceNamespace = GetDocumentsNamespace(sourceInfoBase);
             if (sourceNamespace != null)
             {
                 FillTypeCodesCorrespondenceTableForOneNamespace(sourceNamespace, targetInfoBase, script.ToString());
