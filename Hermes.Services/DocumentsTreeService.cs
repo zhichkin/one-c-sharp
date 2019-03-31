@@ -75,7 +75,7 @@ namespace Zhichkin.Hermes.Services
             sw.Start();
 
             FillChildren(root);
-            
+
             sw.Stop();
             message = "END < BuildDocumentsTree > " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture)
                 + " = " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
@@ -201,7 +201,7 @@ namespace Zhichkin.Hermes.Services
                 }
             }
         }
-        
+
         public List<MetadataTreeNode> RegisterEntitiesForExchange(MetadataTreeNode root)
         {
             return GetExchangeInfo(((Entity)root.MetadataInfo).InfoBase);
@@ -270,7 +270,7 @@ namespace Zhichkin.Hermes.Services
             }
             return (parent as MetadataTreeNode);
         }
-        
+
         private string BuildKeysTableQueryScript(List<Guid> keys)
         {
             StringBuilder script = new StringBuilder();
@@ -566,6 +566,10 @@ namespace Zhichkin.Hermes.Services
         {
             return source.Namespaces.Where((n) => n.Name == "Документ").FirstOrDefault();
         }
+        private Namespace GetСharacteristicsNamespace(InfoBase source)
+        {
+            return source.Namespaces.Where((n) => n.Name == "ПланВидовХарактеристик").FirstOrDefault();
+        }
         private Namespace GetAccountsNamespace(InfoBase source)
         {
             return source.Namespaces.Where((n) => n.Name == "ПланСчетов").FirstOrDefault();
@@ -742,12 +746,18 @@ namespace Zhichkin.Hermes.Services
                 FillReferencesCorrespondenceTable(sourceNamespace.Entities, target);
             }
 
+            sourceNamespace = GetСharacteristicsNamespace(source);
+            if (sourceNamespace != null)
+            {
+                FillReferencesCorrespondenceTable(sourceNamespace.Entities, target);
+            }
+
             sourceNamespace = GetAccountsNamespace(source);
             if (sourceNamespace != null)
             {
                 FillReferencesCorrespondenceTable(sourceNamespace.Entities, target);
             }
-            
+
             #endregion
         }
 
@@ -779,6 +789,24 @@ namespace Zhichkin.Hermes.Services
                         Entity nestedTarget = targetEntity.NestedEntities.Where((e) => e.Name == nestedSource.Name).FirstOrDefault();
                         if (nestedTarget == null) continue;
                         rowsAffected = SendEntityToTargetInfoBase(source, target, nestedSource, nestedTarget);
+                    }
+
+                    if (sourceEntity.Namespace.Name == "Документ")
+                    {
+                        foreach (Entity sourceRegister in GetDocumentsRegisters(sourceEntity))
+                        {
+                            Entity targetRegister = service.GetEntityInfo(target, sourceRegister.Namespace.Name, sourceRegister.Name);
+                            if (targetRegister == null) continue;
+                            rowsAffected = SendRegisterToTargetInfoBase(sourceEntity, sourceRegister, targetRegister);
+                            if (sourceRegister.Namespace.Name == "РегистрБухгалтерии")
+                            {
+                                Entity sourceSubAccounts = sourceRegister.NestedEntities.Where((e) => e.Name == "ЗначенияСубконто").FirstOrDefault();
+                                if (sourceSubAccounts == null) continue;
+                                Entity targetSubAccounts = targetRegister.NestedEntities.Where((e) => e.Name == "ЗначенияСубконто").FirstOrDefault();
+                                if (targetSubAccounts == null) continue;
+                                rowsAffected = SendRegisterToTargetInfoBase(sourceEntity, sourceSubAccounts, targetSubAccounts);
+                            }
+                        }
                     }
                 }
             }
@@ -903,7 +931,7 @@ namespace Zhichkin.Hermes.Services
                     script.Append("[");
                     script.Append(field.Name);
                     script.Append("]");
-                    if (field.Purpose == FieldPurpose.TypeCode || field.Purpose== FieldPurpose.Object)
+                    if (field.Purpose == FieldPurpose.TypeCode || field.Purpose == FieldPurpose.Object)
                     {
                         script.Append(")");
                     }
@@ -1085,11 +1113,15 @@ namespace Zhichkin.Hermes.Services
 
         private string GetReferenceFieldName(Entity entity)
         {
-            if (entity.Owner != null)
+            if (entity.Namespace.Name.StartsWith("Регистр"))
+            {
+                return "_RecorderRRef";
+            }
+            if (entity.Owner != null) // табличная часть ссылочного типа данных
             {
                 return entity.Owner.MainTable.Name + "_IDRRef";
             }
-            return "_IDRRef";
+            return "_IDRRef"; // основная таблица ссылочного типа данных
         }
         private int GetReferenceTypeCode(Entity entity)
         {
@@ -1338,7 +1370,7 @@ namespace Zhichkin.Hermes.Services
                     + "Source: " + sourceEntity.Namespace.Name + "." + ((sourceEntity.Owner == null) ? "" : sourceEntity.Owner.Name + ".") + sourceEntity.Name;
                 throw new ApplicationException(message);
             }
-            
+
             Entity parentEntity = (Entity)parentNode.MetadataInfo;
             if (parentEntity == null) throw new ApplicationException("Node's entity can not be null");
 
@@ -1356,7 +1388,7 @@ namespace Zhichkin.Hermes.Services
 
             string referenceFieldName = GetReferenceFieldName(sourceEntity);
             string targetTable = GetReferencesRegisterTableName();
-            
+
             StringBuilder query = new StringBuilder();
             query.Append("MERGE ");
             query.Append(targetTable);
@@ -1738,7 +1770,7 @@ namespace Zhichkin.Hermes.Services
                     command.Parameters.AddWithValue("parentNode", parentNode.Identity);
                     command.Parameters.AddWithValue("parentEntity", parentEntity.Code);
                 }
-                
+
                 try
                 {
                     rowsAffected = command.ExecuteNonQuery();
@@ -1863,7 +1895,7 @@ namespace Zhichkin.Hermes.Services
                 if (rowsCount == 0) { continue; }
 
                 Entity targetEntity = service.GetEntityInfo(targetInfoBase, sourceEntity.Namespace.Name, sourceEntity.Name);
-                
+
                 string script = InsertReferencesCorrespondenceScript(sourceEntity, targetEntity);
 
                 int rowsAffected = 0;
@@ -2105,7 +2137,7 @@ namespace Zhichkin.Hermes.Services
             script.Append(NodeReferencesFilterScript(filter, parentEntity, "S", "T"));
             return script.ToString();
         }
-        
+
         public void SendNodeRegistersToTarget(MetadataTreeNode node, IProgress<MetadataTreeNode> progress)
         {
             Stopwatch sw = new Stopwatch();
@@ -2277,7 +2309,131 @@ namespace Zhichkin.Hermes.Services
             script.Append(NodeReferencesFilterScript(filter, parentEntity, "S", "T"));
             return script.ToString();
         }
-        
+
+        #endregion
+
+        #region " Перенос движений документа "
+
+        private List<Entity> GetDocumentsRegisters(Entity document)
+        {
+            List<Entity> list = new List<Entity>();
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = SelectDocumentsRegistersScript();
+                command.Parameters.AddWithValue("entity", document.Identity);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Guid key = reader.GetGuid(0);
+                        Entity register = context.Factory.New<Entity>(key);
+                        list.Add(register);
+                    }
+                }
+            }
+            return list;
+        }
+        private string SelectDocumentsRegistersScript()
+        {
+            StringBuilder script = new StringBuilder();
+            script.AppendLine("SELECT");
+            script.AppendLine("e.[key] AS [Entity],");
+            script.AppendLine("e.[name] AS [EntityName],");
+            script.AppendLine("n.[name] AS [NamespaceName]");
+            script.AppendLine("FROM");
+            script.AppendLine("(SELECT [property] FROM [metadata].[relations] WHERE [entity] = @entity) AS r");
+            script.AppendLine("INNER JOIN [metadata].[properties] AS p ON r.[property] = p.[key] AND p.[entity] <> @entity AND p.[name] = N'Регистратор'");
+            script.AppendLine("INNER JOIN [metadata].[entities] AS e ON p.[entity] = e.[key]");
+            script.AppendLine("INNER JOIN [metadata].[namespaces] AS n ON e.[namespace] = n.[key]");
+            script.AppendLine("ORDER BY");
+            script.AppendLine("n.[name],");
+            script.Append("e.[name];");
+            return script.ToString();
+        }
+        private int SendRegisterToTargetInfoBase(Entity sourceEntity, Entity sourceRegister, Entity targetRegister)
+        {
+            int rowsAffected = 0;
+            string query = MergeSourceWithTargetScript(sourceEntity, sourceRegister, targetRegister);
+            IPersistentContext context = MetadataPersistentContext.Current;
+            using (SqlConnection connection = new SqlConnection(context.ConnectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.CommandText = query;
+                try
+                {
+                    rowsAffected = command.ExecuteNonQuery();
+                    WriteToLog("--------------------------------");
+                    WriteToLog("< SendRegisterToTargetInfoBase >");
+                    WriteToLog("Entity: " + sourceEntity.Namespace.Name + "." + sourceEntity.Name);
+                    WriteToLog("Source: " + sourceRegister.Namespace.Name + "." + sourceRegister.Name);
+                    WriteToLog("Target: " + targetRegister.Namespace.Name + "." + targetRegister.Name);
+                    WriteToLog(query);
+                    WriteToLog("Rows affected = " + rowsAffected.ToString() + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    WriteToLog("--------------------------------");
+                    WriteToLog("< SendRegisterToTargetInfoBase >");
+                    WriteToLog("Entity: " + sourceEntity.Namespace.Name + "." + sourceEntity.Name);
+                    WriteToLog("Source: " + sourceRegister.Namespace.Name + "." + sourceRegister.Name);
+                    WriteToLog("Target: " + targetRegister.Namespace.Name + "." + targetRegister.Name);
+                    WriteToLog(query);
+                    WriteToLog(GetErrorText(ex));
+                    WriteToLog(ex.StackTrace);
+                    WriteToLog(Environment.NewLine);
+                    throw;
+                }
+            }
+            return rowsAffected;
+        }
+        private string MergeSourceWithTargetScript(Entity sourceEntity, Entity sourceRegister, Entity targetRegister)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append("MERGE [");
+            script.Append(targetRegister.InfoBase.Database);
+            script.Append("].[dbo].[");
+            script.Append(targetRegister.MainTable.Name);
+            script.AppendLine("] AS target");
+            script.AppendLine("USING");
+            script.AppendLine("(");
+            script.AppendLine(SelectSourceEntityScript(sourceEntity, sourceRegister));
+            script.AppendLine(")");
+            script.Append("AS source(");
+            script.Append(AllFieldsScript(sourceRegister, string.Empty));
+            script.AppendLine(")");
+            script.AppendLine("ON");
+            script.AppendLine(MergeSourceWithTargetConditionsScript(sourceRegister, targetRegister));
+            script.AppendLine("WHEN MATCHED THEN");
+            script.AppendLine(UpdateTargetEntityScript(targetRegister.InfoBase, targetRegister, "source", sourceRegister));
+            script.AppendLine("WHEN NOT MATCHED THEN");
+            script.Append(InsertTargetEntityScript(targetRegister.InfoBase, targetRegister, "source", sourceRegister));
+            script.Append(";");
+            return script.ToString();
+        }
+        private string SelectSourceEntityScript(Entity sourceEntity, Entity sourceRegister)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append("SELECT ");
+            script.Append(AllFieldsScript(sourceRegister, string.Empty));
+            script.Append(" FROM [");
+            script.Append(sourceRegister.InfoBase.Database);
+            script.Append("].[dbo].[");
+            script.Append(sourceRegister.MainTable.Name);
+            script.Append("] AS E INNER JOIN ");
+            script.Append("(SELECT DISTINCT [ENTITY], [OBJ_REF] FROM " + GetReferencesRegisterTableName() + ")");
+            script.Append(" AS T ON E.[");
+            script.Append(GetReferenceFieldName(sourceRegister));
+            script.Append("] = T.[OBJ_REF] AND T.[ENTITY] = ");
+            script.Append(GetReferenceTypeCode(sourceEntity).ToString());
+            return script.ToString();
+        }
+
         #endregion
     }
 }
