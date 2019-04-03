@@ -7,16 +7,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Expander ExpandDirection="Down" IsExpanded="True">
 
-        <Expander.Header>
-            <TextBlock Text="{Binding FilterType}" VerticalAlignment="Center"/>
-        </Expander.Header>
 
-        <StackPanel Orientation="Vertical">
-            
+    <StackPanel Orientation="Vertical">
+
+        <!--<Expander ExpandDirection="Down" IsExpanded="True">
+            <Expander.Header>
+                <TextBlock Text="{Binding FilterType}" VerticalAlignment="Center"/>
+            </Expander.Header>-->
             <DataGrid ItemsSource="{Binding Path=Conditions}" Height="Auto" SelectedItem="{Binding SelectedItem}"
-                  AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False"
+                  AutoGenerateColumns="False" CanUserResizeColumns="True" ColumnWidth="SizeToCells" CanUserAddRows="False"
                   HeadersVisibility="None">
 
                 <DataGrid.Style>
@@ -74,16 +74,53 @@
                 </DataGrid.Columns>
 
             </DataGrid>
+        <!--</Expander>-->
+        
+        <!--<ItemsControl ItemsSource="{Binding Children}" Margin="20,0,0,0">
+            <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type ui:BooleanExpression}">
+                    <ui:BooleanExpressionView />
+                </DataTemplate>
+            </ItemsControl.Resources>
+        </ItemsControl>-->
 
-            <ItemsControl ItemsSource="{Binding Children}" Margin="20,0,0,0">
-                <ItemsControl.Resources>
-                    <DataTemplate DataType="{x:Type ui:BooleanExpression}">
-                        <ui:BooleanExpressionView />
-                    </DataTemplate>
-                </ItemsControl.Resources>
-            </ItemsControl>
+        <DataGrid ItemsSource="{Binding Children}" Height="Auto" SelectedItem="{Binding SelectedItem}"
+                  AutoGenerateColumns="False" CanUserResizeColumns="True" ColumnWidth="SizeToCells" CanUserAddRows="False"
+                  HeadersVisibility="None">
 
-        </StackPanel>
-    </Expander>
+            <DataGrid.Style>
+                <Style TargetType="DataGrid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="0">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
+
+            <DataGrid.Columns>
+
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FilterType}" Margin="5" VerticalAlignment="Top" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ui:BooleanExpressionView />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+    </StackPanel>
+
 
 </UserControl>

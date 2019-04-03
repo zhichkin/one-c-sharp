@@ -18,4 +18,3 @@ C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Infrastructu
 C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Zhichkin.Hermes.Infrastructure.dll
 C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Zhichkin.Hermes.Infrastructure.pdb
 C:\Zhichkin\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Infrastructure.csprojAssemblyReference.cache
-C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Infrastructure.csprojAssemblyReference.cache
