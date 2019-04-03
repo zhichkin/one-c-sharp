@@ -1,17 +1,17 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class PropertyExpression : FunctionExpression
+    public class PropertyExpression : BindableBase
     {
-        public PropertyExpression(TableExpression owner) : base(owner) { }
-        
-        public FunctionExpression Function { get; set; }
-        public string FullName { get { return string.Format("{0}.{1}", this.Owner.Alias, this.Name); } }
-
         private string _Alias;
+        private Property _Property;
+
+        public PropertyExpression() { }
+        
         public string Alias
         {
             get { return _Alias; }
@@ -21,25 +21,13 @@ namespace Zhichkin.Hermes.UI
                 OnPropertyChanged("Alias");
             }
         }
-        private TableExpression _Table;
-        public TableExpression Table
+        public Property Property
         {
-            get { return _Table; }
+            get { return _Property; }
             set
             {
-                _Table = value;
-                OnPropertyChanged("Table");
-            }
-        }
-        private PropertyExpression _Field;
-        public PropertyExpression Field
-        {
-            get { return _Field; }
-            set
-            {
-                _Field = value;
-                this.Alias = _Field?.Name;
-                OnPropertyChanged("Field");
+                _Property = value;
+                OnPropertyChanged("Property");
             }
         }
     }

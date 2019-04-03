@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using Zhichkin.Hermes.Infrastructure;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -46,26 +47,25 @@ namespace Zhichkin.Hermes.UI
             if (data == null) return;
             SetDefaultBackground(sender);
 
-            IEntityInfo item = data as IEntityInfo;
-            if (item == null) return;
+            Entity entity = data as Entity;
+            if (entity == null) return;
             SelectExpression viewModel = this.DataContext as SelectExpression;
             if (viewModel == null) return;
 
             //if (e.AllowedEffects == (DragDropEffects.Copy | DragDropEffects.Move))
             //{
             //}
-            TableExpression table = new EntityExpression(viewModel)
+            TableExpression table = new EntityExpression()
             {
-                Name = item.Name,
-                Alias = item.Name,
-                Namespace = item.Namespace
+                Alias = entity.Name,
+                Entity = entity
             };
-            foreach (IPropertyInfo p in item.Properties)
+            foreach (Property p in entity.Properties)
             {
-                PropertyExpression property = new PropertyExpression(table)
+                PropertyExpression property = new PropertyExpression()
                 {
-                    Name = p.Name,
-                    Alias = p.Name
+                    Alias = p.Name,
+                    Property = p
                 };
                 table.Fields.Add(property);
             }

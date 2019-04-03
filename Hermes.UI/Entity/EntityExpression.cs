@@ -1,26 +1,45 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Collections.ObjectModel;
 using Zhichkin.Hermes.Infrastructure;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
 {
     public class TableExpression : BindableBase
     {
-        public TableExpression(TableExpression owner)
+        private string _Alias;
+
+        public TableExpression()
         {
-            this.Owner = owner;
             this.Fields = new ObservableCollection<PropertyExpression>();
         }
-        public TableExpression Owner { get; private set; }
-        public string Alias { get; set; }
+
+        public string Alias
+        {
+            get { return _Alias; }
+            set
+            {
+                _Alias = value;
+                OnPropertyChanged("Alias");
+            }
+        }
         public virtual ObservableCollection<PropertyExpression> Fields { get; set; }
     }
 
     public class EntityExpression : TableExpression
     {
-        public EntityExpression(TableExpression owner) : base(owner) { }
-        public string Name { get; set; }
-        public INamespaceInfo Namespace { get; set; }
-        public string FullName { get { return string.Format("{0}.{1}", this.Namespace?.Name, this.Name); } }
+        private Entity _Entity;
+
+        public EntityExpression() { }
+
+        public Entity Entity
+        {
+            get { return _Entity; }
+            set
+            {
+                _Entity = value;
+                OnPropertyChanged("Entity");
+            }
+        }
     }
 }

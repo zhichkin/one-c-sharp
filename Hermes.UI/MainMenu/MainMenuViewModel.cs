@@ -75,13 +75,12 @@ namespace Zhichkin.Hermes.UI
             if (rightRegion == null) return;
 
             query = new QueryExpression();
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter0", Type = new EntityInfo(1) { Name = "GUID" } });
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter1", Type = new EntityInfo(2) { Name = "Int32" } });
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new EntityInfo(3) { Name = "String" } });
-            query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new EntityInfo(4) { Name = "Boolean" } });
+            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter0", Type = new EntityInfo(1) { Name = "GUID" } });
+            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter1", Type = new EntityInfo(2) { Name = "Int32" } });
+            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new EntityInfo(3) { Name = "String" } });
+            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new EntityInfo(4) { Name = "Boolean" } });
 
-            SelectExpression select = new SelectExpression(null);
-            InitializeTestData(select);
+            SelectExpression select = new SelectExpression();
             query.QueryExpressions.Add(select);
 
             QueryView queryView = new QueryView(query);
@@ -90,55 +89,20 @@ namespace Zhichkin.Hermes.UI
         }
         private void AddNewSelectStatement()
         {
-            SelectExpression select = new SelectExpression(null);
-            InitializeTestData(select);
+            SelectExpression select = new SelectExpression();
             query.QueryExpressions.Add(select);
         }
         private void AddTableToSelectStatement()
         {
             if (query.QueryExpressions.Count == 0) return;
             SelectExpression select = query.QueryExpressions[0];
-            select.Tables.Add(new EntityExpression(select) { Name = "Table-1", Alias = "T1" });
-
-            JoinExpression join = new JoinExpression(select) { JoinType = "LEFT JOIN", Alias = "J1" };
-            join.Table = new EntityExpression(select) { Name = "Table-2", Alias = "T2" };
-            join.Filter.FilterType = "OR";
-
-            BooleanExpression and_1 = new BooleanExpression(join) { FilterType = "AND" };
-            and_1.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_1" });
-            and_1.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_2" });
-            join.Filter.Children.Add(and_1);
-
-            BooleanExpression or_1 = new BooleanExpression(join) { FilterType = "OR" };
-            BooleanExpression and_2 = new BooleanExpression(join) { FilterType = "AND" };
-            and_2.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_3" });
-            and_2.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_4" });
-            BooleanExpression and_3 = new BooleanExpression(join) { FilterType = "AND" };
-            and_3.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_5" });
-            and_3.Conditions.Add(new ComparisonExpression(join) { LeftExpression = "Field_6" });
-            or_1.Children.Add(and_2);
-            or_1.Children.Add(and_3);
-            join.Filter.Children.Add(or_1);
-
-            select.Tables.Add(join);
-
-            select.Tables.Add(new SelectExpression(select) { Alias = "S1" });
+            select.Tables.Add(new EntityExpression() { Alias = "T1" });
         }
         private void ChangeFromOrientation()
         {
             if (query.QueryExpressions.Count == 0) return;
             SelectExpression select = query.QueryExpressions[0];
             select.IsFromVertical = !select.IsFromVertical;
-        }
-
-        private void InitializeTestData(SelectExpression select)
-        {
-            select.Alias = "<type alias here>";
-
-            //select.Fields = HermesUI.GetTestEntityFields(select);
-
-            select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_1" });
-            select.Filter.Conditions.Add(new ComparisonExpression(select) { LeftExpression = "Field_2" });
         }
 
         private void BuildMetadataTree()

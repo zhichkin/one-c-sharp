@@ -9,17 +9,17 @@ namespace Zhichkin.Hermes.UI
 {
     public class SelectExpression : TableExpression
     {
-        public SelectExpression(TableExpression owner) : base(owner)
+        public SelectExpression()
         {
             this.Tables = new ObservableCollection<TableExpression>();
-            this.Filter = new BooleanExpression(this) { FilterType = "AND" };
+            this.Where = new BooleanExpression() { OperatorType = BooleanOperatorType.AND };
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
         }
         public ICommand AddPropertyCommand { get; private set; }
         private void OnAddProperty()
         {
             string alias = "Поле_" + this.Fields.Count.ToString();
-            this.Fields.Add(new PropertyExpression(this) { Alias = alias });
+            this.Fields.Add(new PropertyExpression() { Alias = alias });
         }
 
         private bool _IsFromVertical = true;
@@ -43,6 +43,6 @@ namespace Zhichkin.Hermes.UI
             }
         }
         public ObservableCollection<TableExpression> Tables { get; set; }
-        public BooleanExpression Filter { get; set; }
+        public BooleanExpression Where { get; set; }
     }
 }
