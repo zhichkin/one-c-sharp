@@ -7,14 +7,102 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
 
+            <ControlTemplate x:Key="DefaultTemplate">
+                <Border BorderThickness="1" CornerRadius="5"  Cursor="Hand">
+                    <Border.BorderBrush>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Rectangle StrokeDashArray="2 2" Stroke="Gray" StrokeThickness="1"
+                                           Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                                           Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Border.BorderBrush>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="+" Command="{Binding AddComparisonOperatorCommand}" Margin="5" Height="20" Width="20"/>
+                        <Label Content="Click to add comparison operator" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
 
-    <StackPanel Orientation="Vertical">
+            <ControlTemplate x:Key="ComparisonOperatorTemplate">
+                <Border BorderThickness="1" CornerRadius="5"  Cursor="Hand">
+                    <Border.BorderBrush>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Rectangle StrokeDashArray="2 2" Stroke="Gray" StrokeThickness="1"
+                                           Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                                           Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Border.BorderBrush>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="+" Command="{Binding AddComparisonOperatorCommand}" Margin="5" Height="20" Width="20"/>
+                        <Label Content="{Binding Expression.OperatorType}" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
 
-        <!--<Expander ExpandDirection="Down" IsExpanded="True">
+            <ControlTemplate x:Key="BooleanOperatorTemplate">
+                <Border BorderThickness="1" CornerRadius="5"  Cursor="Hand">
+                    <Border.BorderBrush>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Rectangle StrokeDashArray="2 2" Stroke="Gray" StrokeThickness="1"
+                                           Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                                           Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Border.BorderBrush>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="-" Command="{Binding RemoveComparisonOperatorCommand}" Margin="5" Height="20" Width="20"/>
+                        <Label Content="{Binding Expression.OperatorType}" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ContentControl>
+        <ContentControl.Style>
+            <Style TargetType="{x:Type ContentControl}">
+                <Setter Property="Template" Value="{StaticResource DefaultTemplate}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ViewModelState}" Value="0">
+                        <Setter Property="Template" Value="{StaticResource DefaultTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ViewModelState}" Value="1">
+                        <Setter Property="Template" Value="{StaticResource ComparisonOperatorTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ViewModelState}" Value="2">
+                        <Setter Property="Template" Value="{StaticResource BooleanOperatorTemplate}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+    <!--<Style x:Key="Die1Face" TargetType="{x:Type Button}">
+        <Setter Property="Template" Value="{StaticResource dieNone}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=ThrowDie1[0]}" Value="1" >
+                <Setter Property="Template" Value="{StaticResource dieOneA}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=ThrowDie1[0]}" Value="2" >
+                <Setter Property="Template" Value="{StaticResource dieTwoA}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>-->
+
+    <!--<StackPanel Orientation="Vertical">
+
+        --><!--<Expander ExpandDirection="Down" IsExpanded="True">
             <Expander.Header>
                 <TextBlock Text="{Binding FilterType}" VerticalAlignment="Center"/>
-            </Expander.Header>-->
+            </Expander.Header>--><!--
             <DataGrid ItemsSource="{Binding Path=Conditions}" Height="Auto" SelectedItem="{Binding SelectedItem}"
                   AutoGenerateColumns="False" CanUserResizeColumns="True" ColumnWidth="SizeToCells" CanUserAddRows="False"
                   HeadersVisibility="None">
@@ -74,7 +162,7 @@
                 </DataGrid.Columns>
 
             </DataGrid>
-        <!--</Expander>-->
+        --><!--</Expander>-->
         
         <!--<ItemsControl ItemsSource="{Binding Children}" Margin="20,0,0,0">
             <ItemsControl.Resources>
@@ -82,7 +170,7 @@
                     <ui:BooleanExpressionView />
                 </DataTemplate>
             </ItemsControl.Resources>
-        </ItemsControl>-->
+        </ItemsControl>--><!--
 
         <DataGrid ItemsSource="{Binding Children}" Height="Auto" SelectedItem="{Binding SelectedItem}"
                   AutoGenerateColumns="False" CanUserResizeColumns="True" ColumnWidth="SizeToCells" CanUserAddRows="False"
@@ -120,7 +208,7 @@
 
         </DataGrid>
 
-    </StackPanel>
+    </StackPanel>-->
 
 
 </UserControl>

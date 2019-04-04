@@ -12,7 +12,7 @@ namespace Zhichkin.Hermes.UI
         public SelectExpression()
         {
             this.Tables = new ObservableCollection<TableExpression>();
-            this.Where = new BooleanExpression() { OperatorType = BooleanOperatorType.AND };
+            this.Where = new BooleanExpression() { };
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
         }
         public ICommand AddPropertyCommand { get; private set; }
