@@ -8,7 +8,6 @@ using System.Text;
 using System.Xml;
 using Zhichkin.Integrator.Model;
 using Zhichkin.Metadata.Model;
-using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Integrator.Services
 {

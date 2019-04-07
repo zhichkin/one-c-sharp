@@ -1,13 +1,11 @@
 ﻿using System;
-using System.IO;
-using System.Xml;
-using System.Linq;
-using Zhichkin.Metadata.Model;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Configuration;
+using System.Xml;
+using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Notifications;
-using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Metadata.Services
 {

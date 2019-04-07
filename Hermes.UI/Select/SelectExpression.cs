@@ -4,6 +4,7 @@ using System;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 using Microsoft.Practices.Prism.Commands;
+using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -12,14 +13,15 @@ namespace Zhichkin.Hermes.UI
         public SelectExpression()
         {
             this.Tables = new ObservableCollection<TableExpression>();
-            this.Where = new BooleanExpression() { };
+            this.WhereClause = new BooleanExpressionViewModel(this) { };
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
         }
         public ICommand AddPropertyCommand { get; private set; }
         private void OnAddProperty()
         {
             string alias = "Поле_" + this.Fields.Count.ToString();
-            this.Fields.Add(new PropertyExpression() { Alias = alias });
+            PropertyExpression property = new PropertyExpression() { Alias = alias };
+            this.Fields.Add(new PropertyExpressionViewModel(property));
         }
 
         private bool _IsFromVertical = true;
@@ -43,6 +45,6 @@ namespace Zhichkin.Hermes.UI
             }
         }
         public ObservableCollection<TableExpression> Tables { get; set; }
-        public BooleanExpression Where { get; set; }
+        public BooleanExpressionViewModel WhereClause { get; set; }
     }
 }

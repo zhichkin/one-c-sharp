@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Zhichkin.Hermes.Infrastructure;
+using Zhichkin.Hermes.Model;
 using Zhichkin.Hermes.Services;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;

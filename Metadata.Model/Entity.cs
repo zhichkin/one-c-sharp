@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using Zhichkin.Metadata.Services;
 
 using Zhichkin.ORM;
-using Zhichkin.Hermes.Infrastructure;
 
 namespace Zhichkin.Metadata.Model
 {
-    public sealed partial class Entity : EntityBase, IEntityInfo
+    public sealed partial class Entity : EntityBase
     {
         private static readonly IDataMapper _mapper = MetadataPersistentContext.Current.GetDataMapper(typeof(Entity));
         private static readonly IMetadataService service = new MetadataService();
@@ -118,33 +117,5 @@ namespace Zhichkin.Metadata.Model
             else if (this.Code > 0) return typeof(object);
             return null;
         }
-
-        INamespaceInfo IEntityInfo.Namespace { get { return this.Namespace; } set { this.Namespace = (Namespace)value; } }
-        IList<IPropertyInfo> IEntityInfo.Properties
-        {
-            get
-            {
-                List<IPropertyInfo> list = new List<IPropertyInfo>();
-                foreach (Property p in this.Properties)
-                {
-                    list.Add(p);
-                }
-                return list;
-            }
-        }
-        IEntityInfo IEntityInfo.Owner { get { return this.Owner; } set { this.Owner = (Entity)value; } }
-        IList<ITableInfo> IEntityInfo.Tables
-        {
-            get
-            {
-                List<ITableInfo> list = new List<ITableInfo>();
-                foreach (Table t in this.Tables)
-                {
-                    list.Add(t);
-                }
-                return list;
-            }
-        }
-
     }
 }

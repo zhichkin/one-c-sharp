@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="Zhichkin.Hermes.UI.BooleanOperatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <DataGrid ItemsSource="{Binding Expression.Operands}"
+                  Height="Auto" SelectedItem="{Binding SelectedItem}"
+                  AutoGenerateColumns="False" CanUserResizeColumns="True" ColumnWidth="SizeToCells"
+                  CanUserAddRows="False" HeadersVisibility="None">
+
+        <DataGrid.Columns>
+            <DataGridTemplateColumn IsReadOnly="True" Width="50">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="{Binding Expression.Name}" Margin="0,0,5,0" VerticalAlignment="Top"/>
+                        <Button Content="+" Command="{Binding AddNewOperatorCommand}" VerticalAlignment="Top"
+                    ToolTip="Click to add new condition"
+                    Margin="5" Height="20" Width="20"/>
+                    </StackPanel>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn IsReadOnly="True" Width="50">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                    <DataGrid
+                  ItemsSource="{Binding Operands}" Height="Auto" SelectedItem="{Binding SelectedItem}"
+                  AutoGenerateColumns="False" CanUserResizeColumns="True" ColumnWidth="SizeToCells"
+                  CanUserAddRows="False" HeadersVisibility="None">
+
+            <DataGrid.Columns>
+
+                <DataGridTemplateColumn IsReadOnly="True" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox SelectedItem="{Binding LeftExpression, UpdateSourceTrigger=PropertyChanged}"
+                                                                  VerticalContentAlignment="Center"
+                                                                  HorizontalContentAlignment="Center">
+                                <ComboBoxItem>
+                                    <TextBlock Text="==" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text="!=" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text=">" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text=">=" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                                                  VerticalContentAlignment="Center"
+                                                                  HorizontalContentAlignment="Center">
+                                <ComboBoxItem>
+                                    <TextBlock Text="==" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text="!=" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text=">" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text=">=" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox SelectedItem="{Binding RightExpression, UpdateSourceTrigger=PropertyChanged}"
+                                                                  VerticalContentAlignment="Center"
+                                                                  HorizontalContentAlignment="Center">
+                                <ComboBoxItem>
+                                    <TextBlock Text="==" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text="!=" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text=">" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text=">=" HorizontalAlignment="Center"/>
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+
+    </DataGrid>
+
+</UserControl>

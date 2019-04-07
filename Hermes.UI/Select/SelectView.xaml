@@ -45,7 +45,7 @@
 
                 <ItemsControl Grid.Row="0" ItemsSource="{Binding Fields}" Margin="30,0,0,0">
                     <ItemsControl.Resources>
-                        <DataTemplate DataType="{x:Type ui:PropertyExpression}">
+                        <DataTemplate DataType="{x:Type ui:PropertyExpressionViewModel}">
                             <ui:PropertyView Margin="0,0,0,5"/>
                         </DataTemplate>
                     </ItemsControl.Resources>
@@ -158,7 +158,7 @@
                             <TextBlock Text="WHERE" FontWeight="Bold"/>
                         </StackPanel>
                     </Expander.Header>
-                    <ui:BooleanExpressionView DataContext="{Binding Where}" Margin="30,0,0,0" />
+                    <ui:BooleanExpressionView DataContext="{Binding WhereClause}" Margin="30,0,0,0" />
                 </Expander>
 
             </Grid>

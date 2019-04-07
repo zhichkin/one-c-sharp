@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Zhichkin.Hermes.Infrastructure;
+using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
@@ -62,11 +62,8 @@ namespace Zhichkin.Hermes.UI
             };
             foreach (Property p in entity.Properties)
             {
-                PropertyExpression property = new PropertyExpression()
-                {
-                    Alias = p.Name,
-                    Property = p
-                };
+                PropertyExpression model = new PropertyExpression() { Property = p, Alias = p.Name };
+                PropertyExpressionViewModel property = new PropertyExpressionViewModel(model);
                 table.Fields.Add(property);
             }
             viewModel.Tables.Add(table);

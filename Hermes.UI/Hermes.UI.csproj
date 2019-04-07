@@ -88,15 +88,23 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BooleanExpression\BooleanOperatorView.xaml.cs">
+      <DependentUpon>BooleanOperatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BooleanExpression\BooleanOperatorViewModel.cs" />
+    <Compile Include="BooleanExpression\ComparisonOperatorView.xaml.cs">
+      <DependentUpon>ComparisonOperatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BooleanExpression\ComparisonOperatorViewModel.cs" />
     <Compile Include="CaseWhenThen\CaseWhenThenView.xaml.cs">
       <DependentUpon>CaseWhenThenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="CaseWhenThen\CaseWhenThenViewModel.cs" />
     <Compile Include="CaseWhenThen\FunctionTemplateSelector.cs" />
-    <Compile Include="Function\BooleanExpressionView.xaml.cs">
+    <Compile Include="BooleanExpression\BooleanExpressionView.xaml.cs">
       <DependentUpon>BooleanExpressionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Function\BooleanExpression.cs" />
+    <Compile Include="BooleanExpression\BooleanExpressionViewModel.cs" />
     <Compile Include="Join\JoinView.xaml.cs">
       <DependentUpon>JoinView.xaml</DependentUpon>
     </Compile>
@@ -110,7 +118,7 @@
       <DependentUpon>ParameterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parameter\ParameterExpression.cs" />
-    <Compile Include="Property\PropertyExpression.cs" />
+    <Compile Include="Property\PropertyExpressionViewModel.cs" />
     <Compile Include="Property\PropertyView.xaml.cs">
       <DependentUpon>PropertyView.xaml</DependentUpon>
     </Compile>
@@ -126,11 +134,19 @@
       <DependentUpon>EntityView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Entity\EntityExpression.cs" />
+    <Page Include="BooleanExpression\BooleanOperatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BooleanExpression\ComparisonOperatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CaseWhenThen\CaseWhenThenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Function\BooleanExpressionView.xaml">
+    <Page Include="BooleanExpression\BooleanExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,9 +214,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Infrastructure.csproj">
+    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Model.csproj">
       <Project>{6a86e382-f7ed-43ff-be21-e2127eb8199a}</Project>
-      <Name>Hermes.Infrastructure</Name>
+      <Name>Hermes.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hermes.Services\Hermes.Services.csproj">
       <Project>{ca3fdd8a-695c-4a87-b09e-c63e5aafb5b1}</Project>

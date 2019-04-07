@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
              xmlns:zui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
-             xmlns:model="clr-namespace:Zhichkin.Hermes.Infrastructure;assembly=Zhichkin.Hermes.Infrastructure"
+             xmlns:model="clr-namespace:Zhichkin.Hermes.Model;assembly=Zhichkin.Hermes.Model"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
@@ -212,9 +212,9 @@
                                 <TextBlock Text="{Binding Path=Count}"/>
                                 <TextBlock Text=")"/>
                             </StackPanel>
-                            <ItemsControl ItemsSource="{Binding Path=Filter.Conditions}" Margin="15,0,0,0">
+                            <ItemsControl ItemsSource="{Binding Path=Filter.Operands}" Margin="15,0,0,0">
                                 <ItemsControl.Resources>
-                                    <DataTemplate DataType="{x:Type model:ComparisonExpression}">
+                                    <DataTemplate DataType="{x:Type model:ComparisonOperator}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="{StaticResource Icon_Property}"/>
                                             <TextBlock Text="{Binding Path=LeftExpression.Name}"/>
@@ -224,7 +224,7 @@
                                 <ItemsControl.Style>
                                     <Style TargetType="ItemsControl">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=Filter.Conditions.Count}" Value="0">
+                                            <DataTrigger Binding="{Binding Path=Filter.Operands.Count}" Value="0">
                                                 <Setter Property="Visibility" Value="Hidden" />
                                             </DataTrigger>
                                         </Style.Triggers>

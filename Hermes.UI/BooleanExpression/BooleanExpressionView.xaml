@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="Zhichkin.Hermes.UI.BooleanExpressionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <ControlTemplate x:Key="DefaultTemplate">
+                <Border BorderThickness="1" CornerRadius="5"  Cursor="Hand">
+                    <Border.BorderBrush>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Rectangle StrokeDashArray="2 2" Stroke="Gray" StrokeThickness="1"
+                                           Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                                           Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Border.BorderBrush>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="+" Command="{Binding AddNewOperatorCommand}" Margin="5" Height="20" Width="20"/>
+                        <Label Content="Click to add new condition" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="ComparisonOperatorTemplate">
+                <ui:ComparisonOperatorView DataContext="{Binding Expression}"/>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="BooleanOperatorTemplate">
+                <ui:BooleanOperatorView DataContext="{Binding Expression}"/>
+            </ControlTemplate>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ContentControl>
+        <ContentControl.Style>
+            <Style TargetType="{x:Type ContentControl}">
+                <Setter Property="Template" Value="{StaticResource DefaultTemplate}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ViewModelState}" Value="0">
+                        <Setter Property="Template" Value="{StaticResource DefaultTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ViewModelState}" Value="1">
+                        <Setter Property="Template" Value="{StaticResource ComparisonOperatorTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ViewModelState}" Value="2">
+                        <Setter Property="Template" Value="{StaticResource BooleanOperatorTemplate}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+    
+</UserControl>

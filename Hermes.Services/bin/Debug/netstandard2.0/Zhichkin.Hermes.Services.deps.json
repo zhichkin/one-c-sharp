@@ -15,7 +15,7 @@
           "ORM": "1.0.0",
           "System.Configuration.ConfigurationManager": "4.5.0",
           "System.Data.SqlClient": "4.6.0",
-          "Zhichkin.Hermes.Infrastructure": "1.0.0"
+          "Zhichkin.Hermes.Model": "1.0.0"
         },
         "runtime": {
           "Zhichkin.Hermes.Services.dll": {}
@@ -188,7 +188,6 @@
       "Metadata.Model/1.0.0": {
         "dependencies": {
           "ORM": "1.0.0",
-          "Zhichkin.Hermes.Infrastructure": "1.0.0",
           "Microsoft.Practices.Prism.PubSubEvents": "1.0.0.0"
         },
         "runtime": {
@@ -200,9 +199,12 @@
           "Zhichkin.ORM.dll": {}
         }
       },
-      "Zhichkin.Hermes.Infrastructure/1.0.0": {
+      "Zhichkin.Hermes.Model/1.0.0": {
+        "dependencies": {
+          "Metadata.Model": "1.0.0"
+        },
         "runtime": {
-          "Zhichkin.Hermes.Infrastructure.dll": {}
+          "Zhichkin.Hermes.Model.dll": {}
         }
       },
       "Microsoft.Practices.Prism.PubSubEvents.Reference/1.0.0.0": {
@@ -371,7 +373,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Zhichkin.Hermes.Infrastructure/1.0.0": {
+    "Zhichkin.Hermes.Model/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

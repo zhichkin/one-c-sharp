@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Collections.ObjectModel;
+using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -7,11 +8,11 @@ namespace Zhichkin.Hermes.UI
     {
         public JoinExpression()
         {
-            this.Filter = new BooleanExpression();
+            this.Filter = new BooleanExpressionViewModel(this);
         }
         public string JoinType { get; set; }
         public TableExpression Table { get; set; }
-        public BooleanExpression Filter { get; set; }
-        public override ObservableCollection<PropertyExpression> Fields { get { return this.Table.Fields; } }
+        public BooleanExpressionViewModel Filter { get; set; }
+        public override ObservableCollection<PropertyExpressionViewModel> Fields { get { return this.Table.Fields; } }
     }
 }

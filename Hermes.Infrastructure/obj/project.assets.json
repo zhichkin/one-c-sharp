@@ -25,6 +25,27 @@
         "build": {
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
+      },
+      "Metadata.Model/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "ORM": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Metadata.Model.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Metadata.Model.dll": {}
+        }
+      },
+      "ORM/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/ORM.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ORM.dll": {}
+        }
       }
     }
   },
@@ -170,10 +191,21 @@
         "netstandard.library.2.0.3.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
+    },
+    "Metadata.Model/1.0.0": {
+      "type": "project",
+      "path": "../Metadata.Model/Metadata.Model.csproj",
+      "msbuildProject": "../Metadata.Model/Metadata.Model.csproj"
+    },
+    "ORM/1.0.0": {
+      "type": "project",
+      "path": "../orm/ORM.csproj",
+      "msbuildProject": "../orm/ORM.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
+      "Metadata.Model >= 1.0.0",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -184,9 +216,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj",
-      "projectName": "Zhichkin.Hermes.Infrastructure",
-      "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Model.csproj",
+      "projectName": "Zhichkin.Hermes.Model",
+      "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Model.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
@@ -206,7 +238,11 @@
       },
       "frameworks": {
         "netstandard2.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

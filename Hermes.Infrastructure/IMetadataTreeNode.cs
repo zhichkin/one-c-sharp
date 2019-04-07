@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Text;
 
-namespace Zhichkin.Hermes.Infrastructure
+namespace Zhichkin.Hermes.Model
 {
     public interface IMetadataTreeNode
     {
         string Name { get; set; }
         IMetadataTreeNode Parent { get; set; }
         ObservableCollection<IMetadataTreeNode> Children { get; }
-        IMetadataInfo MetadataInfo { get; set; }
-        IBooleanExpression Filter { get; set; }
-        IFunctionExpression Function { get; set; }
+        object MetadataInfo { get; set; }
+        BooleanOperator Filter { get; set; }
         int Count { get; set; }
     }
     public sealed class MetadataTreeNode : IMetadataTreeNode, INotifyPropertyChanged
@@ -27,9 +25,8 @@ namespace Zhichkin.Hermes.Infrastructure
         public string Name { get; set; }
         public IMetadataTreeNode Parent { get; set; }
         public ObservableCollection<IMetadataTreeNode> Children { get; }
-        public IMetadataInfo MetadataInfo { get; set; }
-        public IBooleanExpression Filter { get; set; }
-        public IFunctionExpression Function { get; set; }
+        public object MetadataInfo { get; set; }
+        public BooleanOperator Filter { get; set; }
         public List<Guid> Keys { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;

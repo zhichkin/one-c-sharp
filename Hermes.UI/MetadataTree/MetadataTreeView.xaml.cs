@@ -1,11 +1,8 @@
 ﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Zhichkin.Hermes.Infrastructure;
-using Zhichkin.Hermes.Services;
+using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Shell;
 

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Zhichkin.Hermes.Model</AssemblyName>
+    <RootNamespace>Zhichkin.Hermes.Model</RootNamespace>
+    <Copyright>Copyright © 2019</Copyright>
+    <Company>Zhichkin</Company>
+    <Authors>Zhichkin</Authors>
+    <Description>Infrastructure library with basic types and interfaces to be referenced by all Hermes projects</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug\</OutputPath>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)Zhichkin.Hermes.Infrastructure.dll&quot; &quot;$(SolutionDir)Shell\bin\$(ConfigurationName)\&quot; /Y" />
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj" />
+  </ItemGroup>
+
+</Project>

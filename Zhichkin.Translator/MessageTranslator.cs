@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using Zhichkin.ChangeTracking;
-using Zhichkin.Metadata.Model;
-using M = Zhichkin.Metadata.Model;
-using Zhichkin.Integrator.Model;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using Zhichkin.Hermes.Infrastructure;
+using Zhichkin.ChangeTracking;
+using Zhichkin.Integrator.Model;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Integrator.Translator
 {

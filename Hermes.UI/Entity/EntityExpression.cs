@@ -1,6 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Collections.ObjectModel;
-using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
@@ -11,7 +10,7 @@ namespace Zhichkin.Hermes.UI
 
         public TableExpression()
         {
-            this.Fields = new ObservableCollection<PropertyExpression>();
+            this.Fields = new ObservableCollection<PropertyExpressionViewModel>();
         }
 
         public string Alias
@@ -23,7 +22,7 @@ namespace Zhichkin.Hermes.UI
                 OnPropertyChanged("Alias");
             }
         }
-        public virtual ObservableCollection<PropertyExpression> Fields { get; set; }
+        public virtual ObservableCollection<PropertyExpressionViewModel> Fields { get; set; }
     }
 
     public class EntityExpression : TableExpression

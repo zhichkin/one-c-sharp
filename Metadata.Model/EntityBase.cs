@@ -1,5 +1,4 @@
 ﻿using System;
-using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model

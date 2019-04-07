@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.ORM;
 
 namespace Zhichkin.Metadata.Model

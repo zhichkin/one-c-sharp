@@ -1,6 +1,4 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
-using System.Collections.ObjectModel;
-using Zhichkin.Hermes.Infrastructure;
 using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI

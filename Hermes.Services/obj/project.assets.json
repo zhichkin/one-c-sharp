@@ -270,8 +270,7 @@
       "Metadata.Model/1.0.0": {
         "type": "project",
         "dependencies": {
-          "ORM": "1.0.0",
-          "Zhichkin.Hermes.Infrastructure": "1.0.0"
+          "ORM": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Metadata.Model.dll": {}
@@ -289,14 +288,17 @@
           "bin/placeholder/ORM.dll": {}
         }
       },
-      "Zhichkin.Hermes.Infrastructure/1.0.0": {
+      "Zhichkin.Hermes.Model/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "Metadata.Model": "1.0.0"
+        },
         "compile": {
-          "bin/placeholder/Zhichkin.Hermes.Infrastructure.dll": {}
+          "bin/placeholder/Zhichkin.Hermes.Model.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Zhichkin.Hermes.Infrastructure.dll": {}
+          "bin/placeholder/Zhichkin.Hermes.Model.dll": {}
         }
       }
     }
@@ -1057,10 +1059,10 @@
       "path": "../orm/ORM.csproj",
       "msbuildProject": "../orm/ORM.csproj"
     },
-    "Zhichkin.Hermes.Infrastructure/1.0.0": {
+    "Zhichkin.Hermes.Model/1.0.0": {
       "type": "project",
-      "path": "../Hermes.Infrastructure/Hermes.Infrastructure.csproj",
-      "msbuildProject": "../Hermes.Infrastructure/Hermes.Infrastructure.csproj"
+      "path": "../Hermes.Infrastructure/Hermes.Model.csproj",
+      "msbuildProject": "../Hermes.Infrastructure/Hermes.Model.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1071,7 +1073,7 @@
       "ORM >= 1.0.0",
       "System.Configuration.ConfigurationManager >= 4.5.0",
       "System.Data.SqlClient >= 4.6.0",
-      "Zhichkin.Hermes.Infrastructure >= 1.0.0"
+      "Zhichkin.Hermes.Model >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1104,8 +1106,8 @@
       "frameworks": {
         "netstandard2.0": {
           "projectReferences": {
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Infrastructure.csproj"
+            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Model.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Model.csproj"
             },
             "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj": {
               "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj"

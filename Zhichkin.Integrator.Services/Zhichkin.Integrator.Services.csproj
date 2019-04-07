@@ -56,10 +56,6 @@
     <Compile Include="XMLMessageProducer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Infrastructure.csproj">
-      <Project>{6A86E382-F7ED-43FF-BE21-E2127EB8199A}</Project>
-      <Name>Hermes.Infrastructure</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
       <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
       <Name>Metadata.Model</Name>

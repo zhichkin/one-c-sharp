@@ -1,0 +1,10 @@
+C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Model.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Model.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Model.AssemblyInfo.cs
+C:\Users\User\Desktop\GitHub\Z\debug\netstandard2.0\Zhichkin.Hermes.Model.deps.json
+C:\Users\User\Desktop\GitHub\Z\debug\netstandard2.0\Zhichkin.Hermes.Model.dll
+C:\Users\User\Desktop\GitHub\Z\debug\netstandard2.0\Zhichkin.Hermes.Model.pdb
+C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Zhichkin.Hermes.Model.dll
+C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Zhichkin.Hermes.Model.pdb
+C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Model.csprojAssemblyReference.cache
+C:\Users\User\Desktop\GitHub\Z\Hermes.Infrastructure\obj\Debug\netstandard2.0\Hermes.Model.csproj.CopyComplete

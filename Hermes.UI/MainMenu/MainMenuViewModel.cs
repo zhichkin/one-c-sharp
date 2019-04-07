@@ -5,12 +5,7 @@ using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
-using Zhichkin.Hermes.Infrastructure;
-using Zhichkin.Hermes.Services;
-using Zhichkin.Metadata.Model;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI

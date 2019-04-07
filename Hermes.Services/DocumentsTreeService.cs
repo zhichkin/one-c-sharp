@@ -9,7 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Zhichkin.Hermes.Infrastructure;
+using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
 using Zhichkin.ORM;
@@ -85,7 +85,7 @@ namespace Zhichkin.Hermes.Services
         }
         private void FillChildren(MetadataTreeNode parent)
         {
-            if (!(parent.MetadataInfo is IEntityInfo)) return;
+            if (!(parent.MetadataInfo is Entity)) return;
 
             IPersistentContext context = MetadataPersistentContext.Current;
             using (SqlConnection connection = new SqlConnection(context.ConnectionString))
@@ -94,7 +94,7 @@ namespace Zhichkin.Hermes.Services
                 connection.Open();
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[get_metadata_tree_node_children]";
-                command.Parameters.AddWithValue("entity", parent.MetadataInfo.Identity);
+                command.Parameters.AddWithValue("entity", ((Entity)parent.MetadataInfo).Identity);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     Guid current_ns_key = Guid.Empty;
@@ -137,9 +137,9 @@ namespace Zhichkin.Hermes.Services
                                 Name = current_entity.Name,
                                 Parent = current_ns_node,
                                 MetadataInfo = current_entity,
-                                Filter = new BooleanExpression()
+                                Filter = new BooleanOperator(current_entity)
                                 {
-                                    ExpressionType = BooleanExpressionType.OR
+                                    Name = BooleanFunction.OR
                                 }
                             };
                             current_ns_node.Children.Add(current_entity_node);
@@ -163,9 +163,9 @@ namespace Zhichkin.Hermes.Services
                                     Name = current_nested.Name,
                                     Parent = current_entity_node,
                                     MetadataInfo = current_nested,
-                                    Filter = new BooleanExpression()
+                                    Filter = new BooleanOperator(current_nested)
                                     {
-                                        ExpressionType = BooleanExpressionType.OR
+                                        Name = BooleanFunction.OR
                                     }
                                 };
                                 current_entity_node.Children.Add(current_nested_node);
@@ -174,28 +174,22 @@ namespace Zhichkin.Hermes.Services
 
                         key = (Guid)reader["PropertyKey"];
                         current_property = context.Factory.New<Property>(key);
-                        PropertyExpression px = new PropertyExpression()
+                        PropertyExpression px = new PropertyExpression() { Property = current_property };
+                        BooleanOperator caller = (current_nested_node == null) ? current_entity_node.Filter : current_nested_node.Filter;
+                        ComparisonOperator ce = new ComparisonOperator(caller)
                         {
-                            Name = current_property.Name,
-                            PropertyInfo = current_property
-                        };
-                        ComparisonExpression ce = new ComparisonExpression()
-                        {
-                            Name = BooleanExpressionType.Equal.ToString(),
-                            ExpressionType = BooleanExpressionType.Equal,
+                            Name = BooleanFunction.Equal,
                             LeftExpression = px,
                             RightExpression = null
                         };
 
                         if (current_nested_node == null)
                         {
-                            ((BooleanExpression)current_entity_node.Filter).Conditions.Add(ce);
-                            //CountDocuments(current_entity_node, current_property);
+                            current_entity_node.Filter.Operands.Add(ce);
                         }
                         else
                         {
-                            ((BooleanExpression)current_nested_node.Filter).Conditions.Add(ce);
-                            //CountDocuments(current_nested_node, current_property);
+                            current_nested_node.Filter.Operands.Add(ce);
                         }
                     }
                 }
@@ -262,7 +256,7 @@ namespace Zhichkin.Hermes.Services
             IMetadataTreeNode parent = node.Parent;
             while (parent != null)
             {
-                if (!(parent.MetadataInfo is INamespaceInfo))
+                if (!(parent.MetadataInfo is Namespace))
                 {
                     break;
                 }
@@ -325,7 +319,7 @@ namespace Zhichkin.Hermes.Services
                 string object_field = string.Empty;
                 string locator_field = string.Empty;
                 string type_code_field = string.Empty;
-                foreach (IFieldInfo field in property.Fields)
+                foreach (Field field in property.Fields)
                 {
                     switch (field.Purpose)
                     {
@@ -1137,16 +1131,16 @@ namespace Zhichkin.Hermes.Services
         {
             List<Property> list = new List<Property>();
 
-            BooleanExpression filter = node.Filter as BooleanExpression;
-            if (filter == null || filter.Conditions.Count == 0)
+            BooleanOperator filter = node.Filter;
+            if (filter == null || filter.Operands.Count == 0)
             {
                 return list;
             }
 
-            foreach (IComparisonExpression condition in filter.Conditions)
+            foreach (ComparisonOperator condition in filter.Operands)
             {
                 PropertyExpression expression = condition.LeftExpression as PropertyExpression;
-                list.Add((Property)expression.PropertyInfo);
+                list.Add(expression.Property);
             }
 
             return list;
@@ -1507,7 +1501,7 @@ namespace Zhichkin.Hermes.Services
                 string object_field = string.Empty;
                 string locator_field = string.Empty;
                 string type_code_field = string.Empty;
-                foreach (IFieldInfo field in property.Fields)
+                foreach (Field field in property.Fields)
                 {
                     switch (field.Purpose)
                     {
@@ -1602,29 +1596,24 @@ namespace Zhichkin.Hermes.Services
                         if (child == null)
                         {
                             Property filterProperty = nestedEntity.Properties.Where((p) => p.Name == "Ссылка").First();
-                            PropertyExpression px = new PropertyExpression()
-                            {
-                                Name = "Ссылка",
-                                PropertyInfo = filterProperty
-                            };
-                            ComparisonExpression ce = new ComparisonExpression()
-                            {
-                                Name = BooleanExpressionType.Equal.ToString(),
-                                ExpressionType = BooleanExpressionType.Equal,
-                                LeftExpression = px,
-                                RightExpression = null
-                            };
+                            PropertyExpression px = new PropertyExpression() { Property = filterProperty };
                             child = new MetadataTreeNode()
                             {
                                 Name = nestedEntity.Name,
                                 Parent = node,
                                 MetadataInfo = nestedEntity,
-                                Filter = new BooleanExpression()
+                                Filter = new BooleanOperator(nestedEntity)
                                 {
-                                    ExpressionType = BooleanExpressionType.OR
+                                    Name = BooleanFunction.OR
                                 }
                             };
-                            ((BooleanExpression)child.Filter).Conditions.Add(ce);
+                            ComparisonOperator ce = new ComparisonOperator(child.Filter)
+                            {
+                                Name = BooleanFunction.Equal,
+                                LeftExpression = px,
+                                RightExpression = null
+                            };
+                            child.Filter.Operands.Add(ce);
                             node.Children.Add(child);
                         }
                     }
