@@ -88,6 +88,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BooleanExpression\BooleanExpressionViewBuilder.cs" />
+    <Compile Include="BooleanExpression\BooleanFunctionViewModel.cs" />
     <Compile Include="BooleanExpression\BooleanOperatorView.xaml.cs">
       <DependentUpon>BooleanOperatorView.xaml</DependentUpon>
     </Compile>

@@ -4,9 +4,10 @@ namespace Zhichkin.Hermes.UI
 {
     public partial class BooleanOperatorView : UserControl
     {
-        public BooleanOperatorView()
+        public BooleanOperatorView(BooleanOperatorViewModel viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
         }
     }
 }

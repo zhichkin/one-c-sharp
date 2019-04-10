@@ -13,7 +13,7 @@ namespace Zhichkin.Hermes.UI
         public SelectExpression()
         {
             this.Tables = new ObservableCollection<TableExpression>();
-            this.WhereClause = new BooleanExpressionViewModel(this) { };
+            this.WhereClause = new BooleanExpressionViewModel(this, "WHERE") { };
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
         }
         public ICommand AddPropertyCommand { get; private set; }

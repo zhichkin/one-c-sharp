@@ -8,7 +8,7 @@ namespace Zhichkin.Hermes.UI
     {
         public JoinExpression()
         {
-            this.Filter = new BooleanExpressionViewModel(this);
+            this.Filter = new BooleanExpressionViewModel(this, "ON");
         }
         public string JoinType { get; set; }
         public TableExpression Table { get; set; }

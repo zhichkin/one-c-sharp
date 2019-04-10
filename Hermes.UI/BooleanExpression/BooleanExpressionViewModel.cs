@@ -3,69 +3,54 @@ using Microsoft.Practices.Prism.Mvvm;
 using System;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
+using System.Windows.Controls;
 
 namespace Zhichkin.Hermes.UI
 {
     public class BooleanExpressionViewModel : BindableBase
     {
-        private int _ViewModelState = 0;
+        private UserControl _View;
+        private BooleanFunction _Model;
+        private BooleanExpressionViewBuilder _ViewBuilder = new BooleanExpressionViewBuilder();
+        private bool _IsCommandPanelVisible = true;
 
-        public BooleanExpressionViewModel(object caller)
+        public BooleanExpressionViewModel(object caller, string clause)
         {
-            this.Caller = caller; // TableExpression(Model)
-            this.AddNewOperatorCommand = new DelegateCommand(this.AddNewOperator);
-            this.RemoveOperatorCommand = new DelegateCommand(this.RemoveOperator);
+            this.Caller = caller; // Model of type TableExpression
+            this.Clause = clause;
+            this.AddNewConditionCommand = new DelegateCommand(this.AddNewCondition);
         }
-        public ICommand AddNewOperatorCommand { get; private set; }
-        public ICommand RemoveOperatorCommand { get; private set; }
-
         public object Caller { get; private set; }
-        public object Expression { get; private set; }
-        public int ViewModelState
+        public string Clause { get; private set; }
+        public UserControl View
         {
-            get { return _ViewModelState; }
+            get { return _View; }
             set
             {
-                _ViewModelState = value;
-                this.OnPropertyChanged("ViewModelState");
+                _View = value;
+                this.OnPropertyChanged("View");
             }
         }
 
-        public void AddNewOperator()
+        public bool IsCommandPanelVisible
         {
-            if (this.Expression == null)
+            get { return _IsCommandPanelVisible; }
+            set
             {
-                ComparisonOperator comparison = new ComparisonOperator(this.Caller);
-                this.Expression = new ComparisonOperatorViewModel(comparison);
-                this.ViewModelState = 1;
-            }
-            else if (this.Expression is ComparisonOperatorViewModel)
-            {
-                BooleanOperator caller = new BooleanOperator(this.Caller);
-                ComparisonOperatorViewModel viewModel = (ComparisonOperatorViewModel)this.Expression;
-                viewModel.Model.Caller = caller;
-                caller.Operands.Add(viewModel.Model);
-                caller.Operands.Add(new ComparisonOperator(caller));
-                this.Expression = new BooleanOperatorViewModel(caller);
-                this.ViewModelState = 2;
-            }
-            else if (this.Expression is BooleanOperatorViewModel)
-            {
-                BooleanOperatorViewModel viewModel = (BooleanOperatorViewModel)this.Expression;
-                viewModel.Operands.Add(new ComparisonOperator(viewModel.Model));
-            }
-            else
-            {
-                throw new InvalidOperationException();
+                _IsCommandPanelVisible = value;
+                this.OnPropertyChanged("IsCommandPanelVisible");
             }
         }
-        public void RemoveOperator()
+
+        public ICommand AddNewConditionCommand { get; private set; }
+
+        private void AddNewCondition()
         {
-            if (this.ViewModelState == 2)
-            {
-                this.Expression = null;
-                this.ViewModelState = 0;
-            }
+
+        }
+        private void GetView()
+        {
+            this.View = _ViewBuilder.Build(_Model);
         }
     }
 }

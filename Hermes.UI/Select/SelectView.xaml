@@ -152,14 +152,7 @@
                     </ScrollViewer>
                 </Expander>
 
-                <Expander Grid.Row="2" Name="Expander_WHERE" ExpandDirection="Down" IsExpanded="True">
-                    <Expander.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="WHERE" FontWeight="Bold"/>
-                        </StackPanel>
-                    </Expander.Header>
-                    <ui:BooleanExpressionView DataContext="{Binding WhereClause}" Margin="30,0,0,0" />
-                </Expander>
+                <ui:BooleanExpressionView Grid.Row="2" DataContext="{Binding WhereClause}"/>
 
             </Grid>
         </ScrollViewer>

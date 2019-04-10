@@ -45,6 +45,67 @@ namespace Zhichkin.Hermes.Model
             this.Name = BooleanFunction.AND;
         }
         public List<BooleanFunction> Operands { get; set; } = new List<BooleanFunction>();
+        public bool IsLeaf
+        {
+            get
+            {
+                return (this.Operands.Count == 0)
+                    || (this.Operands[0] is ComparisonOperator);
+            }
+        }
+        public void AddChild(BooleanFunction child)
+        {
+            // TODO
+            if (child is ComparisonOperator)
+            {
+                if (this.IsLeaf)
+                {
+                    child.Caller = this;
+                    this.Operands.Add(child);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+            else if (child is BooleanOperator)
+            {
+                if (this.Operands.Count == 0)
+                {
+                    throw new InvalidOperationException();
+                }
+                if (this.Operands[0] is ComparisonOperator)
+                {
+                    BooleanOperator clone = new BooleanOperator(this);
+                    clone.Operands = this.Operands;
+                    foreach (ComparisonOperator operand in clone.Operands)
+                    {
+                        operand.Caller = clone;
+                    }
+                    this.Operands = new List<BooleanFunction>();
+                    this.Operands.Add(clone);
+                    child.Caller = this;
+                    this.Operands.Add(child);
+                }
+                else if (this.Operands[0] is BooleanOperator)
+                {
+                    child.Caller = this;
+                    this.Operands.Add(child);
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+        public void RemoveChild(BooleanFunction child)
+        {
+            // TODO
+        }
     }
     public class ComparisonOperator : BooleanFunction
     {

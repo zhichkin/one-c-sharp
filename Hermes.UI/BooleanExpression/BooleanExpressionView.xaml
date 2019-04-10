@@ -28,34 +28,24 @@
                 </Border>
             </ControlTemplate>
 
-            <ControlTemplate x:Key="ComparisonOperatorTemplate">
+            <!--<ControlTemplate x:Key="ComparisonOperatorTemplate">
                 <ui:ComparisonOperatorView DataContext="{Binding Expression}"/>
             </ControlTemplate>
 
             <ControlTemplate x:Key="BooleanOperatorTemplate">
                 <ui:BooleanOperatorView DataContext="{Binding Expression}"/>
-            </ControlTemplate>
+            </ControlTemplate>-->
 
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ContentControl>
-        <ContentControl.Style>
-            <Style TargetType="{x:Type ContentControl}">
-                <Setter Property="Template" Value="{StaticResource DefaultTemplate}"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ViewModelState}" Value="0">
-                        <Setter Property="Template" Value="{StaticResource DefaultTemplate}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding ViewModelState}" Value="1">
-                        <Setter Property="Template" Value="{StaticResource ComparisonOperatorTemplate}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding ViewModelState}" Value="2">
-                        <Setter Property="Template" Value="{StaticResource BooleanOperatorTemplate}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ContentControl.Style>
-    </ContentControl>
+    <Expander ExpandDirection="Down" IsExpanded="True">
+        <Expander.Header>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Clause}" FontWeight="Bold"/>
+            </StackPanel>
+        </Expander.Header>
+        <ContentControl Content="{Binding View}" Margin="30,0,0,0"/>
+    </Expander>
     
 </UserControl>
