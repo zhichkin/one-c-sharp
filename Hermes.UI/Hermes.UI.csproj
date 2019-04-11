@@ -116,13 +116,13 @@
     </Compile>
     <Compile Include="MetadataTree\MetadataTreeViewModel.cs" />
     <Compile Include="OrientationEnumConverter.cs" />
-    <Compile Include="Parameter\ParameterView.xaml.cs">
-      <DependentUpon>ParameterView.xaml</DependentUpon>
+    <Compile Include="ParameterExpression\ParameterExpressionView.xaml.cs">
+      <DependentUpon>ParameterExpressionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Parameter\ParameterExpression.cs" />
-    <Compile Include="Property\PropertyExpressionViewModel.cs" />
-    <Compile Include="Property\PropertyView.xaml.cs">
-      <DependentUpon>PropertyView.xaml</DependentUpon>
+    <Compile Include="ParameterExpression\ParameterExpression.cs" />
+    <Compile Include="PropertyExpression\PropertyExpressionViewModel.cs" />
+    <Compile Include="PropertyExpression\PropertyExpressionView.xaml.cs">
+      <DependentUpon>PropertyExpressionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Query\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
@@ -168,11 +168,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Parameter\ParameterView.xaml">
+    <Page Include="ParameterExpression\ParameterExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Property\PropertyView.xaml">
+    <Page Include="PropertyExpression\PropertyExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

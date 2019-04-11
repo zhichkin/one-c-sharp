@@ -91,14 +91,10 @@ C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.CoreCompileInputs.cache
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.CopyComplete
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.dll
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.pdb
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Parameter\ParameterView.g.cs
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Parameter\ParameterView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Entity\EntityView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Entity\EntityView.baml
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Property\PropertyView.g.cs
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Property\PropertyView.baml
 C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Hermes.UI.dll.config
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.baml
@@ -121,3 +117,7 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\BooleanExpression\ComparisonO
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\BooleanExpression\ComparisonOperatorView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\BooleanExpression\BooleanOperatorView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\BooleanExpression\BooleanOperatorView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\ParameterExpressionView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyExpression\PropertyExpressionView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\ParameterExpressionView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyExpression\PropertyExpressionView.baml

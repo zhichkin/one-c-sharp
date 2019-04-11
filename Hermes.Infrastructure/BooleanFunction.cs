@@ -21,12 +21,28 @@ namespace Zhichkin.Hermes.Model
         public static string AND { get { return CONST_AND; } }
         public static string OR { get { return CONST_OR; } }
         public static string NOT { get { return CONST_NOT; } }
+        public static List<string> BooleanOperators { get; } = new List<string>()
+        {
+            BooleanFunction.AND,
+            BooleanFunction.OR,
+            BooleanFunction.NOT
+        };
+
         public static string Equal { get { return CONST_Equal; } }
         public static string NotEqual { get { return CONST_NotEqual; } }
         public static string Greater { get { return CONST_Greater; } }
         public static string GreaterOrEqual { get { return CONST_GreaterOrEqual; } }
         public static string Less { get { return CONST_Less; } }
         public static string LessOrEqual { get { return CONST_LessOrEqual; } }
+        public static List<string> ComparisonOperators { get; } = new List<string>()
+        {
+            BooleanFunction.Equal,
+            BooleanFunction.NotEqual,
+            BooleanFunction.Greater,
+            BooleanFunction.GreaterOrEqual,
+            BooleanFunction.Less,
+            BooleanFunction.LessOrEqual
+        };
 
         #endregion
 

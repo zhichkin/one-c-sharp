@@ -4,9 +4,12 @@ namespace Zhichkin.Hermes.UI
 {
     public partial class ComparisonOperatorView : UserControl
     {
-        public ComparisonOperatorView(ComparisonOperatorViewModel viewModel)
+        public ComparisonOperatorView()
         {
             InitializeComponent();
+        }
+        public ComparisonOperatorView(ComparisonOperatorViewModel viewModel) : this()
+        {
             this.DataContext = viewModel;
         }
     }
