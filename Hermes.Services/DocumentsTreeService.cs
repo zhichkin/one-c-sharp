@@ -768,6 +768,17 @@ namespace Zhichkin.Hermes.Services
             MetadataService service = new MetadataService();
             foreach (Entity sourceEntity in list)
             {
+                if (sourceEntity == null) { continue; }
+                if (sourceEntity.Namespace == null)
+                {
+                    WriteToLog("--------------------------");
+                    WriteToLog("< SendDataToTargetInfoBase >");
+                    WriteToLog("Source: " + sourceEntity.Name);
+                    WriteToLog("Error: entity have no Namespace!");
+                    WriteToLog(Environment.NewLine);
+                    continue;
+                }
+
                 if (sourceEntity.Namespace.Name == "Документ" || sourceEntity.Namespace.Name == "Справочник")
                 {
                     Entity targetEntity = service.GetEntityInfo(target, sourceEntity.Namespace.Name, sourceEntity.Name);
