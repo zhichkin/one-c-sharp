@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\
 Zhichkin.Hermes.UI
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 121114829
 
 31-1417534840
-1391366209970
+139643828637
 BooleanExpression\BooleanOperatorView.xaml;BooleanExpression\ComparisonOperatorView.xaml;CaseWhenThen\CaseWhenThenView.xaml;BooleanExpression\BooleanExpressionView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;MetadataTree\MetadataTreeView.xaml;ParameterExpression\ParameterExpressionView.xaml;PropertyExpression\PropertyExpressionView.xaml;Query\QueryView.xaml;Select\SelectView.xaml;Entity\EntityView.xaml;
 
 False

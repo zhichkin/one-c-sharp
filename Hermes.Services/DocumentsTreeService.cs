@@ -365,7 +365,7 @@ namespace Zhichkin.Hermes.Services
             string fields = SelectFieldsScript(foreiners);
             script.AppendLine(string.Format("WITH CTE ({0}) AS", fields));
             script.AppendLine("(");
-            script.Append(string.Format("SELECT {0} FROM {1} WHERE [_Date_Time] >= @period", fields, sourceTable));
+            script.Append(string.Format("SELECT {0} FROM {1} WHERE [_Date_Time] >= @start_period AND [_Date_Time] <= @end_period", fields, sourceTable));
             script.Append(" AND [" + filterName + "] = @branch");
             script.AppendLine(")");
             script.Append(MergeForeignKeysFromEntityToExchangeTableScript(foreiners));
@@ -1214,14 +1214,17 @@ namespace Zhichkin.Hermes.Services
         }
         private void RegisterRootNodeReferences(MetadataTreeNode root)
         {
-            DateTime period = (DateTime)this.Parameters["Period"];
+            DateTime start_of_period = (DateTime)this.Parameters["StartPeriod"];
+            DateTime end_of_period = (DateTime)this.Parameters["EndPeriod"];
             Guid department = (Guid)this.Parameters["Department"];
 
             Entity entity = (Entity)root.MetadataInfo;
-
             string table_name = string.Format("[{0}].[dbo].[{1}]", entity.InfoBase.Database, entity.MainTable.Name);
-            DateTime start_of_period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
+
+            start_of_period = new DateTime(start_of_period.Year, start_of_period.Month, start_of_period.Day, 0, 0, 0);
             start_of_period = start_of_period.AddYears(2000); // fuck 1C !!!
+            end_of_period = new DateTime(end_of_period.Year, end_of_period.Month, end_of_period.Day, 23, 59, 59);
+            end_of_period = end_of_period.AddYears(2000); // fuck 1C !!!
             string branch = GetDepartmentFieldName(entity);
 
             StringBuilder query = new StringBuilder();
@@ -1232,7 +1235,7 @@ namespace Zhichkin.Hermes.Services
             query.AppendLine("(");
             query.Append("SELECT [_IDRRef] FROM ");
             query.Append(table_name);
-            query.Append(" WHERE [_Date_Time] >= @period ");
+            query.Append(" WHERE [_Date_Time] >= @start_period AND [_Date_Time] <= @end_period ");
             query.Append("AND [");
             query.Append(branch);
             query.AppendLine("] = @branch");
@@ -1252,13 +1255,15 @@ namespace Zhichkin.Hermes.Services
                 command.CommandText = query.ToString();
                 command.Parameters.AddWithValue("node", root.Identity);
                 command.Parameters.AddWithValue("entity", entity.Code);
-                command.Parameters.AddWithValue("period", start_of_period);
+                command.Parameters.AddWithValue("start_period", start_of_period);
+                command.Parameters.AddWithValue("end_period", end_of_period);
                 command.Parameters.AddWithValue("branch", department.ToByteArray());
                 rowsAffected = command.ExecuteNonQuery();
             }
             root.Count = rowsAffected;
 
-            WriteToLog("Priod = " + start_of_period.ToString("dd.MM.yyyy HH:mm:ss.ffff", CultureInfo.InvariantCulture));
+            WriteToLog("Start period = " + start_of_period.ToString("dd.MM.yyyy HH:mm:ss.ffff", CultureInfo.InvariantCulture));
+            WriteToLog("End period = " + end_of_period.ToString("dd.MM.yyyy HH:mm:ss.ffff", CultureInfo.InvariantCulture));
             WriteToLog(query.ToString());
             WriteToLog("Count = " + root.Count.ToString() + Environment.NewLine);
         }
@@ -1735,9 +1740,12 @@ namespace Zhichkin.Hermes.Services
 
             string query = BuildSelectForeignKeysScript(parentEntity, sourceEntity, filters, foreigners);
 
-            DateTime period = (DateTime)this.Parameters["Period"];
-            period = new DateTime(period.Year, period.Month, period.Day, 0, 0, 0, 0);
-            period = period.AddYears(2000); // fuck 1C !!!
+            DateTime start_of_period = (DateTime)this.Parameters["StartPeriod"];
+            start_of_period = new DateTime(start_of_period.Year, start_of_period.Month, start_of_period.Day, 0, 0, 0);
+            start_of_period = start_of_period.AddYears(2000); // fuck 1C !!!
+            DateTime end_of_period = (DateTime)this.Parameters["EndPeriod"];
+            end_of_period = new DateTime(end_of_period.Year, end_of_period.Month, end_of_period.Day, 23, 59, 59);
+            end_of_period = end_of_period.AddYears(2000); // fuck 1C !!!
             Guid department = (Guid)this.Parameters["Department"];
 
             int rowsAffected = 0;
@@ -1751,7 +1759,8 @@ namespace Zhichkin.Hermes.Services
                 command.Parameters.AddWithValue("sourceNode", Guid.Empty);
                 if (parentNode == null)
                 {
-                    command.Parameters.AddWithValue("period", period);
+                    command.Parameters.AddWithValue("start_period", start_of_period);
+                    command.Parameters.AddWithValue("end_period", end_of_period);
                     command.Parameters.AddWithValue("branch", department.ToByteArray());
                 }
                 else

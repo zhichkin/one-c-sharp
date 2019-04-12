@@ -85,11 +85,16 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Vertical">
-                <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="{Binding DepartmentName}" Margin="5,0,0,0" MinWidth="120" Height="25" VerticalContentAlignment="Center"/>
+                    <Label Content="Начало периода:" Width="100"/>
+                    <DatePicker SelectedDate="{Binding StartOfPeriod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Конец периода:" Width="100"/>
+                    <DatePicker SelectedDate="{Binding EndOfPeriod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="{Binding DepartmentName}" Margin="5,0,0,0" MinWidth="165" Height="25" VerticalContentAlignment="Center"/>
                     <Button Content="..." Command="{Binding SelectEntityReferenceCommand}" Margin="5,0,0,0" Height="25" Width="25"/>
                 </StackPanel>
             </StackPanel>
@@ -217,7 +222,7 @@
                                     <DataTemplate DataType="{x:Type model:ComparisonOperator}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="{StaticResource Icon_Property}"/>
-                                            <TextBlock Text="{Binding Path=LeftExpression.Name}"/>
+                                            <TextBlock Text="{Binding Path=LeftExpression.Property.Name}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.Resources>

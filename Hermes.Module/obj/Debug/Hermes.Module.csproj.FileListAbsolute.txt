@@ -46,3 +46,11 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.Module\obj\Debug\Hermes.Module.csproj.Copy
 C:\Users\User\Desktop\GitHub\Z\Hermes.Module\obj\Debug\Zhichkin.Hermes.Module.dll
 C:\Users\User\Desktop\GitHub\Z\Hermes.Module\obj\Debug\Zhichkin.Hermes.Module.pdb
 C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Hermes.Module.dll.config
+C:\Zhichkin\Z\debug\Zhichkin.Hermes.Module.dll.config
+C:\Zhichkin\Z\debug\Zhichkin.Hermes.Module.dll
+C:\Zhichkin\Z\debug\Zhichkin.Hermes.Module.pdb
+C:\Zhichkin\Z\Hermes.Module\obj\Debug\Hermes.Module.csprojAssemblyReference.cache
+C:\Zhichkin\Z\Hermes.Module\obj\Debug\Hermes.Module.csproj.CoreCompileInputs.cache
+C:\Zhichkin\Z\Hermes.Module\obj\Debug\Hermes.Module.csproj.CopyComplete
+C:\Zhichkin\Z\Hermes.Module\obj\Debug\Zhichkin.Hermes.Module.dll
+C:\Zhichkin\Z\Hermes.Module\obj\Debug\Zhichkin.Hermes.Module.pdb

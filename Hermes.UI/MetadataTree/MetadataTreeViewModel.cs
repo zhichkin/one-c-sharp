@@ -18,7 +18,8 @@ namespace Zhichkin.Hermes.UI
     {
         public MetadataTreeViewModel()
         {
-            this.SelectedDate = DateTime.Now;
+            this.StartOfPeriod = DateTime.Now;
+            this.EndOfPeriod = DateTime.Now;
             this.Nodes = new ObservableCollection<MetadataTreeNode>();
             this.StateList = new ObservableCollection<string>();
             
@@ -62,7 +63,8 @@ namespace Zhichkin.Hermes.UI
         }
         public InfoBase SourceInfoBase { get; set; }
         public InfoBase TargetInfoBase { get; set; }
-        public DateTime SelectedDate { get; set; }
+        public DateTime StartOfPeriod { get; set; }
+        public DateTime EndOfPeriod { get; set; }
         public MetadataTreeNode SelectedNode { get; set; }
         private string _DepartmentName = "Выберите филиал ...";
         public ReferenceProxy Department { get; set; }
@@ -158,7 +160,8 @@ namespace Zhichkin.Hermes.UI
             {
                 this.Nodes.Clear();
                 DocumentsTreeService service = new DocumentsTreeService();
-                service.Parameters.Add("Period", this.SelectedDate);
+                service.Parameters.Add("StartPeriod", this.StartOfPeriod);
+                service.Parameters.Add("EndPeriod", this.EndOfPeriod);
                 service.Parameters.Add("Department", this.Department.Identity);
                 service.BuildDocumentsTree(entity, new Progress<MetadataTreeNode>(OnDataNodesTreeBuilt));
             }
@@ -244,7 +247,8 @@ namespace Zhichkin.Hermes.UI
             {
                 service.Parameters.Add("SourceInfoBase", this.SourceInfoBase);
                 service.Parameters.Add("TargetInfoBase", this.TargetInfoBase);
-                service.Parameters.Add("Period", this.SelectedDate);
+                service.Parameters.Add("StartPeriod", this.StartOfPeriod);
+                service.Parameters.Add("EndPeriod", this.EndOfPeriod);
                 service.Parameters.Add("Department", this.Department.Identity);
                 service.RegisterNodesReferencesForExchange(root, new Progress<MetadataTreeNode>(OnNodesReferencesRegistered));
             }
@@ -282,7 +286,8 @@ namespace Zhichkin.Hermes.UI
             {
                 service.Parameters.Add("SourceInfoBase", this.SourceInfoBase);
                 service.Parameters.Add("TargetInfoBase", this.TargetInfoBase);
-                service.Parameters.Add("Period", this.SelectedDate);
+                service.Parameters.Add("StartPeriod", this.StartOfPeriod);
+                service.Parameters.Add("EndPeriod", this.EndOfPeriod);
                 service.Parameters.Add("Department", this.Department.Identity);
                 service.RegisterNodesForeignReferencesForExchange(root, new Progress<MetadataTreeNode>(OnNodesForeignReferencesRegistered));
             }
@@ -323,7 +328,8 @@ namespace Zhichkin.Hermes.UI
         private void OnRegisterCurrentNodeForeignReferences()
         {
             DocumentsTreeService service = new DocumentsTreeService();
-            service.Parameters.Add("Period", this.SelectedDate);
+            service.Parameters.Add("StartPeriod", this.StartOfPeriod);
+            service.Parameters.Add("EndPeriod", this.EndOfPeriod);
             service.Parameters.Add("Department", this.Department.Identity);
             try
             {
