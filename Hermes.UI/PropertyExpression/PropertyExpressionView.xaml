@@ -27,7 +27,7 @@
         <TextBlock Text="=" FontWeight="SemiBold" Margin="2,0,2,0" VerticalAlignment="Center"/>
         
         <ComboBox ItemsSource="{Binding DataContext.Tables,
-            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ui:SelectView}}}"
+            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ui:SelectStatementView}}}"
                   SelectedItem="{Binding Table, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="Alias"
                   MinWidth="50"/>

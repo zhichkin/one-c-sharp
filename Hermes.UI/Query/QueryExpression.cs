@@ -12,10 +12,10 @@ namespace Zhichkin.Hermes.UI
     {
         public QueryExpression()
         {
-            this.QueryParameters = new ObservableCollection<ParameterExpression>();
-            this.QueryExpressions = new ObservableCollection<SelectExpression>();
+            this.QueryParameters = new ObservableCollection<ParameterExpressionViewModel>();
+            this.QueryExpressions = new ObservableCollection<SelectStatementViewModel>();
         }
-        public ObservableCollection<ParameterExpression> QueryParameters { get; private set; }
-        public ObservableCollection<SelectExpression> QueryExpressions { get; private set; }
+        public ObservableCollection<ParameterExpressionViewModel> QueryParameters { get; private set; }
+        public ObservableCollection<SelectStatementViewModel> QueryExpressions { get; private set; }
     }
 }

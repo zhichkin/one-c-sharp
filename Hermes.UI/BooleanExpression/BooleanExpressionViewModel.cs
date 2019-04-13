@@ -16,7 +16,7 @@ namespace Zhichkin.Hermes.UI
 
         public BooleanExpressionViewModel(object caller, string clause)
         {
-            this.Caller = caller; // Model of type TableExpression
+            this.Caller = caller; // Model of type TableExpression or CASE expression ?
             // TODO: initialize _Model with the value of caller's property referenced by clause argument !
             this.Clause = clause;
             this.AddNewConditionCommand = new DelegateCommand(this.AddNewCondition);
@@ -45,6 +45,7 @@ namespace Zhichkin.Hermes.UI
 
         public ICommand AddNewConditionCommand { get; private set; }
 
+        // TODO: private BooleanFunction GetPropertyValue(object type, string propertyName)
         private void AddNewCondition()
         {
             if (_Model == null)

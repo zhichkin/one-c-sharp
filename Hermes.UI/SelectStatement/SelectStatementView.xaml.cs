@@ -6,9 +6,9 @@ using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
 {
-    public partial class SelectView : UserControl
+    public partial class SelectStatementView : UserControl
     {
-        public SelectView()
+        public SelectStatementView()
         {
             InitializeComponent();
         }
@@ -49,23 +49,14 @@ namespace Zhichkin.Hermes.UI
 
             Entity entity = data as Entity;
             if (entity == null) return;
-            SelectExpression viewModel = this.DataContext as SelectExpression;
+            SelectStatementViewModel viewModel = this.DataContext as SelectStatementViewModel;
             if (viewModel == null) return;
 
             //if (e.AllowedEffects == (DragDropEffects.Copy | DragDropEffects.Move))
             //{
             //}
-            TableExpression table = new EntityExpression()
-            {
-                Alias = entity.Name,
-                Entity = entity
-            };
-            foreach (Property p in entity.Properties)
-            {
-                PropertyExpression model = new PropertyExpression() { Property = p, Alias = p.Name };
-                PropertyExpressionViewModel property = new PropertyExpressionViewModel(model);
-                table.Fields.Add(property);
-            }
+            TableExpression model = new TableExpression(entity, viewModel.Model);
+            TableExpressionViewModel table = new TableExpressionViewModel(model);
             viewModel.Tables.Add(table);
         }
     }

@@ -110,7 +110,7 @@
     <Compile Include="Join\JoinView.xaml.cs">
       <DependentUpon>JoinView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Join\JoinExpression.cs" />
+    <Compile Include="Join\JoinExpressionViewModel.cs" />
     <Compile Include="MetadataTree\MetadataTreeView.xaml.cs">
       <DependentUpon>MetadataTreeView.xaml</DependentUpon>
     </Compile>
@@ -119,7 +119,7 @@
     <Compile Include="ParameterExpression\ParameterExpressionView.xaml.cs">
       <DependentUpon>ParameterExpressionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ParameterExpression\ParameterExpression.cs" />
+    <Compile Include="ParameterExpression\ParameterExpressionViewModel.cs" />
     <Compile Include="PropertyExpression\PropertyExpressionViewModel.cs" />
     <Compile Include="PropertyExpression\PropertyExpressionView.xaml.cs">
       <DependentUpon>PropertyExpressionView.xaml</DependentUpon>
@@ -128,14 +128,14 @@
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Query\QueryExpression.cs" />
-    <Compile Include="Select\SelectView.xaml.cs">
-      <DependentUpon>SelectView.xaml</DependentUpon>
+    <Compile Include="SelectStatement\SelectStatementView.xaml.cs">
+      <DependentUpon>SelectStatementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Select\SelectExpression.cs" />
-    <Compile Include="Entity\EntityView.xaml.cs">
-      <DependentUpon>EntityView.xaml</DependentUpon>
+    <Compile Include="SelectStatement\SelectStatementViewModel.cs" />
+    <Compile Include="TableExpression\TableExpressionView.xaml.cs">
+      <DependentUpon>TableExpressionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Entity\EntityExpression.cs" />
+    <Compile Include="TableExpression\TableExpressionViewModel.cs" />
     <Page Include="BooleanExpression\BooleanOperatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -180,11 +180,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Select\SelectView.xaml">
+    <Page Include="SelectStatement\SelectStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Entity\EntityView.xaml">
+    <Page Include="TableExpression\TableExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -2,9 +2,9 @@
 
 namespace Zhichkin.Hermes.UI
 {
-    public partial class EntityView : UserControl
+    public partial class TableExpressionView : UserControl
     {
-        public EntityView()
+        public TableExpressionView()
         {
             InitializeComponent();
         }

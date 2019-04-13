@@ -75,7 +75,7 @@ namespace Zhichkin.Hermes.UI
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new EntityInfo(3) { Name = "String" } });
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new EntityInfo(4) { Name = "Boolean" } });
 
-            SelectExpression select = new SelectExpression();
+            SelectStatementViewModel select = new SelectStatementViewModel(null);
             query.QueryExpressions.Add(select);
 
             QueryView queryView = new QueryView(query);
@@ -84,19 +84,19 @@ namespace Zhichkin.Hermes.UI
         }
         private void AddNewSelectStatement()
         {
-            SelectExpression select = new SelectExpression();
+            SelectStatementViewModel select = new SelectStatementViewModel(null);
             query.QueryExpressions.Add(select);
         }
         private void AddTableToSelectStatement()
         {
             if (query.QueryExpressions.Count == 0) return;
-            SelectExpression select = query.QueryExpressions[0];
-            select.Tables.Add(new EntityExpression() { Alias = "T1" });
+            SelectStatementViewModel select = query.QueryExpressions[0];
+            select.Tables.Add(new TableExpressionViewModel(null) { Alias = "T1" });
         }
         private void ChangeFromOrientation()
         {
             if (query.QueryExpressions.Count == 0) return;
-            SelectExpression select = query.QueryExpressions[0];
+            SelectStatementViewModel select = query.QueryExpressions[0];
             select.IsFromVertical = !select.IsFromVertical;
         }
 

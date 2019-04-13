@@ -3,13 +3,13 @@ using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class ParameterExpression : BindableBase
+    public class ParameterExpressionViewModel : BindableBase
     {
         private string _Name;
         private Entity _Type;
         private object _Value;
 
-        public ParameterExpression() { }
+        public ParameterExpressionViewModel() { }
 
         public string Name
         {

@@ -8,12 +8,13 @@ using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class SelectExpression : TableExpression
+    public class SelectStatementViewModel : TableExpressionViewModel
     {
-        public SelectExpression()
+        public SelectStatementViewModel(SelectStatement model) : base(model)
         {
-            this.Tables = new ObservableCollection<TableExpression>();
-            this.WhereClause = new BooleanExpressionViewModel(this, "WHERE") { };
+            this.Tables = new ObservableCollection<TableExpressionViewModel>();
+            this.Fields = new ObservableCollection<PropertyExpressionViewModel>();
+            this.WhereClause = new BooleanExpressionViewModel(model, "WHERE") { };
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
         }
         public ICommand AddPropertyCommand { get; private set; }
@@ -44,7 +45,8 @@ namespace Zhichkin.Hermes.UI
                 this.OnPropertyChanged("FromClauseDescription");
             }
         }
-        public ObservableCollection<TableExpression> Tables { get; set; }
+        public ObservableCollection<TableExpressionViewModel> Tables { get; set; }
         public BooleanExpressionViewModel WhereClause { get; set; }
+        public ObservableCollection<PropertyExpressionViewModel> Fields { get; set; }
     }
 }

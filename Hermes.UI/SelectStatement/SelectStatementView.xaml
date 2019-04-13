@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Zhichkin.Hermes.UI.SelectView"
+﻿<UserControl x:Class="Zhichkin.Hermes.UI.SelectStatementView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -138,13 +138,13 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.Resources>
-                                <DataTemplate DataType="{x:Type ui:EntityExpression}">
-                                    <ui:EntityView />
+                                <DataTemplate DataType="{x:Type ui:TableExpressionViewModel}">
+                                    <ui:TableExpressionView />
                                 </DataTemplate>
-                                <DataTemplate DataType="{x:Type ui:SelectExpression}">
-                                    <ui:SelectView />
+                                <DataTemplate DataType="{x:Type ui:SelectStatementViewModel}">
+                                    <ui:SelectStatementView />
                                 </DataTemplate>
-                                <DataTemplate DataType="{x:Type ui:JoinExpression}">
+                                <DataTemplate DataType="{x:Type ui:JoinExpressionViewModel}">
                                     <ui:JoinView />
                                 </DataTemplate>
                             </ItemsControl.Resources>

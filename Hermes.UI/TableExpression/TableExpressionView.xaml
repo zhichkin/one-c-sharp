@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Zhichkin.Hermes.UI.EntityView"
+﻿<UserControl x:Class="Zhichkin.Hermes.UI.TableExpressionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,7 +20,6 @@
             </Border.BorderBrush>
             <TextBox Text="{Binding Alias}" VerticalContentAlignment="Center" BorderThickness="0" />
         </Border>
-        <TextBlock Text="{Binding FullName}" Margin="5,0,0,0" />
     </StackPanel>
     
 </UserControl>

@@ -4,17 +4,17 @@
 library
 C#
 .cs
-C:\Zhichkin\Z\Hermes.UI\obj\Debug\
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\
 Zhichkin.Hermes.UI
 none
 false
 DEBUG;TRACE
 
-121114829
+121813258884
 
-31-1417534840
-139643828637
-BooleanExpression\BooleanOperatorView.xaml;BooleanExpression\ComparisonOperatorView.xaml;CaseWhenThen\CaseWhenThenView.xaml;BooleanExpression\BooleanExpressionView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;MetadataTree\MetadataTreeView.xaml;ParameterExpression\ParameterExpressionView.xaml;PropertyExpression\PropertyExpressionView.xaml;Query\QueryView.xaml;Select\SelectView.xaml;Entity\EntityView.xaml;
+311212917182
+1391366209970
+BooleanExpression\BooleanOperatorView.xaml;BooleanExpression\ComparisonOperatorView.xaml;CaseWhenThen\CaseWhenThenView.xaml;BooleanExpression\BooleanExpressionView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;MetadataTree\MetadataTreeView.xaml;ParameterExpression\ParameterExpressionView.xaml;PropertyExpression\PropertyExpressionView.xaml;Query\QueryView.xaml;SelectStatement\SelectStatementView.xaml;TableExpression\TableExpressionView.xaml;
 
 False
 
