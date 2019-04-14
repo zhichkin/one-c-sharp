@@ -20,10 +20,10 @@ namespace Zhichkin.Hermes.UI
         {
             if (parent == null) throw new ArgumentNullException();
             this.Clause = clause;
-            GetModelFromCaller();
+            GetModelFromParent();
             this.AddNewConditionCommand = new DelegateCommand(this.AddNewCondition);
         }
-        private void GetModelFromCaller()
+        private void GetModelFromParent()
         {
             if (this.Parent is SelectStatementViewModel)
             {
@@ -38,7 +38,7 @@ namespace Zhichkin.Hermes.UI
                 //else if (clause == "HAVING")
             }
         }
-        private void SetModelToCaller()
+        private void SetModelToParent()
         {
             if (this.Parent is SelectStatementViewModel)
             {
@@ -87,7 +87,7 @@ namespace Zhichkin.Hermes.UI
             if (_Model == null)
             {
                 _Model = new ComparisonOperator(((SelectStatementViewModel)this.Parent).Model);
-                SetModelToCaller();
+                SetModelToParent();
                 this.View = _ViewBuilder.Build(this, _Model);
             }
             else if (_Model is ComparisonOperator)
@@ -96,7 +96,7 @@ namespace Zhichkin.Hermes.UI
                 bo.AddChild(_Model);
                 bo.AddChild(new ComparisonOperator(bo));
                 _Model = bo;
-                SetModelToCaller();
+                SetModelToParent();
                 this.IsCommandPanelVisible = false;
                 this.View = _ViewBuilder.Build(this, _Model);
             }
