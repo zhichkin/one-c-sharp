@@ -3,25 +3,28 @@ using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class TableExpressionViewModel : BindableBase
+    public class TableExpressionViewModel : HermesViewModel
     {
-        public TableExpressionViewModel(TableExpression model)
-        {
-            this.Model = model;
-        }
-        public TableExpression Model { get; set; }
-        public TableExpressionViewModel Parent { get; set; }
+        public TableExpressionViewModel(HermesViewModel parent, TableExpression model) : base(parent, model) { }
         public string Name
         {
-            get { return this.Model?.Name; }
+            get
+            {
+                if (this.Model == null) return string.Empty;
+                return ((TableExpression)this.Model).Name;
+            }
         }
         public string Alias
         {
-            get { return this.Model?.Alias; }
+            get
+            {
+                if (this.Model == null) return string.Empty;
+                return ((TableExpression)this.Model).Alias;
+            }
             set
             {
-                if (this.Model == null) return; // TODO: what can I do with it ???
-                this.Model.Alias = value;
+                if (this.Model == null) return; // TODO: ?
+                ((TableExpression)this.Model).Alias = value;
                 this.OnPropertyChanged("Alias");
             }
         }

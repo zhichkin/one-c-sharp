@@ -1,27 +1,58 @@
 ﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Mvvm;
 using System;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
-using System.Windows.Controls;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class BooleanExpressionViewModel : BindableBase
+    public class BooleanExpressionViewModel : HermesViewModel
     {
         private UserControl _View;
         private BooleanFunction _Model;
         private BooleanExpressionViewBuilder _ViewBuilder = new BooleanExpressionViewBuilder();
         private bool _IsCommandPanelVisible = true;
 
-        public BooleanExpressionViewModel(object caller, string clause)
+        public BooleanExpressionViewModel(HermesViewModel parent, string clause) : base(parent)
         {
-            this.Caller = caller; // Model of type TableExpression or CASE expression ?
-            // TODO: initialize _Model with the value of caller's property referenced by clause argument !
+            if (parent == null) throw new ArgumentNullException();
             this.Clause = clause;
+            GetModelFromCaller();
             this.AddNewConditionCommand = new DelegateCommand(this.AddNewCondition);
         }
-        public object Caller { get; private set; }
+        private void GetModelFromCaller()
+        {
+            if (this.Parent is SelectStatementViewModel)
+            {
+                if (this.Clause == "WHERE")
+                {
+                    SelectStatement model = ((SelectStatementViewModel)this.Parent).Model as SelectStatement;
+                    if (model != null)
+                    {
+                        _Model = model.WHERE;
+                    }
+                }
+                //else if (clause == "HAVING")
+            }
+        }
+        private void SetModelToCaller()
+        {
+            if (this.Parent is SelectStatementViewModel)
+            {
+                if (this.Clause == "WHERE")
+                {
+                    SelectStatement model = ((SelectStatementViewModel)this.Parent).Model as SelectStatement;
+                    if (model != null)
+                    {
+                        model.WHERE = _Model;
+                    }
+                }
+                //else if (clause == "HAVING")
+            }
+        }
         public string Clause { get; private set; }
         public UserControl View
         {
@@ -44,22 +75,28 @@ namespace Zhichkin.Hermes.UI
         }
 
         public ICommand AddNewConditionCommand { get; private set; }
-
-        // TODO: private BooleanFunction GetPropertyValue(object type, string propertyName)
         private void AddNewCondition()
         {
+            TableExpression table = ((SelectStatementViewModel)this.Parent).Model as TableExpression;
+            if (table == null)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Предложение FROM не содержит ни одной таблицы!" });
+                return;
+            }
+
             if (_Model == null)
             {
-                _Model = new ComparisonOperator(this.Caller);
-                // TODO: set caller's clause property to _Model
+                _Model = new ComparisonOperator(((SelectStatementViewModel)this.Parent).Model);
+                SetModelToCaller();
                 this.View = _ViewBuilder.Build(this, _Model);
             }
             else if (_Model is ComparisonOperator)
             {
-                BooleanOperator bo = new BooleanOperator(this.Caller);
+                BooleanOperator bo = new BooleanOperator(((SelectStatementViewModel)this.Parent).Model);
                 bo.AddChild(_Model);
                 bo.AddChild(new ComparisonOperator(bo));
                 _Model = bo;
+                SetModelToCaller();
                 this.IsCommandPanelVisible = false;
                 this.View = _ViewBuilder.Build(this, _Model);
             }

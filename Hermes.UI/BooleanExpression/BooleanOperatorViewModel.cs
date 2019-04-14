@@ -6,7 +6,7 @@ namespace Zhichkin.Hermes.UI
 {
     public class BooleanOperatorViewModel : BooleanFunctionViewModel
     {
-        public BooleanOperatorViewModel(BooleanOperator model) : base(model) { }
+        public BooleanOperatorViewModel(HermesViewModel parent, BooleanOperator model) : base(parent, model) { }
         public ObservableCollection<BooleanFunctionViewModel> Operands { get; set; }
         public List<string> BooleanOperators { get { return BooleanFunction.BooleanOperators; } }
     }

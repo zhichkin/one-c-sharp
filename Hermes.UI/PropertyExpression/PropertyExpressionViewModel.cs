@@ -4,29 +4,21 @@ using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
 {
-    public class PropertyExpressionViewModel : BindableBase
+    public class PropertyExpressionViewModel : HermesViewModel
     {
-        public PropertyExpressionViewModel(PropertyExpression model)
-        {
-            this.Model = model;
-        }
-        public PropertyExpression Model { get; private set; }
+        public PropertyExpressionViewModel(HermesViewModel parent, PropertyExpression model) : base(parent, model) { }
         public string Alias
         {
-            get { return this.Model.Alias; }
-            set
+            get
             {
-                this.Model.Alias = value;
-                OnPropertyChanged("Alias");
+                if (this.Model == null) return string.Empty;
+                return ((PropertyExpression)this.Model).Alias;
             }
-        }
-        public Property Property
-        {
-            get { return this.Model.Property; }
             set
             {
-                this.Model.Property = value;
-                OnPropertyChanged("Property");
+                if (this.Model == null) return;
+                ((PropertyExpression)this.Model).Alias = value;
+                OnPropertyChanged("Alias");
             }
         }
     }

@@ -49,15 +49,11 @@ namespace Zhichkin.Hermes.UI
 
             Entity entity = data as Entity;
             if (entity == null) return;
+
             SelectStatementViewModel viewModel = this.DataContext as SelectStatementViewModel;
             if (viewModel == null) return;
 
-            //if (e.AllowedEffects == (DragDropEffects.Copy | DragDropEffects.Move))
-            //{
-            //}
-            TableExpression model = new TableExpression(entity, viewModel.Model);
-            TableExpressionViewModel table = new TableExpressionViewModel(model);
-            viewModel.Tables.Add(table);
+            viewModel.AddTableCommand.Execute(entity);
         }
     }
 }

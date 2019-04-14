@@ -5,9 +5,9 @@ namespace Zhichkin.Hermes.UI
 {
     public class ComparisonOperatorViewModel : BooleanFunctionViewModel
     {
-        public ComparisonOperatorViewModel(ComparisonOperator model) : base(model) { }
-        public object LeftExpression { get; set; } // ViewModel
-        public object RightExpression { get; set; } // ViewModel
+        public ComparisonOperatorViewModel(HermesViewModel parent, ComparisonOperator model) : base(parent, model) { }
+        public HermesViewModel LeftExpression { get; set; } // ViewModel
+        public HermesViewModel RightExpression { get; set; } // ViewModel
         public List<string> ComparisonOperators
         {
             get { return BooleanFunction.ComparisonOperators; }

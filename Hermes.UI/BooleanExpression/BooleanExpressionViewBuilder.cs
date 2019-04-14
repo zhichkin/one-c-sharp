@@ -1,9 +1,8 @@
-﻿using Zhichkin.Hermes.Model;
-using System.Windows.Controls;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Practices.Prism.Mvvm;
+using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -11,26 +10,23 @@ namespace Zhichkin.Hermes.UI
     {
         private UserControl _View;
         public BooleanExpressionViewBuilder() { }
-        public UserControl Build(BindableBase parent, BooleanFunction model)
+        public UserControl Build(HermesViewModel parent, BooleanFunction model)
         {
             if (model == null) throw new ArgumentNullException();
 
             if (model is ComparisonOperator)
             {
-                ComparisonOperatorViewModel viewModel = new ComparisonOperatorViewModel((ComparisonOperator)model);
-                viewModel.Parent = parent;
+                ComparisonOperatorViewModel viewModel = new ComparisonOperatorViewModel(parent, (ComparisonOperator)model);
                 _View = new ComparisonOperatorView(viewModel);
             }
             else if (model is BooleanOperator)
             {
                 BooleanOperator bo = (BooleanOperator)model;
-                BooleanOperatorViewModel viewModel = new BooleanOperatorViewModel(bo);
-                viewModel.Parent = parent;
+                BooleanOperatorViewModel viewModel = new BooleanOperatorViewModel(parent, bo);
                 List<BooleanFunctionViewModel> ovms = new List<BooleanFunctionViewModel>();
                 foreach (BooleanFunction f in bo.Operands)
                 {
-                    ComparisonOperatorViewModel covm = new ComparisonOperatorViewModel((ComparisonOperator)f);
-                    covm.Parent = viewModel;
+                    ComparisonOperatorViewModel covm = new ComparisonOperatorViewModel(viewModel, (ComparisonOperator)f);
                     ovms.Add(covm);
                 }
                 viewModel.Operands = new ObservableCollection<BooleanFunctionViewModel>(ovms);

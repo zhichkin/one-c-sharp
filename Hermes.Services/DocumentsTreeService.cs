@@ -137,7 +137,7 @@ namespace Zhichkin.Hermes.Services
                                 Name = current_entity.Name,
                                 Parent = current_ns_node,
                                 MetadataInfo = current_entity,
-                                Filter = new BooleanOperator(current_entity)
+                                Filter = new BooleanOperator(new TableExpression(null, current_entity))
                                 {
                                     Name = BooleanFunction.OR
                                 }
@@ -163,7 +163,7 @@ namespace Zhichkin.Hermes.Services
                                     Name = current_nested.Name,
                                     Parent = current_entity_node,
                                     MetadataInfo = current_nested,
-                                    Filter = new BooleanOperator(current_nested)
+                                    Filter = new BooleanOperator(new TableExpression(null, current_nested))
                                     {
                                         Name = BooleanFunction.OR
                                     }
@@ -174,14 +174,13 @@ namespace Zhichkin.Hermes.Services
 
                         key = (Guid)reader["PropertyKey"];
                         current_property = context.Factory.New<Property>(key);
-                        PropertyExpression px = new PropertyExpression() { Property = current_property };
-                        BooleanOperator caller = (current_nested_node == null) ? current_entity_node.Filter : current_nested_node.Filter;
-                        ComparisonOperator ce = new ComparisonOperator(caller)
+                        BooleanOperator consumer = (current_nested_node == null) ? current_entity_node.Filter : current_nested_node.Filter;
+                        ComparisonOperator ce = new ComparisonOperator(consumer)
                         {
                             Name = BooleanFunction.Equal,
-                            LeftExpression = px,
                             RightExpression = null
                         };
+                        ce.LeftExpression = new PropertyExpression(ce, current_property);
 
                         if (current_nested_node == null)
                         {
@@ -1612,13 +1611,12 @@ namespace Zhichkin.Hermes.Services
                         if (child == null)
                         {
                             Property filterProperty = nestedEntity.Properties.Where((p) => p.Name == "Ссылка").First();
-                            PropertyExpression px = new PropertyExpression() { Property = filterProperty };
                             child = new MetadataTreeNode()
                             {
                                 Name = nestedEntity.Name,
                                 Parent = node,
                                 MetadataInfo = nestedEntity,
-                                Filter = new BooleanOperator(nestedEntity)
+                                Filter = new BooleanOperator(new TableExpression(null, nestedEntity))
                                 {
                                     Name = BooleanFunction.OR
                                 }
@@ -1626,9 +1624,9 @@ namespace Zhichkin.Hermes.Services
                             ComparisonOperator ce = new ComparisonOperator(child.Filter)
                             {
                                 Name = BooleanFunction.Equal,
-                                LeftExpression = px,
                                 RightExpression = null
                             };
+                            ce.LeftExpression = new PropertyExpression(ce, filterProperty);
                             child.Filter.Operands.Add(ce);
                             node.Children.Add(child);
                         }

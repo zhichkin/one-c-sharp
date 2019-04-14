@@ -6,6 +6,7 @@ using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using System;
 using System.Windows.Input;
+using Zhichkin.Hermes.Model;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -75,7 +76,7 @@ namespace Zhichkin.Hermes.UI
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new EntityInfo(3) { Name = "String" } });
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new EntityInfo(4) { Name = "Boolean" } });
 
-            SelectStatementViewModel select = new SelectStatementViewModel(null);
+            SelectStatementViewModel select = new SelectStatementViewModel(null, null);
             query.QueryExpressions.Add(select);
 
             QueryView queryView = new QueryView(query);
@@ -84,14 +85,14 @@ namespace Zhichkin.Hermes.UI
         }
         private void AddNewSelectStatement()
         {
-            SelectStatementViewModel select = new SelectStatementViewModel(null);
+            SelectStatementViewModel select = new SelectStatementViewModel(null, null);
             query.QueryExpressions.Add(select);
         }
         private void AddTableToSelectStatement()
         {
             if (query.QueryExpressions.Count == 0) return;
             SelectStatementViewModel select = query.QueryExpressions[0];
-            select.Tables.Add(new TableExpressionViewModel(null) { Alias = "T1" });
+            select.Tables.Add(new TableExpressionViewModel(select, null) { Alias = "T1" });
         }
         private void ChangeFromOrientation()
         {
@@ -107,7 +108,6 @@ namespace Zhichkin.Hermes.UI
             if (rightRegion == null) return;
 
             MetadataTreeViewModel model = new MetadataTreeViewModel();
-            //this.eventAggregator.GetEvent<MetadataTreeViewItemSelected>().Subscribe(model.OnMetadataTreeViewItemSelected, true);
             MetadataTreeView view = new MetadataTreeView();
             view.DataContext = model;
             rightRegion.Add(view);

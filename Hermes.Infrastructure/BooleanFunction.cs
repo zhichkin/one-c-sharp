@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Zhichkin.Hermes.Model
 {
-    public class BooleanFunction
+    public class BooleanFunction : HermesModel
     {
         #region " Predefined names "
 
@@ -46,17 +46,13 @@ namespace Zhichkin.Hermes.Model
 
         #endregion
 
-        public BooleanFunction(object caller)
-        {
-            this.Caller = caller;
-        }
+        public BooleanFunction(HermesModel consumer) : base(consumer) { }
         public string Name { get; set; }
-        public object Caller { get; set; }
     }
     
     public class BooleanOperator : BooleanFunction
     {
-        public BooleanOperator(object caller) : base(caller)
+        public BooleanOperator(HermesModel consumer) : base(consumer)
         {
             this.Name = BooleanFunction.AND;
         }
@@ -76,7 +72,7 @@ namespace Zhichkin.Hermes.Model
             {
                 if (this.IsLeaf)
                 {
-                    child.Caller = this;
+                    child.Consumer = this;
                     this.Operands.Add(child);
                 }
                 else
@@ -96,16 +92,16 @@ namespace Zhichkin.Hermes.Model
                     clone.Operands = this.Operands;
                     foreach (ComparisonOperator operand in clone.Operands)
                     {
-                        operand.Caller = clone;
+                        operand.Consumer = clone;
                     }
                     this.Operands = new List<BooleanFunction>();
                     this.Operands.Add(clone);
-                    child.Caller = this;
+                    child.Consumer = this;
                     this.Operands.Add(child);
                 }
                 else if (this.Operands[0] is BooleanOperator)
                 {
-                    child.Caller = this;
+                    child.Consumer = this;
                     this.Operands.Add(child);
                 }
                 else
@@ -125,11 +121,11 @@ namespace Zhichkin.Hermes.Model
     }
     public class ComparisonOperator : BooleanFunction
     {
-        public ComparisonOperator(object caller) : base(caller)
+        public ComparisonOperator(HermesModel consumer) : base(consumer)
         {
             this.Name = BooleanFunction.Equal;
         }
-        public object LeftExpression { get; set; }
-        public object RightExpression { get; set; }
+        public HermesModel LeftExpression { get; set; }
+        public HermesModel RightExpression { get; set; }
     }
 }

@@ -5,24 +5,26 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using Microsoft.Practices.Prism.Commands;
 using Zhichkin.Hermes.Model;
+using Zhichkin.Metadata.Model;
+using System.Collections.Generic;
 
 namespace Zhichkin.Hermes.UI
 {
     public class SelectStatementViewModel : TableExpressionViewModel
     {
-        public SelectStatementViewModel(SelectStatement model) : base(model)
+        public SelectStatementViewModel(HermesViewModel parent, SelectStatement model) : base(parent, model)
         {
             this.Tables = new ObservableCollection<TableExpressionViewModel>();
             this.Fields = new ObservableCollection<PropertyExpressionViewModel>();
-            this.WhereClause = new BooleanExpressionViewModel(model, "WHERE") { };
+            this.WhereClause = new BooleanExpressionViewModel(this, "WHERE");
+            this.AddTableCommand = new DelegateCommand<Entity>(this.OnAddTable);
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
         }
+        public ICommand AddTableCommand { get; private set; }
         public ICommand AddPropertyCommand { get; private set; }
         private void OnAddProperty()
         {
-            string alias = "Поле_" + this.Fields.Count.ToString();
-            PropertyExpression property = new PropertyExpression() { Alias = alias };
-            this.Fields.Add(new PropertyExpressionViewModel(property));
+            this.Fields.Add(new PropertyExpressionViewModel(this, null));
         }
 
         private bool _IsFromVertical = true;
@@ -48,5 +50,24 @@ namespace Zhichkin.Hermes.UI
         public ObservableCollection<TableExpressionViewModel> Tables { get; set; }
         public BooleanExpressionViewModel WhereClause { get; set; }
         public ObservableCollection<PropertyExpressionViewModel> Fields { get; set; }
+
+        private void OnAddTable(Entity entity)
+        {
+            if (this.Model == null)
+            {
+                SelectStatement model = new SelectStatement(null, entity);
+                model.FROM = new List<TableExpression>();
+                TableExpression table = new TableExpression(model, entity);
+                model.FROM.Add(table);
+                TableExpressionViewModel viewModel = new TableExpressionViewModel(this, table);
+                this.Model = model;
+                this.Tables.Add(viewModel);
+                this.WhereClause = new BooleanExpressionViewModel(this, "WHERE");
+            }
+            else
+            {
+                // TODO: add JoinExpression
+            }
+        }
     }
 }
