@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Border BorderBrush="#FF34E51B" BorderThickness="1">
+    <Border BorderBrush="Gray" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -17,17 +17,34 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" BorderBrush="#FF34E51B" BorderThickness="1">
+            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1">
                 <StackPanel Orientation="Vertical">
                     <ComboBox ItemsSource="{Binding BooleanOperators}"
-                  SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                  Width="55"/>
+                              SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                              Width="55"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="[+" Command="{Binding AddOuterBooleanOperatorCommand}"
+                                ToolTip="Add new conditions group"
+                                Margin="5" Height="20" Width="20"/>
+                        <Button Content="+" Command="{Binding AddComparisonOperatorCommand}"
+                                ToolTip="Add new condition"
+                                Margin="5" Height="20" Width="20"/>
+                        <Button Content="x" Command="{Binding RemoveBooleanOperatorCommand}"
+                                ToolTip="Remove conditions group"
+                                Margin="5" Height="20" Width="20"/>
+                        <Button Content="+]" Command="{Binding AddInnerBooleanOperatorCommand}"
+                                ToolTip="Add new conditions group"
+                                Margin="5" Height="20" Width="20"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="1" BorderBrush="#FF34E51B" BorderThickness="1">
+            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1">
                 <ItemsControl  ItemsSource="{Binding Operands}">
                     <ItemsControl.Resources>
+                        <DataTemplate DataType="{x:Type ui:BooleanOperatorViewModel}">
+                            <ui:BooleanOperatorView/>
+                        </DataTemplate>
                         <DataTemplate DataType="{x:Type ui:ComparisonOperatorViewModel}">
                             <ui:ComparisonOperatorView/>
                         </DataTemplate>

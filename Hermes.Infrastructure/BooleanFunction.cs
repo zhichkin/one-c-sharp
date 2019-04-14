@@ -67,52 +67,8 @@ namespace Zhichkin.Hermes.Model
         }
         public void AddChild(BooleanFunction child)
         {
-            // TODO
-            if (child is ComparisonOperator)
-            {
-                if (this.IsLeaf)
-                {
-                    child.Consumer = this;
-                    this.Operands.Add(child);
-                }
-                else
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-            else if (child is BooleanOperator)
-            {
-                if (this.Operands.Count == 0)
-                {
-                    throw new InvalidOperationException();
-                }
-                if (this.Operands[0] is ComparisonOperator)
-                {
-                    BooleanOperator clone = new BooleanOperator(this);
-                    clone.Operands = this.Operands;
-                    foreach (ComparisonOperator operand in clone.Operands)
-                    {
-                        operand.Consumer = clone;
-                    }
-                    this.Operands = new List<BooleanFunction>();
-                    this.Operands.Add(clone);
-                    child.Consumer = this;
-                    this.Operands.Add(child);
-                }
-                else if (this.Operands[0] is BooleanOperator)
-                {
-                    child.Consumer = this;
-                    this.Operands.Add(child);
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            child.Consumer = this;
+            this.Operands.Add(child);
         }
         public void RemoveChild(BooleanFunction child)
         {
