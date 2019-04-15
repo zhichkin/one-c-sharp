@@ -12,7 +12,7 @@ namespace Zhichkin.Hermes.UI
         public BooleanExpressionViewBuilder() { }
         public UserControl Build(HermesViewModel parent, BooleanFunction model)
         {
-            if (model == null) throw new ArgumentNullException();
+            if (model == null) return null;
 
             if (model is ComparisonOperator)
             {

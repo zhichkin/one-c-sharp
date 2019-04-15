@@ -13,6 +13,8 @@
                   SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                   Width="50"/>
         <ui:ParameterExpressionView DataContext="{Binding RightExpression}"/>
+        <Button Content="x" Command="{Binding RemoveComparisonOperatorCommand}"
+                ToolTip="Remove condition" Margin="5" Height="20" Width="20"/>
     </StackPanel>
 
 </UserControl>

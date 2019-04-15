@@ -140,4 +140,3 @@ C:\Zhichkin\Z\Shell\obj\Debug\Shell.csproj.CopyComplete
 C:\Zhichkin\Z\Shell\obj\Debug\z.exe
 C:\Zhichkin\Z\Shell\obj\Debug\z.pdb
 C:\Zhichkin\Z\Shell\obj\Debug\Shell.csprojAssemblyReference.cache
-C:\Users\User\Desktop\GitHub\Z\Shell\obj\Debug\Shell.csprojAssemblyReference.cache

@@ -101,5 +101,12 @@ namespace Zhichkin.Hermes.UI
                 this.View = _ViewBuilder.Build(this, _Model);
             }
         }
+        public void ClearBooleanExpression()
+        {
+            _Model = null;
+            SetModelToParent();
+            this.View = null;
+            this.IsCommandPanelVisible = true;
+        }
     }
 }

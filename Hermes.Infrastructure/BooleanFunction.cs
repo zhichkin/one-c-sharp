@@ -48,8 +48,14 @@ namespace Zhichkin.Hermes.Model
 
         public BooleanFunction(HermesModel consumer) : base(consumer) { }
         public string Name { get; set; }
+        public bool IsRoot
+        {
+            get
+            {
+                return !(this.Consumer is BooleanOperator);
+            }
+        }
     }
-    
     public class BooleanOperator : BooleanFunction
     {
         public BooleanOperator(HermesModel consumer) : base(consumer)
@@ -72,7 +78,7 @@ namespace Zhichkin.Hermes.Model
         }
         public void RemoveChild(BooleanFunction child)
         {
-            // TODO
+            this.Operands.Remove(child);
         }
     }
     public class ComparisonOperator : BooleanFunction
