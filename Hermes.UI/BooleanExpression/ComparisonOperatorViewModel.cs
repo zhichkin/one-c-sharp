@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
 
@@ -7,11 +8,26 @@ namespace Zhichkin.Hermes.UI
 {
     public class ComparisonOperatorViewModel : BooleanFunctionViewModel
     {
+        private UserControl _LeftExpressionView;
+
         public ComparisonOperatorViewModel(HermesViewModel parent, ComparisonOperator model) : base(parent, model)
         {
+            this.LeftExpression = new PropertyExpressionViewModel(this, null);
+            this._LeftExpressionView = new PropertyExpressionView((PropertyExpressionViewModel)this.LeftExpression);
             this.RemoveComparisonOperatorCommand = new DelegateCommand(this.RemoveComparisonOperator);
         }
-        public HermesViewModel LeftExpression { get; set; } // ViewModel
+
+        public UserControl LeftExpressionView
+        {
+            get { return _LeftExpressionView; }
+            set
+            {
+                _LeftExpressionView = value;
+                this.OnPropertyChanged("LeftExpressionView");
+            }
+        }
+
+        public HermesViewModel LeftExpression { get; private set; } // ViewModel
         public HermesViewModel RightExpression { get; set; } // ViewModel
         public List<string> ComparisonOperators
         {

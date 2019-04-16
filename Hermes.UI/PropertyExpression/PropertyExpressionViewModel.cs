@@ -1,12 +1,20 @@
-﻿using Microsoft.Practices.Prism.Mvvm;
+﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System.Windows.Input;
 using Zhichkin.Hermes.Model;
-using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.UI
 {
     public class PropertyExpressionViewModel : HermesViewModel
     {
-        public PropertyExpressionViewModel(HermesViewModel parent, PropertyExpression model) : base(parent, model) { }
+        private bool _IsAliasVisible;
+
+        public PropertyExpressionViewModel(HermesViewModel parent, PropertyExpression model) : base(parent, model)
+        {
+            _IsAliasVisible = parent is SelectStatementViewModel; // SELECT clause check
+            this.PropertySelectionDialog = new InteractionRequest<Confirmation>();
+            this.OpenPropertySelectionDialogCommand = new DelegateCommand(this.OpenPropertySelectionDialog);
+        }
         public string Alias
         {
             get
@@ -20,6 +28,30 @@ namespace Zhichkin.Hermes.UI
                 ((PropertyExpression)this.Model).Alias = value;
                 OnPropertyChanged("Alias");
             }
+        }
+        public bool IsAliasVisible
+        {
+            get { return _IsAliasVisible; }
+            set
+            {
+                _IsAliasVisible = value;
+                this.OnPropertyChanged("IsAliasVisible");
+            }
+        }
+
+        public ICommand OpenPropertySelectionDialogCommand { get; private set; }
+        public InteractionRequest<Confirmation> PropertySelectionDialog { get; private set; }
+        private void OpenPropertySelectionDialog()
+        {
+            Confirmation confirmation = new Confirmation() { Title = "Select property", Content = this };
+            this.PropertySelectionDialog.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    //_filter = response.Content as List<FilterParameter>;
+                    //this.OnPropertyChanged("Filter");
+                }
+            });
         }
     }
 }

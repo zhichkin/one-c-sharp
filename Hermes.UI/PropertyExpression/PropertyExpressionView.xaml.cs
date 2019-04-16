@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -8,6 +7,10 @@ namespace Zhichkin.Hermes.UI
         public PropertyExpressionView()
         {
             InitializeComponent();
+        }
+        public PropertyExpressionView(PropertyExpressionViewModel viewModel) : this()
+        {
+            this.DataContext = viewModel;
         }
     }
 }

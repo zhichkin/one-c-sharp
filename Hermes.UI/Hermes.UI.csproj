@@ -107,6 +107,11 @@
       <DependentUpon>BooleanExpressionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="BooleanExpression\BooleanExpressionViewModel.cs" />
+    <Compile Include="Dialogs\DialogViewModelBase.cs" />
+    <Compile Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml.cs">
+      <DependentUpon>PropertySelectionDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogViewModel.cs" />
     <Compile Include="HermesViewModel.cs" />
     <Compile Include="Join\JoinView.xaml.cs">
       <DependentUpon>JoinView.xaml</DependentUpon>
@@ -150,6 +155,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="BooleanExpression\BooleanExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -287,6 +296,7 @@
   <ItemGroup>
     <Resource Include="Images\ПланСчетов.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.Hermes.UI.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>

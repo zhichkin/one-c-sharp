@@ -74,14 +74,12 @@ C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csprojAssemblyReference.cache
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\CaseWhenThen\CaseWhenThenView.g.cs
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\MainMenu\MainMenuView.g.cs
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Query\QueryView.g.cs
-C:\Zhichkin\Z\Hermes.UI\obj\Debug\Select\SelectView.g.cs
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI_MarkupCompile.cache
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI_MarkupCompile.lref
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\CaseWhenThen\CaseWhenThenView.baml
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\MainMenu\MainMenuView.baml
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Query\QueryView.baml
-C:\Zhichkin\Z\Hermes.UI\obj\Debug\Select\SelectView.baml
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.g.resources
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.Properties.Resources.resources
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.GenerateResource.cache
@@ -97,10 +95,8 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView
 C:\Zhichkin\Z\debug\Zhichkin.Hermes.UI.dll.config
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Join\JoinView.g.cs
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.g.cs
-C:\Zhichkin\Z\Hermes.UI\obj\Debug\Entity\EntityView.g.cs
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Join\JoinView.baml
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.baml
-C:\Zhichkin\Z\Hermes.UI\obj\Debug\Entity\EntityView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\BooleanExpression\BooleanExpressionView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\BooleanExpression\BooleanExpressionView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\BooleanExpression\ComparisonOperatorView.g.cs
@@ -125,3 +121,9 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\SelectStatement\SelectStateme
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\TableExpression\TableExpressionView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\TableExpression\TableExpressionView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\SelectStatement\SelectStatementView.baml
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\SelectStatement\SelectStatementView.g.cs
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\TableExpression\TableExpressionView.g.cs
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\SelectStatement\SelectStatementView.baml
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\TableExpression\TableExpressionView.baml
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDialog\PropertySelectionDialogView.g.cs
+C:\Zhichkin\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDialog\PropertySelectionDialogView.baml
