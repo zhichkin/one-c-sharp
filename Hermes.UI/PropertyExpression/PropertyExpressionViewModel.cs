@@ -2,6 +2,7 @@
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -48,8 +49,7 @@ namespace Zhichkin.Hermes.UI
             {
                 if (response.Confirmed)
                 {
-                    //_filter = response.Content as List<FilterParameter>;
-                    //this.OnPropertyChanged("Filter");
+                    Z.Notify(new Notification { Title = "Hermes", Content = response.Content.ToString() });
                 }
             });
         }

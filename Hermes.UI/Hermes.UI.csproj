@@ -107,6 +107,7 @@
       <DependentUpon>BooleanExpressionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="BooleanExpression\BooleanExpressionViewModel.cs" />
+    <Compile Include="CompositeCollectionConverter.cs" />
     <Compile Include="Dialogs\DialogViewModelBase.cs" />
     <Compile Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml.cs">
       <DependentUpon>PropertySelectionDialogView.xaml</DependentUpon>
@@ -117,6 +118,10 @@
       <DependentUpon>JoinView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Join\JoinExpressionViewModel.cs" />
+    <Compile Include="MetadataNode\MetadataNodeView.xaml.cs">
+      <DependentUpon>MetadataNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MetadataNode\MetadataNodeViewModel.cs" />
     <Compile Include="MetadataTree\MetadataTreeView.xaml.cs">
       <DependentUpon>MetadataTreeView.xaml</DependentUpon>
     </Compile>
@@ -174,6 +179,10 @@
       <DependentUpon>MainMenuView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MetadataNode\MetadataNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MetadataTree\MetadataTreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

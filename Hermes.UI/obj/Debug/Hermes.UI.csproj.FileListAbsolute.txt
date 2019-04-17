@@ -127,3 +127,7 @@ C:\Zhichkin\Z\Hermes.UI\obj\Debug\SelectStatement\SelectStatementView.baml
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\TableExpression\TableExpressionView.baml
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDialog\PropertySelectionDialogView.g.cs
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDialog\PropertySelectionDialogView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDialog\PropertySelectionDialogView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDialog\PropertySelectionDialogView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataNode\MetadataNodeView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataNode\MetadataNodeView.baml

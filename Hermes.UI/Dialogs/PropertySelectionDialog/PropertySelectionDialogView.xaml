@@ -6,11 +6,20 @@
              xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <Button Content="Выбрать" Margin="0,0,5,0" Width="80" Height="25" Command="{Binding SelectCommand}"/>
-            <Button Content="Закрыть" Margin="5,0,0,0" Width="80" Height="25" Command="{Binding CancelCommand}"/>
+    
+    <Grid Width="300" Height="400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl Grid.Row="0" Content="{Binding View}" Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        
+        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <Button Content="Выбрать" Margin="5" Width="80" Height="25" Command="{Binding SelectCommand}"/>
+            <Button Content="Закрыть" Margin="5" Width="80" Height="25" Command="{Binding CancelCommand}"/>
         </StackPanel>
+        
     </Grid>
     
 </UserControl>
