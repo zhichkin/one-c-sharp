@@ -135,6 +135,10 @@
     <Compile Include="PropertyExpression\PropertyExpressionView.xaml.cs">
       <DependentUpon>PropertyExpressionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PropertyReference\PropertyReferenceView.xaml.cs">
+      <DependentUpon>PropertyReferenceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyReference\PropertyReferenceViewModel.cs" />
     <Compile Include="Query\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
@@ -192,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PropertyExpression\PropertyExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertyReference\PropertyReferenceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -180,7 +180,8 @@ namespace Zhichkin.Hermes.Services
                             Name = BooleanFunction.Equal,
                             RightExpression = null
                         };
-                        ce.LeftExpression = new PropertyExpression(ce, current_property);
+                        TableExpression table = consumer.Consumer as TableExpression;
+                        ce.LeftExpression = new PropertyReference(ce, table, current_property);
 
                         if (current_nested_node == null)
                         {
@@ -1149,7 +1150,7 @@ namespace Zhichkin.Hermes.Services
 
             foreach (ComparisonOperator condition in filter.Operands)
             {
-                PropertyExpression expression = condition.LeftExpression as PropertyExpression;
+                PropertyReference expression = condition.LeftExpression as PropertyReference;
                 list.Add(expression.Property);
             }
 
@@ -1611,12 +1612,13 @@ namespace Zhichkin.Hermes.Services
                         if (child == null)
                         {
                             Property filterProperty = nestedEntity.Properties.Where((p) => p.Name == "Ссылка").First();
+                            TableExpression table = new TableExpression(null, nestedEntity);
                             child = new MetadataTreeNode()
                             {
                                 Name = nestedEntity.Name,
                                 Parent = node,
                                 MetadataInfo = nestedEntity,
-                                Filter = new BooleanOperator(new TableExpression(null, nestedEntity))
+                                Filter = new BooleanOperator(table)
                                 {
                                     Name = BooleanFunction.OR
                                 }
@@ -1626,7 +1628,7 @@ namespace Zhichkin.Hermes.Services
                                 Name = BooleanFunction.Equal,
                                 RightExpression = null
                             };
-                            ce.LeftExpression = new PropertyExpression(ce, filterProperty);
+                            ce.LeftExpression = new PropertyReference(ce, table, filterProperty);
                             child.Filter.Operands.Add(ce);
                             node.Children.Add(child);
                         }

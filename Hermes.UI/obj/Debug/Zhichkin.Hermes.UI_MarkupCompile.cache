@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-14-1897718907
+15529046037
 
-38-401985038
+401535503416
 1391366209970
-BooleanExpression\BooleanOperatorView.xaml;BooleanExpression\ComparisonOperatorView.xaml;CaseWhenThen\CaseWhenThenView.xaml;BooleanExpression\BooleanExpressionView.xaml;Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;MetadataNode\MetadataNodeView.xaml;MetadataTree\MetadataTreeView.xaml;ParameterExpression\ParameterExpressionView.xaml;PropertyExpression\PropertyExpressionView.xaml;Query\QueryView.xaml;SelectStatement\SelectStatementView.xaml;TableExpression\TableExpressionView.xaml;
+BooleanExpression\BooleanOperatorView.xaml;BooleanExpression\ComparisonOperatorView.xaml;CaseWhenThen\CaseWhenThenView.xaml;BooleanExpression\BooleanExpressionView.xaml;Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml;Join\JoinView.xaml;MainMenu\MainMenuView.xaml;MetadataNode\MetadataNodeView.xaml;MetadataTree\MetadataTreeView.xaml;ParameterExpression\ParameterExpressionView.xaml;PropertyExpression\PropertyExpressionView.xaml;PropertyReference\PropertyReferenceView.xaml;Query\QueryView.xaml;SelectStatement\SelectStatementView.xaml;TableExpression\TableExpressionView.xaml;
 
 False
 

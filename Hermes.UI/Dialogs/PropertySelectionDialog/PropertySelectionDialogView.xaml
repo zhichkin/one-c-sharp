@@ -13,8 +13,40 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="0" Content="{Binding View}" Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-        
+        <!--<ContentControl Grid.Row="0" Content="{Binding View}" Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>-->
+        <TreeView ItemsSource="{Binding DialogItems}" SelectedItemChanged="TreeView_SelectedItemChanged"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TreeView.Resources>
+                
+                <HierarchicalDataTemplate DataType="{x:Type ui:TableExpressionViewModel}" ItemsSource="{Binding Properties}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2" Source="{Binding Icon}"/>-->
+                        <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type ui:PropertyReferenceViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2" Source="{Binding Icon}"/>-->
+                        <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+                
+                <HierarchicalDataTemplate DataType="{x:Type ui:SelectStatementViewModel}" ItemsSource="{Binding Fields}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2" Source="{Binding Icon}"/>-->
+                        <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type ui:PropertyExpressionViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2" Source="{Binding Icon}"/>-->
+                        <TextBlock Text="{Binding Alias}" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+                
+            </TreeView.Resources>
+        </TreeView>
+
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
             <Button Content="Выбрать" Margin="5" Width="80" Height="25" Command="{Binding SelectCommand}"/>
             <Button Content="Закрыть" Margin="5" Width="80" Height="25" Command="{Binding CancelCommand}"/>

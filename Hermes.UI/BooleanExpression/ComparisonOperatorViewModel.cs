@@ -12,8 +12,8 @@ namespace Zhichkin.Hermes.UI
 
         public ComparisonOperatorViewModel(HermesViewModel parent, ComparisonOperator model) : base(parent, model)
         {
-            this.LeftExpression = new PropertyExpressionViewModel(this, null);
-            this._LeftExpressionView = new PropertyExpressionView((PropertyExpressionViewModel)this.LeftExpression);
+            this.LeftExpression = new PropertyReferenceViewModel(this, null, null);
+            this._LeftExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.LeftExpression);
             this.RemoveComparisonOperatorCommand = new DelegateCommand(this.RemoveComparisonOperator);
         }
 

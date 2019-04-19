@@ -9,12 +9,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        </ResourceDictionary>
-    </UserControl.Resources>
-
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Raised" SourceObject="{Binding PropertySelectionDialog}">
             <i:EventTrigger.Actions>
@@ -29,8 +23,7 @@
     
     <StackPanel Orientation="Horizontal">
 
-        <Border BorderThickness="1"
-                Visibility="{Binding IsAliasVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Border BorderThickness="1">
             <Border.BorderBrush>
                 <VisualBrush>
                     <VisualBrush.Visual>
@@ -43,21 +36,11 @@
             <TextBox Text="{Binding Alias}" MinWidth="50" VerticalContentAlignment="Center" BorderThickness="0"/>
         </Border>
 
-        <TextBlock Text="=" FontWeight="SemiBold" Margin="2,0,2,0" VerticalAlignment="Center"
-                   Visibility="{Binding IsAliasVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBlock Text="=" FontWeight="SemiBold" Margin="2,0,2,0" VerticalAlignment="Center"/>
 
         <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" Margin="5" Height="18" Width="18"/>
 
-        <ComboBox ItemsSource="{Binding DataContext.Tables,
-            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ui:SelectStatementView}}}"
-                  SelectedItem="{Binding Table, UpdateSourceTrigger=PropertyChanged}"
-                  DisplayMemberPath="Alias"
-                  MinWidth="50"/>
         
-        <ComboBox ItemsSource="{Binding Table.Fields}"
-                  SelectedItem="{Binding Field, UpdateSourceTrigger=PropertyChanged}"
-                  DisplayMemberPath="Alias"
-                  MinWidth="100"/>
         
     </StackPanel>
     

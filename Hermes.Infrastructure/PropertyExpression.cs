@@ -5,15 +5,21 @@ using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.Model
 {
-    public class PropertyExpression : HermesModel
+    public class PropertyReference : HermesModel
     {
-        public PropertyExpression(HermesModel consumer, Property property) : base(consumer)
+        public PropertyReference(HermesModel consumer, TableExpression table, Property property) : base(consumer)
         {
+            this.Table = table;
             this.Property = property;
-            this.Alias = this.Property.Name;
         }
         public string Name { get { return this.Property.Name; } }
-        public string Alias { get; set; }
         public Property Property { get; private set; }
+        public TableExpression Table { get; private set; }
+    }
+    public class PropertyExpression : HermesModel
+    {
+        public PropertyExpression(HermesModel consumer) : base(consumer) { }
+        public string Alias { get; set; }
+        public HermesModel Expression { get; set; }
     }
 }

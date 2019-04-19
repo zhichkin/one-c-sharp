@@ -131,3 +131,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDial
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\PropertySelectionDialog\PropertySelectionDialogView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataNode\MetadataNodeView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataNode\MetadataNodeView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyReference\PropertyReferenceView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyReference\PropertyReferenceView.baml
