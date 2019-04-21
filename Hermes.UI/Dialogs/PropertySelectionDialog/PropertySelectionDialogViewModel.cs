@@ -18,6 +18,11 @@ namespace Zhichkin.Hermes.UI
             SelectStatementViewModel select = GetSelectStatementViewModel(caller);
             if (select == null) throw new Exception("SelectStatementViewModel is not found!");
 
+            // TODO: при поиске SELECT нужно учитывать, что в контексте предложения JOIN список Tables
+            // должен ограничиться текущим JoinTableExpression, так как по правилам SQL "нижние"
+            // по спику таблицы и их поля не видны в данной области видимости
+
+            this.DialogItems.Clear();
             foreach(TableExpressionViewModel table in select.Tables)
             {
                 this.DialogItems.Add(table);
@@ -26,6 +31,7 @@ namespace Zhichkin.Hermes.UI
         public HermesViewModel SelectedNode { get; set; }
         protected override object GetDialogResult()
         {
+            if (this.SelectedNode != null && this.SelectedNode is TableExpressionViewModel) return null;
             return this.SelectedNode;
         }
 

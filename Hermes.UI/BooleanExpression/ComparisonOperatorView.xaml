@@ -4,17 +4,52 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="clr-namespace:Zhichkin.Hermes.UI"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding PropertySelectionDialog}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:PropertySelectionDialogView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <StackPanel Orientation="Horizontal">
-        <ContentControl Content="{Binding LeftExpressionView}"/>
+
+        <!-- Comparison Operator's panel of commands -->
+        <Button Content="x" Command="{Binding RemoveComparisonOperatorCommand}"
+                ToolTip="Remove condition" Margin="5" Height="24" Width="24"/>
+
+        <!-- Left Expression's block of UI elements and commands -->
+        <StackPanel Orientation="Horizontal">
+            <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" CommandParameter="LEFT"
+                    ToolTip="Select property" Margin="5" Height="24" Width="24"/>
+            <ContentControl Content="{Binding LeftExpressionView}"/>
+        </StackPanel>
+
+        <!-- Selection of comparison operator -->
         <ComboBox ItemsSource="{Binding ComparisonOperators}"
                   SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                  Width="50"/>
-        <ui:ParameterExpressionView DataContext="{Binding RightExpression}"/>
-        <Button Content="x" Command="{Binding RemoveComparisonOperatorCommand}"
-                ToolTip="Remove condition" Margin="5" Height="20" Width="20"/>
+                  VerticalContentAlignment="Center"
+                  HorizontalContentAlignment="Center"
+                  Width="50"
+                  Height="24"
+                  Margin="5"/>
+        
+        <!-- Right Expression's block of UI elements and commands -->
+        <StackPanel Orientation="Horizontal">
+            <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" CommandParameter="RIGHT"
+                    ToolTip="Select property" Margin="5" Height="24" Width="24"/>
+            <ContentControl Content="{Binding RightExpressionView}"/>
+        </StackPanel>
+
     </StackPanel>
 
 </UserControl>

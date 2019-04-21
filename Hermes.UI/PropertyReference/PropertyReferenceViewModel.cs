@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
 
@@ -11,8 +12,6 @@ namespace Zhichkin.Hermes.UI
         public PropertyReferenceViewModel(HermesViewModel parent, TableExpressionViewModel table, PropertyReference model) : base(parent, model)
         {
             this.Table = table;
-            this.PropertySelectionDialog = new InteractionRequest<Confirmation>();
-            this.OpenPropertySelectionDialogCommand = new DelegateCommand(this.OpenPropertySelectionDialog);
         }
         public TableExpressionViewModel Table
         {
@@ -28,7 +27,12 @@ namespace Zhichkin.Hermes.UI
             get { return this; }
             set
             {
-                this.Model = value?.Model;
+                // Свойство устанваливается при выборе значения связанного источника данных ComboBox'а
+                if (this.Table != null && value != null && this.Table != value.Table)
+                {
+                    throw new Exception("Что-то пошло не так с выбором свойства =|");
+                }
+                this.Model = (value == null) ? null : value.Model;
             }
         }
         public string Name
@@ -38,23 +42,6 @@ namespace Zhichkin.Hermes.UI
                 if (this.Model == null) return string.Empty;
                 return ((PropertyReference)this.Model).Name;
             }
-        }
-
-        public ICommand OpenPropertySelectionDialogCommand { get; private set; }
-        public InteractionRequest<Confirmation> PropertySelectionDialog { get; private set; }
-        private void OpenPropertySelectionDialog()
-        {
-            Confirmation confirmation = new Confirmation() { Title = "Select property", Content = this };
-            this.PropertySelectionDialog.Raise(confirmation, response =>
-            {
-                if (response.Confirmed)
-                {
-                    PropertyReferenceViewModel result = response.Content as PropertyReferenceViewModel;
-                    if (result == null) return;
-                    this.Table = result.Table;
-                    this.OnPropertyChanged("Name"); // ?
-                }
-            });
         }
     }
 }
