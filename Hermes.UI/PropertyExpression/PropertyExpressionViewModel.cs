@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Shell;
@@ -8,13 +9,23 @@ namespace Zhichkin.Hermes.UI
 {
     public class PropertyExpressionViewModel : HermesViewModel
     {
-        private bool _IsAliasVisible;
+        private UserControl _ExpressionView;
 
         public PropertyExpressionViewModel(HermesViewModel parent, PropertyExpression model) : base(parent, model)
         {
             this.PropertySelectionDialog = new InteractionRequest<Confirmation>();
             this.OpenPropertySelectionDialogCommand = new DelegateCommand(this.OpenPropertySelectionDialog);
         }
+        public UserControl ExpressionView
+        {
+            get { return _ExpressionView; }
+            set
+            {
+                _ExpressionView = value;
+                this.OnPropertyChanged("ExpressionView");
+            }
+        }
+        public HermesViewModel Expression { get; set; }
         public string Alias
         {
             get
@@ -38,9 +49,29 @@ namespace Zhichkin.Hermes.UI
             {
                 if (response.Confirmed)
                 {
-                    Z.Notify(new Notification { Title = "Hermes", Content = response.Content.ToString() });
+                    OnExpressionSelected((HermesViewModel)response.Content);
                 }
             });
+        }
+        private void OnExpressionSelected(HermesViewModel selectedExpression)
+        {
+            if (selectedExpression == null)
+            {
+                this.Expression = null;
+                this.ExpressionView = null;
+            }
+
+            PropertyReferenceViewModel viewModel = selectedExpression as PropertyReferenceViewModel;
+            if (selectedExpression == null) return;
+
+            PropertyExpression model = this.Model as PropertyExpression;
+            model.Expression = selectedExpression.Model;
+            model.Expression.Consumer = model;
+
+            this.Expression = selectedExpression;
+            this.Expression.Parent = this;
+            this.Alias = viewModel.Name; // this sets model's property Alias as well
+            this.ExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.Expression);
         }
     }
 }

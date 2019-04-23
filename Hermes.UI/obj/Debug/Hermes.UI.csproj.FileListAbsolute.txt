@@ -54,13 +54,11 @@ C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Hermes.UI.pdb
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Hermes.UI.csprojAssemblyReference.cache
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\CaseWhenThen\CaseWhenThenView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MainMenu\MainMenuView.g.cs
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Query\QueryView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI_MarkupCompile.cache
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI_MarkupCompile.lref
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\CaseWhenThen\CaseWhenThenView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MainMenu\MainMenuView.baml
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Query\QueryView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.g.resources
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.Properties.Resources.resources
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.GenerateResource.cache
@@ -133,3 +131,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataNode\MetadataNodeView
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataNode\MetadataNodeView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyReference\PropertyReferenceView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyReference\PropertyReferenceView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\QueryExpression\QueryExpressionView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\QueryExpression\QueryExpressionView.baml

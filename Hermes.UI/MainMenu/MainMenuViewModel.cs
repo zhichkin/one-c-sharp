@@ -62,7 +62,7 @@ namespace Zhichkin.Hermes.UI
             }
         }
 
-        private QueryExpression query;
+        private QueryExpressionViewModel query;
         private void AddNewQuery()
         {
             //Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Hello from Hermes!" });
@@ -70,16 +70,17 @@ namespace Zhichkin.Hermes.UI
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;
 
-            query = new QueryExpression();
+            query = new QueryExpressionViewModel(null);
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter0", Type = new EntityInfo(1) { Name = "GUID" } });
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter1", Type = new EntityInfo(2) { Name = "Int32" } });
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new EntityInfo(3) { Name = "String" } });
             //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new EntityInfo(4) { Name = "Boolean" } });
 
-            SelectStatementViewModel select = new SelectStatementViewModel(null, null);
+            SelectStatement model = new SelectStatement(null, null);
+            SelectStatementViewModel select = new SelectStatementViewModel(query, model);
             query.QueryExpressions.Add(select);
 
-            QueryView queryView = new QueryView(query);
+            QueryExpressionView queryView = new QueryExpressionView(query);
             
             rightRegion.Add(queryView);
         }

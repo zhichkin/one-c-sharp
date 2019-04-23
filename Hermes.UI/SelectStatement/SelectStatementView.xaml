@@ -27,9 +27,9 @@
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Border.BorderBrush>
-                    <TextBox Text="{Binding Alias}" VerticalContentAlignment="Center" BorderThickness="0"/>
+                    <TextBox Text="{Binding Alias}" MinWidth="50" VerticalContentAlignment="Center" BorderThickness="0"/>
                 </Border>
-                <Button Content="+" Command="{Binding AddPropertyCommand}" Margin="5,0,0,0" VerticalContentAlignment="Center" /> 
+                <Button Content="+" Command="{Binding AddPropertyCommand}" Margin="5,0,0,0" Width="24" Height="24" VerticalContentAlignment="Center" /> 
             </StackPanel>
         </Expander.Header>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -50,60 +50,6 @@
                         </DataTemplate>
                     </ItemsControl.Resources>
                 </ItemsControl>
-
-                <!--<DataGrid ItemsSource="{Binding Fields}" Grid.Row="0" Margin="30,0,0,0" Height="Auto" SelectedItem="{Binding SelectedItem}"
-                          AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserAddRows="False" HeadersVisibility="Column">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="True">
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="Alias" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Alias}" Margin="5" VerticalAlignment="Center" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="True">
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="Name" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}" Margin="5" VerticalAlignment="Center" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="True">
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="Use" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding IsUsed, Mode=TwoWay}" Margin="5" VerticalAlignment="Center" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="True">
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="Function" FontWeight="DemiBold" Margin="5" VerticalAlignment="Center" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ui:CaseWhenThenView />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>-->
 
                 <Expander Grid.Row="1" Name="Expander_FROM" ExpandDirection="Down" IsExpanded="True">
                     <Expander.Header>

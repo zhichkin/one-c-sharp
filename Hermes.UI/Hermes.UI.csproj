@@ -139,10 +139,10 @@
       <DependentUpon>PropertyReferenceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="PropertyReference\PropertyReferenceViewModel.cs" />
-    <Compile Include="Query\QueryView.xaml.cs">
-      <DependentUpon>QueryView.xaml</DependentUpon>
+    <Compile Include="QueryExpression\QueryExpressionView.xaml.cs">
+      <DependentUpon>QueryExpressionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Query\QueryExpression.cs" />
+    <Compile Include="QueryExpression\QueryExpressionViewModel.cs" />
     <Compile Include="SelectStatement\SelectStatementView.xaml.cs">
       <DependentUpon>SelectStatementView.xaml</DependentUpon>
     </Compile>
@@ -203,7 +203,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Query\QueryView.xaml">
+    <Page Include="QueryExpression\QueryExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -11,7 +11,10 @@ namespace Zhichkin.Hermes.Model
         {
             this.Consumer = consumer;
             this.Entity = entity;
-            this.Alias = this.Entity.Name;
+            if (this.Entity != null) // newly created SelectStatement can nave no entity yet
+            {
+                this.Alias = this.Entity.Name;
+            }
         }
         public string Name { get { return this.Entity.Name; } }
         public string Alias { get; set; }

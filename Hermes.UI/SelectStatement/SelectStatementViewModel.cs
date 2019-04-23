@@ -7,6 +7,8 @@ using Microsoft.Practices.Prism.Commands;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
 using System.Collections.Generic;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -24,7 +26,12 @@ namespace Zhichkin.Hermes.UI
         public ICommand AddPropertyCommand { get; private set; }
         private void OnAddProperty()
         {
-            this.Fields.Add(new PropertyExpressionViewModel(this, null));
+            if (this.Tables.Count == 0)
+            {
+                Z.Notify(new Notification { Title = "Hermes", Content = "Предложение FROM не содержит ни одной таблицы!" });
+                return;
+            }
+            this.Fields.Add(new PropertyExpressionViewModel(this, new PropertyExpression(this.Model)));
         }
 
         private bool _IsFromVertical = true;
@@ -66,8 +73,17 @@ namespace Zhichkin.Hermes.UI
             }
             else
             {
-                // TODO: add JoinExpression
+                SelectStatement model = this.Model as SelectStatement;
+                if (model.FROM == null)
+                {
+                    model.FROM = new List<TableExpression>();
+                }
+                TableExpression table = new TableExpression(model, entity);
+                model.FROM.Add(table);
+                TableExpressionViewModel viewModel = new TableExpressionViewModel(this, table);
+                this.Tables.Add(viewModel);
             }
+            // TODO: add JoinExpression
         }
     }
 }
