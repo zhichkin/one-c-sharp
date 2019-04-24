@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -10,7 +11,7 @@ namespace Zhichkin.Hermes.UI
     {
         public BooleanOperatorViewModel(HermesViewModel parent, BooleanOperator model) : base(parent, model)
         {
-            this.ShowOperands(); // recursive call to this constructor ... аднака =)
+            //this.ShowOperands(); // recursive call to this constructor ... аднака =)
 
             this.AddComparisonOperatorCommand = new DelegateCommand(this.AddComparisonOperator);
             this.AddInnerBooleanOperatorCommand = new DelegateCommand(this.AddInnerBooleanOperator);
@@ -80,9 +81,26 @@ namespace Zhichkin.Hermes.UI
             {
                 BooleanOperator operand = new BooleanOperator(model) { Name = BooleanFunction.OR };
                 model.AddChild(operand);
-                operand.AddChild(new ComparisonOperator(operand));
+                ComparisonOperator child = new ComparisonOperator(operand);
+                operand.AddChild(child);
                 BooleanOperatorViewModel viewModel = new BooleanOperatorViewModel(this, operand);
-                this.Operands.Add(viewModel);
+                ComparisonOperatorViewModel childVM = new ComparisonOperatorViewModel(viewModel, child);
+                if (viewModel.Operands == null)
+                {
+                    viewModel.Operands = new ObservableCollection<BooleanFunctionViewModel>() { childVM };
+                }
+                else
+                {
+                    viewModel.Operands.Add(childVM);
+                }
+                if (this.Operands == null)
+                {
+                    this.Operands = new ObservableCollection<BooleanFunctionViewModel>() { viewModel };
+                }
+                else
+                {
+                    this.Operands.Add(viewModel);
+                }
             }
         }
         private void AddOuterBooleanOperator()
@@ -90,22 +108,69 @@ namespace Zhichkin.Hermes.UI
             BooleanOperator model = this.Model as BooleanOperator;
             if (model == null) return;
 
-            BooleanOperator clone = new BooleanOperator(model) { Name = model.Name };
-            foreach (BooleanFunction operand in model.Operands)
+            //BooleanOperator clone = new BooleanOperator(model) { Name = model.Name };
+            //foreach (BooleanFunction operand in model.Operands)
+            //{
+            //    clone.AddChild(operand);
+            //}
+            //model.Operands = new List<BooleanFunction>();
+
+            //BooleanOperator child = new BooleanOperator(model) { Name = BooleanFunction.OR };
+            //child.AddChild(new ComparisonOperator(child));
+
+            //model.AddChild(clone);
+            //model.AddChild(child);
+            //this.Operands.Clear();
+            //foreach (BooleanFunction operand in model.Operands)
+            //{
+            //    BooleanOperatorViewModel parent = new BooleanOperatorViewModel(this, (BooleanOperator)operand);
+            //    this.Operands.Add(parent);
+            //}
+
+            // 0. Remember the parent of this node
+            HermesModel consumer = model.Consumer;
+            HermesViewModel parentVM = this.Parent;
+            int index_to_replace = -1;
+            if (consumer is BooleanOperator)
             {
-                clone.AddChild(operand);
+                index_to_replace = ((BooleanOperator)consumer).Operands.IndexOf(model);
+                if (index_to_replace == -1)
+                {
+                    throw new ArgumentOutOfRangeException("Model is broken!");
+                }
             }
-            model.Operands = new List<BooleanFunction>();
 
-            BooleanOperator child = new BooleanOperator(model) { Name = BooleanFunction.OR };
-            child.AddChild(new ComparisonOperator(child));
+            // 1. Create new node and it's VM which will substitute this current node
+            BooleanOperator substitute = new BooleanOperator(consumer) { Name = BooleanFunction.OR };
+            substitute.AddChild(model);
+            BooleanOperatorViewModel substituteVM = new BooleanOperatorViewModel(parentVM, substitute);
+            this.Parent = substituteVM;
 
-            model.AddChild(clone);
-            model.AddChild(child);
-            this.Operands.Clear();
-            foreach (BooleanFunction operand in model.Operands)
+            // 2. Create new child and it's VM consumed by substitute
+            BooleanOperator child = new BooleanOperator(substitute);
+            BooleanOperatorViewModel childVM = new BooleanOperatorViewModel(substituteVM, child);
+
+            // 3. Add new comparison operator and it's VM to new born child
+            ComparisonOperator gift = new ComparisonOperator(child);
+            child.AddChild(gift);
+            ComparisonOperatorViewModel giftVM = new ComparisonOperatorViewModel(childVM, gift);
+            childVM.Operands = new ObservableCollection<BooleanFunctionViewModel>() { giftVM };
+
+            // 4. Substitute this current node at parent VM and it's model
+            if (consumer is BooleanOperator)
             {
-                this.Operands.Add(new BooleanOperatorViewModel(this, (BooleanOperator)operand));
+                ((BooleanOperator)consumer).Operands.RemoveAt(index_to_replace);
+                ((BooleanOperator)consumer).Operands.Insert(index_to_replace, substitute);
+                index_to_replace = ((BooleanOperatorViewModel)parentVM).Operands.IndexOf(this);
+                if (index_to_replace > -1)
+                {
+                    ((BooleanOperatorViewModel)parentVM).Operands.RemoveAt(index_to_replace);
+                    ((BooleanOperatorViewModel)parentVM).Operands.Insert(index_to_replace, substituteVM);
+                }
+            }
+            else if (parentVM is BooleanExpressionViewModel)
+            {
+                ((BooleanExpressionViewModel)parentVM).SetBooleanExpression(substituteVM);
             }
         }
         private void RemoveBooleanOperator()

@@ -76,8 +76,7 @@ namespace Zhichkin.Hermes.UI
         public ICommand AddNewConditionCommand { get; private set; }
         private void AddNewCondition()
         {
-            TableExpression table = ((SelectStatementViewModel)this.Parent).Model as TableExpression;
-            if (table == null)
+            if (((SelectStatementViewModel)this.Parent).Tables.Count == 0)
             {
                 Z.Notify(new Notification { Title = "Hermes", Content = "Предложение FROM не содержит ни одной таблицы!" });
                 return;
@@ -106,6 +105,21 @@ namespace Zhichkin.Hermes.UI
             SetModelToParent();
             this.View = null;
             this.IsCommandPanelVisible = true;
+        }
+        public void SetBooleanExpression(BooleanFunctionViewModel vm)
+        {
+            _Model = (BooleanFunction)vm.Model;
+            SetModelToParent();
+            if (_Model is ComparisonOperator)
+            {
+                this.IsCommandPanelVisible = true;
+                this.View = new ComparisonOperatorView((ComparisonOperatorViewModel)vm);
+            }
+            else if (_Model is BooleanOperator)
+            {
+                this.IsCommandPanelVisible = false;
+                this.View = new BooleanOperatorView((BooleanOperatorViewModel)vm);
+            }
         }
     }
 }
