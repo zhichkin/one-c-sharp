@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
@@ -86,17 +87,30 @@ namespace Zhichkin.Hermes.UI
             {
                 _Model = new ComparisonOperator(((SelectStatementViewModel)this.Parent).Model);
                 SetModelToParent();
-                this.View = _ViewBuilder.Build(this, _Model);
+                ComparisonOperatorViewModel viewModel = new ComparisonOperatorViewModel(this, (ComparisonOperator)_Model);
+                this.View = new ComparisonOperatorView(viewModel);
             }
             else if (_Model is ComparisonOperator)
             {
-                BooleanOperator bo = new BooleanOperator(((SelectStatementViewModel)this.Parent).Model);
-                bo.AddChild(_Model);
-                bo.AddChild(new ComparisonOperator(bo));
-                _Model = bo;
+                ComparisonOperatorViewModel currentVM = this.View.DataContext as ComparisonOperatorViewModel;
+
+                BooleanOperator substitute = new BooleanOperator(((SelectStatementViewModel)this.Parent).Model);
+                substitute.AddChild(_Model);
+                BooleanOperatorViewModel substituteVM = new BooleanOperatorViewModel(this, substitute);
+
+                ComparisonOperator child = new ComparisonOperator(substitute);
+                substitute.AddChild(child);
+                ComparisonOperatorViewModel childVM = new ComparisonOperatorViewModel(substituteVM, child);
+
+                currentVM.Parent = substituteVM;
+                substituteVM.Operands = new ObservableCollection<BooleanFunctionViewModel>() { currentVM, childVM };
+
+                BooleanOperatorView substituteView = new BooleanOperatorView(substituteVM);
+
+                _Model = substitute;
                 SetModelToParent();
                 this.IsCommandPanelVisible = false;
-                this.View = _ViewBuilder.Build(this, _Model);
+                this.View = substituteView;
             }
         }
         public void ClearBooleanExpression()

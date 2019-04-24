@@ -30,7 +30,7 @@
         <!-- Left Expression's block of UI elements and commands -->
         <StackPanel Orientation="Horizontal">
             <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" CommandParameter="LEFT"
-                    ToolTip="Select property" Margin="5" Height="24" Width="24"/>
+                    ToolTip="Select left property" Margin="5" Height="24" Width="24"/>
             <ContentControl Content="{Binding LeftExpressionView}"/>
         </StackPanel>
 
@@ -46,7 +46,7 @@
         <!-- Right Expression's block of UI elements and commands -->
         <StackPanel Orientation="Horizontal">
             <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" CommandParameter="RIGHT"
-                    ToolTip="Select property" Margin="5" Height="24" Width="24"/>
+                    ToolTip="Select right property" Margin="5" Height="24" Width="24"/>
             <ContentControl Content="{Binding RightExpressionView}"/>
         </StackPanel>
 

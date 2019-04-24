@@ -11,12 +11,12 @@ namespace Zhichkin.Hermes.UI
     {
         private UserControl _LeftExpressionView;
         private UserControl _RightExpressionView;
+        // TODO: move this dialog to SelectExpressionViewModel to create it once
+        private InteractionRequest<Confirmation> _PropertySelectionDialog;
 
         public ComparisonOperatorViewModel(HermesViewModel parent, ComparisonOperator model) : base(parent, model)
         {
             this.RemoveComparisonOperatorCommand = new DelegateCommand(this.RemoveComparisonOperator);
-
-            this.PropertySelectionDialog = new InteractionRequest<Confirmation>();
             this.OpenPropertySelectionDialogCommand = new DelegateCommand<string>(this.OpenPropertySelectionDialog);
         }
         public List<string> ComparisonOperators
@@ -79,12 +79,23 @@ namespace Zhichkin.Hermes.UI
             }
         }
 
+        public InteractionRequest<Confirmation> PropertySelectionDialog
+        {
+            get
+            {
+                // This is necessary because this view model can be bound to several views
+                // while rebuilding view tree. Each time it is bound to the new view it will
+                // register new trigger with this view model's InteractionRequest.Raised event
+                _PropertySelectionDialog = new InteractionRequest<Confirmation>();
+                return _PropertySelectionDialog;
+            }
+        }
         public ICommand OpenPropertySelectionDialogCommand { get; private set; }
-        public InteractionRequest<Confirmation> PropertySelectionDialog { get; private set; }
         private void OpenPropertySelectionDialog(string parameter)
         {
-            Confirmation confirmation = new Confirmation() { Title = "Select property", Content = this };
-            this.PropertySelectionDialog.Raise(confirmation, response =>
+            string title = "Select " + parameter.ToLower() + " property";
+            Confirmation confirmation = new Confirmation() { Title = title, Content = this };
+            _PropertySelectionDialog.Raise(confirmation, response =>
             {
                 if (response.Confirmed)
                 {

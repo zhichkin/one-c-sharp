@@ -11,8 +11,6 @@ namespace Zhichkin.Hermes.UI
     {
         public BooleanOperatorViewModel(HermesViewModel parent, BooleanOperator model) : base(parent, model)
         {
-            //this.ShowOperands(); // recursive call to this constructor ... аднака =)
-
             this.AddComparisonOperatorCommand = new DelegateCommand(this.AddComparisonOperator);
             this.AddInnerBooleanOperatorCommand = new DelegateCommand(this.AddInnerBooleanOperator);
             this.AddOuterBooleanOperatorCommand = new DelegateCommand(this.AddOuterBooleanOperator);
@@ -30,33 +28,7 @@ namespace Zhichkin.Hermes.UI
         {
             this.Operands.Remove(child);
         }
-        public void ShowOperands()
-        {
-            if (this.Operands == null)
-            {
-                this.Operands = new ObservableCollection<BooleanFunctionViewModel>();
-            }
-            else
-            {
-                this.Operands.Clear();
-            }
-
-            BooleanOperator model = this.Model as BooleanOperator;
-            if (model == null || model.Operands == null) return;
-
-            foreach (BooleanFunction operand in model.Operands)
-            {
-                if (operand is ComparisonOperator)
-                {
-                    this.Operands.Add(new ComparisonOperatorViewModel(this, (ComparisonOperator)operand));
-                }
-                else if (operand is BooleanOperator)
-                {
-                    this.Operands.Add(new BooleanOperatorViewModel(this, (BooleanOperator)operand));
-                }
-            }
-        }
-
+        
         private void AddComparisonOperator()
         {
             BooleanOperator model = this.Model as BooleanOperator;
@@ -108,25 +80,6 @@ namespace Zhichkin.Hermes.UI
             BooleanOperator model = this.Model as BooleanOperator;
             if (model == null) return;
 
-            //BooleanOperator clone = new BooleanOperator(model) { Name = model.Name };
-            //foreach (BooleanFunction operand in model.Operands)
-            //{
-            //    clone.AddChild(operand);
-            //}
-            //model.Operands = new List<BooleanFunction>();
-
-            //BooleanOperator child = new BooleanOperator(model) { Name = BooleanFunction.OR };
-            //child.AddChild(new ComparisonOperator(child));
-
-            //model.AddChild(clone);
-            //model.AddChild(child);
-            //this.Operands.Clear();
-            //foreach (BooleanFunction operand in model.Operands)
-            //{
-            //    BooleanOperatorViewModel parent = new BooleanOperatorViewModel(this, (BooleanOperator)operand);
-            //    this.Operands.Add(parent);
-            //}
-
             // 0. Remember the parent of this node
             HermesModel consumer = model.Consumer;
             HermesViewModel parentVM = this.Parent;
@@ -148,6 +101,7 @@ namespace Zhichkin.Hermes.UI
 
             // 2. Create new child and it's VM consumed by substitute
             BooleanOperator child = new BooleanOperator(substitute);
+            substitute.AddChild(child);
             BooleanOperatorViewModel childVM = new BooleanOperatorViewModel(substituteVM, child);
 
             // 3. Add new comparison operator and it's VM to new born child
@@ -156,7 +110,14 @@ namespace Zhichkin.Hermes.UI
             ComparisonOperatorViewModel giftVM = new ComparisonOperatorViewModel(childVM, gift);
             childVM.Operands = new ObservableCollection<BooleanFunctionViewModel>() { giftVM };
 
-            // 4. Substitute this current node at parent VM and it's model
+            // 4. Fill substitute VM with operands
+            substituteVM.Operands = new ObservableCollection<BooleanFunctionViewModel>()
+            {
+                this,
+                childVM
+            };
+
+            // 5. Substitute this current node at parent VM and it's model
             if (consumer is BooleanOperator)
             {
                 ((BooleanOperator)consumer).Operands.RemoveAt(index_to_replace);
@@ -213,7 +174,6 @@ namespace Zhichkin.Hermes.UI
                     {
                         parent.Name = BooleanFunction.OR; // this will also set consumer.Name property
                     }
-                    parent.ShowOperands();
                 }
                 else // (consumer.Operands.Count == 1) it shouldn't be like this
                 {

@@ -1,7 +1,4 @@
-﻿using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System;
-using System.Windows.Input;
+﻿using System;
 using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.UI
