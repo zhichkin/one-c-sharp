@@ -123,6 +123,8 @@ namespace Zhichkin.Hermes.UI
         public void SetBooleanExpression(BooleanFunctionViewModel vm)
         {
             _Model = (BooleanFunction)vm.Model;
+            _Model.Consumer = ((SelectStatementViewModel)this.Parent).Model;
+            vm.Parent = this;
             SetModelToParent();
             if (_Model is ComparisonOperator)
             {

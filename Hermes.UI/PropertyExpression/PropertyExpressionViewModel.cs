@@ -10,10 +10,11 @@ namespace Zhichkin.Hermes.UI
     public class PropertyExpressionViewModel : HermesViewModel
     {
         private UserControl _ExpressionView;
+        // TODO: move this dialog to SelectExpressionViewModel to create it once
+        private InteractionRequest<Confirmation> _PropertySelectionDialog;
 
         public PropertyExpressionViewModel(HermesViewModel parent, PropertyExpression model) : base(parent, model)
         {
-            this.PropertySelectionDialog = new InteractionRequest<Confirmation>();
             this.OpenPropertySelectionDialogCommand = new DelegateCommand(this.OpenPropertySelectionDialog);
         }
         public UserControl ExpressionView
@@ -41,11 +42,21 @@ namespace Zhichkin.Hermes.UI
             }
         }
         public ICommand OpenPropertySelectionDialogCommand { get; private set; }
-        public InteractionRequest<Confirmation> PropertySelectionDialog { get; private set; }
+        public InteractionRequest<Confirmation> PropertySelectionDialog
+        {
+            get
+            {
+                // This is necessary because this view model can be bound to several views
+                // while rebuilding view tree. Each time it is bound to the new view it will
+                // register new trigger with this view model's InteractionRequest.Raised event
+                _PropertySelectionDialog = new InteractionRequest<Confirmation>();
+                return _PropertySelectionDialog;
+            }
+        }
         private void OpenPropertySelectionDialog()
         {
             Confirmation confirmation = new Confirmation() { Title = "Select property", Content = this };
-            this.PropertySelectionDialog.Raise(confirmation, response =>
+            _PropertySelectionDialog.Raise(confirmation, response =>
             {
                 if (response.Confirmed)
                 {

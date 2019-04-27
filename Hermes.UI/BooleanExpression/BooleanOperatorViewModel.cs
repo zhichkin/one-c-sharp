@@ -156,29 +156,31 @@ namespace Zhichkin.Hermes.UI
 
                 if (consumer.Operands.Count == 0) return;
 
-                if (consumer.Operands.Count > 2)
+                consumer.Operands.Remove(model);
+                parent.RemoveChildOperator(this);
+                
+                if (parent.Operands.Count == 1)
                 {
-                    consumer.Operands.Remove(model);
-                    parent.RemoveChildOperator(this);
-                }
-                else if (consumer.Operands.Count == 2)
-                {
-                    consumer.Operands.Remove(model);
-                    BooleanOperator orphan = consumer.Operands[0] as BooleanOperator;
-                    consumer.Operands.Clear();
-                    foreach (BooleanFunction operand in orphan.Operands)
+                    BooleanFunctionViewModel orphan = parent.Operands[0];
+
+                    if (parent.Parent is BooleanExpressionViewModel)
                     {
-                        consumer.AddChild(operand);
+                        orphan.Name = parent.Name;
+                        ((BooleanExpressionViewModel)parent.Parent).SetBooleanExpression(orphan);
                     }
-                    if (consumer.Name == BooleanFunction.AND && orphan.Name == BooleanFunction.OR)
+                    else if (parent.Parent is BooleanOperatorViewModel)
                     {
-                        parent.Name = BooleanFunction.OR; // this will also set consumer.Name property
+                        orphan.Parent = parent.Parent;
+                        orphan.Model.Consumer = parent.Parent.Model;
+                        
+                        int index_to_replace = ((BooleanOperator)consumer.Consumer).Operands.IndexOf(consumer);
+                        ((BooleanOperator)consumer.Consumer).Operands.RemoveAt(index_to_replace);
+                        ((BooleanOperator)consumer.Consumer).Operands.Insert(index_to_replace, (BooleanOperator)orphan.Model);
+
+                        index_to_replace = ((BooleanOperatorViewModel)parent.Parent).Operands.IndexOf(parent);
+                        ((BooleanOperatorViewModel)parent.Parent).Operands.RemoveAt(index_to_replace);
+                        ((BooleanOperatorViewModel)parent.Parent).Operands.Insert(index_to_replace, orphan);
                     }
-                }
-                else // (consumer.Operands.Count == 1) it shouldn't be like this
-                {
-                    consumer.Operands.Remove(model);
-                    parent.RemoveChildOperator(this);
                 }
             }
         }
