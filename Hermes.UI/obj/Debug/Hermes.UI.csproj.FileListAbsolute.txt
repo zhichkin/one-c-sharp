@@ -133,3 +133,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyReference\PropertyRef
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\PropertyReference\PropertyReferenceView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\QueryExpression\QueryExpressionView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\QueryExpression\QueryExpressionView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\ParameterReferenceView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\ParameterReferenceView.baml

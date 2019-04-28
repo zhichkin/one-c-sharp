@@ -15,6 +15,7 @@ namespace Zhichkin.Hermes.UI
 
         public PropertyExpressionViewModel(HermesViewModel parent, PropertyExpression model) : base(parent, model)
         {
+            this.RemovePropertyCommand = new DelegateCommand(this.RemoveProperty);
             this.OpenPropertySelectionDialogCommand = new DelegateCommand(this.OpenPropertySelectionDialog);
         }
         public UserControl ExpressionView
@@ -66,23 +67,39 @@ namespace Zhichkin.Hermes.UI
         }
         private void OnExpressionSelected(HermesViewModel selectedExpression)
         {
+            PropertyExpression model = (PropertyExpression)this.Model;
+
             if (selectedExpression == null)
             {
+                model.Expression = null;
                 this.Expression = null;
                 this.ExpressionView = null;
+                return;
             }
 
-            PropertyReferenceViewModel viewModel = selectedExpression as PropertyReferenceViewModel;
-            if (selectedExpression == null) return;
-
-            PropertyExpression model = this.Model as PropertyExpression;
             model.Expression = selectedExpression.Model;
-            model.Expression.Consumer = model;
-
             this.Expression = selectedExpression;
             this.Expression.Parent = this;
-            this.Alias = viewModel.Name; // this sets model's property Alias as well
-            this.ExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.Expression);
+
+            if (selectedExpression is PropertyReferenceViewModel)
+            {
+                model.Expression.Consumer = model;
+                this.Alias = ((PropertyReferenceViewModel)this.Expression).Name; // this sets model's property Alias as well
+                this.ExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.Expression);
+            }
+            else if (selectedExpression is ParameterReferenceViewModel)
+            {
+                this.Alias = ((ParameterReferenceViewModel)this.Expression).Name; // this sets model's property Alias as well
+                this.ExpressionView = new ParameterReferenceView((ParameterReferenceViewModel)this.Expression);
+            }
+        }
+
+        public ICommand RemovePropertyCommand { get; private set; }
+        private void RemoveProperty()
+        {
+            SelectStatementViewModel parent = this.Parent as SelectStatementViewModel;
+            if (parent == null) return;
+            parent.RemoveProperty(this);
         }
     }
 }

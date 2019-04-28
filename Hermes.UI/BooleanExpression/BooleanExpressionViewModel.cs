@@ -13,7 +13,6 @@ namespace Zhichkin.Hermes.UI
     {
         private UserControl _View;
         private BooleanFunction _Model;
-        private BooleanExpressionViewBuilder _ViewBuilder = new BooleanExpressionViewBuilder();
         private bool _IsCommandPanelVisible = true;
 
         public BooleanExpressionViewModel(HermesViewModel parent, string clause) : base(parent)

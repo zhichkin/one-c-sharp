@@ -17,7 +17,20 @@
         <TreeView ItemsSource="{Binding DialogItems}" SelectedItemChanged="TreeView_SelectedItemChanged"
                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TreeView.Resources>
-                
+
+                <HierarchicalDataTemplate DataType="{x:Type ui:QueryExpressionViewModel}" ItemsSource="{Binding QueryParameters}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2" Source="{Binding Icon}"/>-->
+                        <TextBlock Text="Query parameters" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type ui:ParameterExpressionViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Margin="2" Source="{Binding Icon}"/>-->
+                        <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+
                 <HierarchicalDataTemplate DataType="{x:Type ui:TableExpressionViewModel}" ItemsSource="{Binding Properties}">
                     <StackPanel Orientation="Horizontal">
                         <!--<Image Margin="2" Source="{Binding Icon}"/>-->

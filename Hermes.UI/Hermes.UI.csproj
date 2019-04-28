@@ -131,6 +131,10 @@
       <DependentUpon>ParameterExpressionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ParameterExpression\ParameterExpressionViewModel.cs" />
+    <Compile Include="ParameterExpression\ParameterReferenceView.xaml.cs">
+      <DependentUpon>ParameterReferenceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ParameterExpression\ParameterReferenceViewModel.cs" />
     <Compile Include="PropertyExpression\PropertyExpressionViewModel.cs" />
     <Compile Include="PropertyExpression\PropertyExpressionView.xaml.cs">
       <DependentUpon>PropertyExpressionView.xaml</DependentUpon>
@@ -192,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ParameterExpression\ParameterExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParameterExpression\ParameterReferenceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

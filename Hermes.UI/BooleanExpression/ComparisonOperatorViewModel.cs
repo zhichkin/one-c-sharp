@@ -113,41 +113,55 @@ namespace Zhichkin.Hermes.UI
 
         private void OnLeftExpressionSelected(HermesViewModel selectedExpression)
         {
+            ComparisonOperator model = (ComparisonOperator)this.Model;
+
             if (selectedExpression == null)
             {
+                model.LeftExpression = null;
                 this.LeftExpression = null;
                 this.LeftExpressionView = null;
+                return;
             }
 
-            PropertyReferenceViewModel viewModel = selectedExpression as PropertyReferenceViewModel;
-            if (selectedExpression == null) return;
-
-            ComparisonOperator model = (ComparisonOperator)this.Model;
             model.LeftExpression = selectedExpression.Model;
-            model.LeftExpression.Consumer = model;
-
             this.LeftExpression = selectedExpression;
             this.LeftExpression.Parent = this;
-            this.LeftExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.LeftExpression);
+
+            if (selectedExpression is PropertyReferenceViewModel)
+            {
+                model.LeftExpression.Consumer = model;
+                this.LeftExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.LeftExpression);
+            }
+            else if (selectedExpression is ParameterReferenceViewModel)
+            {
+                this.LeftExpressionView = new ParameterReferenceView((ParameterReferenceViewModel)this.LeftExpression);
+            }
         }
         private void OnRightExpressionSelected(HermesViewModel selectedExpression)
         {
+            ComparisonOperator model = (ComparisonOperator)this.Model;
+
             if (selectedExpression == null)
             {
+                model.RightExpression = null;
                 this.RightExpression = null;
                 this.RightExpressionView = null;
+                return;
             }
 
-            PropertyReferenceViewModel viewModel = selectedExpression as PropertyReferenceViewModel;
-            if (selectedExpression == null) return;
-
-            ComparisonOperator model = (ComparisonOperator)this.Model;
             model.RightExpression = selectedExpression.Model;
-            model.RightExpression.Consumer = model;
-
             this.RightExpression = selectedExpression;
             this.RightExpression.Parent = this;
-            this.RightExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.RightExpression);
+
+            if (selectedExpression is PropertyReferenceViewModel)
+            {
+                model.RightExpression.Consumer = model;
+                this.RightExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.RightExpression);
+            }
+            else if (selectedExpression is ParameterReferenceViewModel)
+            {
+                this.RightExpressionView = new ParameterReferenceView((ParameterReferenceViewModel)this.RightExpression);
+            }
         }
     }
 }

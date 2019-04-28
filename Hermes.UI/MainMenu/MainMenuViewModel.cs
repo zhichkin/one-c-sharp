@@ -62,43 +62,39 @@ namespace Zhichkin.Hermes.UI
             }
         }
 
-        private QueryExpressionViewModel query;
+        private QueryExpressionViewModel queryVM;
         private void AddNewQuery()
         {
-            //Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Hello from Hermes!" });
             Z.ClearRightRegion(this.regionManager);
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;
 
-            query = new QueryExpressionViewModel(null);
-            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter0", Type = new EntityInfo(1) { Name = "GUID" } });
-            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter1", Type = new EntityInfo(2) { Name = "Int32" } });
-            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter2", Type = new EntityInfo(3) { Name = "String" } });
-            //query.QueryParameters.Add(new ParameterExpression(query) { Name = "Parameter3", Type = new EntityInfo(4) { Name = "Boolean" } });
+            QueryExpression query = new QueryExpression(null);
+            queryVM = new QueryExpressionViewModel(null, query);
 
             SelectStatement model = new SelectStatement(null, null);
-            SelectStatementViewModel select = new SelectStatementViewModel(query, model);
-            query.QueryExpressions.Add(select);
+            SelectStatementViewModel select = new SelectStatementViewModel(queryVM, model);
+            queryVM.QueryExpressions.Add(select);
 
-            QueryExpressionView queryView = new QueryExpressionView(query);
+            QueryExpressionView queryView = new QueryExpressionView(queryVM);
             
             rightRegion.Add(queryView);
         }
         private void AddNewSelectStatement()
         {
             SelectStatementViewModel select = new SelectStatementViewModel(null, null);
-            query.QueryExpressions.Add(select);
+            queryVM.QueryExpressions.Add(select);
         }
         private void AddTableToSelectStatement()
         {
-            if (query.QueryExpressions.Count == 0) return;
-            SelectStatementViewModel select = query.QueryExpressions[0];
+            if (queryVM.QueryExpressions.Count == 0) return;
+            SelectStatementViewModel select = queryVM.QueryExpressions[0];
             select.Tables.Add(new TableExpressionViewModel(select, null) { Alias = "T1" });
         }
         private void ChangeFromOrientation()
         {
-            if (query.QueryExpressions.Count == 0) return;
-            SelectStatementViewModel select = query.QueryExpressions[0];
+            if (queryVM.QueryExpressions.Count == 0) return;
+            SelectStatementViewModel select = queryVM.QueryExpressions[0];
             select.IsFromVertical = !select.IsFromVertical;
         }
 

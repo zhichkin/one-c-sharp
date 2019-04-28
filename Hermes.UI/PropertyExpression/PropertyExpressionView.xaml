@@ -38,7 +38,8 @@
 
         <TextBlock Text="=" FontWeight="SemiBold" Margin="5,0,5,0" VerticalAlignment="Center"/>
 
-        <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" Height="24" Width="24"/>
+        <Button Content="x" ToolTip="Remove property" Command="{Binding RemovePropertyCommand}" Height="24" Width="24"/>
+        <Button Content="..." ToolTip="Select property expression" Command="{Binding OpenPropertySelectionDialogCommand}" Height="24" Width="24"/>
 
         <ContentControl Content="{Binding ExpressionView}" Margin="5,0,0,0"/>
         

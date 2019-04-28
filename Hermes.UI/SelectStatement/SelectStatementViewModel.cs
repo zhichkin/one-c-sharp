@@ -1,13 +1,10 @@
-﻿using Microsoft.Practices.Prism.Mvvm;
-using Microsoft.Practices.Unity;
-using System;
-using System.Windows.Input;
+﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Microsoft.Practices.Prism.Commands;
+using System.Windows.Input;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
-using System.Collections.Generic;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -31,7 +28,11 @@ namespace Zhichkin.Hermes.UI
                 Z.Notify(new Notification { Title = "Hermes", Content = "Предложение FROM не содержит ни одной таблицы!" });
                 return;
             }
-            this.Fields.Add(new PropertyExpressionViewModel(this, new PropertyExpression(this.Model)));
+            PropertyExpression property = new PropertyExpression(this.Model);
+            SelectStatement select = this.Model as SelectStatement;
+            if (select.SELECT == null) { select.SELECT = new List<PropertyExpression>(); }
+            select.SELECT.Add(property);
+            this.Fields.Add(new PropertyExpressionViewModel(this, property));
         }
 
         private bool _IsFromVertical = true;
@@ -84,6 +85,18 @@ namespace Zhichkin.Hermes.UI
                 this.Tables.Add(viewModel);
             }
             // TODO: add JoinExpression
+        }
+
+        public void RemoveProperty(PropertyExpressionViewModel child)
+        {
+            this.Fields.Remove(child);
+
+            SelectStatement select = this.Model as SelectStatement;
+            if (select.SELECT == null || select.SELECT.Count == 0) return;
+
+            PropertyExpression model = child.Model as PropertyExpression;
+            if (model == null) return;
+            select.SELECT.Remove(model);
         }
     }
 }

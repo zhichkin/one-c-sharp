@@ -8,5 +8,9 @@ namespace Zhichkin.Hermes.UI
         {
             InitializeComponent();
         }
+        public ParameterExpressionView(ParameterExpressionViewModel viewModel) : this()
+        {
+            this.DataContext = viewModel;
+        }
     }
 }
