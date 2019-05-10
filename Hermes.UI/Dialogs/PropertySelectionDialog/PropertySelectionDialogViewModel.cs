@@ -17,14 +17,14 @@ namespace Zhichkin.Hermes.UI
 
             this.DialogItems.Clear();
 
-            QueryExpressionViewModel query = GetQueryExpressionViewModel(caller);
+            QueryExpressionViewModel query = caller.GetQueryExpressionViewModel(caller);
             if (query == null) throw new Exception("QueryExpressionViewModel is not found!");
             this.DialogItems.Add(query);
 
             // TODO: при поиске SELECT нужно учитывать, что в контексте предложения JOIN список Tables
             // должен ограничиться текущим JoinTableExpression, так как по правилам SQL "нижние"
             // по спику таблицы и их поля не видны в данной области видимости
-            SelectStatementViewModel select = GetSelectStatementViewModel(caller);
+            SelectStatementViewModel select = caller.GetSelectStatementViewModel(caller);
             if (select == null) throw new Exception("SelectStatementViewModel is not found!");
             foreach (TableExpressionViewModel table in select.Tables)
             {
@@ -44,28 +44,6 @@ namespace Zhichkin.Hermes.UI
                 return ((ParameterExpressionViewModel)this.SelectedNode).GetParameterReferenceViewModel(this.SelectedNode.Parent);
             }
             return this.SelectedNode;
-        }
-
-        private QueryExpressionViewModel GetQueryExpressionViewModel(HermesViewModel child)
-        {
-            if (child is QueryExpressionViewModel) return (QueryExpressionViewModel)child;
-            HermesViewModel parent = child.Parent;
-            while (parent != null && !(parent is QueryExpressionViewModel))
-            {
-                parent = parent.Parent;
-            }
-            return (parent == null) ? null : (QueryExpressionViewModel)parent;
-        }
-
-        private SelectStatementViewModel GetSelectStatementViewModel(HermesViewModel child)
-        {
-            if (child is SelectStatementViewModel) return (SelectStatementViewModel)child;
-            HermesViewModel parent = child.Parent;
-            while (parent != null && !(parent is SelectStatementViewModel))
-            {
-                parent = parent.Parent;
-            }
-            return (parent == null) ? null : (SelectStatementViewModel)parent;
         }
     }
 }

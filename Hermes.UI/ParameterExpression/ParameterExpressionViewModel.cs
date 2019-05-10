@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ namespace Zhichkin.Hermes.UI
         public ParameterExpressionViewModel(HermesViewModel parent, ParameterExpression model) : base(parent, model)
         {
             this.RemoveParameterCommand = new DelegateCommand(this.RemoveParameter);
+            this.OpenTypeSelectionDialogCommand = new DelegateCommand(this.OpenTypeSelectionDialog);
         }
         public string Name
         {
@@ -102,6 +104,30 @@ namespace Zhichkin.Hermes.UI
             QueryExpressionViewModel parent = this.Parent as QueryExpressionViewModel;
             if (parent == null) return;
             parent.RemoveParameterCommand.Execute(this.Name);
+        }
+
+        public ICommand OpenTypeSelectionDialogCommand { get; private set; }
+        private void OpenTypeSelectionDialog()
+        {
+            QueryExpressionViewModel parent = this.Parent as QueryExpressionViewModel;
+            if (parent == null) return;
+            Confirmation confirmation = new Confirmation() { Title = "Select data type", Content = this };
+            parent.TypeSelectionDialog.Raise(confirmation, response =>
+            {
+                if (response.Confirmed) { OnTypeSelected(response.Content); }
+            });
+        }
+        private void OnTypeSelected(object selectedType)
+        {
+            if (selectedType == null) return;
+            MetadataNodeViewModel vm = selectedType as MetadataNodeViewModel;
+            if (vm == null) return;
+            MetadataNode model = vm.Model;
+            if (model == null) return;
+            Entity entity = model.Metadata as Entity;
+            if (entity == null) return;
+
+            this.Type= entity;
         }
 
         public ParameterReferenceViewModel GetParameterReferenceViewModel(HermesViewModel parent)

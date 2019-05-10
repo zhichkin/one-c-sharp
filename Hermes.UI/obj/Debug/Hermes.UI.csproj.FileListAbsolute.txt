@@ -135,3 +135,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\QueryExpression\QueryExpressi
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\QueryExpression\QueryExpressionView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\ParameterReferenceView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\ParameterReferenceView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\TypeSelectionDialog\TypeSelectionDialogView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\TypeSelectionDialog\TypeSelectionDialogView.baml

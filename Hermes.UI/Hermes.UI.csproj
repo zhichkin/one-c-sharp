@@ -113,6 +113,10 @@
       <DependentUpon>PropertySelectionDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogViewModel.cs" />
+    <Compile Include="Dialogs\TypeSelectionDialog\TypeSelectionDialogView.xaml.cs">
+      <DependentUpon>TypeSelectionDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TypeSelectionDialog\TypeSelectionDialogViewModel.cs" />
     <Compile Include="HermesViewModel.cs" />
     <Compile Include="Join\JoinView.xaml.cs">
       <DependentUpon>JoinView.xaml</DependentUpon>
@@ -172,6 +176,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\TypeSelectionDialog\TypeSelectionDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -15,5 +15,26 @@ namespace Zhichkin.Hermes.UI
         }
         public HermesModel Model { get; set; }
         public HermesViewModel Parent { get; set; }
+
+        public QueryExpressionViewModel GetQueryExpressionViewModel(HermesViewModel child)
+        {
+            if (child is QueryExpressionViewModel) return (QueryExpressionViewModel)child;
+            HermesViewModel parent = child.Parent;
+            while (parent != null && !(parent is QueryExpressionViewModel))
+            {
+                parent = parent.Parent;
+            }
+            return (parent == null) ? null : (QueryExpressionViewModel)parent;
+        }
+        public SelectStatementViewModel GetSelectStatementViewModel(HermesViewModel child)
+        {
+            if (child is SelectStatementViewModel) return (SelectStatementViewModel)child;
+            HermesViewModel parent = child.Parent;
+            while (parent != null && !(parent is SelectStatementViewModel))
+            {
+                parent = parent.Parent;
+            }
+            return (parent == null) ? null : (SelectStatementViewModel)parent;
+        }
     }
 }

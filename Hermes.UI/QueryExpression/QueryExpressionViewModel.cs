@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -10,12 +11,16 @@ namespace Zhichkin.Hermes.UI
     {
         public QueryExpressionViewModel(HermesViewModel parent, QueryExpression model) : base(parent, model)
         {
+            this.TypeSelectionDialog = new InteractionRequest<Confirmation>();
+
             this.QueryParameters = new ObservableCollection<ParameterExpressionViewModel>();
             this.QueryExpressions = new ObservableCollection<SelectStatementViewModel>();
 
             this.AddNewParameterCommand = new DelegateCommand(this.AddNewParameter);
             this.RemoveParameterCommand = new DelegateCommand<string>(this.RemoveParameter);
         }
+        public InteractionRequest<Confirmation> TypeSelectionDialog { get; private set; }
+
         public ObservableCollection<SelectStatementViewModel> QueryExpressions { get; private set; }
         public ObservableCollection<ParameterExpressionViewModel> QueryParameters { get; private set; }
 

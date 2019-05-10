@@ -25,7 +25,7 @@
         <TextBlock Text="=" FontWeight="SemiBold" Margin="5,0,5,0" VerticalAlignment="Center"/>
         
         <Button Content="x" ToolTip="Remove parameter" Command="{Binding RemoveParameterCommand}" Height="24" Width="24"/>
-        <Button Content="{Binding TypeButtonContent}" ToolTip="{Binding TypeButtonToolTip}" Command="{Binding OpenPropertySelectionDialogCommand}" Height="24" Width="24"/>
+        <Button Content="{Binding TypeButtonContent}" ToolTip="{Binding TypeButtonToolTip}" Command="{Binding OpenTypeSelectionDialogCommand}" Height="24" Width="24"/>
         
         <ContentControl Content="{Binding ValueView}" Margin="5,0,0,0"/>
         
