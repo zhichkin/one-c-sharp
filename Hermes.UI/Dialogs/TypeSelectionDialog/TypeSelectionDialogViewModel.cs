@@ -24,12 +24,38 @@ namespace Zhichkin.Hermes.UI
         }
         protected override void InitializeViewModel(object input)
         {
+            IMetadataService metadata = new MetadataService();
+
             List<MetadataNodeViewModel> items = new List<MetadataNodeViewModel>();
 
-            IMetadataService metadata = new MetadataService();
+            InfoBase system = new InfoBase();
+            system.Name = "Primitive types";
+            MetadataNode systemNode = new MetadataNode(system);
+            systemNode.Children = new List<MetadataNode>();
+            MetadataNodeViewModel systemVM = new MetadataNodeViewModel(null, systemNode);
+            systemVM.Children = new ObservableCollection<MetadataNodeViewModel>();
+            items.Add(systemVM);
+
+            MetadataNode systemType = new MetadataNode(Entity.Int32);
+            systemNode.Children.Add(systemType);
+            systemVM.Children.Add(new MetadataNodeViewModel(systemVM, systemType));
+
+            systemType = new MetadataNode(Entity.String);
+            systemNode.Children.Add(systemType);
+            systemVM.Children.Add(new MetadataNodeViewModel(systemVM, systemType));
+
+            systemType = new MetadataNode(Entity.Boolean);
+            systemNode.Children.Add(systemType);
+            systemVM.Children.Add(new MetadataNodeViewModel(systemVM, systemType));
+
+            systemType = new MetadataNode(Entity.DateTime);
+            systemNode.Children.Add(systemType);
+            systemVM.Children.Add(new MetadataNodeViewModel(systemVM, systemType));
+
             foreach (InfoBase ib in metadata.GetInfoBases())
             {
                 MetadataNode node = new MetadataNode(ib);
+                node.Children = new List<MetadataNode>();
                 MetadataNodeViewModel parentVM = new MetadataNodeViewModel(null, node);
                 parentVM.Children = new ObservableCollection<MetadataNodeViewModel>();
 
@@ -38,6 +64,8 @@ namespace Zhichkin.Hermes.UI
                     if (ns.Name == "Справочник" || ns.Name == "Документ")
                     {
                         MetadataNode child = new MetadataNode(ns);
+                        child.Children = new List<MetadataNode>();
+                        node.Children.Add(child);
                         MetadataNodeViewModel childVM = new MetadataNodeViewModel(parentVM, child);
                         childVM.Children = new ObservableCollection<MetadataNodeViewModel>();
                         parentVM.Children.Add(childVM);
@@ -45,6 +73,7 @@ namespace Zhichkin.Hermes.UI
                         foreach (Entity entity in ns.Entities)
                         {
                             MetadataNode grandchild = new MetadataNode(entity);
+                            child.Children.Add(grandchild);
                             MetadataNodeViewModel grandchildVM = new MetadataNodeViewModel(childVM, grandchild);
                             childVM.Children.Add(grandchildVM);
                         }

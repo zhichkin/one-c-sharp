@@ -74,7 +74,7 @@ namespace Zhichkin.Hermes.UI
         {
             get
             {
-                return (this.Type == null) ? "Select type of the value" : this.Type.FullName;
+                return (this.Type == null) ? "Select type of the value" : "Select value of the parameter";
             }
         }
         public UIElement ValueView
@@ -127,7 +127,11 @@ namespace Zhichkin.Hermes.UI
             Entity entity = model.Metadata as Entity;
             if (entity == null) return;
 
-            this.Type= entity;
+            this.Type = entity;
+
+            TextBlock view = new TextBlock();
+            view.Text = entity.FullName;
+            this.ValueView = view;
         }
 
         public ParameterReferenceViewModel GetParameterReferenceViewModel(HermesViewModel parent)
