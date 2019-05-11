@@ -61,8 +61,25 @@ namespace Zhichkin.Hermes.UI
             set
             {
                 if (this.Model == null) return;
-                ((ParameterExpression)this.Model).Value = value;
-                // TODO: convert numeric values to Int32 or Decimal
+                ParameterExpression model = (ParameterExpression)this.Model;
+                if (value == null)
+                {
+                    model.Value = value;
+                    return;
+                }
+
+                if (this.Type == Entity.Int32)
+                {
+                    model.Value = Int32.Parse(value.ToString());
+                }
+                else if (this.Type == Entity.Decimal)
+                {
+                    model.Value = decimal.Parse(value.ToString());
+                }
+                else
+                {
+                    model.Value = value;
+                }
                 this.OnPropertyChanged("Value");
             }
         }

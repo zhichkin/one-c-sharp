@@ -29,12 +29,13 @@
         </Border>
         
         <Button Content="x" ToolTip="Remove parameter" Command="{Binding RemoveParameterCommand}" Height="24" Width="24"/>
-        <TextBlock Text="=" FontWeight="SemiBold" Margin="5,0,5,0" VerticalAlignment="Center"/>
+        <TextBlock Text="=" FontWeight="SemiBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        
+        <ContentControl Content="{Binding ValueView}" Margin="5,0,5,0" VerticalAlignment="Center"/>
+        
         <Button Content="{Binding TypeButtonContent}" ToolTip="{Binding TypeButtonToolTip}" Command="{Binding OpenTypeSelectionDialogCommand}" Height="24" Width="24"/>
         <Button Content="..." ToolTip="Select value of the parameter" Command="{Binding OpenReferenceObjectDialogCommand}" Height="24" Width="24"
                 Visibility="{Binding IsReferenceObjectSelectionEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-
-        <ContentControl Content="{Binding ValueView}" Margin="5,0,5,0" VerticalAlignment="Center"/>
         <Button Content="x" ToolTip="Clear parameter" Command="{Binding ClearParameterCommand}"
                 Visibility="{Binding IsClearButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Height="24" Width="24"/>
