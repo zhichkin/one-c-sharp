@@ -12,6 +12,7 @@ namespace Zhichkin.Hermes.UI
         public QueryExpressionViewModel(HermesViewModel parent, QueryExpression model) : base(parent, model)
         {
             this.TypeSelectionDialog = new InteractionRequest<Confirmation>();
+            this.ReferenceObjectSelectionDialog = new InteractionRequest<Confirmation>();
 
             this.QueryParameters = new ObservableCollection<ParameterExpressionViewModel>();
             this.QueryExpressions = new ObservableCollection<SelectStatementViewModel>();
@@ -20,7 +21,8 @@ namespace Zhichkin.Hermes.UI
             this.RemoveParameterCommand = new DelegateCommand<string>(this.RemoveParameter);
         }
         public InteractionRequest<Confirmation> TypeSelectionDialog { get; private set; }
-
+        public InteractionRequest<Confirmation> ReferenceObjectSelectionDialog { get; private set; }
+        
         public ObservableCollection<SelectStatementViewModel> QueryExpressions { get; private set; }
         public ObservableCollection<ParameterExpressionViewModel> QueryParameters { get; private set; }
 

@@ -44,6 +44,10 @@ namespace Zhichkin.Hermes.UI
             systemNode.Children.Add(systemType);
             systemVM.Children.Add(new MetadataNodeViewModel(systemVM, systemType));
 
+            systemType = new MetadataNode(Entity.Decimal);
+            systemNode.Children.Add(systemType);
+            systemVM.Children.Add(new MetadataNodeViewModel(systemVM, systemType));
+
             systemType = new MetadataNode(Entity.Boolean);
             systemNode.Children.Add(systemType);
             systemVM.Children.Add(new MetadataNodeViewModel(systemVM, systemType));
