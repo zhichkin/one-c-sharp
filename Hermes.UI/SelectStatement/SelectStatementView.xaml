@@ -91,7 +91,7 @@
                                     <ui:SelectStatementView />
                                 </DataTemplate>
                                 <DataTemplate DataType="{x:Type ui:JoinExpressionViewModel}">
-                                    <ui:JoinView />
+                                    <ui:JoinExpressionView />
                                 </DataTemplate>
                             </ItemsControl.Resources>
                         </ItemsControl>

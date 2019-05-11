@@ -28,8 +28,6 @@ namespace Zhichkin.Hermes.UI
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.AddNewQueryCommand = new DelegateCommand(this.AddNewQuery);
-            this.AddNewSelectStatementCommand = new DelegateCommand(this.AddNewSelectStatement);
-            this.AddTableToSelectStatementCommand = new DelegateCommand(this.AddTableToSelectStatement);
             this.ChangeFromOrientationCommand = new DelegateCommand(this.ChangeFromOrientation);
             this.BuildMetadataTreeCommand = new DelegateCommand(this.BuildMetadataTree);
         }
@@ -45,8 +43,6 @@ namespace Zhichkin.Hermes.UI
             return errorText;
         }
         public ICommand AddNewQueryCommand { get; private set; }
-        public ICommand AddNewSelectStatementCommand { get; private set; }
-        public ICommand AddTableToSelectStatementCommand { get; private set; }
         public ICommand ChangeFromOrientationCommand { get; private set; }
         public ICommand BuildMetadataTreeCommand { get; private set; }
         
@@ -79,17 +75,6 @@ namespace Zhichkin.Hermes.UI
             QueryExpressionView queryView = new QueryExpressionView(queryVM);
             
             rightRegion.Add(queryView);
-        }
-        private void AddNewSelectStatement()
-        {
-            SelectStatementViewModel select = new SelectStatementViewModel(null, null);
-            queryVM.QueryExpressions.Add(select);
-        }
-        private void AddTableToSelectStatement()
-        {
-            if (queryVM.QueryExpressions.Count == 0) return;
-            SelectStatementViewModel select = queryVM.QueryExpressions[0];
-            select.Tables.Add(new TableExpressionViewModel(select, null) { Alias = "T1" });
         }
         private void ChangeFromOrientation()
         {

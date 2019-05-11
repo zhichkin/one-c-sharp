@@ -34,7 +34,10 @@
                 <HierarchicalDataTemplate DataType="{x:Type ui:TableExpressionViewModel}" ItemsSource="{Binding Properties}">
                     <StackPanel Orientation="Horizontal">
                         <!--<Image Margin="2" Source="{Binding Icon}"/>-->
-                        <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Alias}" Margin="2" VerticalAlignment="Center"/>
+                        <TextBlock Text="(" Margin="5,2,0,2" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding FullName}" Margin="1,2,1,2" VerticalAlignment="Center"/>
+                        <TextBlock Text=")" Margin="0,2,0,2" VerticalAlignment="Center"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type ui:PropertyReferenceViewModel}">

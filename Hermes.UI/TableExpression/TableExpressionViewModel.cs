@@ -16,6 +16,16 @@ namespace Zhichkin.Hermes.UI
                 return ((TableExpression)this.Model).Name;
             }
         }
+        public string FullName
+        {
+            get
+            {
+                if (this.Model == null) { return string.Empty; }
+                TableExpression model = (TableExpression)this.Model;
+                if (model.Entity == null) { return string.Empty; }
+                return model.Entity.FullName;
+            }
+        }
         public string Alias
         {
             get

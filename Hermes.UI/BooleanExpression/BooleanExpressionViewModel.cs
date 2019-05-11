@@ -26,30 +26,46 @@ namespace Zhichkin.Hermes.UI
         {
             if (this.Parent is SelectStatementViewModel)
             {
+                SelectStatement model = this.Parent.Model as SelectStatement;
                 if (this.Clause == "WHERE")
                 {
-                    SelectStatement model = ((SelectStatementViewModel)this.Parent).Model as SelectStatement;
-                    if (model != null)
-                    {
-                        _Model = model.WHERE;
-                    }
+                    if (model != null) { _Model = model.WHERE; }
                 }
-                //else if (clause == "HAVING")
+                else if (this.Clause == "HAVING")
+                {
+                    if (model != null) { _Model = model.HAVING; }
+                }
+            }
+            else if (this.Parent is JoinExpressionViewModel)
+            {
+                JoinExpression model = this.Parent.Model as JoinExpression;
+                if (this.Clause == "ON")
+                {
+                    if (model != null) { _Model = model.ON; }
+                }
             }
         }
         private void SetModelToParent()
         {
             if (this.Parent is SelectStatementViewModel)
             {
+                SelectStatement model = this.Parent.Model as SelectStatement;
                 if (this.Clause == "WHERE")
                 {
-                    SelectStatement model = ((SelectStatementViewModel)this.Parent).Model as SelectStatement;
-                    if (model != null)
-                    {
-                        model.WHERE = _Model;
-                    }
+                    if (model != null) { model.WHERE = _Model; }
                 }
-                //else if (clause == "HAVING")
+                else if (this.Clause == "HAVING")
+                {
+                    if (model != null) { model.HAVING = _Model; }
+                }
+            }
+            else if (this.Parent is JoinExpressionViewModel)
+            {
+                JoinExpression model = this.Parent.Model as JoinExpression;
+                if (this.Clause == "ON")
+                {
+                    if (model != null) { model.ON = _Model; }
+                }
             }
         }
         public string Clause { get; private set; }
@@ -76,15 +92,18 @@ namespace Zhichkin.Hermes.UI
         public ICommand AddNewConditionCommand { get; private set; }
         private void AddNewCondition()
         {
-            if (((SelectStatementViewModel)this.Parent).Tables.Count == 0)
+            if (this.Parent is SelectStatementViewModel)
             {
-                Z.Notify(new Notification { Title = "Hermes", Content = "Предложение FROM не содержит ни одной таблицы!" });
-                return;
+                if (((SelectStatementViewModel)this.Parent).Tables.Count == 0)
+                {
+                    Z.Notify(new Notification { Title = "Hermes", Content = "Предложение FROM не содержит ни одной таблицы!" });
+                    return;
+                }
             }
 
             if (_Model == null)
             {
-                _Model = new ComparisonOperator(((SelectStatementViewModel)this.Parent).Model);
+                _Model = new ComparisonOperator(this.Parent.Model);
                 SetModelToParent();
                 ComparisonOperatorViewModel viewModel = new ComparisonOperatorViewModel(this, (ComparisonOperator)_Model);
                 this.View = new ComparisonOperatorView(viewModel);
@@ -93,7 +112,7 @@ namespace Zhichkin.Hermes.UI
             {
                 ComparisonOperatorViewModel currentVM = this.View.DataContext as ComparisonOperatorViewModel;
 
-                BooleanOperator substitute = new BooleanOperator(((SelectStatementViewModel)this.Parent).Model);
+                BooleanOperator substitute = new BooleanOperator(this.Parent.Model);
                 substitute.AddChild(_Model);
                 BooleanOperatorViewModel substituteVM = new BooleanOperatorViewModel(this, substitute);
 
@@ -122,7 +141,7 @@ namespace Zhichkin.Hermes.UI
         public void SetBooleanExpression(BooleanFunctionViewModel vm)
         {
             _Model = (BooleanFunction)vm.Model;
-            _Model.Consumer = ((SelectStatementViewModel)this.Parent).Model;
+            _Model.Consumer = this.Parent.Model;
             vm.Parent = this;
             SetModelToParent();
             if (_Model is ComparisonOperator)

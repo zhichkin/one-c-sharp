@@ -85,8 +85,6 @@ C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.CoreCompileInputs.cache
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Hermes.UI.csproj.CopyComplete
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.dll
 C:\Zhichkin\Z\Hermes.UI\obj\Debug\Zhichkin.Hermes.UI.pdb
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinView.g.cs
-C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinView.baml
 C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Hermes.UI.dll.config
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\MetadataTree\MetadataTreeView.baml
@@ -137,3 +135,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\Parameter
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\ParameterExpression\ParameterReferenceView.baml
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\TypeSelectionDialog\TypeSelectionDialogView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Dialogs\TypeSelectionDialog\TypeSelectionDialogView.baml
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinExpressionView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Hermes.UI\obj\Debug\Join\JoinExpressionView.baml

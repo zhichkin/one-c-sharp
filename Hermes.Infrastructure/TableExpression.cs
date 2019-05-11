@@ -5,6 +5,14 @@ using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.Model
 {
+    public static class JoinTypes
+    {
+        public static string InnerJoin = "INNER JOIN";
+        public static string LeftJoin = "LEFT JOIN";
+        public static string RightJoin = "RIGHT JOIN";
+        public static string FullJoin = "FULL JOIN";
+    }
+
     public class TableExpression : HermesModel
     {
         public TableExpression(HermesModel consumer, Entity entity) : base(consumer)
@@ -27,5 +35,15 @@ namespace Zhichkin.Hermes.Model
         public BooleanFunction HAVING { get; set; }
         public List<TableExpression> FROM { get; set; }
         public List<PropertyExpression> SELECT { get; set; }
+    }
+    public class JoinExpression : TableExpression
+    {
+        public JoinExpression(HermesModel consumer, Entity entity) : base(consumer, entity)
+        {
+            this.JoinType = JoinTypes.InnerJoin;
+        }
+        public string JoinType { get; set; }
+        public BooleanFunction ON { get; set; }
+        // TODO: can be transformed into SelectStatement
     }
 }

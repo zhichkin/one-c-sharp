@@ -118,8 +118,8 @@
     </Compile>
     <Compile Include="Dialogs\TypeSelectionDialog\TypeSelectionDialogViewModel.cs" />
     <Compile Include="HermesViewModel.cs" />
-    <Compile Include="Join\JoinView.xaml.cs">
-      <DependentUpon>JoinView.xaml</DependentUpon>
+    <Compile Include="Join\JoinExpressionView.xaml.cs">
+      <DependentUpon>JoinExpressionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Join\JoinExpressionViewModel.cs" />
     <Compile Include="MetadataNode\MetadataNodeView.xaml.cs">
@@ -183,7 +183,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Join\JoinView.xaml">
+    <Page Include="Join\JoinExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
