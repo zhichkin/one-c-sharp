@@ -5,8 +5,10 @@ using Microsoft.Practices.Prism.PubSubEvents;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
+using Zhichkin.Hermes.Services;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -14,6 +16,8 @@ namespace Zhichkin.Hermes.UI
     public class MainMenuViewModel : BindableBase
     {
         private const string CONST_ModuleDialogsTitle = "Hermes";
+
+        private QueryExpressionViewModel queryVM;
 
         private readonly IUnityContainer container;
         private readonly IRegionManager regionManager;
@@ -28,6 +32,7 @@ namespace Zhichkin.Hermes.UI
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.AddNewQueryCommand = new DelegateCommand(this.AddNewQuery);
+            this.SaveQueryCommand = new DelegateCommand(this.SaveQuery);
             this.ChangeFromOrientationCommand = new DelegateCommand(this.ChangeFromOrientation);
             this.BuildMetadataTreeCommand = new DelegateCommand(this.BuildMetadataTree);
         }
@@ -43,6 +48,7 @@ namespace Zhichkin.Hermes.UI
             return errorText;
         }
         public ICommand AddNewQueryCommand { get; private set; }
+        public ICommand SaveQueryCommand { get; private set; }
         public ICommand ChangeFromOrientationCommand { get; private set; }
         public ICommand BuildMetadataTreeCommand { get; private set; }
         
@@ -58,7 +64,6 @@ namespace Zhichkin.Hermes.UI
             }
         }
 
-        private QueryExpressionViewModel queryVM;
         private void AddNewQuery()
         {
             Z.ClearRightRegion(this.regionManager);
@@ -66,9 +71,11 @@ namespace Zhichkin.Hermes.UI
             if (rightRegion == null) return;
 
             QueryExpression query = new QueryExpression(null);
+            query.Expressions = new List<HermesModel>();
             queryVM = new QueryExpressionViewModel(null, query);
 
-            SelectStatement model = new SelectStatement(null, null);
+            SelectStatement model = new SelectStatement(query, null);
+            query.Expressions.Add(model);
             SelectStatementViewModel select = new SelectStatementViewModel(queryVM, model);
             queryVM.QueryExpressions.Add(select);
 
@@ -81,6 +88,14 @@ namespace Zhichkin.Hermes.UI
             if (queryVM.QueryExpressions.Count == 0) return;
             SelectStatementViewModel select = queryVM.QueryExpressions[0];
             select.IsFromVertical = !select.IsFromVertical;
+        }
+
+        private void SaveQuery()
+        {
+            QueryExpression query = queryVM.Model as QueryExpression;
+            SerializationService serializer = new SerializationService();
+            string xml = serializer.ToXML(query);
+            
         }
 
         private void BuildMetadataTree()

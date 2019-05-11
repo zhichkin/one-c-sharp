@@ -13,7 +13,7 @@ DEBUG;TRACE
 172064963132
 
 44-880071017
-1391366209970
+139-1442724261
 BooleanExpression\BooleanOperatorView.xaml;BooleanExpression\ComparisonOperatorView.xaml;CaseWhenThen\CaseWhenThenView.xaml;BooleanExpression\BooleanExpressionView.xaml;Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml;Dialogs\TypeSelectionDialog\TypeSelectionDialogView.xaml;Join\JoinExpressionView.xaml;MainMenu\MainMenuView.xaml;MetadataNode\MetadataNodeView.xaml;MetadataTree\MetadataTreeView.xaml;ParameterExpression\ParameterExpressionView.xaml;ParameterExpression\ParameterReferenceView.xaml;PropertyExpression\PropertyExpressionView.xaml;PropertyReference\PropertyReferenceView.xaml;QueryExpression\QueryExpressionView.xaml;SelectStatement\SelectStatementView.xaml;TableExpression\TableExpressionView.xaml;
 
 False
