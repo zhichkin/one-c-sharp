@@ -24,7 +24,7 @@ namespace Zhichkin.Hermes.Model
                 this.Alias = this.Entity.Name;
             }
         }
-        public string Name { get { return this.Entity.Name; } }
+        public string Name { get { return (this.Entity == null)? string.Empty: this.Entity.Name; } }
         public string Alias { get; set; }
         public Entity Entity { get; private set; }
     }

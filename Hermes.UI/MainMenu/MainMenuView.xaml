@@ -11,6 +11,7 @@
             <MenuItem Header="Hermes">
                 <MenuItem Header="Add new QUERY" Command="{Binding AddNewQueryCommand}"/>
                 <MenuItem Header="Save QUERY" Command="{Binding SaveQueryCommand}"/>
+                <MenuItem Header="Open QUERY" Command="{Binding OpenQueryCommand}"/>
                 <MenuItem Header="Change FROM orientation" Command="{Binding ChangeFromOrientationCommand}"/>
                 <Separator/>
                 <MenuItem Header="Build metadata tree" Command="{Binding BuildMetadataTreeCommand}"/>

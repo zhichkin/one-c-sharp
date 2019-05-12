@@ -1,36 +1,49 @@
-﻿using Zhichkin.Hermes.Model;
+﻿using Newtonsoft.Json;
+using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.Services
 {
     public interface ISerializationService
     {
         string ToSQL(QueryExpression query);
-        string ToXML(QueryExpression query);
-        QueryExpression FromXML(string xml);
         string ToJson(QueryExpression query);
         QueryExpression FromJson(string json);
     }
     public sealed class SerializationService : ISerializationService
     {
-        public string ToXML(QueryExpression query)
-        {
-            return string.Empty; 
-        }
-        public QueryExpression FromXML(string xml)
-        {
-            return null;
-        }
         public string ToJson(QueryExpression query)
         {
-            return string.Empty;
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                TypeNameHandling = TypeNameHandling.All,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            };
+            settings.Converters.Add(new EntityJsonConverter());
+            settings.Converters.Add(new PropertyJsonConverter());
+            settings.Converters.Add(new ReferenceProxyJsonConverter());
+            settings.Converters.Add(new ParameterExpressionJsonConverter());
+            return JsonConvert.SerializeObject(query, settings);
         }
         public QueryExpression FromJson(string json)
         {
-            return null;
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            };
+            settings.Converters.Add(new EntityJsonConverter());
+            settings.Converters.Add(new PropertyJsonConverter());
+            settings.Converters.Add(new ReferenceProxyJsonConverter());
+            settings.Converters.Add(new BooleanFunctionJsonConverter());
+            settings.Converters.Add(new ParameterExpressionJsonConverter());
+            return JsonConvert.DeserializeObject<QueryExpression>(json, settings);
         }
         public string ToSQL(QueryExpression query)
         {
             return string.Empty;
         }
     }
+
+
 }
