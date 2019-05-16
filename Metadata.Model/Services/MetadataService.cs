@@ -18,6 +18,15 @@ namespace Zhichkin.Metadata.Services
         public IReferenceObjectFactory Factory { get; private set; }
         public string ConnectionString { get; private set; }
 
+        public Namespace GetTypeSystemNamespace()
+        {
+            QueryService service = new QueryService(MetadataPersistentContext.Current.ConnectionString);
+            string sql = "SELECT [key] FROM [metadata].[namespaces] WHERE [key] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
+            Guid key = (Guid)service.ExecuteScalar(sql);
+            Namespace typeSystem = new Namespace(key, PersistentState.Virtual);
+            return typeSystem;
+        }
+
         public List<InfoBase> GetInfoBases()
         {
             List<InfoBase> list = new List<InfoBase>();
@@ -380,7 +389,7 @@ namespace Zhichkin.Metadata.Services
         {
             if (typeof(TParent) == typeof(Namespace) && typeof(TChild) == typeof(Entity))
             {
-                return "AND [owner] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier)"; // filter by nested entities
+                return "AND [owner] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier)"; // filter out nested entities with namespace specified
             }
             return string.Empty;
         }

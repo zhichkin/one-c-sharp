@@ -176,7 +176,9 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Metadata.Model": "1.0.0"
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0",
+          "System.Data.SqlClient": "4.6.0"
         },
         "compile": {
           "bin/placeholder/Zhichkin.Hermes.Model.dll": {}
@@ -358,7 +360,9 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Metadata.Model": "1.0.0"
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0",
+          "System.Data.SqlClient": "4.6.0"
         },
         "compile": {
           "bin/placeholder/Zhichkin.Hermes.Model.dll": {}
@@ -540,7 +544,9 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Metadata.Model": "1.0.0"
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0",
+          "System.Data.SqlClient": "4.6.0"
         },
         "compile": {
           "bin/placeholder/Zhichkin.Hermes.Model.dll": {}
@@ -722,7 +728,9 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Metadata.Model": "1.0.0"
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0",
+          "System.Data.SqlClient": "4.6.0"
         },
         "compile": {
           "bin/placeholder/Zhichkin.Hermes.Model.dll": {}

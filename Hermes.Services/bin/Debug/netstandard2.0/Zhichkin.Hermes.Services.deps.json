@@ -210,7 +210,9 @@
       },
       "Zhichkin.Hermes.Model/1.0.0": {
         "dependencies": {
-          "Metadata.Model": "1.0.0"
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0",
+          "System.Data.SqlClient": "4.6.0"
         },
         "runtime": {
           "Zhichkin.Hermes.Model.dll": {}

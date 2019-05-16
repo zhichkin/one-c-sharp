@@ -19,7 +19,22 @@
   </Target>
 
   <ItemGroup>
+    <None Remove="SQL\00 - schema_hermes.sql" />
+    <None Remove="SQL\01 - requests.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SQL\00 - schema_hermes.sql" />
+    <Content Include="SQL\01 - requests.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj" />
+    <ProjectReference Include="..\orm\ORM.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
   </ItemGroup>
 
 </Project>

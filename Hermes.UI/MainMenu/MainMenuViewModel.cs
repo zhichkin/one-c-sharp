@@ -101,42 +101,64 @@ namespace Zhichkin.Hermes.UI
 
             SerializationService serializer = new SerializationService();
             string json = serializer.ToJson(model);
-            
-            using (StreamWriter writer = new StreamWriter(GetQueryFilePath(), false))
-            {
-                writer.Write(json);
-            }
 
-            Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = "The query has been saved." });
+            try
+            {
+                HermesService Hermes = new HermesService();
+                Request request = Hermes.GetTestRequest();
+                request.ParseTree = json;
+                request.Save();
+
+                Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = "The query has been saved." });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = Z.GetErrorText(ex) });
+            }
         }
         private void OpenQuery()
         {
             string json = string.Empty;
-            string path = GetQueryFilePath();
-            using (StreamReader reader = new StreamReader(path))
-            {
-                json = reader.ReadToEnd();
-            }
-
             QueryExpression query = null;
             try
             {
+                HermesService Hermes = new HermesService();
+                Request request = Hermes.GetTestRequest();
+                json = request.ParseTree;
+                
                 SerializationService serializer = new SerializationService();
                 query = serializer.FromJson(json);
             }
             catch (Exception ex)
             {
                 Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = Z.GetErrorText(ex) });
+                return;
             }
 
-            var psi = new ProcessStartInfo(@"notepad.exe")
+            try
             {
-                Arguments = $"\"{path}\"",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            Process.Start(psi);
-            
+                string path = GetQueryFilePath();
+                using (StreamWriter writer = new StreamWriter(path, false))
+                {
+                    writer.Write(json);
+                }
+                //using (StreamReader reader = new StreamReader(path))
+                //{
+                //    json = reader.ReadToEnd();
+                //}
+                ProcessStartInfo psi = new ProcessStartInfo(@"notepad.exe")
+                {
+                    Arguments = $"\"{path}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = Z.GetErrorText(ex) });
+            }
+
             //Z.ClearRightRegion(this.regionManager);
             //IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             //if (rightRegion == null) return;

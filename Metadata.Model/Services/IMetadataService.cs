@@ -8,13 +8,18 @@ namespace Zhichkin.Metadata.Services
 {
     public interface IMetadataService
     {
+        Namespace GetTypeSystemNamespace();
+
+        List<InfoBase> GetInfoBases();
+
         IList<TChild> GetChildren<TParent, TChild>(TParent entity, string propertyName)
             where TParent : IReferenceObject
             where TChild : IReferenceObject;
+
         IList<TChild> GetChildren<TParent, TChild>(TParent entity, string propertyName, Action<SqlDataReader, TChild> mapper)
             where TParent : IReferenceObject
             where TChild : IValueObject, new();
-        List<InfoBase> GetInfoBases();
+
         void Save(InfoBase entity);
         void Save(Namespace entity);
         void Save(Entity entity);
