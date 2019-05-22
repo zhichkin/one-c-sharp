@@ -8,6 +8,7 @@ namespace Zhichkin.Metadata.Services
 {
     public interface IMetadataService
     {
+        InfoBase GetSystemInfoBase();
         Namespace GetTypeSystemNamespace();
 
         List<InfoBase> GetInfoBases();

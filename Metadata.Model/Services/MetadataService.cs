@@ -18,6 +18,15 @@ namespace Zhichkin.Metadata.Services
         public IReferenceObjectFactory Factory { get; private set; }
         public string ConnectionString { get; private set; }
 
+        public InfoBase GetSystemInfoBase()
+        {
+            QueryService service = new QueryService(MetadataPersistentContext.Current.ConnectionString);
+            string sql = "SELECT [key] FROM [metadata].[infobases] WHERE [key] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
+            Guid key = (Guid)service.ExecuteScalar(sql);
+            InfoBase infoBase = new InfoBase(key, PersistentState.Virtual);
+            return infoBase;
+        }
+
         public Namespace GetTypeSystemNamespace()
         {
             QueryService service = new QueryService(MetadataPersistentContext.Current.ConnectionString);

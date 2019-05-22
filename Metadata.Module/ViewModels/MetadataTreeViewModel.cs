@@ -56,6 +56,9 @@ namespace Zhichkin.Metadata.ViewModels
             this.infoBases.Clear();
             try
             {
+                InfoBase system = dataService.GetSystemInfoBase();
+                this.InfoBases.Add(system);
+
                 foreach (InfoBase infoBase in dataService.GetInfoBases())
                 {
                     this.infoBases.Add(infoBase);
