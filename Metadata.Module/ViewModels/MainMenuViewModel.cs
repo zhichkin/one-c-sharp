@@ -227,7 +227,23 @@ namespace Zhichkin.Metadata.ViewModels
             {
                 InfoBase infoBase = new InfoBase();
                 (new XMLMetadataAdapter()).Load(dialog.FileName, infoBase);
-                bool cancel = OpenSQLConnectionPopup(infoBase);
+
+                bool cancel = true;
+
+                Confirmation confirmation = new Confirmation
+                {
+                    Title = CONST_ModuleDialogsTitle,
+                    Content = "Загрузить метаданные SQL Server ?"
+                };
+                Z.Confirm(confirmation, c => { cancel = !c.Confirmed; });
+
+                if (cancel)
+                {
+                    MetadataTreeViewModel.InfoBases.Add(infoBase);
+                    return;
+                }
+
+                cancel = OpenSQLConnectionPopup(infoBase);
                 if (cancel)
                 {
                     Z.Notify(new Notification { Title = CONST_ModuleDialogsTitle, Content = "Действие отменено пользователем." });

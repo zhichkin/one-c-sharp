@@ -5,7 +5,7 @@ namespace Zhichkin.Metadata.Model
 {
     public abstract class EntityBase : ReferenceObject, IComparable
     {
-        private static int typeCode = 0;
+        private int typeCode = 0;
 
         public EntityBase(IDataMapper mapper) : base(mapper) { }
         public EntityBase(IDataMapper mapper, Guid identity) : base(mapper, identity) { }

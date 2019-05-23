@@ -15,6 +15,8 @@ namespace Zhichkin.Metadata.Model
         public InfoBase(Guid identity) : base(_mapper, identity) { }
         public InfoBase(Guid identity, PersistentState state) : base(_mapper, identity, state) { }
 
+
+
         private string server = string.Empty;
         private string database = string.Empty;
         private string username = string.Empty;
