@@ -7,10 +7,13 @@ using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Module;
 using Zhichkin.Metadata.Services;
+using Zhichkin.Metadata.UI;
+using Zhichkin.Metadata.Views;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Metadata.ViewModels
@@ -45,6 +48,8 @@ namespace Zhichkin.Metadata.ViewModels
             modelsLookup.Add(typeof(Entity), typeof(EntityViewModel));
             viewsLookup.Add(typeof(Property), typeof(PropertyView));
             modelsLookup.Add(typeof(Property), typeof(PropertyViewModel));
+
+            this.InfoBaseViewPopup = new InteractionRequest<Confirmation>();
 
             RefreshInfoBases();
         }
@@ -150,6 +155,32 @@ namespace Zhichkin.Metadata.ViewModels
             {
                 Z.Notify(new Notification { Title = "Z-Metadata", Content = ExceptionsHandling.GetErrorText(ex) });
             }
+        }
+
+        public InteractionRequest<Confirmation> InfoBaseViewPopup { get; private set; }
+        public void OpenInfoBaseView(object model)
+        {
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = (InfoBase)model
+            };
+            this.InfoBaseViewPopup.Raise(confirmation);
+        }
+        public void KillInfoBase(object model)
+        {
+            _CurrentInfoBase = (InfoBase)model;
+            MainMenuViewModel viewModel = this.GetMetadataModuleMainMenu();
+            if (viewModel == null) return;
+            viewModel.KillMetadataCommand.Execute(model);
+        }
+        private MainMenuViewModel GetMetadataModuleMainMenu()
+        {
+            IRegion topRegion = this.regionManager.Regions[RegionNames.TopRegion];
+            if (topRegion == null) return null;
+            MetadataMainMenu view = topRegion.Views.Where(v => v is MetadataMainMenu).FirstOrDefault() as MetadataMainMenu;
+            if (view == null) return null;
+            return view.DataContext as MainMenuViewModel;
         }
     }
 }

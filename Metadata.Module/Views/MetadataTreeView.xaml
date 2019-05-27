@@ -5,6 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Model="clr-namespace:Zhichkin.Metadata.Model;assembly=Zhichkin.Metadata.Model"
              xmlns:ViewModel="clr-namespace:Zhichkin.Metadata.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
@@ -12,6 +15,7 @@
         <ResourceDictionary>
             <BitmapImage x:Key="Icon_26_Refresh" UriSource="..\Images\26 Refresh.png"/>
             <BitmapImage x:Key="Icon_Add_Database" UriSource="..\Images\26 Add Database.png"/>
+            <BitmapImage x:Key="Icon_Kill_Database" UriSource="..\Images\26 Delete Database.png"/>
             <BitmapImage x:Key="Icon_Exist_Database" UriSource="..\Images\26 Accept Database.png"/>
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
             <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
@@ -29,15 +33,44 @@
             <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
+    <i:Interaction.Triggers>
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding InfoBaseViewPopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:InfoBaseView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
+    </i:Interaction.Triggers>
+
     <Grid>
         <TreeView Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                   ItemsSource="{Binding Path=InfoBases}" MouseMove="TreeView_MouseMove"
-                  TreeViewItem.PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown">
+                  TreeViewItem.PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+                  TreeViewItem.PreviewMouseRightButtonDown="TreeViewItem_PreviewMouseRightButtonDown">
             <TreeView.Resources>
                 <ViewModel:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">
                     <StackPanel Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Открыть" Click="OpenInfoBaseView_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Удалить" Click="KillInfoBase_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Kill_Database}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">

@@ -59,5 +59,32 @@ namespace Zhichkin.Metadata.Views
             if (menu == null) return;
             viewModel.ShowProperties(menu.DataContext);
         }
+
+        private void TreeViewItem_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TreeViewItem treeViewItem = Z.GetParent<TreeViewItem>(e.OriginalSource as DependencyObject);
+
+            if (treeViewItem != null)
+            {
+                treeViewItem.IsSelected = true;
+                e.Handled = true;
+            }
+        }
+        private void OpenInfoBaseView_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.OpenInfoBaseView(menu.DataContext);
+        }
+        private void KillInfoBase_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.KillInfoBase(menu.DataContext);
+        }
     }
 }

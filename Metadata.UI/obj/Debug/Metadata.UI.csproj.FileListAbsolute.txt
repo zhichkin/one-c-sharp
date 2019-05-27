@@ -40,3 +40,5 @@ C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Metadata.UI.csproj.CoreComp
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Metadata.UI.csproj.CopyComplete
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Zhichkin.Metadata.UI.dll
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Zhichkin.Metadata.UI.pdb
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\InfoBase\InfoBaseView.baml
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\InfoBase\InfoBaseView.g.cs

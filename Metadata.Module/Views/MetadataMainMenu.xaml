@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI;assembly=Zhichkin.Metadata.UI"
              xmlns:views="clr-namespace:Zhichkin.Metadata.Views"
              xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
              mc:Ignorable="d" 
@@ -16,12 +17,14 @@
             <BitmapImage x:Key="Icon_26_Kill" UriSource="..\Images\26 Cancel.png"/>
             <BitmapImage x:Key="Icon_26_Synchronize" UriSource="..\Images\26 Synchronize.png"/>
             <BitmapImage x:Key="Icon_26_Settings" UriSource="..\Images\26 Settings.png"/>
-            <BitmapImage x:Key="Icon_26_OpenSave" UriSource="..\Images\26 Accept Database.png"/>
+            <!--<BitmapImage x:Key="Icon_26_OpenSave" UriSource="..\Images\26 Accept Database.png"/>-->
+            <BitmapImage x:Key="Icon_26_CreateInfoBase" UriSource="..\Images\26 Add Database.png"/>
             <BitmapImage x:Key="Icon_26_SetupDatabase" UriSource="..\Images\26 Data Configuration.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <i:Interaction.Triggers>
+        
         <i:EventTrigger EventName="Raised" SourceObject="{Binding SQLConnectionPopupRequest}">
             <i:EventTrigger.Actions>
                 <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
@@ -31,6 +34,17 @@
                 </shell:CustomPopupWindowAction>
             </i:EventTrigger.Actions>
         </i:EventTrigger>
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding InfoBaseViewPopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:InfoBaseView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
     </i:Interaction.Triggers>
 
     <Grid>
@@ -66,9 +80,14 @@
                         <Image Source="{StaticResource Icon_26_Synchronize}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Добавить" Command="{Binding AddMetadataCommand}" CommandParameter="Open">
+                <!--<MenuItem Header="Добавить" Command="{Binding AddMetadataCommand}" CommandParameter="Open">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_OpenSave}" />
+                    </MenuItem.Icon>
+                </MenuItem>-->
+                <MenuItem Header="Создать" Command="{Binding CreateInfoBaseCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource Icon_26_CreateInfoBase}" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>

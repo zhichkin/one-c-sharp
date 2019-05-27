@@ -36,6 +36,7 @@ namespace Zhichkin.Metadata.ViewModels
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
 
+            this.InfoBaseViewPopup = new InteractionRequest<Confirmation>();
             this.SQLConnectionPopupRequest = new InteractionRequest<SQLConnectionDialogNotification>();
 
             OpenMetadataCommand = new OpenMetadataCommand<object>(this.OnOpenMetadata, this.CanExecuteCommand);
@@ -44,6 +45,7 @@ namespace Zhichkin.Metadata.ViewModels
             UpdateMetadataCommand = new UpdateMetadataCommand<object>(this.OnUpdateMetadata, this.CanExecuteCommand);
             ShowSettingsCommand = new ShowSettingsCommand<object>(this.OnShowSettings, this.CanExecuteCommand);
             AddMetadataCommand = new DelegateCommand(this.OnAddMetadata);
+            CreateInfoBaseCommand = new DelegateCommand(this.CreateNewInfoBase);
         }
 
         private MetadataTreeViewModel MetadataTreeViewModel
@@ -64,7 +66,9 @@ namespace Zhichkin.Metadata.ViewModels
         public ICommand UpdateMetadataCommand { get; private set; }
         public ICommand ShowSettingsCommand { get; private set; }
         public ICommand AddMetadataCommand { get; private set; }
+        public ICommand CreateInfoBaseCommand { get; private set; }
 
+        public InteractionRequest<Confirmation> InfoBaseViewPopup { get; private set; }
         public InteractionRequest<SQLConnectionDialogNotification> SQLConnectionPopupRequest { get; private set; }
 
         private bool CanExecuteCommand(object args) { return true; }
@@ -365,6 +369,26 @@ namespace Zhichkin.Metadata.ViewModels
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() != DialogResult.OK) return string.Empty;
             return dialog.SelectedPath;
+        }
+
+        private void CreateNewInfoBase()
+        {
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = CONST_ModuleDialogsTitle,
+                Content = new InfoBase()
+            };
+            this.InfoBaseViewPopup.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    InfoBase infoBase = response.Content as InfoBase;
+                    if (infoBase != null)
+                    {
+                        MetadataTreeViewModel.InfoBases.Add(infoBase);
+                    }
+                }
+            });
         }
     }
 }

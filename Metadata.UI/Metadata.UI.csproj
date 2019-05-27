@@ -107,6 +107,10 @@
     <Compile Include="Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml.cs">
       <DependentUpon>SelectReferenceObjectDialogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InfoBase\InfoBaseView.xaml.cs">
+      <DependentUpon>InfoBaseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InfoBase\InfoBaseViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChameleonBox\ChameleonTemplateSelector.cs" />
   </ItemGroup>
@@ -142,6 +146,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InfoBase\InfoBaseView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
