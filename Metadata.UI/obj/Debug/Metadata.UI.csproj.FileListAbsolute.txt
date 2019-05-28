@@ -42,3 +42,5 @@ C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Zhichkin.Metadata.UI.dll
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Zhichkin.Metadata.UI.pdb
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\InfoBase\InfoBaseView.baml
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\InfoBase\InfoBaseView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Namespace\NamespaceView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Namespace\NamespaceView.baml

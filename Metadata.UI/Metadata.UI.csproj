@@ -111,6 +111,10 @@
       <DependentUpon>InfoBaseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="InfoBase\InfoBaseViewModel.cs" />
+    <Compile Include="Namespace\NamespaceView.xaml.cs">
+      <DependentUpon>NamespaceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Namespace\Namespace_ViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChameleonBox\ChameleonTemplateSelector.cs" />
   </ItemGroup>
@@ -152,6 +156,10 @@
     <Page Include="InfoBase\InfoBaseView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Namespace\NamespaceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup />

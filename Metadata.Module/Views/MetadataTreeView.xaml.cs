@@ -86,5 +86,30 @@ namespace Zhichkin.Metadata.Views
             if (menu == null) return;
             viewModel.KillInfoBase(menu.DataContext);
         }
+
+        private void CreateNamespace_Click(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.CreateNewNamespace(menu.DataContext);
+        }
+        private void OpenNamespaceView_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.OpenNamespaceView(menu.DataContext);
+        }
+        private void KillNamespace_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.KillNamespace(menu.DataContext);
+        }
     }
 }

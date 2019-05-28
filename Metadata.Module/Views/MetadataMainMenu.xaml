@@ -85,7 +85,7 @@
                         <Image Source="{StaticResource Icon_26_OpenSave}" />
                     </MenuItem.Icon>
                 </MenuItem>-->
-                <MenuItem Header="Создать" Command="{Binding CreateInfoBaseCommand}">
+                <MenuItem Header="Создать ИБ" Command="{Binding CreateInfoBaseCommand}">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource Icon_26_CreateInfoBase}" />
                     </MenuItem.Icon>

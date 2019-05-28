@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Transactions;
 using System.Windows.Input;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Module;
@@ -50,6 +51,7 @@ namespace Zhichkin.Metadata.ViewModels
             modelsLookup.Add(typeof(Property), typeof(PropertyViewModel));
 
             this.InfoBaseViewPopup = new InteractionRequest<Confirmation>();
+            this.NamespaceViewPopup = new InteractionRequest<Confirmation>();
 
             RefreshInfoBases();
         }
@@ -181,6 +183,98 @@ namespace Zhichkin.Metadata.ViewModels
             MetadataMainMenu view = topRegion.Views.Where(v => v is MetadataMainMenu).FirstOrDefault() as MetadataMainMenu;
             if (view == null) return null;
             return view.DataContext as MainMenuViewModel;
+        }
+
+        public InteractionRequest<Confirmation> NamespaceViewPopup { get; private set; }
+        public void OpenNamespaceView(object model)
+        {
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = (Namespace)model
+            };
+            this.NamespaceViewPopup.Raise(confirmation);
+        }
+        public void CreateNewNamespace(object owner)
+        {
+            Namespace new_namespace = new Namespace();
+            if (owner is InfoBase)
+            {
+                new_namespace.Owner = (InfoBase)owner;
+            }
+            else if (owner is Namespace)
+            {
+                new_namespace.Owner = (Namespace)owner;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("owner");
+            }
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = new_namespace
+            };
+            this.NamespaceViewPopup.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    Namespace ns = response.Content as Namespace;
+                    if (ns != null)
+                    {
+                        if (ns.Owner is InfoBase)
+                        {
+                            ns.InfoBase.Namespaces.Add(ns);
+                            ns.InfoBase.OnPropertyChanged("Namespaces");
+                        }
+                        else if (ns.Owner is Namespace)
+                        {
+                            ((Namespace)ns.Owner).Namespaces.Add(ns);
+                            ((Namespace)ns.Owner).OnPropertyChanged("Namespaces");
+                        }
+                    }
+                }
+            });
+        }
+        public void KillNamespace(object model)
+        {
+            Namespace ns = model as Namespace;
+            if (ns == null) throw new ArgumentNullException("model");
+
+            bool cancel = true;
+            Z.Confirm(new Confirmation
+                {
+                    Title = "Z-Metadata",
+                    Content = $"Пространство имён \"{ns.Name}\" и все его\nподчинённые объекты будут удалены.\n\nПродолжить ?"
+                },
+                c => { cancel = !c.Confirmed; });
+
+            if (cancel) return;
+
+            try
+            {
+                TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+                {
+                    dataService.Kill(ns);
+                    scope.Complete();
+                }
+                if (ns.Owner is InfoBase)
+                {
+                    ns.InfoBase.Namespaces.Remove(ns);
+                    ns.InfoBase.OnPropertyChanged("Namespaces");
+                }
+                else if (ns.Owner is Namespace)
+                {
+                    ((Namespace)ns.Owner).Namespaces.Remove(ns);
+                    ((Namespace)ns.Owner).OnPropertyChanged("Namespaces");
+                }
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
+            }
         }
     }
 }

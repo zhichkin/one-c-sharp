@@ -13,6 +13,8 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <BitmapImage x:Key="Icon_Add_Object" UriSource="..\Images\26 Add.png"/>
+            <BitmapImage x:Key="Icon_Kill_Object" UriSource="..\Images\26 Cancel.png"/>
             <BitmapImage x:Key="Icon_26_Refresh" UriSource="..\Images\26 Refresh.png"/>
             <BitmapImage x:Key="Icon_Add_Database" UriSource="..\Images\26 Add Database.png"/>
             <BitmapImage x:Key="Icon_Kill_Database" UriSource="..\Images\26 Delete Database.png"/>
@@ -46,6 +48,16 @@
             </i:EventTrigger.Actions>
         </i:EventTrigger>
 
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding NamespaceViewPopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:NamespaceView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
     </i:Interaction.Triggers>
 
     <Grid>
@@ -69,6 +81,17 @@
                                         <Image Source="{StaticResource Icon_Kill_Database}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Добавить">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Add_Object}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Пространство имён" Click="CreateNamespace_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="{StaticResource Icon_Enumeration}" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </MenuItem>
                             </ContextMenu>
                         </StackPanel.ContextMenu>
                         <Image Margin="2">
@@ -91,8 +114,40 @@
                         <TextBlock Text="{Binding Path=Name}" Margin="2" VerticalAlignment="Center"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type Model:Namespace}" ItemsSource="{Binding Path=Entities}">
+                <HierarchicalDataTemplate DataType="{x:Type Model:Namespace}">
+                    <!-- ItemsSource="{Binding Path=Entities}" -->
+                    <HierarchicalDataTemplate.ItemsSource>
+                        <MultiBinding Converter="{StaticResource CompositeCollectionConverter}">
+                            <Binding Path="Namespaces" />
+                            <Binding Path="Entities" />
+                        </MultiBinding>
+                    </HierarchicalDataTemplate.ItemsSource>
                     <StackPanel Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Открыть" Click="OpenNamespaceView_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Удалить" Click="KillNamespace_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Kill_Object}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Добавить">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Add_Object}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Пространство имён" Click="CreateNamespace_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="{StaticResource Icon_Enumeration}" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
