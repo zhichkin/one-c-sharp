@@ -83,7 +83,7 @@ namespace Zhichkin.Metadata.Model
             {
                 if (this.state == PersistentState.New) return properties;
                 if (properties.Count > 0) return properties;
-                return service.GetChildren<Entity, Property>(this, "entity");
+                return service.GetChildren<Entity, Property>(this, "entity").OrderBy((p) => p.Ordinal).ToList();
             }
         }
         public IList<Entity> NestedEntities

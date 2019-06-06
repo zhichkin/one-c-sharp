@@ -400,6 +400,10 @@ namespace Zhichkin.Metadata.Services
             {
                 return "AND [owner] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier)"; // filter out nested entities with namespace specified
             }
+            else if (typeof(TParent) == typeof(Namespace) && typeof(TChild) == typeof(Namespace))
+            {
+                return "AND [owner_] = 2"; // filter by Namespace owner type
+            }
             return string.Empty;
         }
 

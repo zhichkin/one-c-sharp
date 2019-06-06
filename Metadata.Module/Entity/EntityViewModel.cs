@@ -45,7 +45,7 @@ namespace Zhichkin.Metadata.Module
         }
         public string MainTable
         {
-            get { return _model.MainTable.Name; }
+            get { return _model.MainTable?.Name; }
         }
         public IList<Table> Tables
         {
