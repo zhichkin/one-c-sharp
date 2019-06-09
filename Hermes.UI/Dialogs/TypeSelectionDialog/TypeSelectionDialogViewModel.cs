@@ -28,6 +28,8 @@ namespace Zhichkin.Hermes.UI
 
             List<MetadataNodeViewModel> items = new List<MetadataNodeViewModel>();
 
+            AddMetadataObjects(items, metadata);
+
             InfoBase system = new InfoBase();
             system.Name = "Primitive types";
             MetadataNode systemNode = new MetadataNode(system);
@@ -94,6 +96,34 @@ namespace Zhichkin.Hermes.UI
         protected override object GetDialogResult()
         {
             return _ViewModel.SelectedNode;
+        }
+
+        private void AddMetadataObjects(List<MetadataNodeViewModel> root, IMetadataService service)
+        {
+            InfoBase metadata = service.GetSystemInfoBase();
+            MetadataNode metadataNode = new MetadataNode(metadata);
+            metadataNode.Children = new List<MetadataNode>();
+            MetadataNodeViewModel metadataVM = new MetadataNodeViewModel(null, metadataNode);
+            metadataVM.Children = new ObservableCollection<MetadataNodeViewModel>();
+
+            foreach (Namespace ns in metadata.Namespaces)
+            {
+                MetadataNode child = new MetadataNode(ns);
+                child.Children = new List<MetadataNode>();
+                metadataNode.Children.Add(child);
+                MetadataNodeViewModel childVM = new MetadataNodeViewModel(metadataVM, child);
+                childVM.Children = new ObservableCollection<MetadataNodeViewModel>();
+                metadataVM.Children.Add(childVM);
+
+                foreach (Entity entity in ns.Entities)
+                {
+                    MetadataNode grandchild = new MetadataNode(entity);
+                    child.Children.Add(grandchild);
+                    MetadataNodeViewModel grandchildVM = new MetadataNodeViewModel(childVM, grandchild);
+                    childVM.Children.Add(grandchildVM);
+                }
+            }
+            root.Add(metadataVM);
         }
     }
 }

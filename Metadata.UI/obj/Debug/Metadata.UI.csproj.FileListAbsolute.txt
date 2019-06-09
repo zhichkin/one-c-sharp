@@ -44,3 +44,5 @@ C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\InfoBase\InfoBaseView.baml
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\InfoBase\InfoBaseView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Namespace\NamespaceView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Namespace\NamespaceView.baml
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Property\PropertyForm.baml
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Property\PropertyForm.g.cs

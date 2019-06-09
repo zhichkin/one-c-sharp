@@ -58,6 +58,16 @@
             </i:EventTrigger.Actions>
         </i:EventTrigger>
 
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding PropertyPopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:PropertyForm />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
     </i:Interaction.Triggers>
 
     <Grid>
@@ -198,6 +208,17 @@
                                         <Image Source="{StaticResource Icon_Settings}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Добавить">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Add_Object}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Свойство" Click="CreateNewProperty_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="{StaticResource Icon_Property}" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </MenuItem>
                             </ContextMenu>
                         </StackPanel.ContextMenu>
                         <Image Margin="2">
@@ -248,6 +269,17 @@
                     <StackPanel Orientation="Horizontal">
                         <StackPanel.ContextMenu>
                             <ContextMenu>
+                                <MenuItem Header="Открыть" Click="OpenPropertyForm_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Удалить" Click="KillProperty_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Kill_Object}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
                                 <MenuItem Header="Свойства" Click="ShowProperties_Clicked">
                                     <MenuItem.Icon>
                                         <Image Source="{StaticResource Icon_Settings}" />

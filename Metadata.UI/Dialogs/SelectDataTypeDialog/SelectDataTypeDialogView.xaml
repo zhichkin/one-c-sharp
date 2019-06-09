@@ -29,7 +29,7 @@
                 <ui:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
                 <HierarchicalDataTemplate DataType="{x:Type ui:NamespaceViewModel}" ItemsSource="{Binding Path=Entities}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Margin="2">
+                        <!--<Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
@@ -48,13 +48,13 @@
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>
-                        </Image>
+                        </Image>-->
                         <TextBlock Text="{Binding Path=Name}" Margin="2"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Entity}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Margin="2">
+                        <!--<Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
@@ -70,7 +70,7 @@
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>
-                        </Image>
+                        </Image>-->
                         <TextBlock Text="{Binding Path=Name}" Margin="2"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>

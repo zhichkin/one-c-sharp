@@ -27,6 +27,20 @@ namespace Zhichkin.Metadata.UI
                 if (infoBase == null) return null;
                 namespaces.Clear();
 
+                if (infoBase.Name == "Metadata")
+                {
+                    foreach (Namespace ns in infoBase.Namespaces)
+                    {
+                        NamespaceViewModel facade = new NamespaceViewModel(ns);
+                        foreach (Entity entity in ns.Entities)
+                        {
+                            facade.Entities.Add(entity);
+                        }
+                        namespaces.Add(facade);
+                    }
+                    return namespaces;
+                }
+
                 NamespaceViewModel typeSystem = new NamespaceViewModel(Namespace.TypeSystem);
                 typeSystem.Entities.Add(Entity.Boolean);
                 typeSystem.Entities.Add(Entity.Decimal);

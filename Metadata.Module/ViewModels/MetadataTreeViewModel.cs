@@ -52,6 +52,7 @@ namespace Zhichkin.Metadata.ViewModels
 
             this.InfoBaseViewPopup = new InteractionRequest<Confirmation>();
             this.NamespaceViewPopup = new InteractionRequest<Confirmation>();
+            this.PropertyPopup = new InteractionRequest<Confirmation>();
 
             RefreshInfoBases();
         }
@@ -270,6 +271,81 @@ namespace Zhichkin.Metadata.ViewModels
                     ((Namespace)ns.Owner).Namespaces.Remove(ns);
                     ((Namespace)ns.Owner).OnPropertyChanged("Namespaces");
                 }
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
+            }
+        }
+
+        public InteractionRequest<Confirmation> PropertyPopup { get; private set; }
+        public void OpenPropertyForm(object model)
+        {
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = (Property)model
+            };
+            this.PropertyPopup.Raise(confirmation);
+        }
+        public void CreateNewProperty(object owner)
+        {
+            Property new_property = new Property();
+            if (owner is Entity)
+            {
+                new_property.Entity = (Entity)owner;
+                new_property.Purpose = PropertyPurpose.Property;
+                new_property.Ordinal = new_property.Entity.Properties.Count;
+                new_property.Name = $"NewProperty{new_property.Ordinal}";
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("owner");
+            }
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = new_property
+            };
+            this.PropertyPopup.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    Property content = response.Content as Property;
+                    if (content != null)
+                    {
+                        content.Entity.Properties.Add(content);
+                        content.Entity.OnPropertyChanged("Properties");
+                    }
+                }
+            });
+        }
+        public void KillProperty(object model)
+        {
+            Property property = model as Property;
+            if (property == null) throw new ArgumentNullException("model");
+
+            bool cancel = true;
+            Z.Confirm(new Confirmation
+            {
+                Title = "Z-Metadata",
+                Content = $"Свойство \"{property.Name}\" и все его\nподчинённые объекты будут удалены.\n\nПродолжить ?"
+            },
+                c => { cancel = !c.Confirmed; });
+
+            if (cancel) return;
+
+            try
+            {
+                TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+                {
+                    dataService.Kill(property);
+                    scope.Complete();
+                }
+                property.Entity.Properties.Remove(property);
+                property.Entity.OnPropertyChanged("Properties");
             }
             catch (Exception ex)
             {
