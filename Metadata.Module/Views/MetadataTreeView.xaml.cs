@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-
 using Zhichkin.Metadata.ViewModels;
 using Zhichkin.Shell;
 
@@ -135,6 +134,39 @@ namespace Zhichkin.Metadata.Views
             MenuItem menu = sender as MenuItem;
             if (menu == null) return;
             viewModel.KillProperty(menu.DataContext);
+        }
+
+        private void CreateEntity_Click(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.CreateNewEntity(menu.DataContext);
+        }
+        private void CreateNestedEntity_Click(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.CreateNewNestedEntity(menu.DataContext);
+        }
+        private void OpenEntityForm_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.OpenEntityForm(menu.DataContext);
+        }
+        private void KillEntity_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.KillEntity(menu.DataContext);
         }
     }
 }

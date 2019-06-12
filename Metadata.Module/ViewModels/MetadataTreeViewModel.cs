@@ -52,6 +52,7 @@ namespace Zhichkin.Metadata.ViewModels
 
             this.InfoBaseViewPopup = new InteractionRequest<Confirmation>();
             this.NamespaceViewPopup = new InteractionRequest<Confirmation>();
+            this.EntityPopup = new InteractionRequest<Confirmation>();
             this.PropertyPopup = new InteractionRequest<Confirmation>();
 
             RefreshInfoBases();
@@ -346,6 +347,121 @@ namespace Zhichkin.Metadata.ViewModels
                 }
                 property.Entity.Properties.Remove(property);
                 property.Entity.OnPropertyChanged("Properties");
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
+            }
+        }
+
+        public InteractionRequest<Confirmation> EntityPopup { get; private set; }
+        public void OpenEntityForm(object model)
+        {
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = (Entity)model
+            };
+            this.EntityPopup.Raise(confirmation);
+        }
+        public void CreateNewEntity(object model)
+        {
+            Entity entity = new Entity();
+            if (model is Namespace)
+            {
+                entity.Namespace = (Namespace)model;
+                entity.Name = $"NewEntity{entity.Namespace.Entities.Count.ToString()}";
+                //TODO: entity.Parent = Entity.Object; !?
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("owner");
+            }
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = entity
+            };
+            this.EntityPopup.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    Entity content = response.Content as Entity;
+                    if (content != null)
+                    {
+                        content.Namespace.Entities.Add(content);
+                        content.Namespace.OnPropertyChanged("Entities");
+                    }
+                }
+            });
+        }
+        public void CreateNewNestedEntity(object model)
+        {
+            Entity entity = new Entity();
+            if (model is Entity)
+            {
+                entity.Owner = (Entity)model;
+                entity.Namespace = entity.Owner.Namespace;
+                entity.Name = $"NewNestedEntity{entity.Owner.NestedEntities.Count.ToString()}";
+                //TODO: entity.Parent = Entity.Object; !?
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("owner");
+            }
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = entity
+            };
+            this.EntityPopup.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    Entity content = response.Content as Entity;
+                    if (content != null)
+                    {
+                        content.Owner.NestedEntities.Add(content);
+                        content.Owner.OnPropertyChanged("NestedEntities");
+                    }
+                }
+            });
+        }
+        public void KillEntity(object model)
+        {
+            Entity entity = model as Entity;
+            if (entity == null) throw new ArgumentNullException("model");
+
+            bool cancel = true;
+            Z.Confirm(new Confirmation
+            {
+                Title = "Z-Metadata",
+                Content = $"Сущность \"{entity.Name}\" и все её\nподчинённые объекты будут удалены.\n\nПродолжить ?"
+            },
+                c => { cancel = !c.Confirmed; });
+
+            if (cancel) return;
+
+            try
+            {
+                TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+                {
+                    dataService.Kill(entity);
+                    scope.Complete();
+                }
+                if (entity.Owner != null)
+                {
+                    entity.Owner.NestedEntities.Remove(entity);
+                    entity.Owner.OnPropertyChanged("NestedEntities");
+                }
+                else
+                {
+                    entity.Namespace.Entities.Remove(entity);
+                    entity.Namespace.OnPropertyChanged("Entities");
+                }
             }
             catch (Exception ex)
             {

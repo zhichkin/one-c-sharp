@@ -77,6 +77,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
@@ -107,6 +108,10 @@
     <Compile Include="Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml.cs">
       <DependentUpon>SelectReferenceObjectDialogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Entity\EntityForm.xaml.cs">
+      <DependentUpon>EntityForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityFormModel.cs" />
     <Compile Include="InfoBase\InfoBaseView.xaml.cs">
       <DependentUpon>InfoBaseView.xaml</DependentUpon>
     </Compile>
@@ -156,6 +161,10 @@
     <Page Include="Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Entity\EntityForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InfoBase\InfoBaseView.xaml">
       <Generator>MSBuild:Compile</Generator>

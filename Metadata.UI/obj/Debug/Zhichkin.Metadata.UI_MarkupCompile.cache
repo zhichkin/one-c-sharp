@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-8-937835602
+998616311
 
-221668427076
-128-1956200958
-Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;InfoBase\InfoBaseView.xaml;Namespace\NamespaceView.xaml;Property\PropertyForm.xaml;
+241567348287
+129-1244801552
+Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;Entity\EntityForm.xaml;InfoBase\InfoBaseView.xaml;Namespace\NamespaceView.xaml;Property\PropertyForm.xaml;
 
 False
 
