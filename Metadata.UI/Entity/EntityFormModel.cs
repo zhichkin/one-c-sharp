@@ -23,6 +23,7 @@ namespace Zhichkin.Metadata.UI
             this.PropertyPopup = new InteractionRequest<Confirmation>();
             this.SelectDataTypeDialog = new InteractionRequest<Confirmation>();
             this.CreateNewPropertyCommand = new DelegateCommand(this.CreateNewProperty);
+            this.SelectNamespaceCommand = new DelegateCommand(this.OpenNamespaceSelectionDialog);
             this.SelectParentEntityCommand = new DelegateCommand(this.OpenParentEntitySelectionDialog);
 
             this.KillPropertyCommand = new DelegateCommand(this.KillProperty);
@@ -534,6 +535,36 @@ namespace Zhichkin.Metadata.UI
                 {
                     this.OnPropertyChanged("MainTableName");
                     this.OnPropertyChanged("TableFields");
+                }
+            });
+        }
+
+        public ICommand SelectNamespaceCommand { private set; get; }
+        private void OpenNamespaceSelectionDialog()
+        {
+            if (this.model == null) return;
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Выбор пространства имён",
+                Content = this.model.InfoBase
+            };
+            this.SelectDataTypeDialog.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    NamespaceViewModel content = response.Content as NamespaceViewModel;
+                    if (content != null && content.Model != null)
+                    {
+                        if (this.model.Namespace == content.Model)
+                        {
+                            return;
+                        }
+                        this.model.Namespace = content.Model;
+                        this.RefreshView();
+                        //TODO: set selected namespace for all nested entities
+                        //TODO: metadata tree doesn't reflect changes
+                    }
                 }
             });
         }

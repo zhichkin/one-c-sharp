@@ -16,12 +16,10 @@ namespace Zhichkin.Metadata.UI
         }
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            ViewModel.SelectedEntity = e.NewValue as Entity;
+            ViewModel.SelectedNode = e.NewValue;
         }
         private void TreeView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (ViewModel.SelectedEntity == null) return;
-            if (!(ViewModel.SelectedEntity is Entity)) return;
             ViewModel.Confirm();
         }
     }

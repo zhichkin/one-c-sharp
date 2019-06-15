@@ -76,10 +76,14 @@
         <TextBlock Grid.Row="5" Grid.Column="0" Text="Код прикладного типа:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Наименование:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <TextBlock Grid.Row="7" Grid.Column="0" Text="Представление:" Margin="10,5,5,10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Namespace.Name, Mode=OneWay}"
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="5,10,10,5">
+            <TextBox Text="{Binding Namespace.Name, Mode=OneWay}" MinWidth="200"
                  IsReadOnly="True" Background="#FFF0F0F0" Height="24" VerticalContentAlignment="Center"
-                 Margin="5,10,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                 VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+            <Button Content="..." Margin="5,0,0,0" Width="24" Height="24" Command="{Binding SelectNamespaceCommand}"/>
+        </StackPanel>
+
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Owner.FullName, Mode=OneWay}"
                  IsReadOnly="True" Background="#FFF0F0F0" Height="24" VerticalContentAlignment="Center"
                  Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>

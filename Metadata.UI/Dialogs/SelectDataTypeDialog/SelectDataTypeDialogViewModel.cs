@@ -6,6 +6,7 @@ using Microsoft.Practices.Prism.Mvvm;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Zhichkin.Metadata.Model;
+using Zhichkin.Metadata.Services;
 
 namespace Zhichkin.Metadata.UI
 {
@@ -49,6 +50,20 @@ namespace Zhichkin.Metadata.UI
                 typeSystem.Entities.Add(Entity.DateTime);
                 namespaces.Add(typeSystem);
 
+                MetadataService metadata = new MetadataService();
+                InfoBase system = metadata.GetSystemInfoBase();
+                foreach (Namespace ns in system.Namespaces)
+                {
+                    if (ns.Name == "TypeSystem") continue;
+
+                    NamespaceViewModel facade = new NamespaceViewModel(ns);
+                    foreach (Entity entity in ns.Entities)
+                    {
+                        facade.Entities.Add(entity);
+                    }
+                    namespaces.Add(facade);
+                }
+
                 foreach (Namespace ns in infoBase.Namespaces)
                 {
                     if (ns.Name == "Перечисление" ||
@@ -62,19 +77,39 @@ namespace Zhichkin.Metadata.UI
                         }
                         namespaces.Add(facade);
                     }
+                    else
+                    {
+                        NamespaceViewModel facade = new NamespaceViewModel(ns);
+                        foreach (Entity entity in ns.Entities)
+                        {
+                            if (entity.Parent != null)
+                            {
+                                facade.Entities.Add(entity);
+                            }
+                        }
+                        namespaces.Add(facade);
+                    }
                 }
                 return namespaces;
             }
         }
-        public Entity SelectedEntity { set; get; }
+        public object SelectedNode { set; get; }
         public ICommand SelectCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
         public void Confirm()
         {
             if (this.notification != null)
             {
-                this.notification.Confirmed = true;
-                this.notification.Content = this.SelectedEntity;
+                if (this.SelectedNode == null)
+                {
+                    this.notification.Confirmed = false;
+                    this.notification.Content = null;
+                }
+                else
+                {
+                    this.notification.Confirmed = true;
+                    this.notification.Content = this.SelectedNode;
+                }
             }
             this.FinishInteraction();
         }
