@@ -112,6 +112,10 @@
       <DependentUpon>EntityForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Entity\EntityFormModel.cs" />
+    <Compile Include="Field\FieldForm.xaml.cs">
+      <DependentUpon>FieldForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Field\FieldFormModel.cs" />
     <Compile Include="InfoBase\InfoBaseView.xaml.cs">
       <DependentUpon>InfoBaseView.xaml</DependentUpon>
     </Compile>
@@ -126,6 +130,10 @@
       <DependentUpon>PropertyForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Property\PropertyFormModel.cs" />
+    <Compile Include="Table\TableForm.xaml.cs">
+      <DependentUpon>TableForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Table\TableFormModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
@@ -166,6 +174,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Field\FieldForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InfoBase\InfoBaseView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -175,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Property\PropertyForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Table\TableForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

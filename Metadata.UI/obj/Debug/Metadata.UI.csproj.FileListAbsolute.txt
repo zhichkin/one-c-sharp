@@ -48,3 +48,7 @@ C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Property\PropertyForm.baml
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Property\PropertyForm.g.cs
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Entity\EntityForm.g.cs
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Entity\EntityForm.baml
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Field\FieldForm.baml
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Field\FieldForm.g.cs
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Table\TableForm.g.cs
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Table\TableForm.baml

@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="Zhichkin.Metadata.UI.FieldForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Height="Auto" MinWidth="350" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="{Binding FormTitle}"
+                   FontSize="20" FontWeight="DemiBold"
+                   Margin="10" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Таблица:" Margin="10,10,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Свойство:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Table.Name, Mode=OneWay}"
+                 IsReadOnly="True" Background="#FFF0F0F0" Height="24" VerticalContentAlignment="Center"
+                 Margin="5,10,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Height="24"
+                  ItemsSource="{Binding PropertiesItemsSource}"
+                  SelectedItem="{Binding SelectedPropertyItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Наименование:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Может быть NULL:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Первичный ключ:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Порядок в ключе:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MinWidth="150"
+                 KeyUp="Name_TextBox_KeyUp" Height="24" VerticalContentAlignment="Center"
+                 Margin="5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsNullable, Mode=TwoWay}"
+                 Height="24" VerticalContentAlignment="Center"
+                 Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsPrimaryKey, Mode=TwoWay}"
+                 Height="24" VerticalContentAlignment="Center"
+                 Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding KeyOrdinal, Mode=TwoWay}" MinWidth="150"
+                 KeyUp="KeyOrdinal_TextBox_KeyUp" Height="24" VerticalContentAlignment="Center"
+                 Margin="5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="2" Text="Тип данных:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="4" Grid.Column="2" Text="Длина:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="5" Grid.Column="2" Text="Точность:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="6" Grid.Column="2" Text="Масштаб:" Margin="10,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding TypeName, Mode=TwoWay}" MinWidth="150"
+                 KeyUp="TypeName_TextBox_KeyUp" Height="24" VerticalContentAlignment="Center"
+                 Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="4" Grid.Column="3" Text="{Binding Length, Mode=TwoWay}" MinWidth="150"
+                 KeyUp="Length_TextBox_KeyUp" Height="24" VerticalContentAlignment="Center"
+                 Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="5" Grid.Column="3" Text="{Binding Precision, Mode=TwoWay}" MinWidth="150"
+                 KeyUp="Precision_TextBox_KeyUp" Height="24" VerticalContentAlignment="Center"
+                 Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="6" Grid.Column="3" Text="{Binding Scale, Mode=TwoWay}" MinWidth="150"
+                 KeyUp="Scale_TextBox_KeyUp" Height="24" VerticalContentAlignment="Center"
+                 Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Назначение:" Margin="10,5,5,10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <ComboBox Grid.Row="7" Grid.Column="1" Height="24"
+                  ItemsSource="{Binding PurposesItemsSource}"
+                  SelectedItem="{Binding SelectedPurposeItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Margin="5,5,5,10" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+
+        <StackPanel Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,10,10">
+            <Button Content="{Binding ConfirmButtonTitle}" Width="80" Height="24"  Command="{Binding ConfirmCommand}"
+                    Visibility="{Binding IsConfirmButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Content="{Binding CancelButtonTitle}" Width="80" Height="24" Command="{Binding CancelCommand}" Margin="10,0,0,0"
+                    Visibility="{Binding IsCancelButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+
+    </Grid>
+    
+</UserControl>

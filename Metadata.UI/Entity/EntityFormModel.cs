@@ -2,7 +2,6 @@
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Transactions;
@@ -29,6 +28,9 @@ namespace Zhichkin.Metadata.UI
             this.KillPropertyCommand = new DelegateCommand(this.KillProperty);
             this.EditPropertyCommand = new DelegateCommand(this.EditProperty);
             this.CreateNewTableCommand = new DelegateCommand(this.CreateNewTable);
+
+            this.TablePopup = new InteractionRequest<Confirmation>();
+            this.EditTableCommand = new DelegateCommand(this.EditTable);
 
             this.ConfirmCommand = new DelegateCommand(this.Confirm);
             this.CancelCommand = new DelegateCommand(this.Cancel);
@@ -101,7 +103,7 @@ namespace Zhichkin.Metadata.UI
                 }
                 else
                 {
-                    this.TableFields = new ObservableCollection<Field>(this.model.MainTable.Fields.OrderBy(f => f.Property.Ordinal));
+                    this.TableFields = new ObservableCollection<Field>(this.model.MainTable.Fields.OrderBy(f => f.Property?.Ordinal ?? 0));
                 }
 
                 this.RefreshView();
@@ -487,7 +489,7 @@ namespace Zhichkin.Metadata.UI
                 Title = "Z-Metadata",
                 Content = table
             };
-            this.PropertyPopup.Raise(confirmation, response =>
+            this.TablePopup.Raise(confirmation, response =>
             {
                 if (response.Confirmed)
                 {
@@ -503,5 +505,37 @@ namespace Zhichkin.Metadata.UI
             });
         }
 
+        public ICommand EditTableCommand { private set; get; }
+        public InteractionRequest<Confirmation> TablePopup { get; private set; }
+        private void EditTable()
+        {
+            if (this.model == null) throw new InvalidOperationException("Entity is null!");
+            if (this.model.State == PersistentState.New)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = "Сущность не записана!" });
+                return;
+            }
+
+            Table table = this.model.MainTable;
+            if (table == null)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = "Таблица не выбрана." });
+                return;
+            }
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = table
+            };
+            this.TablePopup.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    this.OnPropertyChanged("MainTableName");
+                    this.OnPropertyChanged("TableFields");
+                }
+            });
+        }
     }
 }

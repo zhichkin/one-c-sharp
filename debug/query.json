@@ -9,118 +9,50 @@
         "$type": "Zhichkin.Hermes.Model.SelectStatement, Zhichkin.Hermes.Model",
         "WHERE": {
           "$id": "3",
-          "$type": "Zhichkin.Hermes.Model.BooleanOperator, Zhichkin.Hermes.Model",
-          "Operands": {
-            "$type": "System.Collections.Generic.List`1[[Zhichkin.Hermes.Model.BooleanFunction, Zhichkin.Hermes.Model]], mscorlib",
-            "$values": [
-              {
-                "$id": "4",
-                "$type": "Zhichkin.Hermes.Model.ComparisonOperator, Zhichkin.Hermes.Model",
-                "LeftExpression": {
-                  "$id": "5",
-                  "$type": "Zhichkin.Hermes.Model.PropertyReference, Zhichkin.Hermes.Model",
-                  "Name": "Валюта",
-                  "Property": {
-                    "$type": "Zhichkin.Metadata.Model.Property, Zhichkin.Metadata.Model",
-                    "identity": "efdff7be-504c-4df7-bc39-856582f11351"
-                  },
-                  "Table": {
-                    "$id": "6",
-                    "$type": "Zhichkin.Hermes.Model.TableExpression, Zhichkin.Hermes.Model",
-                    "Name": "КурсыВалют",
-                    "Alias": "КВ",
-                    "Entity": {
-                      "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-                      "identity": "3a5c378b-dab3-4a7c-b5bb-c44ac1840a96"
-                    },
-                    "Consumer": {
-                      "$ref": "2"
-                    }
-                  },
-                  "Consumer": {
-                    "$ref": "4"
-                  }
-                },
-                "RightExpression": {
-                  "$type": "Zhichkin.Hermes.Model.ParameterExpression, Zhichkin.Hermes.Model",
-                  "Name": "Валюта",
-                  "Type": {
-                    "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-                    "identity": "413dae98-3ee0-4df6-930d-3c16ddc1580c"
-                  },
-                  "Value": {
-                    "$type": "Zhichkin.Metadata.Model.ReferenceProxy, Zhichkin.Metadata.Model",
-                    "type": {
-                      "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-                      "identity": "413dae98-3ee0-4df6-930d-3c16ddc1580c"
-                    },
-                    "identity": "6439c909-b006-4e34-8eb3-292d0e53b63f"
-                  }
-                },
-                "Name": "=",
-                "IsRoot": false,
-                "Consumer": {
-                  "$ref": "3"
-                }
+          "$type": "Zhichkin.Hermes.Model.ComparisonOperator, Zhichkin.Hermes.Model",
+          "LeftExpression": {
+            "$id": "4",
+            "$type": "Zhichkin.Hermes.Model.PropertyReference, Zhichkin.Hermes.Model",
+            "Name": "Name",
+            "Property": {
+              "$type": "Zhichkin.Metadata.Model.Property, Zhichkin.Metadata.Model",
+              "identity": "00000000-0000-0000-0000-000000000004"
+            },
+            "Table": {
+              "$id": "5",
+              "$type": "Zhichkin.Hermes.Model.TableExpression, Zhichkin.Hermes.Model",
+              "Name": "InfoBase",
+              "Alias": "ib",
+              "Entity": {
+                "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
+                "identity": "00000000-0000-0000-0000-000000000001"
               },
-              {
-                "$id": "7",
-                "$type": "Zhichkin.Hermes.Model.ComparisonOperator, Zhichkin.Hermes.Model",
-                "LeftExpression": {
-                  "$id": "8",
-                  "$type": "Zhichkin.Hermes.Model.PropertyReference, Zhichkin.Hermes.Model",
-                  "Name": "Период",
-                  "Property": {
-                    "$type": "Zhichkin.Metadata.Model.Property, Zhichkin.Metadata.Model",
-                    "identity": "e1414d0d-7a97-4046-b228-4ed0ab191f2b"
-                  },
-                  "Table": {
-                    "$ref": "6"
-                  },
-                  "Consumer": {
-                    "$id": "9",
-                    "$type": "Zhichkin.Hermes.Model.ComparisonOperator, Zhichkin.Hermes.Model",
-                    "LeftExpression": {
-                      "$ref": "8"
-                    },
-                    "RightExpression": {
-                      "$type": "Zhichkin.Hermes.Model.ParameterExpression, Zhichkin.Hermes.Model",
-                      "Name": "КонецПериода",
-                      "Type": {
-                        "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-                        "identity": "00000000-0000-0000-0000-0000fffffff0"
-                      },
-                      "Value": "2019-05-31T00:00:00"
-                    },
-                    "Name": "<=",
-                    "IsRoot": false,
-                    "Consumer": {
-                      "$ref": "3"
-                    }
-                  }
-                },
-                "RightExpression": {
-                  "$type": "Zhichkin.Hermes.Model.ParameterExpression, Zhichkin.Hermes.Model",
-                  "Name": "НачалоПериода",
-                  "Type": {
-                    "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-                    "identity": "00000000-0000-0000-0000-0000fffffff0"
-                  },
-                  "Value": "2019-05-01T00:00:00"
-                },
-                "Name": ">=",
-                "IsRoot": false,
-                "Consumer": {
-                  "$ref": "3"
-                }
-              },
-              {
-                "$ref": "9"
+              "Consumer": {
+                "$ref": "2"
               }
-            ]
+            },
+            "Consumer": {
+              "$id": "6",
+              "$type": "Zhichkin.Hermes.Model.PropertyExpression, Zhichkin.Hermes.Model",
+              "Alias": "Name",
+              "Expression": {
+                "$ref": "4"
+              },
+              "Consumer": {
+                "$ref": "2"
+              }
+            }
           },
-          "IsLeaf": true,
-          "Name": "AND",
+          "RightExpression": {
+            "$type": "Zhichkin.Hermes.Model.ParameterExpression, Zhichkin.Hermes.Model",
+            "Name": "InfoBaseName",
+            "Type": {
+              "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
+              "identity": "00000000-0000-0000-0000-0000ffffffee"
+            },
+            "Value": "TEST"
+          },
+          "Name": "=",
           "IsRoot": true,
           "Consumer": {
             "$ref": "2"
@@ -131,7 +63,7 @@
           "$type": "System.Collections.Generic.List`1[[Zhichkin.Hermes.Model.TableExpression, Zhichkin.Hermes.Model]], mscorlib",
           "$values": [
             {
-              "$ref": "6"
+              "$ref": "5"
             }
           ]
         },
@@ -139,11 +71,49 @@
           "$type": "System.Collections.Generic.List`1[[Zhichkin.Hermes.Model.PropertyExpression, Zhichkin.Hermes.Model]], mscorlib",
           "$values": [
             {
-              "$id": "10",
+              "$id": "7",
               "$type": "Zhichkin.Hermes.Model.PropertyExpression, Zhichkin.Hermes.Model",
-              "Alias": "Период",
+              "Alias": "Identity",
               "Expression": {
-                "$ref": "8"
+                "$id": "8",
+                "$type": "Zhichkin.Hermes.Model.PropertyReference, Zhichkin.Hermes.Model",
+                "Name": "Identity",
+                "Property": {
+                  "$type": "Zhichkin.Metadata.Model.Property, Zhichkin.Metadata.Model",
+                  "identity": "00000000-0000-0000-0000-000000000001"
+                },
+                "Table": {
+                  "$ref": "5"
+                },
+                "Consumer": {
+                  "$ref": "7"
+                }
+              },
+              "Consumer": {
+                "$ref": "2"
+              }
+            },
+            {
+              "$ref": "6"
+            },
+            {
+              "$id": "9",
+              "$type": "Zhichkin.Hermes.Model.PropertyExpression, Zhichkin.Hermes.Model",
+              "Alias": "Server",
+              "Expression": {
+                "$id": "10",
+                "$type": "Zhichkin.Hermes.Model.PropertyReference, Zhichkin.Hermes.Model",
+                "Name": "Server",
+                "Property": {
+                  "$type": "Zhichkin.Metadata.Model.Property, Zhichkin.Metadata.Model",
+                  "identity": "00000000-0000-0000-0000-000000000005"
+                },
+                "Table": {
+                  "$ref": "5"
+                },
+                "Consumer": {
+                  "$ref": "9"
+                }
               },
               "Consumer": {
                 "$ref": "2"
@@ -152,17 +122,17 @@
             {
               "$id": "11",
               "$type": "Zhichkin.Hermes.Model.PropertyExpression, Zhichkin.Hermes.Model",
-              "Alias": "Курс",
+              "Alias": "Database",
               "Expression": {
                 "$id": "12",
                 "$type": "Zhichkin.Hermes.Model.PropertyReference, Zhichkin.Hermes.Model",
-                "Name": "Курс",
+                "Name": "Database",
                 "Property": {
                   "$type": "Zhichkin.Metadata.Model.Property, Zhichkin.Metadata.Model",
-                  "identity": "8e36db5c-e3f3-4579-a9ec-cad726357961"
+                  "identity": "00000000-0000-0000-0000-000000000006"
                 },
                 "Table": {
-                  "$ref": "6"
+                  "$ref": "5"
                 },
                 "Consumer": {
                   "$ref": "11"
@@ -175,7 +145,7 @@
           ]
         },
         "Name": "",
-        "Alias": "КурсРубляМай",
+        "Alias": null,
         "Entity": null,
         "Consumer": {
           "$ref": "1"
@@ -188,37 +158,12 @@
     "$values": [
       {
         "$type": "Zhichkin.Hermes.Model.ParameterExpression, Zhichkin.Hermes.Model",
-        "Name": "Валюта",
+        "Name": "InfoBaseName",
         "Type": {
           "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-          "identity": "413dae98-3ee0-4df6-930d-3c16ddc1580c"
+          "identity": "00000000-0000-0000-0000-0000ffffffee"
         },
-        "Value": {
-          "$type": "Zhichkin.Metadata.Model.ReferenceProxy, Zhichkin.Metadata.Model",
-          "type": {
-            "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-            "identity": "413dae98-3ee0-4df6-930d-3c16ddc1580c"
-          },
-          "identity": "6439c909-b006-4e34-8eb3-292d0e53b63f"
-        }
-      },
-      {
-        "$type": "Zhichkin.Hermes.Model.ParameterExpression, Zhichkin.Hermes.Model",
-        "Name": "НачалоПериода",
-        "Type": {
-          "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-          "identity": "00000000-0000-0000-0000-0000fffffff0"
-        },
-        "Value": "2019-05-01T00:00:00"
-      },
-      {
-        "$type": "Zhichkin.Hermes.Model.ParameterExpression, Zhichkin.Hermes.Model",
-        "Name": "КонецПериода",
-        "Type": {
-          "$type": "Zhichkin.Metadata.Model.Entity, Zhichkin.Metadata.Model",
-          "identity": "00000000-0000-0000-0000-0000fffffff0"
-        },
-        "Value": "2019-05-31T00:00:00"
+        "Value": "TEST"
       }
     ]
   },

@@ -71,7 +71,6 @@ namespace Zhichkin.Metadata.Model
                         e.version        = (byte[])reader[0];
                         e.name           = (string)reader[1];
                         e.table          = Factory.New<Table>((Guid)reader[2]);
-                        e.property       = Factory.New<Property>((Guid)reader[3]);
                         e.purpose        = (FieldPurpose)reader[4];
                         e.type_name      = (string)reader[5];
                         e.length         = (int)reader[6];
@@ -80,6 +79,9 @@ namespace Zhichkin.Metadata.Model
                         e.is_nullable    = (bool)reader[9];
                         e.is_primary_key = (bool)reader[10];
                         e.key_ordinal    = (byte)reader[11];
+
+                        Guid key = (Guid)reader[3];
+                        e.property = (key == Guid.Empty) ? null : Factory.New<Property>(key);
 
                         ok = true;
                     }

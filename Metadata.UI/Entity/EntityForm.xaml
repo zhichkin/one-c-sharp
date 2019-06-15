@@ -33,6 +33,16 @@
             </i:EventTrigger.Actions>
         </i:EventTrigger>
 
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding TablePopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:TableForm />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
     </i:Interaction.Triggers>
 
     <UserControl.Resources>
@@ -157,6 +167,13 @@
                                    Visibility="{Binding DataContext.IsTableInfoVisible,
                                         Converter={StaticResource BooleanToVisibilityConverter},
                                         RelativeSource={RelativeSource AncestorType={x:Type ui:EntityForm}}}"/>
+                        <Button Content="Изменить таблицу ..."  Width="130" Height="24" Margin="0,5,0,0"
+                            Command="{Binding DataContext.EditTableCommand, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityForm}}}"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Visibility="{Binding DataContext.IsTableInfoVisible,
+                                Converter={StaticResource BooleanToVisibilityConverter},
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityForm}}}"/>
+                        
                         <Grid MaxHeight="200" Margin="0,10,0,0" Visibility="{Binding DataContext.IsTableInfoVisible,
                                                     Converter={StaticResource BooleanToVisibilityConverter},
                                                     RelativeSource={RelativeSource AncestorType={x:Type ui:EntityForm}}}">

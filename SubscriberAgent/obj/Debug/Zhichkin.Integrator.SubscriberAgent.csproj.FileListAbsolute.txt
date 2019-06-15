@@ -24,7 +24,6 @@ C:\Users\User\Desktop\Z\debug\Zhichkin.Integrator.SubscriberAgent.pdb
 C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.SubscriberAgent.exe.config
 C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.SubscriberAgent.exe
 C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.Integrator.SubscriberAgent.pdb
-C:\Users\User\Desktop\GitHub\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.csprojAssemblyReference.cache
 C:\Users\User\Desktop\GitHub\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.ProjectInstaller.resources
 C:\Users\User\Desktop\GitHub\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.csproj.GenerateResource.cache
 C:\Users\User\Desktop\GitHub\Z\SubscriberAgent\obj\Debug\Zhichkin.Integrator.SubscriberAgent.csproj.CoreCompileInputs.cache
