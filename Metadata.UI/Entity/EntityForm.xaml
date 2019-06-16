@@ -93,6 +93,7 @@
                      IsReadOnly="True" Background="#FFF0F0F0" VerticalContentAlignment="Center"
                      VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="24" MinWidth="200"/>
             <Button Content="..." Margin="5,0,0,0" Width="24" Height="24" Command="{Binding SelectParentEntityCommand}"/>
+            <Button Content="X" Margin="5,0,0,0" Width="24" Height="24" Command="{Binding ClearParentEntityCommand}"/>
         </StackPanel>
     
         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding TypeCode, Mode=OneWay}"

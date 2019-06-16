@@ -24,6 +24,7 @@ namespace Zhichkin.Metadata.UI
             this.SelectDataTypeDialog = new InteractionRequest<Confirmation>();
             this.CreateNewPropertyCommand = new DelegateCommand(this.CreateNewProperty);
             this.SelectNamespaceCommand = new DelegateCommand(this.OpenNamespaceSelectionDialog);
+            this.ClearParentEntityCommand = new DelegateCommand(this.ClearParentEntity);
             this.SelectParentEntityCommand = new DelegateCommand(this.OpenParentEntitySelectionDialog);
 
             this.KillPropertyCommand = new DelegateCommand(this.KillProperty);
@@ -299,7 +300,13 @@ namespace Zhichkin.Metadata.UI
 
         public InteractionRequest<Confirmation> SelectDataTypeDialog { private set; get; }
 
+        public ICommand ClearParentEntityCommand { private set; get; }
         public ICommand SelectParentEntityCommand { private set; get; }
+        private void ClearParentEntity()
+        {
+            if (this.model == null) return;
+            this.Parent = null;
+        }
         private void OpenParentEntitySelectionDialog()
         {
             if (this.model == null) return;

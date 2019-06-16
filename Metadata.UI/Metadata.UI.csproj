@@ -77,7 +77,9 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
@@ -108,6 +110,10 @@
     <Compile Include="Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml.cs">
       <DependentUpon>SelectReferenceObjectDialogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Entity\EntityCommonView.xaml.cs">
+      <DependentUpon>EntityCommonView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityCommonViewModel.cs" />
     <Compile Include="Entity\EntityForm.xaml.cs">
       <DependentUpon>EntityForm.xaml</DependentUpon>
     </Compile>
@@ -120,6 +126,10 @@
       <DependentUpon>InfoBaseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="InfoBase\InfoBaseViewModel.cs" />
+    <Compile Include="MetadataProperty\MetadataPropertyView.xaml.cs">
+      <DependentUpon>MetadataPropertyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MetadataProperty\MetadataPropertyViewModel.cs" />
     <Compile Include="Namespace\NamespaceView.xaml.cs">
       <DependentUpon>NamespaceView.xaml</DependentUpon>
     </Compile>
@@ -170,6 +180,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Entity\EntityCommonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Entity\EntityForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -181,6 +195,10 @@
     <Page Include="InfoBase\InfoBaseView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MetadataProperty\MetadataPropertyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Namespace\NamespaceView.xaml">
       <SubType>Designer</SubType>
