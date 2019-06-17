@@ -2,8 +2,11 @@
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Shell;
@@ -84,7 +87,50 @@ namespace Zhichkin.Metadata.UI
         }
         private void InitializeViewModel()
         {
-            //TODO: build Grid programmatically
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { MinWidth = 100, Width = GridLength.Auto });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { MinWidth = 100, Width = GridLength.Auto });
+
+            Dictionary<Entity, IList<Property>> lookup = new Dictionary<Entity, IList<Property>>();
+            Entity parent = this.model;
+            while (parent != null)
+            {
+                if (parent.Properties.Count > 0)
+                {
+                    lookup.Add(parent, parent.Properties);
+                }
+                parent = parent.Parent;
+            }
+
+            int rowIndex = 0;
+            foreach(KeyValuePair<Entity, IList<Property>> item in lookup)
+            {
+                foreach (Property property in item.Value)
+                {
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+
+                    TextBlock textBlock = new TextBlock()
+                    {
+                        Text = $"{property.Name}:",
+                        Margin = new Thickness(5),
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Left
+                    };
+                    Grid.SetRow(textBlock, rowIndex);
+                    Grid.SetColumn(textBlock, 0);
+                    grid.Children.Add(textBlock);
+                    
+                    MetadataPropertyViewModel propertyViewModel = new MetadataPropertyViewModel(this, property);
+                    MetadataPropertyView propertyView = new MetadataPropertyView(propertyViewModel);
+                    Grid.SetRow(propertyView, rowIndex);
+                    Grid.SetColumn(propertyView, 1);
+                    grid.Children.Add(propertyView);
+
+                    rowIndex++;
+                }
+            }
+
+            this.View = grid;
         }
         private void SaveModel()
         {

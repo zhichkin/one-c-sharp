@@ -136,6 +136,14 @@ namespace Zhichkin.Metadata.Views
             viewModel.KillProperty(menu.DataContext);
         }
 
+        private void OpenEntityView_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.OpenEntityView(menu.DataContext);
+        }
         private void CreateEntity_Click(object sender, RoutedEventArgs e)
         {
             MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;

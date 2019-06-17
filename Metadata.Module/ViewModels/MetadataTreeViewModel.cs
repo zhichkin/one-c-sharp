@@ -54,6 +54,7 @@ namespace Zhichkin.Metadata.ViewModels
             this.NamespaceViewPopup = new InteractionRequest<Confirmation>();
             this.EntityPopup = new InteractionRequest<Confirmation>();
             this.PropertyPopup = new InteractionRequest<Confirmation>();
+            this.EntityViewPopup = new InteractionRequest<Confirmation>();
 
             RefreshInfoBases();
         }
@@ -467,6 +468,17 @@ namespace Zhichkin.Metadata.ViewModels
             {
                 Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
             }
+        }
+
+        public InteractionRequest<Confirmation> EntityViewPopup { get; private set; }
+        public void OpenEntityView(object model)
+        {
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = (Entity)model
+            };
+            this.EntityViewPopup.Raise(confirmation);
         }
     }
 }

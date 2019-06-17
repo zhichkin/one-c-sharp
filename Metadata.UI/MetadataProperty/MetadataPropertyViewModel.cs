@@ -20,6 +20,26 @@ namespace Zhichkin.Metadata.UI
             this.model = model ?? throw new ArgumentNullException("model");
             this.parent = parent ?? throw new ArgumentNullException("parent");
 
+            //TODO: get real value of the property from database !
+            //this.Value = typeof(Entity).GetProperty(model.Name).GetValue(model.Entity);
+            
+            if (model.Relations.Count == 0)
+            {
+                this.Type = null;
+                this.Value = null;
+            }
+            else if (model.Relations.Count == 1)
+            {
+                this.Type = model.Relations[0].Entity;
+                this.Value = Entity.GetDefaultValue(this.Type);
+            }
+            else
+            {
+                this.Type = Entity.Object;
+                this.Value = null;
+            }
+            OnTypeSelected(this.Type);
+
             this.ClearValueCommand = new DelegateCommand(this.ClearValue);
             this.OpenReferenceObjectDialogCommand = new DelegateCommand(this.OpenReferenceObjectDialog);
         }
@@ -40,18 +60,7 @@ namespace Zhichkin.Metadata.UI
                 return this.model.Name;
             }
         }
-        private Entity _Type;
-        public Entity Type
-        {
-            get
-            {
-                return _Type;
-            }
-            set
-            {
-                this.Type = value;
-            }
-        }
+        public Entity Type { get; set; }
         private object _Value;
         public object Value
         {
@@ -161,8 +170,8 @@ namespace Zhichkin.Metadata.UI
         
         private void OnTypeSelected(Entity type)
         {
-            this.Type = type;
-            this.Value = null;
+            //this.Type = type;
+            //this.Value = null;
 
             this.SetupValueView();
             this.OnPropertyChanged("IsClearButtonVisible");

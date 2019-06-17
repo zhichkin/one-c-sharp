@@ -78,6 +78,16 @@
             </i:EventTrigger.Actions>
         </i:EventTrigger>
 
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding EntityViewPopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:EntityCommonView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+        
     </i:Interaction.Triggers>
 
     <Grid>
@@ -218,13 +228,7 @@
                     <StackPanel Orientation="Horizontal">
                         <StackPanel.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Свойства" Click="ShowProperties_Clicked">
-                                    <MenuItem.Icon>
-                                        <Image Source="{StaticResource Icon_Settings}" />
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <Separator/>
-                                <MenuItem Header="Открыть" Click="OpenEntityForm_Clicked">
+                                <MenuItem Header="Свойства" Click="OpenEntityView_Clicked">
                                     <MenuItem.Icon>
                                         <Image Source="{StaticResource Icon_Settings}" />
                                     </MenuItem.Icon>
@@ -247,6 +251,17 @@
                                 <MenuItem Header="Удалить" Click="KillEntity_Clicked">
                                     <MenuItem.Icon>
                                         <Image Source="{StaticResource Icon_Kill_Object}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Открыть (старый вариант)" Click="ShowProperties_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Открыть (чуть новее)" Click="OpenEntityForm_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
