@@ -13,8 +13,8 @@ DEBUG;TRACE
 1382990074
 
 36-1715356959
-1311658184854
+132-1324121115
 Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;Entity\EntityCommonView.xaml;Entity\EntityForm.xaml;Field\FieldForm.xaml;InfoBase\InfoBaseView.xaml;MetadataProperty\MetadataPropertyView.xaml;Namespace\NamespaceView.xaml;Property\PropertyForm.xaml;Table\TableForm.xaml;
 
-False
+True
 

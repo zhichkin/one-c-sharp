@@ -140,10 +140,24 @@
           "bin/placeholder/Metadata.Model.dll": {}
         }
       },
+      "Metadata.Services/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        }
+      },
       "Metadata.UI/1.0.0": {
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "ORM": "1.0.0",
           "Shell": "1.0.0"
         },
@@ -324,10 +338,24 @@
           "bin/placeholder/Metadata.Model.dll": {}
         }
       },
+      "Metadata.Services/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        }
+      },
       "Metadata.UI/1.0.0": {
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "ORM": "1.0.0",
           "Shell": "1.0.0"
         },
@@ -508,10 +536,24 @@
           "bin/placeholder/Metadata.Model.dll": {}
         }
       },
+      "Metadata.Services/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        }
+      },
       "Metadata.UI/1.0.0": {
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "ORM": "1.0.0",
           "Shell": "1.0.0"
         },
@@ -692,10 +734,24 @@
           "bin/placeholder/Metadata.Model.dll": {}
         }
       },
+      "Metadata.Services/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        }
+      },
       "Metadata.UI/1.0.0": {
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "ORM": "1.0.0",
           "Shell": "1.0.0"
         },
@@ -1064,6 +1120,11 @@
       "type": "project",
       "path": "../Metadata.Model/Metadata.Model.csproj",
       "msbuildProject": "../Metadata.Model/Metadata.Model.csproj"
+    },
+    "Metadata.Services/1.0.0": {
+      "type": "project",
+      "path": "../Metadata.Services/Metadata.Services.csproj",
+      "msbuildProject": "../Metadata.Services/Metadata.Services.csproj"
     },
     "Metadata.UI/1.0.0": {
       "type": "project",

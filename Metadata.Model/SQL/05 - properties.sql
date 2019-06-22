@@ -8,6 +8,9 @@ CREATE TABLE [metadata].[properties](
 	[entity] [uniqueidentifier] NOT NULL,
 	[purpose] [int] NOT NULL,
 	[ordinal] [int] NOT NULL,
+	[is_abstract] [bit] NOT NULL,
+	[is_read_only] [bit] NOT NULL,
+	[is_primary_key] [bit] NOT NULL,
  CONSTRAINT [PK_properties] PRIMARY KEY CLUSTERED 
 (
 	[key] ASC

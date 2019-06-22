@@ -10,16 +10,17 @@ namespace Zhichkin.Metadata.Model
         public sealed class DataMapper : IDataMapper
         {
             # region " SQL "
-            private const string SelectCommandText = @"SELECT [entity], [name], [purpose], [version], [ordinal] FROM [metadata].[properties] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [entity], [name], [purpose], [version], [ordinal], [is_abstract], [is_read_only], [is_primary_key] FROM [metadata].[properties] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [metadata].[properties] ([key], [entity], [name], [purpose], [ordinal]) " +
+                @"INSERT [metadata].[properties] ([key], [entity], [name], [purpose], [ordinal], [is_abstract], [is_read_only], [is_primary_key]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @entity, @name, @purpose, @ordinal); " +
+                @"VALUES (@key, @entity, @name, @purpose, @ordinal, @is_abstract, @is_read_only, @is_primary_key); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
-                @"UPDATE [metadata].[properties] SET [entity] = @entity, [name] = @name, [purpose] = @purpose, [ordinal] = @ordinal " +
+                @"UPDATE [metadata].[properties] SET [entity] = @entity, [name] = @name, [purpose] = @purpose, [ordinal] = @ordinal, " +
+                @"[is_abstract] = @is_abstract, [is_read_only] = @is_read_only, [is_primary_key] = @is_primary_key " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
@@ -74,6 +75,9 @@ namespace Zhichkin.Metadata.Model
                         e.purpose = (PropertyPurpose)reader[2];
                         e.version = (byte[])reader[3];
                         e.ordinal = reader.GetInt32(4);
+                        e.isAbstract = reader.GetBoolean(5);
+                        e.isReadOnly = reader.GetBoolean(6);
+                        e.isPrimaryKey = reader.GetBoolean(7);
 
                         ok = true;
                     }
@@ -122,6 +126,21 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("ordinal", SqlDbType.Int);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.ordinal;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_abstract", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isAbstract;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_read_only", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isReadOnly;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_primary_key", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isPrimaryKey;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -180,6 +199,21 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("ordinal", SqlDbType.Int);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = e.ordinal;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_abstract", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isAbstract;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_read_only", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isReadOnly;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_primary_key", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isPrimaryKey;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())

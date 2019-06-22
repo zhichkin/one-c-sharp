@@ -4,8 +4,204 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:ui="clr-namespace:Zhichkin.Metadata.UI"
+             xmlns:shell="clr-namespace:Zhichkin.Shell;assembly=z"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             Height="Auto" MinWidth="400" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+    <i:Interaction.Triggers>
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding PropertyPopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:PropertyForm/>
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding SelectDataTypeDialog}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:SelectDataTypeDialogView/>
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding TablePopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:TableForm/>
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
+    </i:Interaction.Triggers>
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
     
-    <ContentControl Content="{Binding View}"/>
-    
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{Binding FormTitle}" FontSize="20" FontWeight="DemiBold" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        
+        <ContentControl Grid.Row="1" Content="{Binding View}"/>
+
+        <TabControl Grid.Row="2" MinHeight="120">
+            <TabControl.Resources>
+                <Style TargetType="TextBlock" x:Key="SelectedTabTextStyle">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TabControl.Resources>
+
+            <!-- Собственные свойства -->
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Собственные свойства" Style="{StaticResource SelectedTabTextStyle}" Margin="4" VerticalAlignment="Center"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <Button Content="Добавить свойство ..." Margin="10" Width="130" Height="24"
+                                    Command="{Binding DataContext.CreateNewPropertyCommand,
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                                    CommandParameter="Own"/>
+                            <Button Content="Редактировать ..." Margin="10" Width="130" Height="24"
+                                    Command="{Binding DataContext.EditPropertyCommand,
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"/>
+                            <Button Content="Удалить ..." Margin="10" Width="130" Height="24"
+                                    Command="{Binding DataContext.KillPropertyCommand,
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"/>
+                        </StackPanel>
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding DataContext.OwnProperties, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                                  IsReadOnly="True" AutoGenerateColumns="False" MaxHeight="200"
+                                  SelectedItem="{Binding DataContext.SelectedProperty, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="№" Binding="{Binding Ordinal}"/>
+                                <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Назначение" Binding="{Binding Purpose}"/>
+                                <DataGridTextColumn Header="Тип" Binding="{Binding Relations[0].Entity.FullName}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <!-- Абстрактные свойства -->
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Абстрактные свойства" Style="{StaticResource SelectedTabTextStyle}" Margin="4" VerticalAlignment="Center"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <Button Content="Добавить свойство ..." Margin="10" Width="130" Height="24"
+                                    Command="{Binding DataContext.CreateNewPropertyCommand,
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                                    CommandParameter="Abstract"/>
+                            <Button Content="Редактировать ..." Margin="10" Width="130" Height="24"
+                                    Command="{Binding DataContext.EditPropertyCommand,
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"/>
+                            <Button Content="Удалить ..." Margin="10" Width="130" Height="24"
+                                    Command="{Binding DataContext.KillPropertyCommand,
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"/>
+                        </StackPanel>
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding DataContext.AbstractProperties, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                                  IsReadOnly="True" AutoGenerateColumns="False" MaxHeight="200"
+                                  SelectedItem="{Binding DataContext.SelectedProperty, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="№" Binding="{Binding Ordinal}"/>
+                                <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Назначение" Binding="{Binding Purpose}"/>
+                                <DataGridTextColumn Header="Тип" Binding="{Binding Relations[0].Entity.FullName}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <!-- Таблица базы данных -->
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Таблица базы данных" Style="{StaticResource SelectedTabTextStyle}" Margin="4"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <StackPanel Orientation="Vertical" Margin="10">
+                        <Button Content="Добавить таблицу ..."  Width="130" Height="24"
+                            Command="{Binding DataContext.CreateNewTableCommand, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Visibility="{Binding DataContext.IsCreateNewTableButtonVisible,
+                                Converter={StaticResource BooleanToVisibilityConverter},
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"/>
+                        <TextBlock Text="{Binding DataContext.TableName,
+                                        RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   Visibility="{Binding DataContext.IsTableInfoVisible,
+                                        Converter={StaticResource BooleanToVisibilityConverter},
+                                        RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"/>
+                        <Button Content="Изменить таблицу ..."  Width="130" Height="24" Margin="0,5,0,0"
+                            Command="{Binding DataContext.EditTableCommand, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Visibility="{Binding DataContext.IsTableInfoVisible,
+                                Converter={StaticResource BooleanToVisibilityConverter},
+                                RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"/>
+
+                        <Grid MaxHeight="200" Margin="0,10,0,0" Visibility="{Binding DataContext.IsTableInfoVisible,
+                                                    Converter={StaticResource BooleanToVisibilityConverter},
+                                                    RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}">
+                            <DataGrid ItemsSource="{Binding DataContext.TableFields, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityCommonView}}}"
+                                      IsReadOnly="True" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Тип" Binding="{Binding TypeName}"/>
+                                    <DataGridCheckBoxColumn Header="Nullable" Binding="{Binding IsNullable}"/>
+                                    <DataGridTextColumn Header="Назначение" Binding="{Binding Purpose}"/>
+                                    <DataGridTextColumn Header="Свойство" Binding="{Binding Property.Name}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+            
+        </TabControl>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="{Binding ConfirmButtonTitle}" Margin="10" Width="80" Height="24"  Command="{Binding ConfirmCommand}"
+                    Visibility="{Binding IsConfirmButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Content="{Binding CancelButtonTitle}" Margin="10" Width="80" Height="24" Command="{Binding CancelCommand}"
+                    Visibility="{Binding IsCancelButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+
+    </Grid>
+
 </UserControl>

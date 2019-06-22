@@ -15,30 +15,32 @@ namespace Zhichkin.Metadata.UI
         private UIElement _ValueView;
         private readonly EntityCommonViewModel parent;
 
-        public MetadataPropertyViewModel(EntityCommonViewModel parent, Property model)
+        public MetadataPropertyViewModel(EntityCommonViewModel parent, Property model, object value)
         {
             this.model = model ?? throw new ArgumentNullException("model");
             this.parent = parent ?? throw new ArgumentNullException("parent");
+            this.Value = value;
+            SetupValueView();
 
             //TODO: get real value of the property from database !
             //this.Value = typeof(Entity).GetProperty(model.Name).GetValue(model.Entity);
             
-            if (model.Relations.Count == 0)
-            {
-                this.Type = null;
-                this.Value = null;
-            }
-            else if (model.Relations.Count == 1)
-            {
-                this.Type = model.Relations[0].Entity;
-                this.Value = Entity.GetDefaultValue(this.Type);
-            }
-            else
-            {
-                this.Type = Entity.Object;
-                this.Value = null;
-            }
-            OnTypeSelected(this.Type);
+            //if (model.Relations.Count == 0)
+            //{
+            //    this.Type = null;
+            //    this.Value = null;
+            //}
+            //else if (model.Relations.Count == 1)
+            //{
+            //    this.Type = model.Relations[0].Entity;
+            //    this.Value = Entity.GetDefaultValue(this.Type);
+            //}
+            //else
+            //{
+            //    this.Type = Entity.Object;
+            //    this.Value = null;
+            //}
+            //OnTypeSelected(this.Type);
 
             this.ClearValueCommand = new DelegateCommand(this.ClearValue);
             this.OpenReferenceObjectDialogCommand = new DelegateCommand(this.OpenReferenceObjectDialog);
@@ -61,32 +63,18 @@ namespace Zhichkin.Metadata.UI
             }
         }
         public Entity Type { get; set; }
-        private object _Value;
-        public object Value
-        {
-            get
-            {
-                return _Value;
-            }
-            set
-            {
-                if (this.Type == Entity.Int32)
-                {
-                    _Value = Int32.Parse(value.ToString());
-                }
-                else if (this.Type == Entity.Decimal)
-                {
-                    _Value = decimal.Parse(value.ToString());
-                }
-                else
-                {
-                    _Value = value;
-                }
-            }
-        }
+        public object Value { get; set; }
 
         private void SetupValueView()
         {
+            TextBox view = new TextBox();
+            view.MinWidth = 100;
+            view.Height = 24;
+            view.VerticalContentAlignment = VerticalAlignment.Center;
+            view.Text = this.Value?.ToString();
+            this.ValueView = view;
+            return;
+
             if (this.Type == Entity.Int32
                 || this.Type == Entity.Decimal
                 || this.Type == Entity.String)
@@ -103,9 +91,9 @@ namespace Zhichkin.Metadata.UI
             }
             else
             {
-                TextBlock view = new TextBlock();
-                view.Text = this.Type.FullName;
-                this.ValueView = view;
+                //TextBlock view = new TextBlock();
+                //view.Text = this.Type?.FullName;
+                //this.ValueView = view;
             }
         }
         private void SetupTextBoxView()
@@ -156,7 +144,7 @@ namespace Zhichkin.Metadata.UI
 
         public bool IsClearButtonVisible
         {
-            get { return this.Type != null; }
+            get { return false; }
         }
         public ICommand ClearValueCommand { get; private set; }
         private void ClearValue()

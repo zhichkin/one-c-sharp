@@ -11,17 +11,17 @@ namespace Zhichkin.Metadata.Model
         public sealed class DataMapper : IDataMapper
         {
             #region " SQL "
-            private const string SelectCommandText = @"SELECT [namespace], [owner], [parent], [name], [code], [version], [alias] FROM [metadata].[entities] WHERE [key] = @key";
+            private const string SelectCommandText = @"SELECT [namespace], [owner], [parent], [name], [code], [version], [alias], [is_abstract], [is_sealed] FROM [metadata].[entities] WHERE [key] = @key";
             private const string InsertCommandText =
                 @"DECLARE @result table([version] binary(8)); " +
-                @"INSERT [metadata].[entities] ([key], [namespace], [owner], [parent], [name], [code], [alias]) " +
+                @"INSERT [metadata].[entities] ([key], [namespace], [owner], [parent], [name], [code], [alias], [is_abstract], [is_sealed]) " +
                 @"OUTPUT inserted.[version] INTO @result " +
-                @"VALUES (@key, @namespace, @owner, @parent, @name, @code, @alias); " +
+                @"VALUES (@key, @namespace, @owner, @parent, @name, @code, @alias, @is_abstract, @is_sealed); " +
                 @"IF @@ROWCOUNT > 0 SELECT [version] FROM @result;";
             private const string UpdateCommandText =
                 @"DECLARE @rows_affected int; DECLARE @result table([version] binary(8)); " +
                 @"UPDATE [metadata].[entities] SET [namespace] = @namespace, [owner] = @owner, [parent] = @parent, " +
-                @"[name] = @name, [code] = @code, [alias] = @alias " +
+                @"[name] = @name, [code] = @code, [alias] = @alias, [is_abstract] = @is_abstract, [is_sealed] = @is_sealed " +
                 @"OUTPUT inserted.[version] INTO @result" +
                 @" WHERE [key] = @key AND [version] = @version; " +
                 @"SET @rows_affected = @@ROWCOUNT; " +
@@ -79,6 +79,8 @@ namespace Zhichkin.Metadata.Model
                         e.code = (int)reader[4];
                         e.version = (byte[])reader[5];
                         e.alias = reader.GetString(6);
+                        e.isAbstract = reader.GetBoolean(7);
+                        e.isSealed = reader.GetBoolean(8);
 
                         ok = true;
                     }
@@ -137,6 +139,16 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("alias", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = (e.alias == null) ? string.Empty : e.alias;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_abstract", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isAbstract;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_sealed", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isSealed;
                     command.Parameters.Add(parameter);
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -205,6 +217,16 @@ namespace Zhichkin.Metadata.Model
                     parameter = new SqlParameter("alias", SqlDbType.NVarChar);
                     parameter.Direction = ParameterDirection.Input;
                     parameter.Value = (e.alias == null) ? string.Empty : e.alias;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_abstract", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isAbstract;
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter("is_sealed", SqlDbType.Bit);
+                    parameter.Direction = ParameterDirection.Input;
+                    parameter.Value = e.isSealed;
                     command.Parameters.Add(parameter);
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -303,6 +325,8 @@ namespace Zhichkin.Metadata.Model
                                 entity.code = (int)reader[4];
                                 entity.version = (byte[])reader[5];
                                 entity.alias = reader.GetString(6);
+                                entity.isAbstract = reader.GetBoolean(7);
+                                entity.isSealed = reader.GetBoolean(8);
                                 entity.State = PersistentState.Original;
                             }
                         }

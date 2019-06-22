@@ -17,6 +17,7 @@ namespace Zhichkin.Metadata.UI
     {
         private Table model;
         private Confirmation notification;
+        private SQLBuilder sqlService = new SQLBuilder();
 
         public TableFormModel()
         {
@@ -27,6 +28,9 @@ namespace Zhichkin.Metadata.UI
             this.KillFieldCommand = new DelegateCommand(this.KillField);
             this.EditFieldCommand = new DelegateCommand(this.EditField);
             this.CreateNewFieldCommand = new DelegateCommand(this.CreateNewField);
+
+            this.DropTableCommand = new DelegateCommand(this.DropTable);
+            this.CreateTableCommand = new DelegateCommand(this.CreateTable);
         }
         public ICommand ConfirmCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
@@ -86,6 +90,9 @@ namespace Zhichkin.Metadata.UI
 
                 this.TableFields = new ObservableCollection<Field>(this.model.Fields.OrderBy(f => f.Property?.Ordinal ?? 0));
 
+                _IsDropTableButtonVisible = sqlService.TableExists(this.model);
+                _IsCreateTableButtonVisible = !_IsDropTableButtonVisible;
+
                 this.RefreshView();
             }
         }
@@ -96,6 +103,9 @@ namespace Zhichkin.Metadata.UI
             this.OnPropertyChanged("ConfirmButtonTitle");
             this.OnPropertyChanged("IsCancelButtonVisible");
             this.OnPropertyChanged("IsConfirmButtonVisible");
+
+            this.OnPropertyChanged("IsDropTableButtonVisible");
+            this.OnPropertyChanged("IsCreateTableButtonVisible");
 
             this.OnPropertyChanged("Name");
             this.OnPropertyChanged("Schema");
@@ -316,6 +326,60 @@ namespace Zhichkin.Metadata.UI
                     scope.Complete();
                 }
                 this.TableFields.Remove(field);
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
+            }
+        }
+
+        private bool _IsDropTableButtonVisible = false;
+        private bool _IsCreateTableButtonVisible = false;
+        public bool IsDropTableButtonVisible { get { return _IsDropTableButtonVisible; } }
+        public bool IsCreateTableButtonVisible { get { return _IsCreateTableButtonVisible; } }
+        public ICommand DropTableCommand { get; private set; }
+        public ICommand CreateTableCommand { get; private set; }
+        private void DropTable()
+        {
+            if (this.model == null) throw new InvalidOperationException("Model is null!");
+            if (this.model.State == PersistentState.New)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = "Свойства таблицы не записаны!" });
+                return;
+            }
+
+            bool cancel = true;
+            Z.Confirm(new Confirmation
+                {
+                    Title = "Z-Metadata",
+                    Content = $"Таблица \"{this.model.Name}\" будет удалена.\n\nПродолжить ?"
+                },
+                c => { cancel = !c.Confirmed; }
+            );
+            if (cancel) return;
+
+            try
+            {
+                sqlService.DropTable(this.model);
+                _IsDropTableButtonVisible = sqlService.TableExists(this.model);
+                _IsCreateTableButtonVisible = !_IsDropTableButtonVisible;
+                this.OnPropertyChanged("IsDropTableButtonVisible");
+                this.OnPropertyChanged("IsCreateTableButtonVisible");
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
+            }
+        }
+        private void CreateTable()
+        {
+            try
+            {
+                sqlService.CreateTable(this.model);
+                _IsDropTableButtonVisible = sqlService.TableExists(this.model);
+                _IsCreateTableButtonVisible = !_IsDropTableButtonVisible;
+                this.OnPropertyChanged("IsDropTableButtonVisible");
+                this.OnPropertyChanged("IsCreateTableButtonVisible");
             }
             catch (Exception ex)
             {

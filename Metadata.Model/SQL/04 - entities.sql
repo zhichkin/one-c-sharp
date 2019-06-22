@@ -10,6 +10,8 @@ CREATE TABLE [metadata].[entities](
 	[owner] [uniqueidentifier] NOT NULL, -- nesting
 	[parent] [uniqueidentifier] NOT NULL, -- inheritance
 	[alias] [nvarchar](128) NOT NULL,
+	[is_abstract] [bit] NOT NULL,
+	[is_sealed] [bit] NOT NULL,
  CONSTRAINT [PK_entities] PRIMARY KEY CLUSTERED 
 (
 	[key] ASC

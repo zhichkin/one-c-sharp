@@ -65,6 +65,10 @@
             <Button Content="Добавить поле ..." Command="{Binding CreateNewFieldCommand}" Width="100" Height="24"/>
             <Button Content="Изменить поле ..." Command="{Binding EditFieldCommand}" Width="100" Height="24" Margin="10,0,0,0"/>
             <Button Content="Удалить поле ..." Command="{Binding KillFieldCommand}" Width="100" Height="24" Margin="10,0,0,0"/>
+            <Button Content="Создать таблицу" Command="{Binding CreateTableCommand}" Width="100" Height="24" Margin="10,0,0,0"
+                    Visibility="{Binding IsCreateTableButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Content="Удалить таблицу" Command="{Binding DropTableCommand}" Width="100" Height="24" Margin="10,0,0,0"
+                    Visibility="{Binding IsDropTableButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         </StackPanel>
 
         <Grid Grid.Row="5" Grid.ColumnSpan="2" Margin="10,0,10,10">

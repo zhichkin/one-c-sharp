@@ -40,6 +40,8 @@ namespace Zhichkin.Metadata.Model
         private Entity owner = null; // Nesting, aggregation
         private Entity parent = null; // Inheritance
         private string alias = string.Empty; // presentation in UI
+        private bool isAbstract = false;
+        private bool isSealed = false;
 
         ///<summary>Type code of the entity</summary>
         public int Code { set { Set<int>(value, ref code); } get { return Get<int>(ref code); } }
@@ -49,6 +51,9 @@ namespace Zhichkin.Metadata.Model
         ///<summary>Inheritance: base entity reference</summary>
         public Entity Parent { set { Set<Entity>(value, ref parent); } get { return Get<Entity>(ref parent); } }
         public string Alias { set { Set<string>(value, ref alias); } get { return Get<string>(ref alias); } }
+        public bool IsAbstract { set { Set<bool>(value, ref isAbstract); } get { return Get<bool>(ref isAbstract); } }
+        public bool IsSealed { set { Set<bool>(value, ref isSealed); } get { return Get<bool>(ref isSealed); } }
+
         public string FullName { get { return string.Format("{0}.{1}", this.Namespace.Name, this.Name); } }
 
         public Table MainTable
