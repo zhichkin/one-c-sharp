@@ -126,6 +126,8 @@ namespace Zhichkin.Metadata.UI
             this.OnPropertyChanged("Owner");
             this.OnPropertyChanged("Parent");
             this.OnPropertyChanged("Namespace");
+            this.OnPropertyChanged("IsSealed");
+            this.OnPropertyChanged("IsAbstract");
             this.OnPropertyChanged("Properties");
 
             this.OnPropertyChanged("MainTableName");
@@ -294,6 +296,46 @@ namespace Zhichkin.Metadata.UI
             {
                 if (this.model == null) return;
                 this.model.Parent = value;
+                this.RefreshView();
+            }
+        }
+        public bool IsAbstract
+        {
+            get
+            {
+                if (this.model == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.model.IsAbstract;
+                }
+            }
+            set
+            {
+                if (this.model == null) return;
+                this.model.IsAbstract = value;
+                this.RefreshView();
+            }
+        }
+        public bool IsSealed
+        {
+            get
+            {
+                if (this.model == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.model.IsSealed;
+                }
+            }
+            set
+            {
+                if (this.model == null) return;
+                this.model.IsSealed = value;
                 this.RefreshView();
             }
         }

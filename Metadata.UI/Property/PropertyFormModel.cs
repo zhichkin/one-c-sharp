@@ -74,6 +74,9 @@ namespace Zhichkin.Metadata.UI
         {
             this.OnPropertyChanged("Name");
             this.OnPropertyChanged("Entity");
+            this.OnPropertyChanged("IsAbstract");
+            this.OnPropertyChanged("IsReadOnly");
+            this.OnPropertyChanged("IsPrimaryKey");
             this.OnPropertyChanged("Relations");
             this.OnPropertyChanged("PurposeSelectedItem");
 
@@ -101,6 +104,66 @@ namespace Zhichkin.Metadata.UI
             {
                 if (this.model == null) return;
                 this.model.Name = value;
+                this.RefreshView();
+            }
+        }
+        public bool IsAbstract
+        {
+            get
+            {
+                if (this.model == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.model.IsAbstract;
+                }
+            }
+            set
+            {
+                if (this.model == null) return;
+                this.model.IsAbstract = value;
+                this.RefreshView();
+            }
+        }
+        public bool IsReadOnly
+        {
+            get
+            {
+                if (this.model == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.model.IsReadOnly;
+                }
+            }
+            set
+            {
+                if (this.model == null) return;
+                this.model.IsReadOnly = value;
+                this.RefreshView();
+            }
+        }
+        public bool IsPrimaryKey
+        {
+            get
+            {
+                if (this.model == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.model.IsPrimaryKey;
+                }
+            }
+            set
+            {
+                if (this.model == null) return;
+                this.model.IsPrimaryKey = value;
                 this.RefreshView();
             }
         }

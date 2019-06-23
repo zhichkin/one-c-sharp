@@ -89,11 +89,21 @@
                  Margin="5,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="5,5,10,5">
+            
             <TextBox Text="{Binding Parent.FullName, Mode=OneWay}"
                      IsReadOnly="True" Background="#FFF0F0F0" VerticalContentAlignment="Center"
                      VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="24" MinWidth="200"/>
             <Button Content="..." Margin="5,0,0,0" Width="24" Height="24" Command="{Binding SelectParentEntityCommand}"/>
             <Button Content="X" Margin="5,0,0,0" Width="24" Height="24" Command="{Binding ClearParentEntityCommand}"/>
+
+            <TextBlock Text="Абстрактный класс:" Margin="20,0,0,0" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding IsAbstract, Mode=TwoWay}" Margin="5,0,10,0"
+                 Height="24" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+
+            <TextBlock Text="Финальный класс:" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding IsSealed, Mode=TwoWay}" Margin="5,0,0,0"
+                 Height="24" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+
         </StackPanel>
     
         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding TypeCode, Mode=OneWay}"
@@ -147,6 +157,7 @@
                                 <DataGridTextColumn Header="№" Binding="{Binding Ordinal}"/>
                                 <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Назначение" Binding="{Binding Purpose}"/>
+                                <DataGridCheckBoxColumn Header="Ключ" Binding="{Binding IsPrimaryKey}"/>
                                 <DataGridTextColumn Header="Тип" Binding="{Binding Relations[0].Entity.FullName}"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -185,11 +196,13 @@
                             <DataGrid ItemsSource="{Binding DataContext.TableFields, RelativeSource={RelativeSource AncestorType={x:Type ui:EntityForm}}}"
                                       IsReadOnly="True" AutoGenerateColumns="False">
                                 <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Свойство" Binding="{Binding Property.Name}"/>
                                     <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
                                     <DataGridTextColumn Header="Тип" Binding="{Binding TypeName}"/>
                                     <DataGridCheckBoxColumn Header="Nullable" Binding="{Binding IsNullable}"/>
+                                    <DataGridCheckBoxColumn Header="Ключ" Binding="{Binding IsPrimaryKey}"/>
+                                    <DataGridTextColumn Header="#" Binding="{Binding KeyOrdinal}"/>
                                     <DataGridTextColumn Header="Назначение" Binding="{Binding Purpose}"/>
-                                    <DataGridTextColumn Header="Свойство" Binding="{Binding Property.Name}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>

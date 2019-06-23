@@ -77,11 +77,13 @@
                       ItemsSource="{Binding TableFields}"
                       SelectedItem="{Binding SelectedField}">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Header="Свойство" Binding="{Binding Property.Name}"/>
                     <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="Тип" Binding="{Binding TypeName}"/>
                     <DataGridCheckBoxColumn Header="Nullable" Binding="{Binding IsNullable}"/>
+                    <DataGridCheckBoxColumn Header="Ключ" Binding="{Binding IsPrimaryKey}"/>
+                    <DataGridTextColumn Header="#" Binding="{Binding KeyOrdinal}"/>
                     <DataGridTextColumn Header="Назначение" Binding="{Binding Purpose}"/>
-                    <DataGridTextColumn Header="Свойство" Binding="{Binding Property.Name}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

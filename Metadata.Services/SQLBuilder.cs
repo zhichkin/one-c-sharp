@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using Zhichkin.Metadata.Model;
@@ -151,7 +153,32 @@ namespace Zhichkin.Metadata.Services
             return $"CONSTRAINT [pk_{table.Name}] PRIMARY KEY CLUSTERED ({script.ToString()})";
         }
 
+        /// <summary>
+        /// Function creates persistent object for metadata object
+        /// </summary>
+        /// <param name="entity">
+        /// Metadata object to build persistent object for
+        /// </param>
+        /// <returns>
+        /// Persistent object to work with persistent properties and bind them to UI
+        /// </returns>
+        public object BuildPersistentObject(Entity entity)
+        {
+            dynamic proxy = new ExpandoObject();
+            //((IDictionary<string, object>)proxy).Add("PropertyName", null);
 
+            if (entity.Parent == null)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            return proxy; 
+        }
+        
     }
 }
 
