@@ -97,7 +97,7 @@
                   TreeViewItem.PreviewMouseRightButtonDown="TreeViewItem_PreviewMouseRightButtonDown">
             <TreeView.Resources>
                 <ViewModel:CompositeCollectionConverter x:Key="CompositeCollectionConverter" />
-                <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=Namespaces}">
+                <HierarchicalDataTemplate DataType="{x:Type Model:InfoBase}" ItemsSource="{Binding Path=ObservableNamespaces}">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel.ContextMenu>
                             <ContextMenu>
@@ -148,8 +148,8 @@
                     <!-- ItemsSource="{Binding Path=Entities}" -->
                     <HierarchicalDataTemplate.ItemsSource>
                         <MultiBinding Converter="{StaticResource CompositeCollectionConverter}">
-                            <Binding Path="Namespaces" />
-                            <Binding Path="Entities" />
+                            <Binding Path="ObservableNamespaces" />
+                            <Binding Path="ObservableEntities" />
                         </MultiBinding>
                     </HierarchicalDataTemplate.ItemsSource>
                     <StackPanel Orientation="Horizontal">
@@ -186,6 +186,9 @@
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
+                                    <Style.Setters>
+                                        <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
+                                    </Style.Setters>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Name}" Value="Перечисление">
                                             <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>
@@ -221,7 +224,7 @@
                 <HierarchicalDataTemplate DataType="{x:Type Model:Entity}">
                     <HierarchicalDataTemplate.ItemsSource>
                         <MultiBinding Converter="{StaticResource CompositeCollectionConverter}">
-                            <Binding Path="Properties" />
+                            <Binding Path="ObservableProperties" />
                             <Binding Path="NestedEntities" />
                         </MultiBinding>
                     </HierarchicalDataTemplate.ItemsSource>
@@ -269,6 +272,9 @@
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">
+                                    <Style.Setters>
+                                        <Setter Property="Source" Value="{StaticResource Icon_Catalog}"/>
+                                    </Style.Setters>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Namespace.Name}" Value="Перечисление">
                                             <Setter Property="Source" Value="{StaticResource Icon_Enumeration}"/>

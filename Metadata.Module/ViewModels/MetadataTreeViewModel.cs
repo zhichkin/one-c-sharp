@@ -228,13 +228,13 @@ namespace Zhichkin.Metadata.ViewModels
                     {
                         if (ns.Owner is InfoBase)
                         {
-                            ns.InfoBase.Namespaces.Add(ns);
-                            ns.InfoBase.OnPropertyChanged("Namespaces");
+                            ns.InfoBase.ObservableNamespaces.Add(ns);
+                            //ns.InfoBase.OnPropertyChanged("Namespaces");
                         }
                         else if (ns.Owner is Namespace)
                         {
-                            ((Namespace)ns.Owner).Namespaces.Add(ns);
-                            ((Namespace)ns.Owner).OnPropertyChanged("Namespaces");
+                            ((Namespace)ns.Owner).ObservableNamespaces.Add(ns);
+                            //((Namespace)ns.Owner).OnPropertyChanged("Namespaces");
                         }
                     }
                 }
@@ -265,13 +265,23 @@ namespace Zhichkin.Metadata.ViewModels
                 }
                 if (ns.Owner is InfoBase)
                 {
-                    ns.InfoBase.Namespaces.Remove(ns);
-                    ns.InfoBase.OnPropertyChanged("Namespaces");
+                    InfoBase ib = this.InfoBases.Where(i => i == ns.Owner).FirstOrDefault();
+                    if (ib != null)
+                    {
+                        ib.ObservableNamespaces.Remove(ns);
+                    }
                 }
                 else if (ns.Owner is Namespace)
                 {
-                    ((Namespace)ns.Owner).Namespaces.Remove(ns);
-                    ((Namespace)ns.Owner).OnPropertyChanged("Namespaces");
+                    InfoBase ib = this.InfoBases.Where(i => i == ns.InfoBase).FirstOrDefault();
+                    if (ib != null)
+                    {
+                        Namespace owner = FindObservableNamespace(ib, (Namespace)ns.Owner);
+                        if (owner != null)
+                        {
+                            owner.ObservableNamespaces.Remove(ns);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -279,16 +289,57 @@ namespace Zhichkin.Metadata.ViewModels
                 Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
             }
         }
+        private Namespace FindObservableNamespace(InfoBase ib, Namespace ns)
+        {
+            Namespace found = null;
+            foreach (Namespace n in ib.ObservableNamespaces)
+            {
+                if (n == ns)
+                {
+                    found = n;
+                    break;
+                }
+                found = FindObservableNamespace(n, ns);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+            return found;
+        }
+        private Namespace FindObservableNamespace(Namespace parent, Namespace ns)
+        {
+            Namespace found = null;
+            foreach (Namespace n in parent.ObservableNamespaces)
+            {
+                if (n == ns)
+                {
+                    found = n;
+                    break;
+                }
+                found = FindObservableNamespace(n, ns);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+            return found;
+        }
 
         public InteractionRequest<Confirmation> PropertyPopup { get; private set; }
         public void OpenPropertyForm(object model)
         {
+            Property property = model as Property;
+            if (property == null) return;
+
             Confirmation confirmation = new Confirmation()
             {
                 Title = "Z-Metadata",
-                Content = (Property)model
+                Content = property
             };
             this.PropertyPopup.Raise(confirmation);
+
+            property.OnPropertyChanged("Name");
         }
         public void CreateNewProperty(object owner)
         {
@@ -314,11 +365,10 @@ namespace Zhichkin.Metadata.ViewModels
             {
                 if (response.Confirmed)
                 {
-                    Property content = response.Content as Property;
-                    if (content != null)
+                    Property property = response.Content as Property;
+                    if (property != null)
                     {
-                        content.Entity.Properties.Add(content);
-                        content.Entity.OnPropertyChanged("Properties");
+                        property.Entity.ObservableProperties.Add(property);
                     }
                 }
             });
@@ -346,8 +396,19 @@ namespace Zhichkin.Metadata.ViewModels
                     dataService.Kill(property);
                     scope.Complete();
                 }
-                property.Entity.Properties.Remove(property);
-                property.Entity.OnPropertyChanged("Properties");
+                InfoBase ib = this.InfoBases.Where(i => i == property.Entity.InfoBase).FirstOrDefault();
+                if (ib != null)
+                {
+                    Namespace ns = FindObservableNamespace(ib, property.Entity.Namespace);
+                    if (ns != null)
+                    {
+                        Entity owner = ns.ObservableEntities.Where(e => e == property.Entity).FirstOrDefault();
+                        if (owner != null)
+                        {
+                            owner.ObservableProperties.Remove(property);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -358,12 +419,33 @@ namespace Zhichkin.Metadata.ViewModels
         public InteractionRequest<Confirmation> EntityPopup { get; private set; }
         public void OpenEntityForm(object model)
         {
+            Entity entity = model as Entity;
+            if (entity == null) return;
+
             Confirmation confirmation = new Confirmation()
             {
                 Title = "Z-Metadata",
-                Content = (Entity)model
+                Content = entity
             };
             this.EntityPopup.Raise(confirmation);
+
+            InfoBase ib = this.InfoBases.Where(i => i == entity.InfoBase).FirstOrDefault();
+            if (ib != null)
+            {
+                Namespace ns = FindObservableNamespace(ib, entity.Namespace);
+                if (ns != null)
+                {
+                    Entity owner = ns.ObservableEntities.Where(e => e == entity).FirstOrDefault();
+                    if (owner != null)
+                    {
+                        foreach (Property property in owner.ObservableProperties)
+                        {
+                            property.Load();
+                            property.OnPropertyChanged("Name");
+                        }
+                    }
+                }
+            }
         }
         public void CreateNewEntity(object model)
         {
@@ -391,8 +473,9 @@ namespace Zhichkin.Metadata.ViewModels
                     Entity content = response.Content as Entity;
                     if (content != null)
                     {
-                        content.Namespace.Entities.Add(content);
-                        content.Namespace.OnPropertyChanged("Entities");
+                        content.Namespace.ObservableEntities.Add(content);
+                        //content.Namespace.Entities.Add(content);
+                        //content.Namespace.OnPropertyChanged("Entities");
                     }
                 }
             });
@@ -460,8 +543,15 @@ namespace Zhichkin.Metadata.ViewModels
                 }
                 else
                 {
-                    entity.Namespace.Entities.Remove(entity);
-                    entity.Namespace.OnPropertyChanged("Entities");
+                    InfoBase ib = this.InfoBases.Where(i => i == entity.InfoBase).FirstOrDefault();
+                    if (ib != null)
+                    {
+                        Namespace owner = FindObservableNamespace(ib, entity.Namespace);
+                        if (owner != null)
+                        {
+                            owner.ObservableEntities.Remove(entity);
+                        }
+                    }
                 }
             }
             catch (Exception ex)

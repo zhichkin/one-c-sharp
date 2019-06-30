@@ -405,8 +405,8 @@ namespace Zhichkin.Metadata.UI
                     Property content = response.Content as Property;
                     if (content != null)
                     {
-                        this.model.Properties.Add(content);
                         this.Properties.Add(content);
+                        this.model.ObservableProperties.Add(content);
                     }
                 }
             });
@@ -477,6 +477,7 @@ namespace Zhichkin.Metadata.UI
                     scope.Complete();
                 }
                 this.Properties.Remove(property);
+                this.model.ObservableProperties.Remove(property);
             }
             catch (Exception ex)
             {

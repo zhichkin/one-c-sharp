@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using Zhichkin.ORM;
 using Zhichkin.Metadata.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Zhichkin.Metadata.Model
 {
@@ -14,8 +15,6 @@ namespace Zhichkin.Metadata.Model
         public InfoBase() : base(_mapper) { }
         public InfoBase(Guid identity) : base(_mapper, identity) { }
         public InfoBase(Guid identity, PersistentState state) : base(_mapper, identity, state) { }
-
-
 
         private string server = string.Empty;
         private string database = string.Empty;
@@ -34,7 +33,12 @@ namespace Zhichkin.Metadata.Model
             {
                 if (this.state == PersistentState.New) return namespaces;
                 if (namespaces.Count > 0) return namespaces;
-                return service.GetChildren<InfoBase, Namespace>(this, "owner");
+                IList<Namespace> children = service.GetChildren<InfoBase, Namespace>(this, "owner");
+                foreach (Namespace child in children)
+                {
+                    child.Owner = this;
+                }
+                return children;
             }
         }
 
@@ -58,5 +62,19 @@ namespace Zhichkin.Metadata.Model
             }
         }
         public Entity GetEntity(int typeCode) { return DataMapper.GetEntity(this, typeCode); }
+
+        private ObservableCollection<Namespace> _ObservableNamespaces;
+        public ObservableCollection<Namespace> ObservableNamespaces
+        {
+            set { _ObservableNamespaces = value; }
+            get
+            {
+                if (_ObservableNamespaces == null)
+                {
+                    _ObservableNamespaces = new ObservableCollection<Namespace>(this.Namespaces);
+                }
+                return _ObservableNamespaces;
+            }
+        }
     }
 }

@@ -44,7 +44,8 @@ namespace Zhichkin.Metadata.Services
             string sql = "SELECT [key] FROM [metadata].[infobases] WHERE [key] <> CAST(0x00000000000000000000000000000000 AS uniqueidentifier);";
             foreach (dynamic item in service.Execute(sql))
             {
-                list.Add(new InfoBase((Guid)item.key, PersistentState.Virtual));
+                //list.Add(new InfoBase((Guid)item.key, PersistentState.Virtual));
+                list.Add(Factory.New<InfoBase>((Guid)item.key));
             }
             return list;
         }

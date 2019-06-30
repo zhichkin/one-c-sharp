@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Zhichkin.Metadata.Services;
 using Zhichkin.ORM;
 
@@ -31,14 +32,14 @@ namespace Zhichkin.Metadata.Model
             }
         }
 
-        private List<Namespace> namespaces = new List<Namespace>();
-        private List<Entity> entities = new List<Entity>();
+        //private List<Namespace> namespaces = new List<Namespace>();
+        //private List<Entity> entities = new List<Entity>();
         public IList<Namespace> Namespaces
         {
             get
             {
-                if (this.state == PersistentState.New) return namespaces;
-                if (namespaces.Count > 0) return namespaces;
+                //if (this.state == PersistentState.New) return namespaces;
+                //if (namespaces.Count > 0) return namespaces;
                 return service.GetChildren<Namespace, Namespace>(this, "owner");
             }
         }
@@ -46,9 +47,37 @@ namespace Zhichkin.Metadata.Model
         {
             get
             {
-                if (this.state == PersistentState.New) return entities;
-                if (entities.Count > 0) return entities;
+                //if (this.state == PersistentState.New) return entities;
+                //if (entities.Count > 0) return entities;
                 return service.GetChildren<Namespace, Entity>(this, "namespace");
+            }
+        }
+
+        private ObservableCollection<Entity> _ObservableEntities;
+        public ObservableCollection<Entity> ObservableEntities
+        {
+            set { _ObservableEntities = value; }
+            get
+            {
+                if (_ObservableEntities == null)
+                {
+                    _ObservableEntities = new ObservableCollection<Entity>(this.Entities);
+                }
+                return _ObservableEntities;
+            }
+        }
+
+        private ObservableCollection<Namespace> _ObservableNamespaces;
+        public ObservableCollection<Namespace> ObservableNamespaces
+        {
+            set { _ObservableNamespaces = value; }
+            get
+            {
+                if (_ObservableNamespaces == null)
+                {
+                    _ObservableNamespaces = new ObservableCollection<Namespace>(this.Namespaces);
+                }
+                return _ObservableNamespaces;
             }
         }
     }

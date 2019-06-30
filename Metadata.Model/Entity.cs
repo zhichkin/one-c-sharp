@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Zhichkin.Metadata.Services;
 
 using Zhichkin.ORM;
+using System.Collections.ObjectModel;
 
 namespace Zhichkin.Metadata.Model
 {
@@ -78,7 +79,7 @@ namespace Zhichkin.Metadata.Model
             }
         }
 
-        private List<Property> properties = new List<Property>();
+        //private List<Property> properties = new List<Property>();
         private List<Entity> nestedEntities = new List<Entity>();
         private List<Table> tables = new List<Table>();
 
@@ -86,8 +87,8 @@ namespace Zhichkin.Metadata.Model
         {
             get
             {
-                if (this.state == PersistentState.New) return properties;
-                if (properties.Count > 0) return properties;
+                //if (this.state == PersistentState.New) return properties;
+                //if (properties.Count > 0) return properties;
                 return service.GetChildren<Entity, Property>(this, "entity").OrderBy((p) => p.Ordinal).ToList();
             }
         }
@@ -121,6 +122,20 @@ namespace Zhichkin.Metadata.Model
             else if (this == Entity.String) return typeof(string);
             else if (this.Code > 0) return typeof(object);
             return null;
+        }
+
+        private ObservableCollection<Property> _ObservableProperties;
+        public ObservableCollection<Property> ObservableProperties
+        {
+            set { _ObservableProperties = value; }
+            get
+            {
+                if (_ObservableProperties == null)
+                {
+                    _ObservableProperties = new ObservableCollection<Property>(this.Properties);
+                }
+                return _ObservableProperties;
+            }
         }
     }
 }
