@@ -41,10 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PropertyReferenceTranslator.cs" />
+    <Compile Include="QueryExecutor.cs" />
     <Compile Include="SQLBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Model.csproj">
+      <Project>{6A86E382-F7ED-43FF-BE21-E2127EB8199A}</Project>
+      <Name>Hermes.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
       <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
       <Name>Metadata.Model</Name>
