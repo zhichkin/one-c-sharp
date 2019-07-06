@@ -56,6 +56,7 @@
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <Button Content="+" ToolTip="Add new parameter" Command="{Binding AddNewParameterCommand}" Height="24" Width="24"/>
                     <Label Content="Click to add new parameter" HorizontalAlignment="Center"/>
+                    <Button Content="Execute" ToolTip="Execute query" Command="{Binding ExecuteQueryCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
                 </StackPanel>
             </Border>
 

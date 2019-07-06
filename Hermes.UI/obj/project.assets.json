@@ -144,7 +144,8 @@
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
-          "ORM": "1.0.0"
+          "ORM": "1.0.0",
+          "Zhichkin.Hermes.Model": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Metadata.Services.dll": {}
@@ -206,6 +207,7 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "Microsoft.CSharp": "4.5.0",
           "Newtonsoft.Json": "12.0.2",
           "ORM": "1.0.0",
@@ -342,7 +344,8 @@
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
-          "ORM": "1.0.0"
+          "ORM": "1.0.0",
+          "Zhichkin.Hermes.Model": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Metadata.Services.dll": {}
@@ -404,6 +407,7 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "Microsoft.CSharp": "4.5.0",
           "Newtonsoft.Json": "12.0.2",
           "ORM": "1.0.0",
@@ -540,7 +544,8 @@
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
-          "ORM": "1.0.0"
+          "ORM": "1.0.0",
+          "Zhichkin.Hermes.Model": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Metadata.Services.dll": {}
@@ -602,6 +607,7 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "Microsoft.CSharp": "4.5.0",
           "Newtonsoft.Json": "12.0.2",
           "ORM": "1.0.0",
@@ -738,7 +744,8 @@
         "type": "project",
         "dependencies": {
           "Metadata.Model": "1.0.0",
-          "ORM": "1.0.0"
+          "ORM": "1.0.0",
+          "Zhichkin.Hermes.Model": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Metadata.Services.dll": {}
@@ -800,6 +807,7 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "Microsoft.CSharp": "4.5.0",
           "Newtonsoft.Json": "12.0.2",
           "ORM": "1.0.0",

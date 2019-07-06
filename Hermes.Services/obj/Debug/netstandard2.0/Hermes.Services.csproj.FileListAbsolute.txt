@@ -32,3 +32,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Model.pdb
 C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Model.dll
 C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Model.pdb
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Services.dll
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Services.pdb

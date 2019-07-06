@@ -1,18 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Metadata.Services
 {
     public sealed class QueryExecutor
     {
-        private Dictionary<string, PropertyReferenceTranslator> propertyTranslators = new Dictionary<string, PropertyReferenceTranslator>();
+        QueryExpression query;
+        StringBuilder sql = new StringBuilder();
+        private Dictionary<string, PropertyReferenceManager> propertyManagers = new Dictionary<string, PropertyReferenceManager>();
 
-        public void BuildSQLCommand(QueryExpression query)
+        public QueryExecutor(QueryExpression query)
+        {
+            this.query = query;
+        }
+        public string ToSQL() { return sql.ToString(); }
+
+        public QueryExecutor Build()
         {
             foreach (HermesModel expression in query.Expressions)
             {
                 VisitExpression(expression);
             }
+            return this;
         }
         private void VisitExpression(HermesModel expression)
         {
@@ -23,28 +33,40 @@ namespace Zhichkin.Metadata.Services
         }
         private void VisitSelectStatement(SelectStatement expression)
         {
+            sql.Append("SELECT ");
+            int currentOrdinal = 0;
             foreach (PropertyExpression property in expression.SELECT)
             {
-                VisitPropertyExpression(property);
+                VisitPropertyExpression(property, ref currentOrdinal);
             }
+
+            sql.Append(" FROM ");
             foreach (TableExpression table in expression.FROM)
             {
                 VisitTableExpression(table);
             }
-            VisitBooleanFunction(expression.WHERE);
+
+            if (expression.WHERE != null)
+            {
+                sql.Append(" WHERE ");
+                VisitBooleanFunction(expression.WHERE);
+            }
         }
-        private void VisitPropertyExpression(PropertyExpression expression)
+        private void VisitPropertyExpression(PropertyExpression expression, ref int currentOrdinal)
         {
             PropertyReference property = expression.Expression as PropertyReference;
             if (property == null) return;
 
-            PropertyReferenceTranslator translator = new PropertyReferenceTranslator(property);
-            propertyTranslators.Add(expression.Alias, translator);
-            string sql = $"{translator.ToSQL()} AS [{expression.Alias}]";
+            PropertyReferenceManager manager = new PropertyReferenceManager(property);
+            manager.Prepare(ref currentOrdinal);
+            propertyManagers.Add(expression.Alias, manager);
+            sql.Append($"{manager.ToSQL()}");
         }
         private void VisitTableExpression(TableExpression table)
         {
-            // TODO
+            if (table is JoinExpression) return;
+
+            sql.Append($"[{table.Entity.MainTable.Name}] AS [{table.Alias}]");
         }
         private void VisitBooleanFunction(BooleanFunction expression)
         {

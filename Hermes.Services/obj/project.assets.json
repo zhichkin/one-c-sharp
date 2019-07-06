@@ -288,6 +288,20 @@
           "bin/placeholder/Metadata.Model.dll": {}
         }
       },
+      "Metadata.Services/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0",
+          "Zhichkin.Hermes.Model": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Metadata.Services.dll": {}
+        }
+      },
       "ORM/1.0.0": {
         "type": "project",
         "compile": {
@@ -1095,6 +1109,11 @@
       "path": "../Metadata.Model/Metadata.Model.csproj",
       "msbuildProject": "../Metadata.Model/Metadata.Model.csproj"
     },
+    "Metadata.Services/1.0.0": {
+      "type": "project",
+      "path": "../Metadata.Services/Metadata.Services.csproj",
+      "msbuildProject": "../Metadata.Services/Metadata.Services.csproj"
+    },
     "ORM/1.0.0": {
       "type": "project",
       "path": "../orm/ORM.csproj",
@@ -1109,6 +1128,7 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "Metadata.Model >= 1.0.0",
+      "Metadata.Services >= 1.0.0",
       "Microsoft.CSharp >= 4.5.0",
       "NETStandard.Library >= 2.0.3",
       "Newtonsoft.Json >= 12.0.2",
@@ -1153,6 +1173,9 @@
             },
             "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj": {
               "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj"
+            },
+            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Services\\Metadata.Services.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Services\\Metadata.Services.csproj"
             },
             "C:\\Users\\User\\Desktop\\GitHub\\Z\\orm\\ORM.csproj": {
               "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\orm\\ORM.csproj"

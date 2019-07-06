@@ -10,6 +10,7 @@
       "Zhichkin.Hermes.Services/1.0.0": {
         "dependencies": {
           "Metadata.Model": "1.0.0",
+          "Metadata.Services": "1.0.0",
           "Microsoft.CSharp": "4.5.0",
           "NETStandard.Library": "2.0.3",
           "Newtonsoft.Json": "12.0.2",
@@ -203,6 +204,16 @@
           "Zhichkin.Metadata.Model.dll": {}
         }
       },
+      "Metadata.Services/1.0.0": {
+        "dependencies": {
+          "Metadata.Model": "1.0.0",
+          "ORM": "1.0.0",
+          "Zhichkin.Hermes.Model": "1.0.0"
+        },
+        "runtime": {
+          "Zhichkin.Metadata.Services.dll": {}
+        }
+      },
       "ORM/1.0.0": {
         "runtime": {
           "Zhichkin.ORM.dll": {}
@@ -382,6 +393,11 @@
       "hashPath": "system.text.encoding.codepages.4.5.0.nupkg.sha512"
     },
     "Metadata.Model/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Metadata.Services/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

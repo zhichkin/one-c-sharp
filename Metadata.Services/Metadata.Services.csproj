@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PropertyReferenceTranslator.cs" />
+    <Compile Include="PropertyReferenceManager.cs" />
     <Compile Include="QueryExecutor.cs" />
     <Compile Include="SQLBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

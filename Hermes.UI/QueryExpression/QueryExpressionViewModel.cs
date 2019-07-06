@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
+using Zhichkin.Hermes.Services;
+using Zhichkin.Metadata.Services;
+using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
 {
@@ -19,6 +22,8 @@ namespace Zhichkin.Hermes.UI
 
             this.AddNewParameterCommand = new DelegateCommand(this.AddNewParameter);
             this.RemoveParameterCommand = new DelegateCommand<string>(this.RemoveParameter);
+
+            this.ExecuteQueryCommand = new DelegateCommand(this.ExecuteQuery);
         }
         public InteractionRequest<Confirmation> TypeSelectionDialog { get; private set; }
         public InteractionRequest<Confirmation> ReferenceObjectSelectionDialog { get; private set; }
@@ -62,6 +67,18 @@ namespace Zhichkin.Hermes.UI
                     break;
                 }
             }
+        }
+
+        public ICommand ExecuteQueryCommand { get; private set; }
+        private void ExecuteQuery()
+        {
+            QueryExpression model = this.Model as QueryExpression;
+            if (model == null) return;
+
+            HermesService service = new HermesService();
+            string sql = service.ToSQL(model);
+
+            Z.Notify(new Notification { Title = "Hermes", Content = sql });
         }
     }
 }
