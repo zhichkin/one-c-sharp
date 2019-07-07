@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
@@ -18,6 +20,59 @@ namespace Zhichkin.Metadata.Services
             this.query = query;
         }
         public string ToSQL() { return sql.ToString(); }
+        public IEnumerable Execute()
+        {
+            string ConnectionString = MetadataPersistentContext.Current.ConnectionString;
+            PropertyReferenceManager manager;
+
+            List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
+
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (SqlCommand command = new SqlCommand(sql.ToString(), connection))
+            {
+                connection.Open();
+
+                if (query.Parameters != null)
+                {
+                    foreach (ParameterExpression parameter in query.Parameters)
+                    {
+                        if (parameter.Value is ReferenceProxy)
+                        {
+                            ReferenceProxy parameterValue = (ReferenceProxy)parameter.Value;
+                            if (parameterValue.Type.Namespace.Name == "MetaModel")
+                            {
+                                command.Parameters.AddWithValue(parameter.Name, parameterValue.Identity);
+                            }
+                            else
+                            {
+                                command.Parameters.AddWithValue(parameter.Name, parameterValue.Identity.ToByteArray());
+                            }
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue(parameter.Name, parameter.Value);
+                        }
+                    }
+                }
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Dictionary<string, object> item = new Dictionary<string, object>();
+                        foreach (KeyValuePair<string, PropertyReferenceManager> pm in propertyManagers)
+                        {
+                            manager = pm.Value;
+                            string name = pm.Key;
+                            object value = manager.GetValue(reader);
+                            item.Add(pm.Key, value);
+                        }
+                        result.Add(item);
+                    }
+                }
+            }
+            return result.ToDataSource();
+        }
 
         public QueryExecutor Build()
         {
@@ -68,11 +123,13 @@ namespace Zhichkin.Metadata.Services
             PropertyReference property = expression.Expression as PropertyReference;
             if (property == null) return;
 
+            if (currentOrdinal == 0) { sql.Append("\n"); }
+
             PropertyReferenceManager manager = new PropertyReferenceManager(property);
             manager.Prepare(ref currentOrdinal);
             propertyManagers.Add(expression.Alias, manager);
 
-            sql.Append($"{Environment.NewLine}\t{manager.ToSQL()}");
+            sql.Append($"\t{manager.ToSQL()}");
         }
         private void VisitTableExpression(TableExpression table)
         {
@@ -127,9 +184,17 @@ namespace Zhichkin.Metadata.Services
         }
         private void VisitComparisonOperator(ComparisonOperator expression)
         {
+            if (expression.IsRoot)
+            {
+                sql.Append("\n\t(");
+            }
             VisitExpression(expression.LeftExpression);
             sql.Append($" {expression.Name} ");
             VisitExpression(expression.RightExpression);
+            if (expression.IsRoot)
+            {
+                sql.Append(")");
+            }
         }
         private void VisitPropertyReference(PropertyReference expression)
         {

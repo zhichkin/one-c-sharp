@@ -1,11 +1,12 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Hermes.Services;
-using Zhichkin.Metadata.Services;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI
@@ -40,7 +41,7 @@ namespace Zhichkin.Hermes.UI
 
             ParameterExpression parameter = new ParameterExpression(model);
             model.Parameters.Add(parameter);
-            parameter.Name = "Parameter " + model.Parameters.Count.ToString();
+            parameter.Name = "Parameter" + model.Parameters.Count.ToString();
 
             ParameterExpressionViewModel childVM = new ParameterExpressionViewModel(this, parameter);
             this.QueryParameters.Add(childVM);
@@ -88,9 +89,15 @@ namespace Zhichkin.Hermes.UI
             if (model == null) return;
 
             HermesService service = new HermesService();
-            string sql = service.ToSQL(model);
-
-            Z.Notify(new Notification { Title = "Hermes", Content = sql });
+            try
+            {
+                this.QueryResultTable = service.ExecuteQuery(model);
+                this.IsQueryResultTabSelected = true;
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification() { Title = "Hermes", Content = Z.GetErrorText(ex) });
+            }
         }
 
         // Tab "Query Design"
@@ -126,10 +133,20 @@ namespace Zhichkin.Hermes.UI
                 this.OnPropertyChanged("SQLText");
             }
         }
-        
+
         // Tab "Query Result"
-        private List<dynamic> _QueryResultTable;
-        public List<dynamic> QueryResultTable
+        private bool _IsQueryResultTabSelected = false;
+        public bool IsQueryResultTabSelected
+        {
+            get { return _IsQueryResultTabSelected; }
+            set
+            {
+                _IsQueryResultTabSelected = value;
+                this.OnPropertyChanged("IsQueryResultTabSelected");
+            }
+        }
+        private IEnumerable _QueryResultTable;
+        public IEnumerable QueryResultTable
         {
             get { return _QueryResultTable; }
             set

@@ -23,12 +23,11 @@ namespace Zhichkin.Metadata.Services
         {
             bool isMultiValued = (property.Property.Fields.Count > 1);
 
-            int counter = 0;
-
             foreach (Field field in property.Property.Fields)
             {
                 string name = string.Empty;
-                if (counter > 0) { name += $"\n\t,"; }
+                if (currentOrdinal > 0) { name += $"\n\t,"; }
+
                 name += $"[{property.Table.Alias}].[{field.Name}] AS ";
                 if (isMultiValued)
                 {
@@ -41,7 +40,6 @@ namespace Zhichkin.Metadata.Services
                 ordinals.Add(currentOrdinal, name);
                 purposes.Add(field.Purpose, currentOrdinal);
                 currentOrdinal++;
-                counter++;
             }
         }
         public string ToSQL()
@@ -49,7 +47,7 @@ namespace Zhichkin.Metadata.Services
             string sql = "";
             foreach (KeyValuePair<int, string> item in ordinals)
             {
-                sql += (item.Key == 0) ? item.Value : "," + item.Value;
+                sql += item.Value;
             }
             return sql;
         }
@@ -120,7 +118,17 @@ namespace Zhichkin.Metadata.Services
             if (field.Purpose == FieldPurpose.Object)
             {
                 Entity entity = property.Property.Relations[0].Entity;
-                Guid identity = new Guid((byte[])value);
+
+                Guid identity = Guid.Empty;
+                if (value is Guid)
+                {
+                    identity = (Guid)value;
+                }
+                else
+                {
+                    identity = new Guid((byte[])value);
+                }
+                
                 return new ReferenceProxy(entity, identity);
             }
 
@@ -129,12 +137,21 @@ namespace Zhichkin.Metadata.Services
         private object TranslateComplexType(IDataReader reader)
         {
             byte[] buffer;
+            object value;
             
             int typeCode = -1;
             if (purposes.TryGetValue(FieldPurpose.TypeCode, out typeCode))
             {
-                buffer = (byte[])reader[typeCode];
-                typeCode = BitConverter.ToInt32(buffer, 0);
+                value = reader[typeCode];
+                if (value is int)
+                {
+                    typeCode = (int)value;
+                }
+                else
+                {
+                    buffer = (byte[])value;
+                    typeCode = BitConverter.ToInt32(buffer, 0);
+                }
             }
 
             if (typeCode > 0) // ReferenceObject
@@ -147,8 +164,18 @@ namespace Zhichkin.Metadata.Services
                 {
                     index = purposes[FieldPurpose.Value];
                 }
-                buffer = (byte[])reader[index];
-                Guid identity = new Guid(buffer);
+
+                Guid identity = Guid.Empty;
+                value = reader[index];
+                if (value is Guid)
+                {
+                    identity = (Guid)value;
+                }
+                else
+                {
+                    buffer = (byte[])reader[index];
+                    identity = new Guid(buffer);
+                }
 
                 return new ReferenceProxy(relation.Entity, identity);
             }
@@ -159,8 +186,7 @@ namespace Zhichkin.Metadata.Services
             buffer = (byte[])reader[locator];
             locator = buffer[0];
 
-            object value = null;
-
+            value = null;
             if (locator == 1) // Неопределено
             {
                 return null;
@@ -194,7 +220,6 @@ namespace Zhichkin.Metadata.Services
             {
                 return null;
             }
-
             return value;
         }
     }

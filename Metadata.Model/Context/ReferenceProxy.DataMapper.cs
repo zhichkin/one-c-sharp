@@ -25,7 +25,11 @@ namespace Zhichkin.Metadata.Model
 
                 string sql = string.Empty;
                 bool hasNumber = false;
-                if (_owner.Namespace.Name == "Справочник")
+                if (_owner.Namespace.Name == "MetaModel")
+                {
+                    sql = string.Format("SELECT [name] FROM [metadata].[{0}] WHERE [key] = @key", _table_name);
+                }
+                else if (_owner.Namespace.Name == "Справочник")
                 {
                     sql = string.Format("SELECT [_Description] FROM {0} WHERE [_IDRRef] = @key", _table_name);
                 }
@@ -63,7 +67,11 @@ namespace Zhichkin.Metadata.Model
                         {
                             if (reader.Read())
                             {
-                                if (_owner.Namespace.Name == "Перечисление")
+                                if (_owner.Namespace.Name == "MetaModel")
+                                {
+                                    e._presentation = reader.GetString(0);
+                                }
+                                else if (_owner.Namespace.Name == "Перечисление")
                                 {
                                     e._presentation = e.identity.ToString();
                                     int order = (int)reader.GetDecimal(0);

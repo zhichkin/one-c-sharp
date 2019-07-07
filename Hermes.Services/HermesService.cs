@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
@@ -9,7 +10,7 @@ namespace Zhichkin.Hermes.Services
     public interface IHermesService
     {
         string ToSQL(QueryExpression query);
-        void ExecuteQuery(QueryExpression query);
+        IEnumerable ExecuteQuery(QueryExpression query);
         Request GetTestRequest();
     }
 
@@ -45,15 +46,15 @@ namespace Zhichkin.Hermes.Services
             return request;
         }
 
-        public void ExecuteQuery(QueryExpression query)
-        {
-            QueryExecutor executor = new QueryExecutor(query);
-            string sql = executor.Build().ToSQL();
-        }
         public string ToSQL(QueryExpression query)
         {
             QueryExecutor executor = new QueryExecutor(query);
             return executor.Build().ToSQL();
+        }
+        public IEnumerable ExecuteQuery(QueryExpression query)
+        {
+            QueryExecutor executor = new QueryExecutor(query);
+            return executor.Build().Execute();
         }
     }
 }
