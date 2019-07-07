@@ -11,6 +11,38 @@ namespace Zhichkin.Hermes.Model
         public static string LeftJoin = "LEFT JOIN";
         public static string RightJoin = "RIGHT JOIN";
         public static string FullJoin = "FULL JOIN";
+        public static List<string> JoinTypesList = new List<string>()
+        {
+            JoinTypes.InnerJoin,
+            JoinTypes.LeftJoin,
+            JoinTypes.RightJoin,
+            JoinTypes.FullJoin
+        };
+    }
+
+    public static class HintTypes
+    {
+        public static string NoneHint = "NONE HINT";
+        public static string ReadUncommited = "READUNCOMMITTED";
+        public static string ReadCommited = "READCOMMITTED";
+        public static string ReadCommitedLock = "READCOMMITTEDLOCK";
+        public static string RepeatableRead = "REPEATABLEREAD";
+        public static string Serializable = "SERIALIZABLE";
+        public static string UpdateLock = "UPDLOCK";
+        public static string ReadPast = "READPAST";
+        public static string RowLock = "ROWLOCK";
+        public static List<string> HintTypesList = new List<string>()
+        {
+            HintTypes.NoneHint,
+            HintTypes.ReadUncommited,
+            HintTypes.ReadCommited,
+            HintTypes.ReadCommitedLock,
+            HintTypes.RepeatableRead,
+            HintTypes.Serializable,
+            HintTypes.UpdateLock,
+            HintTypes.ReadPast,
+            HintTypes.RowLock
+        };
     }
 
     public class TableExpression : HermesModel
@@ -23,10 +55,12 @@ namespace Zhichkin.Hermes.Model
             {
                 this.Alias = this.Entity.Name;
             }
+            this.Hint = HintTypes.NoneHint;
         }
         public string Name { get { return (this.Entity == null)? string.Empty: this.Entity.Name; } }
         public string Alias { get; set; }
         public Entity Entity { get; private set; }
+        public string Hint { get; set; }
     }
     public class SelectStatement : TableExpression
     {

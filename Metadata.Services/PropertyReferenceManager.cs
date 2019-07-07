@@ -21,12 +21,27 @@ namespace Zhichkin.Metadata.Services
         }
         public void Prepare(ref int currentOrdinal) // start ordinal for the table fields in SELECT clause - move to constructor ?
         {
+            bool isMultiValued = (property.Property.Fields.Count > 1);
+
+            int counter = 0;
+
             foreach (Field field in property.Property.Fields)
             {
-                string name = $"[{property.Table.Alias}].[{field.Name}] AS [f{currentOrdinal}]";
+                string name = string.Empty;
+                if (counter > 0) { name += $"\n\t,"; }
+                name += $"[{property.Table.Alias}].[{field.Name}] AS ";
+                if (isMultiValued)
+                {
+                    name += $"[{currentOrdinal}_{property.Name}_{GetFieldPurposeSuffix(field)}]";
+                }
+                else
+                {
+                    name += $"[{currentOrdinal}_{property.Name}]";
+                }
                 ordinals.Add(currentOrdinal, name);
                 purposes.Add(field.Purpose, currentOrdinal);
                 currentOrdinal++;
+                counter++;
             }
         }
         public string ToSQL()
@@ -34,9 +49,53 @@ namespace Zhichkin.Metadata.Services
             string sql = "";
             foreach (KeyValuePair<int, string> item in ordinals)
             {
-                sql += (item.Key == 0) ? item.Value : ", " + item.Value;
+                sql += (item.Key == 0) ? item.Value : "," + item.Value;
             }
             return sql;
+        }
+
+        private string GetFieldPurposeSuffix(Field field)
+        {
+            if (field.Purpose == FieldPurpose.Locator)
+            {
+                return "TYPE";
+            }
+            else if (field.Purpose == FieldPurpose.TypeCode)
+            {
+                return "T";
+            }
+            else if (field.Purpose == FieldPurpose.Value)
+            {
+                return string.Empty;
+            }
+            else if (field.Purpose == FieldPurpose.Object)
+            {
+                return "R";
+            }
+            else if (field.Purpose == FieldPurpose.Boolean)
+            {
+                return "L";
+            }
+            else if (field.Purpose == FieldPurpose.Number)
+            {
+                return "N";
+            }
+            else if (field.Purpose == FieldPurpose.String)
+            {
+                return "S";
+            }
+            else if (field.Purpose == FieldPurpose.Binary)
+            {
+                return "B";
+            }
+            else if (field.Purpose == FieldPurpose.DateTime)
+            {
+                return "D";
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         public object GetValue(IDataReader reader)

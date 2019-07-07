@@ -9,8 +9,10 @@
 
     <StackPanel Orientation="Vertical" VerticalAlignment="Top">
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{Binding JoinType}" FontWeight="Bold" VerticalAlignment="Center"/>
-            <ui:TableExpressionView DataContext="{Binding Table}" Margin="5,0,0,0"/>
+            <ComboBox Height="24" VerticalAlignment="Center"
+                  ItemsSource="{Binding JoinTypeItemsSource}"
+                  SelectedItem="{Binding SelectedJoinTypeItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <ui:TableExpressionView DataContext="{Binding Table}" Margin="5,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <ui:BooleanExpressionView DataContext="{Binding Filter}"/>

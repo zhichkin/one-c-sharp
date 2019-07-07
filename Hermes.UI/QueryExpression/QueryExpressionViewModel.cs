@@ -23,6 +23,7 @@ namespace Zhichkin.Hermes.UI
             this.AddNewParameterCommand = new DelegateCommand(this.AddNewParameter);
             this.RemoveParameterCommand = new DelegateCommand<string>(this.RemoveParameter);
 
+            this.ShowSQLCommand = new DelegateCommand(this.ShowSQL);
             this.ExecuteQueryCommand = new DelegateCommand(this.ExecuteQuery);
         }
         public InteractionRequest<Confirmation> TypeSelectionDialog { get; private set; }
@@ -69,6 +70,17 @@ namespace Zhichkin.Hermes.UI
             }
         }
 
+        public ICommand ShowSQLCommand { get; private set; }
+        private void ShowSQL()
+        {
+            QueryExpression model = this.Model as QueryExpression;
+            if (model == null) return;
+
+            HermesService service = new HermesService();
+            this.SQLText = service.ToSQL(model);
+           this.IsSQLTabSelected = true;
+        }
+
         public ICommand ExecuteQueryCommand { get; private set; }
         private void ExecuteQuery()
         {
@@ -79,6 +91,52 @@ namespace Zhichkin.Hermes.UI
             string sql = service.ToSQL(model);
 
             Z.Notify(new Notification { Title = "Hermes", Content = sql });
+        }
+
+        // Tab "Query Design"
+        private bool _IsQueryTabSelected = true;
+        public bool IsQueryTabSelected
+        {
+            get { return _IsQueryTabSelected; }
+            set
+            {
+                _IsQueryTabSelected = value;
+                this.OnPropertyChanged("IsQueryTabSelected");
+            }
+        }
+
+        // Tab "SQL"
+        private bool _IsSQLTabSelected = false;
+        public bool IsSQLTabSelected
+        {
+            get { return _IsSQLTabSelected; }
+            set
+            {
+                _IsSQLTabSelected = value;
+                this.OnPropertyChanged("IsSQLTabSelected");
+            }
+        }
+        private string _SQLText = string.Empty;
+        public string SQLText
+        {
+            get { return _SQLText; }
+            set
+            {
+                _SQLText = value;
+                this.OnPropertyChanged("SQLText");
+            }
+        }
+        
+        // Tab "Query Result"
+        private List<dynamic> _QueryResultTable;
+        public List<dynamic> QueryResultTable
+        {
+            get { return _QueryResultTable; }
+            set
+            {
+                _QueryResultTable = value;
+                this.OnPropertyChanged("QueryResultTable");
+            }
         }
     }
 }

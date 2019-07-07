@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 using Zhichkin.Hermes.Model;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Metadata.Services
 {
@@ -30,17 +33,25 @@ namespace Zhichkin.Metadata.Services
             {
                 VisitSelectStatement((SelectStatement)expression);
             }
+            else if (expression is PropertyReference)
+            {
+                VisitPropertyReference((PropertyReference)expression);
+            }
+            else if (expression is ParameterExpression)
+            {
+                VisitParameterExpression((ParameterExpression)expression);
+            }
         }
         private void VisitSelectStatement(SelectStatement expression)
         {
-            sql.Append("SELECT ");
+            sql.Append("SELECT");
             int currentOrdinal = 0;
             foreach (PropertyExpression property in expression.SELECT)
             {
                 VisitPropertyExpression(property, ref currentOrdinal);
             }
 
-            sql.Append(" FROM ");
+            sql.Append("\nFROM");
             foreach (TableExpression table in expression.FROM)
             {
                 VisitTableExpression(table);
@@ -48,7 +59,7 @@ namespace Zhichkin.Metadata.Services
 
             if (expression.WHERE != null)
             {
-                sql.Append(" WHERE ");
+                sql.Append("\nWHERE");
                 VisitBooleanFunction(expression.WHERE);
             }
         }
@@ -60,87 +71,85 @@ namespace Zhichkin.Metadata.Services
             PropertyReferenceManager manager = new PropertyReferenceManager(property);
             manager.Prepare(ref currentOrdinal);
             propertyManagers.Add(expression.Alias, manager);
-            sql.Append($"{manager.ToSQL()}");
+
+            sql.Append($"{Environment.NewLine}\t{manager.ToSQL()}");
         }
         private void VisitTableExpression(TableExpression table)
         {
-            if (table is JoinExpression) return;
+            if (table is JoinExpression)
+            {
+                JoinExpression jt = (JoinExpression)table;
+                sql.Append($"{Environment.NewLine}\t{jt.JoinType} {jt.Entity.MainTable.FullName} AS [{jt.Alias}]");
+                if (jt.Hint != HintTypes.NoneHint)
+                {
+                    sql.Append($" WITH({jt.Hint})");
+                }
 
-            sql.Append($"[{table.Entity.MainTable.Name}] AS [{table.Alias}]");
+                sql.Append("\n\tON");
+                VisitBooleanFunction(jt.ON);
+            }
+            else if (table is TableExpression)
+            {
+                sql.Append($"{Environment.NewLine}\t{table.Entity.MainTable.FullName} AS [{table.Alias}]");
+                if (table.Hint != HintTypes.NoneHint)
+                {
+                    sql.Append($" WITH({table.Hint})");
+                }
+            }
         }
         private void VisitBooleanFunction(BooleanFunction expression)
         {
-            // TODO
+            if (expression is BooleanOperator)
+            {
+                VisitBooleanOperator((BooleanOperator)expression);
+            }
+            else if (expression is ComparisonOperator)
+            {
+                VisitComparisonOperator((ComparisonOperator)expression);
+            }
+        }
+        private void VisitBooleanOperator(BooleanOperator expression)
+        {
+            int counter = 0;
+
+            sql.Append("\n\t(");
+            foreach (BooleanFunction function in expression.Operands)
+            {
+                sql.Append("\n\t");
+                if (counter > 0)
+                {
+                    sql.Append($"{expression.Name} ");
+                }
+                VisitBooleanFunction(function);
+                counter++;
+            }
+            sql.Append("\n\t)");
+        }
+        private void VisitComparisonOperator(ComparisonOperator expression)
+        {
+            VisitExpression(expression.LeftExpression);
+            sql.Append($" {expression.Name} ");
+            VisitExpression(expression.RightExpression);
+        }
+        private void VisitPropertyReference(PropertyReference expression)
+        {
+            Field field = expression.Property.Fields.Where(f => f.Purpose == FieldPurpose.Value).FirstOrDefault();
+            if (field == null)
+            {
+                field = expression.Property.Fields.Where(f => f.Purpose == FieldPurpose.Object).FirstOrDefault();
+            }
+            if (field == null)
+            {
+                sql.Append($"[{expression.Table.Alias}].[{expression.Name}]");
+            }
+            else
+            {
+                sql.Append($"[{expression.Table.Alias}].[{field.Name}]");
+            }
+        }
+        private void VisitParameterExpression(ParameterExpression expression)
+        {
+            sql.Append($"@{expression.Name}");
         }
     }
 }
-
-//private void PrepareSelectEntityDataCommand(Subscription subscription, AggregateItem item, Guid aggregate, SqlCommand command)
-//{
-//    command.CommandType = CommandType.Text;
-//    command.CommandText = GetSelectEntityDataScript(subscription, item);
-//    command.Parameters.Clear();
-//    AddParameters(command, item, aggregate);
-//}
-//private string GetSelectEntityDataScript(Subscription subscription, AggregateItem item)
-//{
-//    string sql = "SELECT {0} FROM [{1}] WHERE {2};";
-
-//    string table = subscription.Publisher.Entity.MainTable.Name;
-//    StringBuilder fields = new StringBuilder();
-//    StringBuilder where = new StringBuilder();
-
-//    AddFields(fields, subscription);
-//    AddConditions(where, item.Connector);
-
-//    sql = string.Format(sql, fields.ToString(), table, where.ToString());
-
-//    return sql;
-//}
-//private void AddFields(StringBuilder fields, Subscription subscription)
-//{
-//    foreach (string name in subscription.Mappings.Keys)
-//    {
-//        if (fields.Length > 0) fields.Append(", ");
-//        fields.AppendFormat("[{0}]", name);
-//    }
-//}
-//private void AddConditions(StringBuilder where, Property connector)
-//{
-//    foreach (Field field in connector.Fields)
-//    {
-//        if (field.Purpose == FieldPurpose.Locator)
-//        {
-//            if (where.Length > 0) where.Append(" AND ");
-//            where.AppendFormat("[{0}] = @locator", field.Name);
-//        }
-//        if (field.Purpose == FieldPurpose.TypeCode)
-//        {
-//            if (where.Length > 0) where.Append(" AND ");
-//            where.AppendFormat("[{0}] = @code", field.Name);
-//        }
-//        if (field.Purpose == FieldPurpose.Object || field.Purpose == FieldPurpose.Value)
-//        {
-//            if (where.Length > 0) where.Append(" AND ");
-//            where.AppendFormat("[{0}] = @value", field.Name);
-//        }
-//    }
-//}
-//private void AddParameters(SqlCommand command, AggregateItem item, Guid aggregate)
-//{
-//    foreach (Field field in item.Connector.Fields)
-//    {
-//        if (field.Purpose == FieldPurpose.Locator)
-//        {
-//            command.Parameters.AddWithValue("locator", new byte[] { 0x08 }); // reference
-//        }
-//        if (field.Purpose == FieldPurpose.TypeCode)
-//        {
-//            command.Parameters.AddWithValue("code", Utilities.GetByteArray(item.Aggregate.Code));
-//        }
-//        if (field.Purpose == FieldPurpose.Object || field.Purpose == FieldPurpose.Value)
-//        {
-//            command.Parameters.AddWithValue("value", aggregate.ToByteArray());
-//        }
-//    }
-//}

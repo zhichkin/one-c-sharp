@@ -37,14 +37,32 @@ namespace Zhichkin.Metadata.Model
             get
             {
                 string tableName = string.Empty;
-                if (string.IsNullOrWhiteSpace(this.Schema))
+
+                string DatabaseName = this.Entity.InfoBase.Database;
+
+                if (string.IsNullOrWhiteSpace(DatabaseName))
                 {
-                    tableName = string.Format("[{0}]", this.Name);
+                    if (string.IsNullOrWhiteSpace(this.Schema))
+                    {
+                        tableName = string.Format("[{0}]", this.Name);
+                    }
+                    else
+                    {
+                        tableName = string.Format("[{0}].[{1}]", this.Schema, this.Name);
+                    }
                 }
                 else
                 {
-                    tableName = string.Format("[{0}].[{1}]", this.Schema, this.Name);
+                    if (string.IsNullOrWhiteSpace(this.Schema))
+                    {
+                        tableName = string.Format("[{0}].[dbo].[{1}]", DatabaseName, this.Name);
+                    }
+                    else
+                    {
+                        tableName = string.Format("[{0}].[{1}].[{2}]", DatabaseName, this.Schema, this.Name);
+                    }
                 }
+
                 return tableName;
             }
         }

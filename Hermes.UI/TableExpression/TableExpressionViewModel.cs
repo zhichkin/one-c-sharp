@@ -57,5 +57,21 @@ namespace Zhichkin.Hermes.UI
                 return _Properties;
             }
         }
+
+        public string SelectedHintItem
+        {
+            get
+            {
+                if (this.Model == null) return string.Empty;
+                return ((TableExpression)this.Model).Hint;
+            }
+            set
+            {
+                if (this.Model == null) return;
+                ((TableExpression)this.Model).Hint = value;
+                this.OnPropertyChanged("SelectedHintItem");
+            }
+        }
+        public List<string> HintTypeItemsSource { get { return HintTypes.HintTypesList; } }
     }
 }

@@ -33,54 +33,99 @@
         </i:EventTrigger>
         
     </i:Interaction.Triggers>
-    
-    <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10"
-                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" BorderThickness="1" Cursor="Hand">
-                <Border.BorderBrush>
-                    <VisualBrush>
-                        <VisualBrush.Visual>
-                            <Rectangle StrokeDashArray="2 2" Stroke="Gray" StrokeThickness="1"
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    
+    <TabControl Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <TabControl.Resources>
+            <Style TargetType="TextBlock" x:Key="SelectedTabTextStyle">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                        <Setter Property="FontWeight" Value="Bold"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TabControl.Resources>
+
+        <TabItem IsSelected="{Binding IsQueryTabSelected}">
+            <TabItem.Header>
+                <TextBlock Text="Design" Style="{StaticResource SelectedTabTextStyle}" Margin="4" VerticalAlignment="Center"/>
+            </TabItem.Header>
+            <TabItem.Content>
+                <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10"
+                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" BorderThickness="1" Cursor="Hand">
+                            <Border.BorderBrush>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Rectangle StrokeDashArray="2 2" Stroke="Gray" StrokeThickness="1"
                                        Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
                                        Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
-                        </VisualBrush.Visual>
-                    </VisualBrush>
-                </Border.BorderBrush>
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <Button Content="+" ToolTip="Add new parameter" Command="{Binding AddNewParameterCommand}" Height="24" Width="24"/>
-                    <Label Content="Click to add new parameter" HorizontalAlignment="Center"/>
-                    <Button Content="Execute" ToolTip="Execute query" Command="{Binding ExecuteQueryCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
-                </StackPanel>
-            </Border>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Border.BorderBrush>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Button Content="+" ToolTip="Add new parameter" Command="{Binding AddNewParameterCommand}" Height="24" Width="24"/>
+                                <Label Content="Click to add new parameter" HorizontalAlignment="Center"/>
+                                <Button Content="Execute" ToolTip="Execute query" Command="{Binding ExecuteQueryCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
+                                <Button Content="SQL" ToolTip="Show SQL script" Command="{Binding ShowSQLCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
 
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding QueryParameters}"
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding QueryParameters}"
                           Margin="0,5,0,0"
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <ItemsControl.Resources>
-                    <DataTemplate DataType="{x:Type ui:ParameterExpressionViewModel}">
-                        <ui:ParameterExpressionView Margin="0,5,0,0"/>
-                    </DataTemplate>
-                </ItemsControl.Resources>
-            </ItemsControl>
+                            <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type ui:ParameterExpressionViewModel}">
+                                    <ui:ParameterExpressionView Margin="0,5,0,0"/>
+                                </DataTemplate>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
 
-            <ItemsControl Grid.Row="2" ItemsSource="{Binding QueryExpressions}"
+                        <ItemsControl Grid.Row="2" ItemsSource="{Binding QueryExpressions}"
                           Margin="0,20,0,0"
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <ItemsControl.Resources>
-                    <DataTemplate DataType="{x:Type ui:SelectStatementViewModel}">
-                        <ui:SelectStatementView/>
-                    </DataTemplate>
-                </ItemsControl.Resources>
-            </ItemsControl>
+                            <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type ui:SelectStatementViewModel}">
+                                    <ui:SelectStatementView/>
+                                </DataTemplate>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
 
-        </Grid>
-    </ScrollViewer>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem.Content>
+        </TabItem>
+
+        <TabItem IsSelected="{Binding IsQueryResultTabSelected}">
+            <TabItem.Header>
+                <TextBlock Text="Result" Style="{StaticResource SelectedTabTextStyle}" Margin="4" VerticalAlignment="Center"/>
+            </TabItem.Header>
+            <TabItem.Content>
+                <DataGrid ItemsSource="{Binding QueryResultTable}" IsReadOnly="True" AutoGenerateColumns="True" Margin="10"/>
+            </TabItem.Content>
+        </TabItem>
+
+        <TabItem IsSelected="{Binding IsSQLTabSelected}">
+            <TabItem.Header>
+                <TextBlock Text="SQL" Style="{StaticResource SelectedTabTextStyle}" Margin="4" VerticalAlignment="Center"/>
+            </TabItem.Header>
+            <TabItem.Content>
+                <TextBox Text="{Binding SQLText}" FontFamily="Courier New" FontSize="12"
+                             TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
+                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            </TabItem.Content>
+        </TabItem>
+        
+    </TabControl>
 
 </UserControl>

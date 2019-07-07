@@ -19,11 +19,26 @@
                     </VisualBrush.Visual>
                 </VisualBrush>
             </Border.BorderBrush>
-            <TextBox Text="{Binding Alias}" MinWidth="50" Height="24" VerticalContentAlignment="Center" BorderThickness="0" />
+            <TextBox Text="{Binding Alias}" MinWidth="50" Height="24" VerticalContentAlignment="Center" BorderThickness="0" Margin="2,0,2,0"/>
         </Border>
 
-        <TextBlock Text="{Binding FullName}" FontWeight="SemiBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <Border BorderThickness="1" Margin="3,0,0,0">
+            <Border.BorderBrush>
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Rectangle Stroke="Blue" StrokeThickness="1"
+                                   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                                   Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Border.BorderBrush>
+            <TextBlock Text="{Binding FullName}" FontWeight="SemiBold" MinWidth="50" VerticalAlignment="Center" Margin="2,0,2,0"/>
+        </Border>
 
+        <ComboBox Height="24" VerticalAlignment="Center" Margin="3,0,0,0"
+                  ItemsSource="{Binding HintTypeItemsSource}"
+                  SelectedItem="{Binding SelectedHintItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        
     </StackPanel>
     
 </UserControl>
