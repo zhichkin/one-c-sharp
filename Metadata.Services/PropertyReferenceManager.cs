@@ -31,11 +31,11 @@ namespace Zhichkin.Metadata.Services
                 name += $"[{property.Table.Alias}].[{field.Name}] AS ";
                 if (isMultiValued)
                 {
-                    name += $"[{currentOrdinal}_{property.Name}_{GetFieldPurposeSuffix(field)}]";
+                    name += $"[{property.Name}_{GetFieldPurposeSuffix(field)}]";
                 }
                 else
                 {
-                    name += $"[{currentOrdinal}_{property.Name}]";
+                    name += $"[{property.Name}]";
                 }
                 ordinals.Add(currentOrdinal, name);
                 purposes.Add(field.Purpose, currentOrdinal);

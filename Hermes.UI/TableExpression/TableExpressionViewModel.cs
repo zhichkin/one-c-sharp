@@ -23,7 +23,7 @@ namespace Zhichkin.Hermes.UI
                 if (this.Model == null) { return string.Empty; }
                 TableExpression model = (TableExpression)this.Model;
                 if (model.Entity == null) { return string.Empty; }
-                return model.Entity.FullName;
+                return $"{model.Entity.InfoBase.Database}.{model.Entity.FullName}";
             }
         }
         public string Alias
