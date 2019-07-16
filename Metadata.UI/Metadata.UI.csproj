@@ -93,6 +93,7 @@
       <DependentUpon>DatabaseSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DatabaseSettingsDialog\DatabaseSettingsViewModel.cs" />
+    <Compile Include="Dialogs\DynamicContextMenu\MetadataCommandViewModel.cs" />
     <Compile Include="Dialogs\SelectDataTypeDialog\NamespaceViewModel.cs" />
     <Compile Include="Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml.cs">
       <DependentUpon>SelectDataTypeDialogView.xaml</DependentUpon>

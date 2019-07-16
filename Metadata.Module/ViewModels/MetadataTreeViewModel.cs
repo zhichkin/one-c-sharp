@@ -7,9 +7,14 @@ using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Transactions;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using Zhichkin.Hermes.Model;
+using Zhichkin.Hermes.UI;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Module;
 using Zhichkin.Metadata.Services;
@@ -55,6 +60,8 @@ namespace Zhichkin.Metadata.ViewModels
             this.EntityPopup = new InteractionRequest<Confirmation>();
             this.PropertyPopup = new InteractionRequest<Confirmation>();
             this.EntityViewPopup = new InteractionRequest<Confirmation>();
+
+            this.SetupPropertyContextMenu();
 
             RefreshInfoBases();
         }
@@ -569,6 +576,58 @@ namespace Zhichkin.Metadata.ViewModels
                 Content = (Entity)model
             };
             this.EntityViewPopup.Raise(confirmation);
+        }
+
+        public ObservableCollection<MetadataCommandViewModel> PropertyContextMenuItems { get; private set; }
+        private void SetupPropertyContextMenu()
+        {
+            List<MetadataCommandViewModel> commandsList = new List<MetadataCommandViewModel>();
+
+            commandsList.Add(new MetadataCommandViewModel()
+            {
+                Name = "Открыть",
+                Icon = "Icon_Settings", // pack://application:,,,/Zhichkin.Metadata.Module;component/views/metadatatreeview.xaml	System.Windows.Media.Imaging.BitmapImage
+                Command = new DelegateCommand<object>(this.OpenPropertyForm)
+            });
+            commandsList.Add(new MetadataCommandViewModel()
+            {
+                Name = "Удалить",
+                Icon = "Icon_Kill_Object",
+                Command = new DelegateCommand<object>(this.KillProperty)
+            });
+            commandsList.Add(new MetadataCommandViewModel() { Name = "-" }); // Separator
+            commandsList.Add(new MetadataCommandViewModel()
+            {
+                Name = "Редактировать запрос",
+                Icon = "Icon_Edit_Object",
+                Command = new DelegateCommand<object>(this.OpenQueryDesigner)
+            });
+
+
+            this.PropertyContextMenuItems = new ObservableCollection<MetadataCommandViewModel>(commandsList);
+        }
+
+        private void OpenQueryDesigner(object model)
+        {
+            Property property = model as Property;
+            if (property == null) throw new ArgumentNullException("model");
+
+            Z.ClearRightRegion(this.regionManager);
+            IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
+            if (rightRegion == null) return;
+
+            QueryExpression query = new QueryExpression(null);
+            query.Expressions = new List<HermesModel>();
+            QueryExpressionViewModel queryVM = new QueryExpressionViewModel(null, query);
+
+            SelectStatement statement = new SelectStatement(query, null);
+            query.Expressions.Add(statement);
+            SelectStatementViewModel select = new SelectStatementViewModel(queryVM, statement);
+            queryVM.QueryExpressions.Add(select);
+
+            QueryExpressionView queryView = new QueryExpressionView(queryVM);
+
+            rightRegion.Add(queryView);
         }
     }
 }

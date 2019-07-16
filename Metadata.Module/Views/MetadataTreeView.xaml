@@ -19,6 +19,7 @@
             <BitmapImage x:Key="Icon_Add_Database" UriSource="..\Images\26 Add Database.png"/>
             <BitmapImage x:Key="Icon_Kill_Database" UriSource="..\Images\26 Delete Database.png"/>
             <BitmapImage x:Key="Icon_Exist_Database" UriSource="..\Images\26 Accept Database.png"/>
+            <BitmapImage x:Key="Icon_Edit_Object" UriSource="..\Images\26 Edit.png"/>
             <BitmapImage x:Key="Icon_Catalog" UriSource="..\Images\Справочник.png"/>
             <BitmapImage x:Key="Icon_Document" UriSource="..\Images\Документ.png"/>
             <BitmapImage x:Key="Icon_Enumeration" UriSource="..\Images\Перечисление.png"/>
@@ -317,8 +318,8 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type Model:Property}" ItemsSource="{Binding Path=Fields}">
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.ContextMenu>
+                    <StackPanel Orientation="Horizontal" ContextMenuOpening="Property_ContextMenuOpening">
+                        <!--<StackPanel.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Открыть" Click="OpenPropertyForm_Clicked">
                                     <MenuItem.Icon>
@@ -337,7 +338,7 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
-                        </StackPanel.ContextMenu>
+                        </StackPanel.ContextMenu>-->
                         <Image Margin="2">
                             <Image.Style>
                                 <Style TargetType="Image">

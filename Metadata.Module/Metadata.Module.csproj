@@ -168,6 +168,14 @@
       <Project>{8d3dfa86-c8a2-430e-875d-93bdd72efcbd}</Project>
       <Name>ComConnector</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Model.csproj">
+      <Project>{6A86E382-F7ED-43FF-BE21-E2127EB8199A}</Project>
+      <Name>Hermes.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hermes.UI\Hermes.UI.csproj">
+      <Project>{45C80CED-A3E9-4A66-9978-C1731AF40D49}</Project>
+      <Name>Hermes.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
       <Project>{810ee1aa-bdde-4657-9029-eb00a061d3f2}</Project>
       <Name>Metadata.Model</Name>
@@ -237,7 +245,9 @@
   <ItemGroup>
     <Resource Include="Images\СтандартныйРеквизит.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\26 Edit.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.Metadata.Module.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>
