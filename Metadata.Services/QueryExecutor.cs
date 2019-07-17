@@ -73,6 +73,59 @@ namespace Zhichkin.Metadata.Services
             }
             return result.ToDataSource();
         }
+        public List<Dictionary<string, object>> ExecuteAsRowData()
+        {
+            string ConnectionString = MetadataPersistentContext.Current.ConnectionString;
+            PropertyReferenceManager manager;
+
+            List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
+
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (SqlCommand command = new SqlCommand(sql.ToString(), connection))
+            {
+                connection.Open();
+
+                if (query.Parameters != null)
+                {
+                    foreach (ParameterExpression parameter in query.Parameters)
+                    {
+                        if (parameter.Value is ReferenceProxy)
+                        {
+                            ReferenceProxy parameterValue = (ReferenceProxy)parameter.Value;
+                            if (parameterValue.Type.Namespace.Name == "MetaModel")
+                            {
+                                command.Parameters.AddWithValue(parameter.Name, parameterValue.Identity);
+                            }
+                            else
+                            {
+                                command.Parameters.AddWithValue(parameter.Name, parameterValue.Identity.ToByteArray());
+                            }
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue(parameter.Name, parameter.Value);
+                        }
+                    }
+                }
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Dictionary<string, object> item = new Dictionary<string, object>();
+                        foreach (KeyValuePair<string, PropertyReferenceManager> pm in propertyManagers)
+                        {
+                            manager = pm.Value;
+                            string name = pm.Key;
+                            object value = manager.GetValue(reader);
+                            item.Add(pm.Key, value);
+                        }
+                        result.Add(item);
+                    }
+                }
+            }
+            return result;
+        }
 
         public QueryExecutor Build()
         {

@@ -10,8 +10,6 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Zhichkin
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Model.dll
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.ORM.dll
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Microsoft.Practices.Prism.PubSubEvents.dll
-C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Model.pdb
-C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.ORM.pdb
 C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Services.deps.json
 C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Services.dll
 C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Services.pdb
@@ -33,4 +31,6 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin
 C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Model.dll
 C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Hermes.Model.pdb
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Services.dll
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Model.pdb
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Services.pdb
+C:\Users\User\Desktop\GitHub\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.ORM.pdb
