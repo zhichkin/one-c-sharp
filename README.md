@@ -43,10 +43,10 @@
 Конфигурационный файл приложения App.config находится в папках Metadata.Server и debug или Shell.
 Первый нужен для работы через сервер Kestrel, а второй - для работы через обычный UI, который запускается при помощи z.exe (см. выше).
 
-# Описание идеи проекта на YouTube
+# Краткое описание идеи проекта на YouTube
 
 <a href="https://youtu.be/mxLNecqwZ4E" target="_blank"><img src="https://img.youtube.com/vi/mxLNecqwZ4E/0.jpg" 
-alt="ALT-1C# in 10 minutes" width="240" height="180" border="10" /></a>
+alt="ALT-OneCSharp in 10 minutes" width="240" height="180" border="10" /></a>
 
 # Контакты
 
