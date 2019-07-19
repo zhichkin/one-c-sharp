@@ -260,7 +260,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Model.csproj">
+    <ProjectReference Include="..\Hermes.Model\Hermes.Model.csproj">
       <Project>{6a86e382-f7ed-43ff-be21-e2127eb8199a}</Project>
       <Name>Hermes.Model</Name>
     </ProjectReference>

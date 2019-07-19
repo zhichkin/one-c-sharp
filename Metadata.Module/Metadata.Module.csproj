@@ -163,8 +163,8 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Model.csproj">
-      <Project>{6A86E382-F7ED-43FF-BE21-E2127EB8199A}</Project>
+    <ProjectReference Include="..\Hermes.Model\Hermes.Model.csproj">
+      <Project>{6a86e382-f7ed-43ff-be21-e2127eb8199a}</Project>
       <Name>Hermes.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hermes.UI\Hermes.UI.csproj">

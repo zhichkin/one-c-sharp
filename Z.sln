@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hermes.Module", "Hermes.Mod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hermes.UI", "Hermes.UI\Hermes.UI.csproj", "{45C80CED-A3E9-4A66-9978-C1731AF40D49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hermes.Model", "Hermes.Infrastructure\Hermes.Model.csproj", "{6A86E382-F7ED-43FF-BE21-E2127EB8199A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hermes.Model", "Hermes.Model\Hermes.Model.csproj", "{6A86E382-F7ED-43FF-BE21-E2127EB8199A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hermes.Services", "Hermes.Services\Hermes.Services.csproj", "{CA3FDD8A-695C-4A87-B09E-C63E5AAFB5B1}"
 EndProject

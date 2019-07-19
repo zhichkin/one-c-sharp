@@ -3355,8 +3355,8 @@
     },
     "Zhichkin.Hermes.Model/1.0.0": {
       "type": "project",
-      "path": "../Hermes.Infrastructure/Hermes.Model.csproj",
-      "msbuildProject": "../Hermes.Infrastructure/Hermes.Model.csproj"
+      "path": "../Hermes.Model/Hermes.Model.csproj",
+      "msbuildProject": "../Hermes.Model/Hermes.Model.csproj"
     },
     "Zhichkin.Hermes.Services/1.0.0": {
       "type": "project",

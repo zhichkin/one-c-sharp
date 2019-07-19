@@ -1121,8 +1121,8 @@
     },
     "Zhichkin.Hermes.Model/1.0.0": {
       "type": "project",
-      "path": "../Hermes.Infrastructure/Hermes.Model.csproj",
-      "msbuildProject": "../Hermes.Infrastructure/Hermes.Model.csproj"
+      "path": "../Hermes.Model/Hermes.Model.csproj",
+      "msbuildProject": "../Hermes.Model/Hermes.Model.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1168,8 +1168,8 @@
       "frameworks": {
         "netstandard2.0": {
           "projectReferences": {
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Model.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Infrastructure\\Hermes.Model.csproj"
+            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Model\\Hermes.Model.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Model\\Hermes.Model.csproj"
             },
             "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj": {
               "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj"
