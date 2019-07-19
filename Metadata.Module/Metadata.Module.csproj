@@ -119,7 +119,6 @@
     <Compile Include="Services\IMetadataAdapter.cs" />
     <Compile Include="Services\SQLMetadataAdapter.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
-    <Compile Include="Services\COMMetadataAdapter.cs" />
     <Compile Include="ViewModels\MetadataSettingsViewModel.cs" />
     <Compile Include="ViewModels\SQLConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
@@ -164,10 +163,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ComConnector\ComConnector.csproj">
-      <Project>{8d3dfa86-c8a2-430e-875d-93bdd72efcbd}</Project>
-      <Name>ComConnector</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Hermes.Infrastructure\Hermes.Model.csproj">
       <Project>{6A86E382-F7ED-43FF-BE21-E2127EB8199A}</Project>
       <Name>Hermes.Model</Name>

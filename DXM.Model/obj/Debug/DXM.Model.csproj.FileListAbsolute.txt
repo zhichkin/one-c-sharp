@@ -1,6 +1,0 @@
-C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.DXM.Model.dll
-C:\Users\User\Desktop\GitHub\Z\debug\Zhichkin.DXM.Model.pdb
-C:\Users\User\Desktop\GitHub\Z\DXM.Model\obj\Debug\DXM.Model.csproj.CoreCompileInputs.cache
-C:\Users\User\Desktop\GitHub\Z\DXM.Model\obj\Debug\DXM.Model.csproj.CopyComplete
-C:\Users\User\Desktop\GitHub\Z\DXM.Model\obj\Debug\Zhichkin.DXM.Model.dll
-C:\Users\User\Desktop\GitHub\Z\DXM.Model\obj\Debug\Zhichkin.DXM.Model.pdb
