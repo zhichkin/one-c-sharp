@@ -629,5 +629,41 @@ namespace Zhichkin.Metadata.ViewModels
 
             rightRegion.Add(queryView);
         }
+
+        public void CreateNewRequest(object owner)
+        {
+            Request new_request = new Request()
+            {
+                Name = "New request"
+            };
+            if (owner is Namespace)
+            {
+                new_request.Namespace = (Namespace)owner;
+            }
+            else if (owner is Entity)
+            {
+                new_request.Owner = (Entity)owner;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("owner");
+            }
+            try
+            {
+                new_request.Save();
+                if (owner is Namespace)
+                {
+                    ((Namespace)owner).ObservableRequests.Add(new_request);
+                }
+                else if (owner is Entity)
+                {
+                    // (Entity)owner
+                }
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
+            }
+        }
     }
 }

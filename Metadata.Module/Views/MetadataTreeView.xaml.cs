@@ -179,6 +179,15 @@ namespace Zhichkin.Metadata.Views
             viewModel.KillEntity(menu.DataContext);
         }
 
+        private void CreateRequest_Click(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.CreateNewRequest(menu.DataContext);
+        }
+
         private void Property_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             FrameworkElement fe = e.Source as FrameworkElement;

@@ -80,5 +80,26 @@ namespace Zhichkin.Metadata.Model
                 return _ObservableNamespaces;
             }
         }
+
+        public IList<Request> Requests
+        {
+            get
+            {
+                return service.GetChildren<Namespace, Request>(this, "namespace");
+            }
+        }
+        private ObservableCollection<Request> _ObservableRequests;
+        public ObservableCollection<Request> ObservableRequests
+        {
+            set { _ObservableRequests = value; }
+            get
+            {
+                if (_ObservableRequests == null)
+                {
+                    _ObservableRequests = new ObservableCollection<Request>(this.Requests);
+                }
+                return _ObservableRequests;
+            }
+        }
     }
 }

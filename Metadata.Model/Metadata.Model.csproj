@@ -48,6 +48,8 @@
     <Compile Include="Context\SqlCommandBuilder.cs" />
     <Compile Include="Difference\DifferenceObject.cs" />
     <Compile Include="FieldPurpose.cs" />
+    <Compile Include="Request.cs" />
+    <Compile Include="Request.DataMapper.cs" />
     <Compile Include="Services\DifferenceService.cs" />
     <Compile Include="Difference\DifferenceType.cs" />
     <Compile Include="Difference\IDifferenceObject.cs" />
@@ -94,6 +96,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="SQL\00 - create_database.sql" />
+    <Content Include="SQL\10 - requests.sql" />
     <Content Include="SQL\09 - settings.sql" />
     <Content Include="SQL\01 - schema_metadata.sql" />
     <Content Include="SQL\04 - entities.sql" />

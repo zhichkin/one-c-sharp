@@ -22,9 +22,9 @@ namespace Zhichkin.Hermes.Services
         {
             Request request = null;
 
-            IPersistentContext context = HermesPersistentContext.Current;
+            IPersistentContext context = MetadataPersistentContext.Current;
             QueryService queryService = new QueryService(context.ConnectionString);
-            string sql = $"SELECT [key] FROM [hermes].[requests] WHERE [namespace] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier) AND [name] = N'{CONST_TestRequestName}';";
+            string sql = $"SELECT [key] FROM [metadata].[requests] WHERE [namespace] = CAST(0x00000000000000000000000000000000 AS uniqueidentifier) AND [name] = N'{CONST_TestRequestName}';";
             object key = queryService.ExecuteScalar(sql);
             if (key == null)
             {

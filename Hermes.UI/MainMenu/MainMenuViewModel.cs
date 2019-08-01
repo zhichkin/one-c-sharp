@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Hermes.Services;
+using Zhichkin.Metadata.Model;
 using Zhichkin.Shell;
 
 namespace Zhichkin.Hermes.UI

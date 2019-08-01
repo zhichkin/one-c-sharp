@@ -381,6 +381,10 @@ namespace Zhichkin.Metadata.Services
             {
                 return "relations";
             }
+            else if (typeof(T) == typeof(Request))
+            {
+                return "requests";
+            }
 
             return tableName;
         }

@@ -20,12 +20,10 @@
 
   <ItemGroup>
     <None Remove="SQL\00 - schema_hermes.sql" />
-    <None Remove="SQL\01 - requests.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="SQL\00 - schema_hermes.sql" />
-    <Content Include="SQL\01 - requests.sql" />
   </ItemGroup>
 
   <ItemGroup>

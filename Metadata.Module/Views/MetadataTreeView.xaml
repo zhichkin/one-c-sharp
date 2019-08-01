@@ -151,6 +151,7 @@
                         <MultiBinding Converter="{StaticResource CompositeCollectionConverter}">
                             <Binding Path="ObservableNamespaces" />
                             <Binding Path="ObservableEntities" />
+                            <Binding Path="ObservableRequests" />
                         </MultiBinding>
                     </HierarchicalDataTemplate.ItemsSource>
                     <StackPanel Orientation="Horizontal">
@@ -179,6 +180,11 @@
                                     <MenuItem Header="Объект метаданных" Click="CreateEntity_Click">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_Catalog}" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Запрос данных" Click="CreateRequest_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="{StaticResource Icon_Charecteristic}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
                                 </MenuItem>
