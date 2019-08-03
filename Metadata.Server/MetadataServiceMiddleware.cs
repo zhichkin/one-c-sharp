@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Hermes.Services;
+using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Services;
 
 namespace Zhichkin.Metadata.Server
@@ -19,6 +21,7 @@ namespace Zhichkin.Metadata.Server
 
     public sealed class MetadataServiceMiddleware
     {
+        private Dictionary<string, Request> routes = new Dictionary<string, Request>();
         private readonly IHermesService Hermes = new HermesService();
         private readonly IMetadataService Metadata = new MetadataService();
         private readonly SerializationService Serializer = new SerializationService();
@@ -33,26 +36,52 @@ namespace Zhichkin.Metadata.Server
         {
             if (context.Request.Method == "POST")
             {
+                if (routes.Count == 0)
+                {
+                    routes = Metadata.GetRequests();
+                }
+
+                Request request = null;
                 string json = string.Empty;
-                QueryExpression query = null;
 
-                Request request = Hermes.GetTestRequest();
-                json = request.ParseTree;
+                /* http://localhost:5000/TestRequest */
+                if (routes.TryGetValue(context.Request.Path, out request))
+                {
+                    json = request.ParseTree;
+                    QueryExpression query = Serializer.FromJson(json);
+                    QueryExecutor executor = new QueryExecutor(query);
 
-                query = Serializer.FromJson(json);
-                QueryExecutor executor = new QueryExecutor(query);
+                    try
+                    {
+                        var result = executor.Build().ExecuteAsRowData();
+                        json = JsonConvert.SerializeObject(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        json = Program.GetErrorText(ex);
+                    }
+                }
+
+                //string json = string.Empty;
+                //QueryExpression query = null;
+
+                //Request request = Hermes.GetTestRequest();
+                //json = request.ParseTree;
+
+                //query = Serializer.FromJson(json);
+                //QueryExecutor executor = new QueryExecutor(query);
                 
-                try
-                {
-                    var result = executor.Build().ExecuteAsRowData();
+                //try
+                //{
+                //    var result = executor.Build().ExecuteAsRowData();
 
-                    json = JsonConvert.SerializeObject(result);
-                }
-                catch (Exception ex)
-                {
-                    json = Program.GetErrorText(ex);
-                    //context.Response.StatusCode = 500;
-                }
+                //    json = JsonConvert.SerializeObject(result);
+                //}
+                //catch (Exception ex)
+                //{
+                //    json = Program.GetErrorText(ex);
+                //    //context.Response.StatusCode = 500;
+                //}
 
                 await context.Response.WriteAsync(json);
             }

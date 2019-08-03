@@ -187,6 +187,30 @@ namespace Zhichkin.Metadata.Views
             if (menu == null) return;
             viewModel.CreateNewRequest(menu.DataContext);
         }
+        private void OpenRequestView_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.OpenRequestView(menu.DataContext);
+        }
+        private void EditRequest_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.EditRequest(menu.DataContext);
+        }
+        private void KillRequest_Clicked(object sender, RoutedEventArgs e)
+        {
+            MetadataTreeViewModel viewModel = this.DataContext as MetadataTreeViewModel;
+            if (viewModel == null) return;
+            MenuItem menu = sender as MenuItem;
+            if (menu == null) return;
+            viewModel.KillRequest(menu.DataContext);
+        }
 
         private void Property_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {

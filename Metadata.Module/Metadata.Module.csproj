@@ -167,6 +167,10 @@
       <Project>{6a86e382-f7ed-43ff-be21-e2127eb8199a}</Project>
       <Name>Hermes.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hermes.Services\Hermes.Services.csproj">
+      <Project>{CA3FDD8A-695C-4A87-B09E-C63E5AAFB5B1}</Project>
+      <Name>Hermes.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hermes.UI\Hermes.UI.csproj">
       <Project>{45C80CED-A3E9-4A66-9978-C1731AF40D49}</Project>
       <Name>Hermes.UI</Name>

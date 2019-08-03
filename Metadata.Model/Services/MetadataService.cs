@@ -159,6 +159,17 @@ namespace Zhichkin.Metadata.Services
                 scope.Complete();
             }
         }
+        public void Save(Request request)
+        {
+            if (request == null) throw new ArgumentNullException("request");
+
+            TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
+            {
+                request.Save();
+                scope.Complete();
+            }
+        }
 
         public void Kill(InfoBase infoBase)
         {
@@ -266,6 +277,25 @@ namespace Zhichkin.Metadata.Services
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
             {
                 field.Kill();
+                scope.Complete();
+            }
+        }
+        public void Kill(Request request)
+        {
+            if (request == null) throw new ArgumentNullException("field");
+
+            TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
+            {
+                if (request.RequestType != null)
+                {
+                    Kill(request.RequestType);
+                }
+                if (request.ResponseType != null)
+                {
+                    Kill(request.ResponseType);
+                }
+                request.Kill();
                 scope.Complete();
             }
         }
@@ -467,6 +497,30 @@ namespace Zhichkin.Metadata.Services
                 info = context.Factory.New<Entity>((Guid)item.key);
             }
             return info;
+        }
+
+        public Dictionary<string, Request> GetRequests()
+        {
+            Dictionary<string, Request> routes = new Dictionary<string, Request>();
+
+            QueryService service = new QueryService(MetadataPersistentContext.Current.ConnectionString);
+            string sql = "SELECT [key] FROM [metadata].[requests];";
+            List<dynamic> requests = service.Execute(sql);
+
+            foreach (dynamic item in requests)
+            {
+                Request request = new Request(item.key, PersistentState.Virtual);
+                if (request.Namespace == null)
+                {
+                    routes.Add($"/{request.Name}", request);
+                }
+                else
+                {
+                    routes.Add($"/{request.Namespace.InfoBase.Database}/{request.Namespace.Name}/{request.Name}", request);
+                }
+            }
+
+            return routes;
         }
     }
 }

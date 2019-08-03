@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
@@ -17,7 +18,31 @@ namespace Zhichkin.Hermes.UI
         {
             this.RemovePropertyCommand = new DelegateCommand(this.RemoveProperty);
             this.OpenPropertySelectionDialogCommand = new DelegateCommand(this.OpenPropertySelectionDialog);
+
+            this.IntializeViewModel(model);
         }
+        private void IntializeViewModel(PropertyExpression model)
+        {
+            if (model.Expression == null)
+            {
+                return;
+            }
+            if (model.Expression is PropertyReference)
+            {
+                SelectStatementViewModel parent = this.Parent as SelectStatementViewModel;
+                if (parent != null)
+                {
+                    PropertyReference property = (PropertyReference)model.Expression;
+                    TableExpressionViewModel tableVM = parent.Tables.Where(t => t.Alias == property.Table.Alias).FirstOrDefault();
+                    PropertyReferenceViewModel propertyVM = tableVM.Properties.Where(p => p.Name == property.Name).FirstOrDefault();
+                    if (propertyVM != null)
+                    {
+                        this.OnExpressionSelected(propertyVM);
+                    }
+                }
+            }
+        }
+
         public UserControl ExpressionView
         {
             get { return _ExpressionView; }

@@ -56,3 +56,5 @@ C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Entity\EntityCommonView.bam
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\MetadataProperty\MetadataPropertyView.baml
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Entity\EntityCommonView.g.cs
 C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\MetadataProperty\MetadataPropertyView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Request\RequestView.g.cs
+C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\Request\RequestView.baml

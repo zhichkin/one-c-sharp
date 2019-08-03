@@ -7,7 +7,10 @@ namespace Zhichkin.Hermes.UI
     public class TableExpressionViewModel : HermesViewModel
     {
         private List<PropertyReferenceViewModel> _Properties;
-        public TableExpressionViewModel(HermesViewModel parent, TableExpression model) : base(parent, model) { }
+        public TableExpressionViewModel(HermesViewModel parent, TableExpression model) : base(parent, model)
+        {
+
+        }
         public string Name
         {
             get
@@ -49,9 +52,12 @@ namespace Zhichkin.Hermes.UI
                 if (_Properties == null)
                 {
                     _Properties = new List<PropertyReferenceViewModel>();
-                    foreach (Property property in table.Entity.Properties)
+                    if (table.Entity != null)
                     {
-                        _Properties.Add(new PropertyReferenceViewModel(this, this, new PropertyReference(table, table, property)));
+                        foreach (Property property in table.Entity.Properties)
+                        {
+                            _Properties.Add(new PropertyReferenceViewModel(this, this, new PropertyReference(table, table, property)));
+                        }
                     }
                 }
                 return _Properties;

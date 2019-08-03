@@ -27,13 +27,18 @@ namespace Zhichkin.Metadata.Services
         void Save(Property entity);
         void Save(Relation entity);
         void Save(Table entity);
-        void Save(Field entity);
+        void Save(Field field);
+        void Save(Request request);
+
         void Kill(InfoBase entity);
         void Kill(Namespace entity);
         void Kill(Entity entity);
         void Kill(Property entity);
         void Kill(Relation entity);
         void Kill(Table entity);
-        void Kill(Field entity);
+        void Kill(Field field);
+        void Kill(Request request);
+
+        Dictionary<string, Request> GetRequests();
     }
 }

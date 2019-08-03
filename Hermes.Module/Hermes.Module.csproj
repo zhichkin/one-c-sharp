@@ -48,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hermes.Services\Hermes.Services.csproj">
+      <Project>{CA3FDD8A-695C-4A87-B09E-C63E5AAFB5B1}</Project>
+      <Name>Hermes.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hermes.UI\Hermes.UI.csproj">
       <Project>{45c80ced-a3e9-4a66-9978-c1731af40d49}</Project>
       <Name>Hermes.UI</Name>

@@ -17,9 +17,55 @@ namespace Zhichkin.Hermes.UI
             this.Tables = new ObservableCollection<TableExpressionViewModel>();
             this.Fields = new ObservableCollection<PropertyExpressionViewModel>();
             this.WhereClause = new BooleanExpressionViewModel(this, "WHERE");
+
+            this.InitializeViewModel(model);
+
             this.AddTableCommand = new DelegateCommand<Entity>(this.OnAddTable);
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
         }
+        private void InitializeViewModel(SelectStatement model)
+        {
+            if (model.FROM != null && model.FROM.Count > 0)
+            {
+                foreach (TableExpression table in model.FROM)
+                {
+                    this.AddTable(table);
+                }
+            }
+
+            if (model.SELECT != null && model.SELECT.Count > 0)
+            {
+                foreach (PropertyExpression property in model.SELECT)
+                {
+                    this.AddProperty(property);
+                }
+            }
+
+            if (model.WHERE != null)
+            {
+                this.WhereClause.Model = model.WHERE;
+            }
+        }
+        private void AddTable(TableExpression table)
+        {
+            if (table is JoinExpression)
+            {
+                this.Tables.Add(new JoinExpressionViewModel(this, table));
+            }
+            else if (table is SelectStatement)
+            {
+                this.Tables.Add(new SelectStatementViewModel(this, (SelectStatement)table));
+            }
+            else
+            {
+                this.Tables.Add(new TableExpressionViewModel(this, table));
+            }
+        }
+        private void AddProperty(PropertyExpression property)
+        {
+            this.Fields.Add(new PropertyExpressionViewModel(this, property));
+        }
+
         public ICommand AddTableCommand { get; private set; }
         public ICommand AddPropertyCommand { get; private set; }
         private void OnAddProperty()

@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Zhichkin.Hermes.Model;
+using Zhichkin.Hermes.Services;
 using Zhichkin.Hermes.UI;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Module;
@@ -60,6 +61,7 @@ namespace Zhichkin.Metadata.ViewModels
             this.EntityPopup = new InteractionRequest<Confirmation>();
             this.PropertyPopup = new InteractionRequest<Confirmation>();
             this.EntityViewPopup = new InteractionRequest<Confirmation>();
+            this.RequestViewPopup = new InteractionRequest<Confirmation>();
 
             this.SetupPropertyContextMenu();
 
@@ -603,67 +605,159 @@ namespace Zhichkin.Metadata.ViewModels
                 Command = new DelegateCommand<object>(this.OpenQueryDesigner)
             });
 
-
             this.PropertyContextMenuItems = new ObservableCollection<MetadataCommandViewModel>(commandsList);
         }
 
         private void OpenQueryDesigner(object model)
         {
-            Property property = model as Property;
-            if (property == null) throw new ArgumentNullException("model");
+            Request request = model as Request;
+            if (request == null) return;
 
             Z.ClearRightRegion(this.regionManager);
             IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
             if (rightRegion == null) return;
 
-            QueryExpression query = new QueryExpression(null);
-            query.Expressions = new List<HermesModel>();
-            QueryExpressionViewModel queryVM = new QueryExpressionViewModel(null, query);
+            QueryExpression query;
+            QueryExpressionViewModel queryVM;
+            if (string.IsNullOrEmpty(request.ParseTree))
+            {
+                query = new QueryExpression(null, request);
+                query.Expressions = new List<HermesModel>();
+                queryVM = new QueryExpressionViewModel(null, query);
 
-            SelectStatement statement = new SelectStatement(query, null);
-            query.Expressions.Add(statement);
-            SelectStatementViewModel select = new SelectStatementViewModel(queryVM, statement);
-            queryVM.QueryExpressions.Add(select);
+                SelectStatement statement = new SelectStatement(query, null);
+                query.Expressions.Add(statement);
+                SelectStatementViewModel select = new SelectStatementViewModel(queryVM, statement);
+                queryVM.QueryExpressions.Add(select);
+            }
+            else
+            {
+                ISerializationService serializer = container.Resolve<ISerializationService>();
+                query = serializer.FromJson(request.ParseTree);
+                query.Request = request;
+                queryVM = new QueryExpressionViewModel(null, query);
+            }
 
             QueryExpressionView queryView = new QueryExpressionView(queryVM);
-
             rightRegion.Add(queryView);
         }
 
+        public InteractionRequest<Confirmation> RequestViewPopup { get; private set; }
         public void CreateNewRequest(object owner)
         {
-            Request new_request = new Request()
-            {
-                Name = "New request"
-            };
+            Request request = new Request();
+
             if (owner is Namespace)
             {
-                new_request.Namespace = (Namespace)owner;
+                request.Namespace = (Namespace)owner;
+                request.Name = $"NewRequest{request.Namespace.Requests.Count.ToString()}";
             }
             else if (owner is Entity)
             {
-                new_request.Owner = (Entity)owner;
+                request.Owner = (Entity)owner;
+                request.Name = $"NewRequest{request.Owner.Requests.Count.ToString()}";
             }
             else
             {
                 throw new ArgumentOutOfRangeException("owner");
             }
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = request
+            };
+            this.RequestViewPopup.Raise(confirmation, response =>
+            {
+                if (response.Confirmed)
+                {
+                    Request content = response.Content as Request;
+                    if (content != null)
+                    {
+                        if (owner is Namespace)
+                        {
+                            content.Namespace.ObservableRequests.Add(content);
+                        }
+                        else if (owner is Entity)
+                        {
+                            content.Owner.ObservableRequests.Add(content);
+                        }
+                    }
+                }
+            });
+        }
+        public void OpenRequestView(object model)
+        {
+            Request request = model as Request;
+            if (request == null) return;
+
+            Confirmation confirmation = new Confirmation()
+            {
+                Title = "Z-Metadata",
+                Content = request
+            };
+            this.RequestViewPopup.Raise(confirmation);
+        }
+        public void KillRequest(object model)
+        {
+            Request request = model as Request;
+            if (request == null) throw new ArgumentNullException("model");
+
+            bool cancel = true;
+            Z.Confirm(new Confirmation
+            {
+                Title = "Z-Metadata",
+                Content = $"Запрос данных \"{request.Name}\" и все его\nподчинённые объекты будут удалены.\n\nПродолжить ?"
+            },
+                c => { cancel = !c.Confirmed; });
+
+            if (cancel) return;
+
             try
             {
-                new_request.Save();
-                if (owner is Namespace)
+                TransactionOptions options = new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted };
+                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
                 {
-                    ((Namespace)owner).ObservableRequests.Add(new_request);
+                    dataService.Kill(request);
+                    scope.Complete();
                 }
-                else if (owner is Entity)
+                if (request.Namespace != null)
                 {
-                    // (Entity)owner
+                    InfoBase ib = this.InfoBases.Where(i => i == request.Namespace.InfoBase).FirstOrDefault();
+                    if (ib != null)
+                    {
+                        Namespace owner = FindObservableNamespace(ib, request.Namespace);
+                        if (owner != null)
+                        {
+                            owner.ObservableRequests.Remove(request);
+                        }
+                    }
+                }
+                if (request.Owner != null)
+                {
+                    InfoBase ib = this.InfoBases.Where(i => i == request.Owner.InfoBase).FirstOrDefault();
+                    if (ib != null)
+                    {
+                        Namespace ns = FindObservableNamespace(ib, request.Owner.Namespace);
+                        if (ns != null)
+                        {
+                            Entity owner = ns.ObservableEntities.Where(e => e == request.Owner).FirstOrDefault();
+                            if (owner != null)
+                            {
+                                owner.ObservableRequests.Remove(request);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Z.Notify(new Notification { Title = "Z-Metadata", Content = Z.GetErrorText(ex) });
             }
+        }
+        public void EditRequest(object model)
+        {
+            this.OpenQueryDesigner(model);
         }
     }
 }

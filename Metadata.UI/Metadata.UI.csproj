@@ -141,6 +141,10 @@
       <DependentUpon>PropertyForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Property\PropertyFormModel.cs" />
+    <Compile Include="Request\RequestView.xaml.cs">
+      <DependentUpon>RequestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Request\RequestViewModel.cs" />
     <Compile Include="Table\TableForm.xaml.cs">
       <DependentUpon>TableForm.xaml</DependentUpon>
     </Compile>
@@ -210,6 +214,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Property\PropertyForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Request\RequestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -3,6 +3,7 @@ using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using Zhichkin.Shell;
 using Zhichkin.Hermes.UI;
+using Zhichkin.Hermes.Services;
 
 namespace Zhichkin.Hermes
 {
@@ -20,8 +21,7 @@ namespace Zhichkin.Hermes
         }
         public void Initialize()
         {
-            //unity.RegisterType<IMetadataService, MetadataService>();
-            //mainMenuController = unity.Resolve<MetadataMainMenuController>();
+            unity.RegisterType<ISerializationService, SerializationService>();
 
             MainMenuView view = this.unity.Resolve<MainMenuView>();
             this.regions.Regions[RegionNames.TopRegion].Add(view);

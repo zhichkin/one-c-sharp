@@ -34,6 +34,7 @@
             <BitmapImage x:Key="Icon_Dimension" UriSource="..\Images\Измерение.png"/>
             <BitmapImage x:Key="Icon_Measure" UriSource="..\Images\Ресурс.png"/>
             <BitmapImage x:Key="Icon_Settings" UriSource="..\Images\26 Settings.png"/>
+            <BitmapImage x:Key="Icon_SetInterval" UriSource="..\Images\УстановитьИнтервал.png"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -88,7 +89,17 @@
                 </shell:CustomPopupWindowAction>
             </i:EventTrigger.Actions>
         </i:EventTrigger>
-        
+
+        <i:EventTrigger EventName="Raised" SourceObject="{Binding RequestViewPopup}">
+            <i:EventTrigger.Actions>
+                <shell:CustomPopupWindowAction IsModal="true" CenterOverAssociatedObject="True">
+                    <shell:CustomPopupWindowAction.WindowContent>
+                        <ui:RequestView />
+                    </shell:CustomPopupWindowAction.WindowContent>
+                </shell:CustomPopupWindowAction>
+            </i:EventTrigger.Actions>
+        </i:EventTrigger>
+
     </i:Interaction.Triggers>
 
     <Grid>
@@ -377,6 +388,31 @@
                 <DataTemplate DataType="{x:Type Model:Field}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource Icon_Property}" Margin="2"/>
+                        <TextBlock Text="{Binding Path=Name}" Margin="2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type Model:Request}">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Открыть" Click="OpenRequestView_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Settings}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Редактировать" Click="EditRequest_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Edit_Object}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Удалить" Click="KillRequest_Clicked">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource Icon_Kill_Object}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <Image Source="{StaticResource Icon_SetInterval}" Margin="2"/>
                         <TextBlock Text="{Binding Path=Name}" Margin="2" VerticalAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>

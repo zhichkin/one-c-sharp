@@ -13,20 +13,70 @@ namespace Zhichkin.Hermes.UI
 {
     public class QueryExpressionViewModel : HermesViewModel
     {
+        private const string CONST_ModuleDialogsTitle = "Hermes";
+
         public QueryExpressionViewModel(HermesViewModel parent, QueryExpression model) : base(parent, model)
         {
             this.TypeSelectionDialog = new InteractionRequest<Confirmation>();
             this.ReferenceObjectSelectionDialog = new InteractionRequest<Confirmation>();
 
-            this.QueryParameters = new ObservableCollection<ParameterExpressionViewModel>();
-            this.QueryExpressions = new ObservableCollection<SelectStatementViewModel>();
+            this.InitializeViewModel(model);
 
             this.AddNewParameterCommand = new DelegateCommand(this.AddNewParameter);
             this.RemoveParameterCommand = new DelegateCommand<string>(this.RemoveParameter);
 
             this.ShowSQLCommand = new DelegateCommand(this.ShowSQL);
+            this.SaveQueryCommand = new DelegateCommand(this.SaveQuery);
             this.ExecuteQueryCommand = new DelegateCommand(this.ExecuteQuery);
         }
+        private void InitializeViewModel(QueryExpression model)
+        {
+            if (model.Parameters == null || model.Parameters.Count == 0)
+            {
+                this.QueryParameters = new ObservableCollection<ParameterExpressionViewModel>();
+            }
+            else
+            {
+                foreach (ParameterExpression parameter in model.Parameters)
+                {
+                    this.AddParameter(parameter);
+                }
+            }
+
+            if (model.Expressions == null || model.Expressions.Count == 0)
+            {
+                this.QueryExpressions = new ObservableCollection<SelectStatementViewModel>();
+            }
+            else
+            {
+                foreach (HermesModel expression in model.Expressions)
+                {
+                    this.AddExpression(expression);
+                }
+            }
+        }
+        private void AddParameter(ParameterExpression parameter)
+        {
+            if (this.QueryParameters == null)
+            {
+                this.QueryParameters = new ObservableCollection<ParameterExpressionViewModel>();
+            }
+            this.QueryParameters.Add(new ParameterExpressionViewModel(this, parameter));
+        }
+        private void AddExpression(HermesModel expression)
+        {
+            if (this.QueryExpressions == null)
+            {
+                this.QueryExpressions = new ObservableCollection<SelectStatementViewModel>();
+            }
+            if (expression is SelectStatement)
+            {
+                SelectStatement statement = (SelectStatement)expression;
+                SelectStatementViewModel select = new SelectStatementViewModel(this, statement);
+                this.QueryExpressions.Add(select);
+            }
+        }
+
         public InteractionRequest<Confirmation> TypeSelectionDialog { get; private set; }
         public InteractionRequest<Confirmation> ReferenceObjectSelectionDialog { get; private set; }
         
@@ -97,6 +147,32 @@ namespace Zhichkin.Hermes.UI
             catch (Exception ex)
             {
                 Z.Notify(new Notification() { Title = "Hermes", Content = Z.GetErrorText(ex) });
+            }
+        }
+
+        public ICommand SaveQueryCommand { get; private set; }
+        private void SaveQuery()
+        {
+            QueryExpression model = this.Model as QueryExpression;
+            if (model == null) return;
+
+            if (model.Request == null)
+            {
+                Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = "Объект запроса не указан." });
+                return;
+            }
+
+            try
+            {
+                SerializationService serializer = new SerializationService();
+                model.Request.ParseTree = serializer.ToJson(model);
+                model.Request.Save();
+
+                Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = "Объект запроса сохранён успешно." });
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification() { Title = CONST_ModuleDialogsTitle, Content = Z.GetErrorText(ex) });
             }
         }
 
