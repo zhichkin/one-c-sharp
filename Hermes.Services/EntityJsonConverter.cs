@@ -166,10 +166,48 @@ namespace Zhichkin.Hermes.Services
 
     public sealed class BooleanFunctionJsonConverter : JsonConverter<BooleanFunction>
     {
-        public override bool CanWrite { get { return false; } }
+        //public override bool CanWrite { get { return false; } }
         public override void WriteJson(JsonWriter writer, BooleanFunction value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            if (value is BooleanOperator)
+            {
+                Type type = typeof(BooleanOperator);
+
+                writer.WriteStartObject();
+
+                writer.WritePropertyName("$type");
+                serializer.Serialize(writer, $"{type.FullName}, {type.Namespace}");
+
+                writer.WritePropertyName("Name");
+                serializer.Serialize(writer, value.Name);
+
+                BooleanOperator source = (BooleanOperator)value;
+                writer.WritePropertyName("Operands");
+                serializer.Serialize(writer, source.Operands);
+
+                writer.WriteEndObject();
+            }
+            else if (value is ComparisonOperator)
+            {
+                Type type = typeof(ComparisonOperator);
+
+                writer.WriteStartObject();
+
+                writer.WritePropertyName("$type");
+                serializer.Serialize(writer, $"{type.FullName}, {type.Namespace}");
+
+                writer.WritePropertyName("Name");
+                serializer.Serialize(writer, value.Name);
+
+                ComparisonOperator source = (ComparisonOperator)value;
+                writer.WritePropertyName("LeftExpression");
+                serializer.Serialize(writer, source.LeftExpression);
+
+                writer.WritePropertyName("RightExpression");
+                serializer.Serialize(writer, source.RightExpression);
+
+                writer.WriteEndObject();
+            }
         }
         public override BooleanFunction ReadJson(JsonReader reader, Type objectType, BooleanFunction existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
@@ -224,6 +262,57 @@ namespace Zhichkin.Hermes.Services
                 };
             }
             return function;
+        }
+    }
+
+    public sealed class PropertyReferenceJsonConverter : JsonConverter<PropertyReference>
+    {
+        public override void WriteJson(JsonWriter writer, PropertyReference value, JsonSerializer serializer)
+        {
+            Type type = typeof(PropertyReference);
+
+            writer.WriteStartObject();
+            writer.WritePropertyName("$type");
+            serializer.Serialize(writer, $"{type.FullName}, {type.Namespace}");
+
+            writer.WritePropertyName("Name");
+            serializer.Serialize(writer, value.Name);
+
+            writer.WritePropertyName("Table");
+            serializer.Serialize(writer, value.Table);
+
+            writer.WritePropertyName("Property");
+            serializer.Serialize(writer, value.Property);
+
+            writer.WriteEndObject();
+        }
+        public override PropertyReference ReadJson(JsonReader reader, Type objectType, PropertyReference existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null) return null;
+
+            JObject json = JObject.Load(reader);
+
+            string name = string.Empty;
+            TableExpression table = null;
+            Property property = null;
+
+            foreach (JProperty p in json.Properties())
+            {
+                if (property.Name == "Name")
+                {
+                    name = (string)p.Value;
+                }
+                else if (property.Name == "Table")
+                {
+                    table = serializer.Deserialize<TableExpression>(p.Value.CreateReader());
+                }
+                else if (property.Name == "Property")
+                {
+                    property = serializer.Deserialize<Property>(p.Value.CreateReader());
+                }
+            }
+
+            return new PropertyReference(null, table, property);
         }
     }
 }

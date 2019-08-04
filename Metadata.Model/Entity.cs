@@ -79,7 +79,7 @@ namespace Zhichkin.Metadata.Model
             }
         }
 
-        //private List<Property> properties = new List<Property>();
+        private List<Property> properties = new List<Property>();
         private List<Entity> nestedEntities = new List<Entity>();
         private List<Table> tables = new List<Table>();
 
@@ -87,8 +87,8 @@ namespace Zhichkin.Metadata.Model
         {
             get
             {
-                //if (this.state == PersistentState.New) return properties;
-                //if (properties.Count > 0) return properties;
+                if (this.state == PersistentState.New) return properties;
+                if (properties.Count > 0) return properties;
                 return service.GetChildren<Entity, Property>(this, "entity").OrderBy((p) => p.Ordinal).ToList();
             }
         }

@@ -32,14 +32,14 @@ namespace Zhichkin.Metadata.Model
             }
         }
 
-        //private List<Namespace> namespaces = new List<Namespace>();
-        //private List<Entity> entities = new List<Entity>();
+        private List<Namespace> namespaces = new List<Namespace>();
+        private List<Entity> entities = new List<Entity>();
         public IList<Namespace> Namespaces
         {
             get
             {
-                //if (this.state == PersistentState.New) return namespaces;
-                //if (namespaces.Count > 0) return namespaces;
+                if (this.state == PersistentState.New) return namespaces;
+                if (namespaces.Count > 0) return namespaces;
                 return service.GetChildren<Namespace, Namespace>(this, "owner");
             }
         }
@@ -47,8 +47,8 @@ namespace Zhichkin.Metadata.Model
         {
             get
             {
-                //if (this.state == PersistentState.New) return entities;
-                //if (entities.Count > 0) return entities;
+                if (this.state == PersistentState.New) return entities;
+                if (entities.Count > 0) return entities;
                 return service.GetChildren<Namespace, Entity>(this, "namespace");
             }
         }

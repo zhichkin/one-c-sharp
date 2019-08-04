@@ -3369,6 +3369,7 @@
       "Metadata.Services >= 1.0.0",
       "Microsoft.AspNetCore >= 2.2.0",
       "Microsoft.NETCore.App >= 2.2.0",
+      "System.Configuration.ConfigurationManager >= 4.5.0",
       "Zhichkin.Hermes.Services >= 1.0.0"
     ]
   },
@@ -3429,6 +3430,10 @@
             "target": "Package",
             "version": "[2.2.0, )",
             "autoReferenced": true
+          },
+          "System.Configuration.ConfigurationManager": {
+            "target": "Package",
+            "version": "[4.5.0, )"
           }
         },
         "imports": [

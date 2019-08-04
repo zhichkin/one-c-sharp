@@ -1,15 +1,20 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using System;
+using System.Configuration;
 
 namespace Zhichkin.Metadata.Server
 {
     public sealed class Program
     {
+        private const string Setting_ServerURL = "ServerURL";
+
         public static void Main(string[] args)
         {
+            string url = ConfigurationManager.AppSettings[Setting_ServerURL];
+
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls(@"http://localhost:5000")
+                .UseUrls(url)
                 .UseStartup<Startup>()
                 .Build();
             host.Run();

@@ -44,7 +44,6 @@ namespace Zhichkin.Metadata.Server
                 Request request = null;
                 string json = string.Empty;
 
-                /* http://localhost:5000/TestRequest */
                 if (routes.TryGetValue(context.Request.Path, out request))
                 {
                     json = request.ParseTree;

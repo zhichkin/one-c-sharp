@@ -5,7 +5,6 @@ namespace Zhichkin.Hermes.Services
 {
     public interface ISerializationService
     {
-        string ToSQL(QueryExpression query);
         string ToJson(QueryExpression query);
         QueryExpression FromJson(string json);
     }
@@ -22,6 +21,8 @@ namespace Zhichkin.Hermes.Services
             settings.Converters.Add(new EntityJsonConverter());
             settings.Converters.Add(new PropertyJsonConverter());
             settings.Converters.Add(new ReferenceProxyJsonConverter());
+            settings.Converters.Add(new BooleanFunctionJsonConverter());
+            settings.Converters.Add(new PropertyReferenceJsonConverter());
             settings.Converters.Add(new ParameterExpressionJsonConverter());
             return JsonConvert.SerializeObject(query, settings);
         }
@@ -36,14 +37,9 @@ namespace Zhichkin.Hermes.Services
             settings.Converters.Add(new PropertyJsonConverter());
             settings.Converters.Add(new ReferenceProxyJsonConverter());
             settings.Converters.Add(new BooleanFunctionJsonConverter());
+            settings.Converters.Add(new PropertyReferenceJsonConverter());
             settings.Converters.Add(new ParameterExpressionJsonConverter());
             return JsonConvert.DeserializeObject<QueryExpression>(json, settings);
         }
-        public string ToSQL(QueryExpression query)
-        {
-            return string.Empty;
-        }
     }
-
-
 }

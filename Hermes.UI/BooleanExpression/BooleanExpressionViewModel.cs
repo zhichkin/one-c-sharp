@@ -20,8 +20,25 @@ namespace Zhichkin.Hermes.UI
             if (parent == null) throw new ArgumentNullException();
             this.Clause = clause;
             GetModelFromParent();
+
+            this.InitializeViewModel();
+
             this.AddNewConditionCommand = new DelegateCommand(this.AddNewCondition);
         }
+        private void InitializeViewModel()
+        {
+            if (_Model is BooleanOperator)
+            {
+                this.IsCommandPanelVisible = false;
+                this.View = new BooleanOperatorView(new BooleanOperatorViewModel(this, (BooleanOperator)_Model));
+            }
+            else if (_Model is ComparisonOperator)
+            {
+                this.IsCommandPanelVisible = true;
+                this.View = new ComparisonOperatorView(new ComparisonOperatorViewModel(this, (ComparisonOperator)_Model));
+            }
+        }
+
         private void GetModelFromParent()
         {
             if (this.Parent is SelectStatementViewModel)

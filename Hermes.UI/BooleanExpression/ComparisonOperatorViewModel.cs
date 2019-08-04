@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Zhichkin.Hermes.Model;
@@ -16,9 +17,37 @@ namespace Zhichkin.Hermes.UI
 
         public ComparisonOperatorViewModel(HermesViewModel parent, ComparisonOperator model) : base(parent, model)
         {
+            this.InitializeViewModel(model);
+
             this.RemoveComparisonOperatorCommand = new DelegateCommand(this.RemoveComparisonOperator);
             this.OpenPropertySelectionDialogCommand = new DelegateCommand<string>(this.OpenPropertySelectionDialog);
         }
+        private void InitializeViewModel(ComparisonOperator model)
+        {
+            SelectStatementViewModel select = this.GetSelectStatementViewModel(this);
+            if (select == null) return;
+
+            if (model.LeftExpression is PropertyReference)
+            {
+                PropertyReference property = (PropertyReference)model.LeftExpression;
+                TableExpressionViewModel tableVM = select.Tables.Where(t => t.Alias == property.Table.Alias).FirstOrDefault();
+                PropertyReferenceViewModel propertyVM = tableVM.Properties.Where(p => p.Name == property.Name).FirstOrDefault();
+
+                this.LeftExpression = propertyVM;
+                this.LeftExpressionView = new PropertyReferenceView(propertyVM);
+            }
+
+            if (model.RightExpression is PropertyReference)
+            {
+                PropertyReference property = (PropertyReference)model.RightExpression;
+                TableExpressionViewModel tableVM = select.Tables.Where(t => t.Alias == property.Table.Alias).FirstOrDefault();
+                PropertyReferenceViewModel propertyVM = tableVM.Properties.Where(p => p.Name == property.Name).FirstOrDefault();
+
+                this.RightExpression = propertyVM;
+                this.RightExpressionView = new PropertyReferenceView(propertyVM);
+            }
+        }
+
         public List<string> ComparisonOperators
         {
             get { return BooleanFunction.ComparisonOperators; }
