@@ -10,6 +10,7 @@ namespace Zhichkin.Hermes.Model
         {
             this.Consumer = consumer;
         }
+        
         public HermesModel Consumer { get; set; }
     }
 }

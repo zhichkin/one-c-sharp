@@ -78,6 +78,7 @@
                                 <Label Content="Click to add new parameter" HorizontalAlignment="Center"/>
                                 <Button Content="Execute" ToolTip="Execute query" Command="{Binding ExecuteQueryCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
                                 <Button Content="SQL" ToolTip="Show SQL script" Command="{Binding ShowSQLCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
+                                <Button Content="JSON" ToolTip="Show JSON data" Command="{Binding ShowJSONCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
                                 <Button Content="Save" ToolTip="Save query to metadata" Command="{Binding SaveQueryCommand}" Height="24" Width="80" Margin="10,0,0,0"/>
                             </StackPanel>
                         </Border>
@@ -126,7 +127,18 @@
                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
             </TabItem.Content>
         </TabItem>
-        
+
+        <TabItem IsSelected="{Binding IsJSONTabSelected}">
+            <TabItem.Header>
+                <TextBlock Text="JSON" Style="{StaticResource SelectedTabTextStyle}" Margin="4" VerticalAlignment="Center"/>
+            </TabItem.Header>
+            <TabItem.Content>
+                <TextBox Text="{Binding JSONText}" FontFamily="Courier New" FontSize="12"
+                             TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
+                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            </TabItem.Content>
+        </TabItem>
+
     </TabControl>
 
 </UserControl>

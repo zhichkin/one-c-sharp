@@ -26,6 +26,7 @@ namespace Zhichkin.Hermes.UI
             this.RemoveParameterCommand = new DelegateCommand<string>(this.RemoveParameter);
 
             this.ShowSQLCommand = new DelegateCommand(this.ShowSQL);
+            this.ShowJSONCommand = new DelegateCommand(this.ShowJSON);
             this.SaveQueryCommand = new DelegateCommand(this.SaveQuery);
             this.ExecuteQueryCommand = new DelegateCommand(this.ExecuteQuery);
         }
@@ -230,6 +231,38 @@ namespace Zhichkin.Hermes.UI
                 _QueryResultTable = value;
                 this.OnPropertyChanged("QueryResultTable");
             }
+        }
+
+        // Tab "JSON"
+        private bool _IsJSONTabSelected = false;
+        public bool IsJSONTabSelected
+        {
+            get { return _IsJSONTabSelected; }
+            set
+            {
+                _IsJSONTabSelected = value;
+                this.OnPropertyChanged("IsJSONTabSelected");
+            }
+        }
+        private string _JSONText = string.Empty;
+        public string JSONText
+        {
+            get { return _JSONText; }
+            set
+            {
+                _JSONText = value;
+                this.OnPropertyChanged("JSONText");
+            }
+        }
+        public ICommand ShowJSONCommand { get; private set; }
+        private void ShowJSON()
+        {
+            QueryExpression model = this.Model as QueryExpression;
+            if (model == null) return;
+
+            SerializationService service = new SerializationService();
+            this.JSONText = service.ToJson(model);
+            this.IsJSONTabSelected = true;
         }
     }
 }
