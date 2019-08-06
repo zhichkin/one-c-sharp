@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\User\Desktop\GitHub\Z\Metadata.UI\obj\Debug\
+C:\Zhichkin\Z\Metadata.UI\obj\Debug\
 Zhichkin.Metadata.UI
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 141838371041
 
 35-2082511892
-132-1324121115
+132-1449549584
 Dialogs\DatabaseSettingsDialog\DatabaseSettingsView.xaml;Dialogs\SelectDataTypeDialog\SelectDataTypeDialogView.xaml;ChameleonBox\ChameleonBox.xaml;Dialogs\SelectParametersDialog\SelectParametersDialogView.xaml;Dialogs\SelectReferenceObjectDialog\SelectReferenceObjectDialogView.xaml;Entity\EntityCommonView.xaml;Entity\EntityForm.xaml;Field\FieldForm.xaml;InfoBase\InfoBaseView.xaml;MetadataProperty\MetadataPropertyView.xaml;Namespace\NamespaceView.xaml;Property\PropertyForm.xaml;Request\RequestView.xaml;Table\TableForm.xaml;
 
 False

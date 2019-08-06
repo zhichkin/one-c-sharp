@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Serialization;
-using Zhichkin.Hermes.Model;
 
 namespace Zhichkin.Hermes.Services
 {
@@ -9,6 +8,24 @@ namespace Zhichkin.Hermes.Services
     {
         private readonly IDictionary<Guid, object> _map_id_to_object = new Dictionary<Guid, object>();
         private readonly IDictionary<object, Guid> _map_object_to_id = new Dictionary<object, Guid>();
+
+        public bool IsReferenced(object context, object value)
+        {
+            return _map_object_to_id.ContainsKey(value);
+        }
+        public string GetReference(object context, object value)
+        {
+            Guid id;
+            if (_map_object_to_id.TryGetValue(value, out id))
+            {
+                return id.ToString();
+            }
+
+            id = Guid.NewGuid();
+            _map_object_to_id.Add(value, id);
+
+            return id.ToString();
+        }
 
         public object ResolveReference(object context, string reference)
         {
@@ -19,27 +36,6 @@ namespace Zhichkin.Hermes.Services
 
             return value;
         }
-
-        public string GetReference(object context, object value)
-        {
-            Guid id;
-            if (_map_object_to_id.TryGetValue(value, out id))
-            {
-                return id.ToString();
-            }
-
-            id = Guid.NewGuid();
-            _map_id_to_object.Add(id, value);
-            _map_object_to_id.Add(value, id);
-
-            return id.ToString();
-        }
-
-        public bool IsReferenced(object context, object value)
-        {
-            return _map_object_to_id.ContainsKey(value);
-        }
-
         public void AddReference(object context, string reference, object value)
         {
             Guid id = new Guid(reference);

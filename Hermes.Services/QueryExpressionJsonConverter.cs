@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using Zhichkin.Hermes.Model;
@@ -10,10 +11,12 @@ namespace Zhichkin.Hermes.Services
     {
         public override void WriteJson(JsonWriter writer, QueryExpression value, JsonSerializer serializer)
         {
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
+
             writer.WriteStartObject();
 
             writer.WritePropertyName("$id");
-            serializer.Serialize(writer, (new Guid()).ToString());
+            serializer.Serialize(writer, new Guid(resolver.GetReference(null, value)));
 
             writer.WritePropertyName("$type");
             serializer.Serialize(writer, "QueryExpression");

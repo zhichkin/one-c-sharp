@@ -34,3 +34,5 @@ C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Hermes.S
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Hermes.Services.csproj.CopyComplete
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Zhichkin.Hermes.Services.dll
 C:\Users\User\Desktop\GitHub\Z\Hermes.Services\obj\Debug\netstandard2.0\Zhichkin.Hermes.Services.pdb
+C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Services.dll
+C:\Zhichkin\Z\Hermes.Services\bin\Debug\netstandard2.0\Zhichkin.Metadata.Services.pdb

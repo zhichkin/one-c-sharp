@@ -5,3 +5,10 @@ C:\Users\User\Desktop\GitHub\Z\Metadata.Services\obj\Debug\Metadata.Services.csp
 C:\Users\User\Desktop\GitHub\Z\Metadata.Services\obj\Debug\Metadata.Services.csproj.CopyComplete
 C:\Users\User\Desktop\GitHub\Z\Metadata.Services\obj\Debug\Zhichkin.Metadata.Services.dll
 C:\Users\User\Desktop\GitHub\Z\Metadata.Services\obj\Debug\Zhichkin.Metadata.Services.pdb
+C:\Zhichkin\Z\debug\Zhichkin.Metadata.Services.dll
+C:\Zhichkin\Z\debug\Zhichkin.Metadata.Services.pdb
+C:\Zhichkin\Z\Metadata.Services\obj\Debug\Metadata.Services.csprojAssemblyReference.cache
+C:\Zhichkin\Z\Metadata.Services\obj\Debug\Metadata.Services.csproj.CoreCompileInputs.cache
+C:\Zhichkin\Z\Metadata.Services\obj\Debug\Metadata.Services.csproj.CopyComplete
+C:\Zhichkin\Z\Metadata.Services\obj\Debug\Zhichkin.Metadata.Services.dll
+C:\Zhichkin\Z\Metadata.Services\obj\Debug\Zhichkin.Metadata.Services.pdb
