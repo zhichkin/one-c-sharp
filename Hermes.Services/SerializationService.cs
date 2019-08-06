@@ -17,19 +17,24 @@ namespace Zhichkin.Hermes.Services
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.None,
             ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            SerializationBinder = new QuerySerializationBinder(),
+            MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead
         };
         
         public SerializationService()
         {
-            settings.Converters.Add(new QueryExpressionJsonConverter());
-            settings.Converters.Add(new SelectStatementJsonConverter());
-            settings.Converters.Add(new EntityJsonConverter());
-            settings.Converters.Add(new PropertyJsonConverter());
-            settings.Converters.Add(new ReferenceProxyJsonConverter());
             settings.Converters.Add(new BooleanFunctionJsonConverter());
-            settings.Converters.Add(new PropertyReferenceJsonConverter());
+            settings.Converters.Add(new EntityJsonConverter());
+            settings.Converters.Add(new JoinExpressionJsonConverter());
             settings.Converters.Add(new ParameterExpressionJsonConverter());
+            settings.Converters.Add(new PropertyExpressionJsonConverter());
+            settings.Converters.Add(new PropertyJsonConverter());
+            settings.Converters.Add(new PropertyReferenceJsonConverter());
+            settings.Converters.Add(new QueryExpressionJsonConverter());
+            settings.Converters.Add(new ReferenceProxyJsonConverter());
+            settings.Converters.Add(new SelectStatementJsonConverter());
+            settings.Converters.Add(new TableExpressionJsonConverter());
         }
 
         public string ToJson(QueryExpression query)

@@ -20,7 +20,7 @@ namespace Zhichkin.Hermes.Services
             serializer.Serialize(writer, new Guid(resolver.GetReference(null, value)));
 
             writer.WritePropertyName("$type");
-            serializer.Serialize(writer, "SelectStatement");
+            serializer.Serialize(writer, nameof(SelectStatement));
 
             writer.WritePropertyName("Consumer");
             if (value.Consumer == null)
@@ -100,11 +100,25 @@ namespace Zhichkin.Hermes.Services
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
-            JObject json = JObject.Load(reader);
-            JProperty property = json.Properties().Where(p => p.Name == "identity").FirstOrDefault();
-            Guid identity = new Guid((string)property.Value);
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
 
-            return new SelectStatement(null, null);
+            SelectStatement target = new SelectStatement(null, null);
+
+            JObject json = JObject.Load(reader);
+            foreach (JProperty property in json.Properties())
+            {
+                if (property.Name == "$id")
+                {
+                    string id = (string)serializer.Deserialize(property.Value.CreateReader());
+                    resolver.AddReference(null, id, target);
+                }
+                else if (property.Name == "Consumer")
+                {
+                    target.Consumer = (HermesModel)serializer.Deserialize(property.Value.CreateReader());
+                }
+            }
+
+            return target;
         }
     }
 }
