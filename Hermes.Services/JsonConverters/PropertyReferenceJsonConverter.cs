@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Linq;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
 
@@ -72,7 +73,26 @@ namespace Zhichkin.Hermes.Services
                 }
                 else if (property.Name == "Table")
                 {
-                    target.Table = serializer.Deserialize<TableExpression>(property.Value.CreateReader());
+                    JObject expression = JObject.Load(property.Value.CreateReader());
+                    JProperty refProperty = expression.Properties().Where(p => p.Name == "$ref").FirstOrDefault();
+                    if (refProperty != null)
+                    {
+                        target.Table = (TableExpression)serializer.Deserialize(property.Value.CreateReader());
+                    }
+                    else
+                    {
+                        JProperty typeProperty = expression.Properties().Where(p => p.Name == "$type").FirstOrDefault();
+                        if (typeProperty == null)
+                        {
+                            target.Table = null;
+                        }
+                        else
+                        {
+                            string typeName = (string)serializer.Deserialize(typeProperty.Value.CreateReader());
+                            Type type = serializer.SerializationBinder.BindToType(null, typeName);
+                            target.Table = (TableExpression)serializer.Deserialize(property.Value.CreateReader(), type);
+                        }
+                    }
                 }
                 else if (property.Name == "Property")
                 {

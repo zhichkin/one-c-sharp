@@ -86,7 +86,23 @@ namespace Zhichkin.Hermes.Services
                 }
                 else if (property.Name == "Parameters")
                 {
-                    target.Parameters = (List<ParameterExpression>)serializer.Deserialize(property.Value.CreateReader());
+                    JArray array = (JArray)serializer.Deserialize(property.Value.CreateReader());
+                    if (array == null)
+                    {
+                        target.Parameters = null;
+                    }
+                    else if (array.Count == 0)
+                    {
+                        target.Parameters = new List<ParameterExpression>();
+                    }
+                    else
+                    {
+                        target.Parameters = new List<ParameterExpression>();
+                        foreach (JObject item in array)
+                        {
+                            target.Parameters.Add(serializer.Deserialize<ParameterExpression>(item.CreateReader()));
+                        }
+                    }
                 }
                 else if (property.Name == "Expressions")
                 {

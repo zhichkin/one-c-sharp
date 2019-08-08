@@ -826,7 +826,7 @@
   },
   "libraries": {
     "Microsoft.CSharp/4.5.0": {
-      "sha512": "yWWeTbGCzBOlRPWDCIxiTZW1ecZiMbao0ZT97KKEWdBhrLvUqU8RdzkhzuCRQzvoxzxlR7vytO43OOgFdkxv6g==",
+      "sha512": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
       "type": "package",
       "path": "microsoft.csharp/4.5.0",
       "files": [
@@ -894,7 +894,7 @@
       ]
     },
     "Newtonsoft.Json/12.0.2": {
-      "sha512": "mtweBXPWhp1CMQATtBT7ZfMZrbZBTKfjGwz6Y75NwGjx/GztDaUnfw8GK9KZ2T4fDIqKJyDjc9Rxlw5+G2FcVA==",
+      "sha512": "rTK0s2EKlfHsQsH6Yx2smvcTCeyoDNgCW7FEYyV01drPlh2T243PR2DiDXqtC5N4GDm4Ma/lkxfW5a/4793vbA==",
       "type": "package",
       "path": "newtonsoft.json/12.0.2",
       "files": [
@@ -1171,20 +1171,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\Zhichkin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.UI\\Hermes.UI.csproj",
+      "projectUniqueName": "C:\\Zhichkin\\Z\\Hermes.UI\\Hermes.UI.csproj",
       "projectName": "Hermes.UI",
-      "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.UI\\Hermes.UI.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.UI\\obj\\",
+      "projectPath": "C:\\Zhichkin\\Z\\Hermes.UI\\Hermes.UI.csproj",
+      "packagesPath": "C:\\Users\\Zhichkin\\.nuget\\packages\\",
+      "outputPath": "C:\\Zhichkin\\Z\\Hermes.UI\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Zhichkin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1197,23 +1197,23 @@
       "frameworks": {
         "net472": {
           "projectReferences": {
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Model\\Hermes.Model.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Model\\Hermes.Model.csproj"
+            "C:\\Zhichkin\\Z\\Hermes.Model\\Hermes.Model.csproj": {
+              "projectPath": "C:\\Zhichkin\\Z\\Hermes.Model\\Hermes.Model.csproj"
             },
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Services\\Hermes.Services.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Hermes.Services\\Hermes.Services.csproj"
+            "C:\\Zhichkin\\Z\\Hermes.Services\\Hermes.Services.csproj": {
+              "projectPath": "C:\\Zhichkin\\Z\\Hermes.Services\\Hermes.Services.csproj"
             },
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.Model\\Metadata.Model.csproj"
+            "C:\\Zhichkin\\Z\\Metadata.Model\\Metadata.Model.csproj": {
+              "projectPath": "C:\\Zhichkin\\Z\\Metadata.Model\\Metadata.Model.csproj"
             },
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.UI\\Metadata.UI.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Metadata.UI\\Metadata.UI.csproj"
+            "C:\\Zhichkin\\Z\\Metadata.UI\\Metadata.UI.csproj": {
+              "projectPath": "C:\\Zhichkin\\Z\\Metadata.UI\\Metadata.UI.csproj"
             },
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\orm\\ORM.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\orm\\ORM.csproj"
+            "C:\\Zhichkin\\Z\\orm\\ORM.csproj": {
+              "projectPath": "C:\\Zhichkin\\Z\\orm\\ORM.csproj"
             },
-            "C:\\Users\\User\\Desktop\\GitHub\\Z\\Shell\\Shell.csproj": {
-              "projectPath": "C:\\Users\\User\\Desktop\\GitHub\\Z\\Shell\\Shell.csproj"
+            "C:\\Zhichkin\\Z\\Shell\\Shell.csproj": {
+              "projectPath": "C:\\Zhichkin\\Z\\Shell\\Shell.csproj"
             }
           }
         }

@@ -16,9 +16,13 @@ namespace Zhichkin.Hermes.UI
         {
             this.Tables = new ObservableCollection<TableExpressionViewModel>();
             this.Fields = new ObservableCollection<PropertyExpressionViewModel>();
-            this.WhereClause = new BooleanExpressionViewModel(this, "WHERE");
-
             this.InitializeViewModel(model);
+
+            this.WhereClause = new BooleanExpressionViewModel(this, "WHERE");
+            if (model.WHERE != null)
+            {
+                this.WhereClause.Model = model.WHERE;
+            }
 
             this.AddTableCommand = new DelegateCommand<Entity>(this.OnAddTable);
             this.AddPropertyCommand = new DelegateCommand(this.OnAddProperty);
@@ -39,11 +43,6 @@ namespace Zhichkin.Hermes.UI
                 {
                     this.AddProperty(property);
                 }
-            }
-
-            if (model.WHERE != null)
-            {
-                this.WhereClause.Model = model.WHERE;
             }
         }
         private void AddTable(TableExpression table)

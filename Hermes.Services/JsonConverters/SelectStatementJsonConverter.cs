@@ -97,6 +97,7 @@ namespace Zhichkin.Hermes.Services
 
             writer.WriteEndObject();
         }
+
         public override SelectStatement ReadJson(JsonReader reader, Type objectType, SelectStatement existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null) return null;
@@ -135,7 +136,7 @@ namespace Zhichkin.Hermes.Services
                 }
                 else if (property.Name == "WHERE")
                 {
-                    // TODO !!!
+                    DeserializeWHERE(serializer, property, target);
                 }
             }
 
@@ -193,6 +194,10 @@ namespace Zhichkin.Hermes.Services
                     }
                 }
             }
+        }
+        private void DeserializeWHERE(JsonSerializer serializer, JProperty property, SelectStatement target)
+        {
+            target.WHERE = serializer.Deserialize<BooleanFunction>(property.Value.CreateReader());
         }
     }
 }

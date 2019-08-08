@@ -18,3 +18,5 @@ CREATE TABLE [metadata].[properties](
 ) ON [PRIMARY]
 GO
 
+CREATE NONCLUSTERED INDEX NCX_properties_entity ON [metadata].[properties] ([entity]);
+GO

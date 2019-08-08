@@ -53,42 +53,44 @@ namespace Zhichkin.Hermes.Services
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
+
+            ParameterExpression target = new ParameterExpression(null);
+
             JObject json = JObject.Load(reader);
-
-            string name = string.Empty;
-            Entity entity = null;
-            object value = null;
-
             foreach (JProperty property in json.Properties())
             {
-                if (property.Name == "Name")
+                if (property.Name == "$id")
                 {
-                    name = (string)property.Value;
+                    string id = (string)serializer.Deserialize(property.Value.CreateReader());
+                    resolver.AddReference(null, id, target);
+                }
+                else if (property.Name == "Consumer")
+                {
+                    target.Consumer = (HermesModel)serializer.Deserialize(property.Value.CreateReader());
+                }
+                else if (property.Name == "Name")
+                {
+                    target.Name = (string)property.Value;
                 }
                 else if (property.Name == "Type")
                 {
-                    entity = serializer.Deserialize<Entity>(property.Value.CreateReader());
+                    target.Type = serializer.Deserialize<Entity>(property.Value.CreateReader());
                 }
                 else if (property.Name == "Value")
                 {
                     if (property.Value.Type == JTokenType.Object)
                     {
-                        value = serializer.Deserialize<ReferenceProxy>(property.Value.CreateReader());
+                        target.Value = serializer.Deserialize<ReferenceProxy>(property.Value.CreateReader());
                     }
                     else
                     {
-                        value = serializer.Deserialize(property.Value.CreateReader());
+                        target.Value = serializer.Deserialize(property.Value.CreateReader());
                     }
                 }
             }
 
-            ParameterExpression parameter = new ParameterExpression(null)
-            {
-                Name = name,
-                Type = entity,
-                Value = value
-            };
-            return parameter;
+            return target;
         }
     }
 }

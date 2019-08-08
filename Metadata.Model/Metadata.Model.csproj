@@ -40,13 +40,16 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\FilterOperator.cs" />
     <Compile Include="Context\FilterParameter.cs" />
     <Compile Include="Context\SqlCommandBuilder.cs" />
     <Compile Include="Difference\DifferenceObject.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="FieldPurpose.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Request.DataMapper.cs" />
@@ -56,7 +59,6 @@
     <Compile Include="Services\IBinaryFormatter.cs" />
     <Compile Include="Services\IDataTranslator.cs" />
     <Compile Include="Services\IDifferenceService.cs" />
-    <Compile Include="Entity.cs" />
     <Compile Include="Entity.DataMapper.cs" />
     <Compile Include="Context\Entity.SystemTypes.cs" />
     <Compile Include="EntityBase.cs" />
@@ -96,6 +98,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="SQL\00 - create_database.sql" />
+    <Content Include="SQL\11 - alter table.sql" />
     <Content Include="SQL\10 - requests.sql" />
     <Content Include="SQL\09 - settings.sql" />
     <Content Include="SQL\01 - schema_metadata.sql" />
