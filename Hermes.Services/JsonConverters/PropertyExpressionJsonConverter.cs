@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Linq;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
 
@@ -51,29 +52,47 @@ namespace Zhichkin.Hermes.Services
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
+
             JObject json = JObject.Load(reader);
 
-            string name = string.Empty;
-            TableExpression table = null;
-            Property property = null;
+            PropertyExpression target = new PropertyExpression(null);
 
-            foreach (JProperty p in json.Properties())
+            foreach (JProperty property in json.Properties())
             {
-                if (property.Name == "Name")
+                if (property.Name == "$id")
                 {
-                    name = (string)p.Value;
+                    string id = (string)serializer.Deserialize(property.Value.CreateReader());
+                    resolver.AddReference(null, id, target);
                 }
-                else if (property.Name == "Table")
+                else if (property.Name == "Consumer")
                 {
-                    table = serializer.Deserialize<TableExpression>(p.Value.CreateReader());
+                    target.Consumer = (HermesModel)serializer.Deserialize(property.Value.CreateReader());
                 }
-                else if (property.Name == "Property")
+                else if (property.Name == "Alias")
                 {
-                    property = serializer.Deserialize<Property>(p.Value.CreateReader());
+                    target.Alias = (string)property.Value;
+                }
+                else if (property.Name == "Expression")
+                {
+                    JObject expression = JObject.Load(property.Value.CreateReader());
+
+                    JProperty refProperty = expression.Properties().Where(p => p.Name == "$ref").FirstOrDefault();
+                    if (refProperty != null)
+                    {
+                        target.Expression = (HermesModel)serializer.Deserialize(property.Value.CreateReader());
+                    }
+                    else
+                    {
+                        JProperty typeProperty = expression.Properties().Where(p => p.Name == "$type").FirstOrDefault();
+                        string typeName = (string)serializer.Deserialize(typeProperty.Value.CreateReader());
+                        Type type = serializer.SerializationBinder.BindToType(null, typeName);
+                        target.Expression = (HermesModel)serializer.Deserialize(property.Value.CreateReader(), type);
+                    }
                 }
             }
 
-            return new PropertyExpression(null);
+            return target;
         }
     }
 }

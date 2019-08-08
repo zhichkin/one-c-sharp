@@ -45,19 +45,21 @@ namespace Zhichkin.Hermes.Model
 
     public class TableExpression : HermesModel
     {
-        public TableExpression(HermesModel consumer, Entity entity) : base(consumer)
+        public TableExpression(HermesModel consumer) : base(consumer)
         {
-            this.Consumer = consumer;
+            this.Hint = HintTypes.NoneHint;
+        }
+        public TableExpression(HermesModel consumer, Entity entity) : this(consumer)
+        {
             this.Entity = entity;
             if (this.Entity != null) // newly created SelectStatement can nave no entity yet
             {
                 this.Alias = this.Entity.Name;
             }
-            this.Hint = HintTypes.NoneHint;
         }
         public string Name { get { return (this.Entity == null)? string.Empty: this.Entity.Name; } }
         public string Alias { get; set; }
-        public Entity Entity { get; private set; }
+        public Entity Entity { get; set; }
         public string Hint { get; set; }
     }
     public class SelectStatement : TableExpression

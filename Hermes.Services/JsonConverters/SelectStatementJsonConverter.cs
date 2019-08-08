@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Metadata.Model;
@@ -116,9 +117,82 @@ namespace Zhichkin.Hermes.Services
                 {
                     target.Consumer = (HermesModel)serializer.Deserialize(property.Value.CreateReader());
                 }
+                else if (property.Name == "Alias")
+                {
+                    target.Alias = (string)serializer.Deserialize(property.Value.CreateReader());
+                }
+                else if (property.Name == "Hint")
+                {
+                    target.Hint = (string)serializer.Deserialize(property.Value.CreateReader());
+                }
+                else if (property.Name == "SELECT")
+                {
+                    DeserializeSELECT(serializer, property, target);
+                }
+                else if (property.Name == "FROM")
+                {
+                    DeserializeFROM(serializer, property, target);
+                }
+                else if (property.Name == "WHERE")
+                {
+                    // TODO !!!
+                }
             }
 
             return target;
+        }
+        private void DeserializeSELECT(JsonSerializer serializer, JProperty property, SelectStatement target)
+        {
+            JArray array = (JArray)serializer.Deserialize(property.Value.CreateReader());
+            if (array == null)
+            {
+                target.SELECT = null;
+            }
+            else if (array.Count == 0)
+            {
+                target.SELECT = new List<PropertyExpression>();
+            }
+            else
+            {
+                target.SELECT = new List<PropertyExpression>();
+                foreach (JObject item in array)
+                {
+                    target.SELECT.Add(serializer.Deserialize<PropertyExpression>(item.CreateReader()));
+                }
+            }
+        }
+        private void DeserializeFROM(JsonSerializer serializer, JProperty property, SelectStatement target)
+        {
+            JArray array = (JArray)serializer.Deserialize(property.Value.CreateReader());
+            if (array == null)
+            {
+                target.FROM = null;
+            }
+            else if (array.Count == 0)
+            {
+                target.FROM = new List<TableExpression>();
+            }
+            else
+            {
+                target.FROM = new List<TableExpression>();
+                foreach (JObject item in array)
+                {
+                    JObject expression = JObject.Load(item.CreateReader());
+
+                    JProperty refProperty = expression.Properties().Where(p => p.Name == "$ref").FirstOrDefault();
+                    if (refProperty != null)
+                    {
+                        target.FROM.Add((TableExpression)serializer.Deserialize(item.CreateReader()));
+                    }
+                    else
+                    {
+                        JProperty typeProperty = expression.Properties().Where(p => p.Name == "$type").FirstOrDefault();
+                        string typeName = (string)serializer.Deserialize(typeProperty.Value.CreateReader());
+                        Type type = serializer.SerializationBinder.BindToType(null, typeName);
+                        target.FROM.Add((TableExpression)serializer.Deserialize(item.CreateReader(), type));
+                    }
+                }
+            }
         }
     }
 }

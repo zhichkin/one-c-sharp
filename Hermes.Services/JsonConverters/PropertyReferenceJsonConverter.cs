@@ -53,29 +53,34 @@ namespace Zhichkin.Hermes.Services
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
+
+            PropertyReference target = new PropertyReference(null);
+
             JObject json = JObject.Load(reader);
 
-            string name = string.Empty;
-            TableExpression table = null;
-            Property property = null;
-
-            foreach (JProperty p in json.Properties())
+            foreach (JProperty property in json.Properties())
             {
-                if (property.Name == "Name")
+                if (property.Name == "$id")
                 {
-                    name = (string)p.Value;
+                    string id = (string)serializer.Deserialize(property.Value.CreateReader());
+                    resolver.AddReference(null, id, target);
+                }
+                else if (property.Name == "Consumer")
+                {
+                    target.Consumer = (HermesModel)serializer.Deserialize(property.Value.CreateReader());
                 }
                 else if (property.Name == "Table")
                 {
-                    table = serializer.Deserialize<TableExpression>(p.Value.CreateReader());
+                    target.Table = serializer.Deserialize<TableExpression>(property.Value.CreateReader());
                 }
                 else if (property.Name == "Property")
                 {
-                    property = serializer.Deserialize<Property>(p.Value.CreateReader());
+                    target.Property = serializer.Deserialize<Property>(property.Value.CreateReader());
                 }
             }
 
-            return new PropertyReference(null, table, property);
+            return target;
         }
     }
 }
