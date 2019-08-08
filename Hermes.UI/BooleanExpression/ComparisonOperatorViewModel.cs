@@ -24,6 +24,7 @@ namespace Zhichkin.Hermes.UI
         }
         private void InitializeViewModel(ComparisonOperator model)
         {
+            QueryExpressionViewModel query = this.GetQueryExpressionViewModel(this);
             SelectStatementViewModel select = this.GetSelectStatementViewModel(this);
             if (select == null) return;
 
@@ -36,6 +37,19 @@ namespace Zhichkin.Hermes.UI
                 this.LeftExpression = propertyVM;
                 this.LeftExpressionView = new PropertyReferenceView(propertyVM);
             }
+            else if (model.LeftExpression is ParameterExpression)
+            {
+                if (query != null)
+                {
+                    ParameterExpression expression = (ParameterExpression)model.LeftExpression;
+                    ParameterExpressionViewModel vm = query.QueryParameters.Where(p => p.Name == expression.Name).FirstOrDefault();
+                    if (vm != null)
+                    {
+                        this.LeftExpression = vm.GetParameterReferenceViewModel(this);
+                        this.LeftExpressionView = new ParameterReferenceView((ParameterReferenceViewModel)this.LeftExpression);
+                    }
+                }
+            }
 
             if (model.RightExpression is PropertyReference)
             {
@@ -45,6 +59,19 @@ namespace Zhichkin.Hermes.UI
 
                 this.RightExpression = propertyVM;
                 this.RightExpressionView = new PropertyReferenceView(propertyVM);
+            }
+            else if (model.RightExpression is ParameterExpression)
+            {
+                if (query != null)
+                {
+                    ParameterExpression expression = (ParameterExpression)model.RightExpression;
+                    ParameterExpressionViewModel vm = query.QueryParameters.Where(p => p.Name == expression.Name).FirstOrDefault();
+                    if (vm != null)
+                    {
+                        this.RightExpression = vm.GetParameterReferenceViewModel(this);
+                        this.RightExpressionView = new ParameterReferenceView((ParameterReferenceViewModel)this.RightExpression);
+                    }
+                }
             }
         }
 

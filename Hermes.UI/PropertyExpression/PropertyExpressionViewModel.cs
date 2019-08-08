@@ -108,8 +108,11 @@ namespace Zhichkin.Hermes.UI
 
             if (selectedExpression is PropertyReferenceViewModel)
             {
-                model.Expression.Consumer = model;
-                this.Alias = ((PropertyReferenceViewModel)this.Expression).Name; // this sets model's property Alias as well
+                //model.Expression.Consumer = model;
+                if (string.IsNullOrEmpty(this.Alias))
+                {
+                    this.Alias = ((PropertyReferenceViewModel)this.Expression).Name; // this sets model's property Alias as well
+                }
                 this.ExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.Expression);
             }
             else if (selectedExpression is ParameterReferenceViewModel)

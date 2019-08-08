@@ -91,9 +91,31 @@ namespace Zhichkin.Hermes.UI
         }
         private void ChangeFromOrientation()
         {
-            if (queryVM.QueryExpressions.Count == 0) return;
-            SelectStatementViewModel select = queryVM.QueryExpressions[0];
-            select.IsFromVertical = !select.IsFromVertical;
+            if (queryVM != null)
+            {
+                if (queryVM.QueryExpressions.Count == 0) return;
+                SelectStatementViewModel select = queryVM.QueryExpressions[0];
+                select.IsFromVertical = !select.IsFromVertical;
+            }
+            else
+            {
+                IRegion rightRegion = this.regionManager.Regions[RegionNames.RightRegion];
+                foreach (var view in rightRegion.Views)
+                {
+                    if (view is QueryExpressionView)
+                    {
+                        QueryExpressionViewModel vm = ((QueryExpressionView)view).DataContext as QueryExpressionViewModel;
+                        if (vm != null && vm.QueryExpressions != null && vm.QueryExpressions.Count > 0)
+                        {
+                            SelectStatementViewModel select = vm.QueryExpressions[0] as SelectStatementViewModel;
+                            if (select != null)
+                            {
+                                select.IsFromVertical = !select.IsFromVertical;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void SaveQuery()

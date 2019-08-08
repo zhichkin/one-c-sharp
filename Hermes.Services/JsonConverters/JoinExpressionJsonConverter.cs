@@ -4,6 +4,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using Zhichkin.Hermes.Model;
+using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.Services
 {
@@ -62,11 +63,45 @@ namespace Zhichkin.Hermes.Services
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
-            JObject json = JObject.Load(reader);
-            JProperty property = json.Properties().Where(p => p.Name == "identity").FirstOrDefault();
-            Guid identity = new Guid((string)property.Value);
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
 
-            return new JoinExpression(null, null);
+            JoinExpression target = new JoinExpression(null, null);
+
+            JObject json = JObject.Load(reader);
+            foreach (JProperty property in json.Properties())
+            {
+                if (property.Name == "$id")
+                {
+                    string id = (string)serializer.Deserialize(property.Value.CreateReader());
+                    resolver.AddReference(null, id, target);
+                }
+                else if (property.Name == "Consumer")
+                {
+                    target.Consumer = (HermesModel)serializer.Deserialize(property.Value.CreateReader());
+                }
+                else if (property.Name == "Alias")
+                {
+                    target.Alias = (string)serializer.Deserialize(property.Value.CreateReader());
+                }
+                else if (property.Name == "Hint")
+                {
+                    target.Hint = (string)serializer.Deserialize(property.Value.CreateReader());
+                }
+                else if (property.Name == "Entity")
+                {
+                    target.Entity = serializer.Deserialize<Entity>(property.Value.CreateReader());
+                }
+                else if (property.Name == "JoinType")
+                {
+                    target.JoinType = (string)serializer.Deserialize(property.Value.CreateReader());
+                }
+                else if (property.Name == "ON")
+                {
+                    target.ON = serializer.Deserialize<BooleanFunction>(property.Value.CreateReader());
+                }
+            }
+
+            return target;
         }
     }
 }

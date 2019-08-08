@@ -45,26 +45,6 @@ namespace Zhichkin.Hermes.Services
             writer.WritePropertyName("Hint");
             serializer.Serialize(writer, value.Hint);
 
-            writer.WritePropertyName("SELECT");
-            if (value.SELECT == null)
-            {
-                serializer.Serialize(writer, null);
-            }
-            else if (value.SELECT.Count == 0)
-            {
-                writer.WriteStartArray();
-                writer.WriteEndArray();
-            }
-            else
-            {
-                writer.WriteStartArray();
-                foreach (PropertyExpression model in value.SELECT)
-                {
-                    serializer.Serialize(writer, model, model.GetType());
-                }
-                writer.WriteEndArray();
-            }
-
             writer.WritePropertyName("FROM");
             if (value.FROM == null)
             {
@@ -79,6 +59,26 @@ namespace Zhichkin.Hermes.Services
             {
                 writer.WriteStartArray();
                 foreach (TableExpression model in value.FROM)
+                {
+                    serializer.Serialize(writer, model, model.GetType());
+                }
+                writer.WriteEndArray();
+            }
+
+            writer.WritePropertyName("SELECT");
+            if (value.SELECT == null)
+            {
+                serializer.Serialize(writer, null);
+            }
+            else if (value.SELECT.Count == 0)
+            {
+                writer.WriteStartArray();
+                writer.WriteEndArray();
+            }
+            else
+            {
+                writer.WriteStartArray();
+                foreach (PropertyExpression model in value.SELECT)
                 {
                     serializer.Serialize(writer, model, model.GetType());
                 }
@@ -126,13 +126,13 @@ namespace Zhichkin.Hermes.Services
                 {
                     target.Hint = (string)serializer.Deserialize(property.Value.CreateReader());
                 }
-                else if (property.Name == "SELECT")
-                {
-                    DeserializeSELECT(serializer, property, target);
-                }
                 else if (property.Name == "FROM")
                 {
                     DeserializeFROM(serializer, property, target);
+                }
+                else if (property.Name == "SELECT")
+                {
+                    DeserializeSELECT(serializer, property, target);
                 }
                 else if (property.Name == "WHERE")
                 {

@@ -16,11 +16,19 @@ namespace Zhichkin.Hermes.UI
 
         public ParameterExpressionViewModel(HermesViewModel parent, ParameterExpression model) : base(parent, model)
         {
+            InitializeViewModel(model);
+            
             this.ClearParameterCommand = new DelegateCommand(this.ClearParameter);
             this.RemoveParameterCommand = new DelegateCommand(this.RemoveParameter);
             this.OpenTypeSelectionDialogCommand = new DelegateCommand(this.OpenTypeSelectionDialog);
             this.OpenReferenceObjectDialogCommand = new DelegateCommand(this.OpenReferenceObjectDialog);
         }
+        private void InitializeViewModel(ParameterExpression model)
+        {
+            if (model == null) return;
+            this.SetupValueView();
+        }
+
         public string Name
         {
             get

@@ -9,7 +9,7 @@ namespace Zhichkin.Hermes.UI
     {
         public JoinExpressionViewModel(HermesViewModel parent, TableExpression model) : base(parent, model)
         {
-            this.Filter = new BooleanExpressionViewModel(this, "ON");
+            //this.Filter = new BooleanExpressionViewModel(this, "ON");
         }
         public TableExpressionViewModel Table
         {

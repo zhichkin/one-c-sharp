@@ -49,7 +49,12 @@ namespace Zhichkin.Hermes.UI
         {
             if (table is JoinExpression)
             {
-                this.Tables.Add(new JoinExpressionViewModel(this, table));
+                // This sequence of JoinExpressionViewModel building is the must !!!
+                // Because ON clause may look up for JoinExpressionViewModel in SelectStatement.Tables collection while it is not added there yet =/
+                JoinExpressionViewModel joinVM = new JoinExpressionViewModel(this, table);
+                this.Tables.Add(joinVM);
+                joinVM.Filter = new BooleanExpressionViewModel(joinVM, "ON");
+                // JoinExpressionViewModel building sequence end
             }
             else if (table is SelectStatement)
             {
@@ -160,8 +165,12 @@ namespace Zhichkin.Hermes.UI
             {
                 JoinExpression join = new JoinExpression(model, entity);
                 model.FROM.Add(join);
+                // This sequence of JoinExpressionViewModel building is the must !!!
+                // Because ON clause may look up for JoinExpressionViewModel in SelectStatement.Tables collection while it is not added there yet =/
                 JoinExpressionViewModel joinVM = new JoinExpressionViewModel(this, join);
                 this.Tables.Add(joinVM);
+                joinVM.Filter = new BooleanExpressionViewModel(joinVM, "ON");
+                // JoinExpressionViewModel building sequence end
             }
             this.OnPropertyChanged("FromClauseDescription");
         }
