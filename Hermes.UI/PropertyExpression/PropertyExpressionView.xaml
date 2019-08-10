@@ -41,7 +41,7 @@
         <Button Content="x" ToolTip="Remove property" Command="{Binding RemovePropertyCommand}" Height="24" Width="24"/>
         <Button Content="..." ToolTip="Select property expression" Command="{Binding OpenPropertySelectionDialogCommand}" Height="24" Width="24"/>
 
-        <ContentControl Content="{Binding ExpressionView}" Margin="5,0,0,0"/>
+        <ContentControl Content="{Binding ExpressionView}"/>
         
     </StackPanel>
     

@@ -19,6 +19,9 @@ CREATE TABLE [metadata].[entities](
 ) ON [PRIMARY]
 GO
 
+CREATE NONCLUSTERED INDEX NCX_entities_namespace ON [metadata].[entities] ([namespace]);
+GO
+
 INSERT [metadata].[entities] ([key], [code], [name], [namespace], [owner], [parent], [alias])
 VALUES
 (0x00000000000000000000000000000000,   0, N'Empty',    0x00000000000000000000000000000000, 0x00000000000000000000000000000000, 0x00000000000000000000000000000000, N''),

@@ -32,8 +32,8 @@ namespace Zhichkin.Hermes.UI
             {
                 PropertyReference property = (PropertyReference)model.LeftExpression;
                 TableExpressionViewModel tableVM = select.Tables.Where(t => t.Alias == property.Table.Alias).FirstOrDefault();
-                PropertyReferenceViewModel propertyVM = tableVM.Properties.Where(p => p.Name == property.Name).FirstOrDefault();
-
+                PropertyReferenceViewModel propertyVM = new PropertyReferenceViewModel(this, tableVM, (PropertyReference)model.LeftExpression);
+                
                 this.LeftExpression = propertyVM;
                 this.LeftExpressionView = new PropertyReferenceView(propertyVM);
             }
@@ -55,7 +55,7 @@ namespace Zhichkin.Hermes.UI
             {
                 PropertyReference property = (PropertyReference)model.RightExpression;
                 TableExpressionViewModel tableVM = select.Tables.Where(t => t.Alias == property.Table.Alias).FirstOrDefault();
-                PropertyReferenceViewModel propertyVM = tableVM.Properties.Where(p => p.Name == property.Name).FirstOrDefault();
+                PropertyReferenceViewModel propertyVM = new PropertyReferenceViewModel(this, tableVM, (PropertyReference)model.RightExpression);
 
                 this.RightExpression = propertyVM;
                 this.RightExpressionView = new PropertyReferenceView(propertyVM);
@@ -181,11 +181,11 @@ namespace Zhichkin.Hermes.UI
 
             model.LeftExpression = selectedExpression.Model;
             this.LeftExpression = selectedExpression;
-            this.LeftExpression.Parent = this;
+            //this.LeftExpression.Parent = this;
 
             if (selectedExpression is PropertyReferenceViewModel)
             {
-                model.LeftExpression.Consumer = model;
+                //model.LeftExpression.Consumer = model;
                 this.LeftExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.LeftExpression);
             }
             else if (selectedExpression is ParameterReferenceViewModel)
@@ -207,11 +207,11 @@ namespace Zhichkin.Hermes.UI
 
             model.RightExpression = selectedExpression.Model;
             this.RightExpression = selectedExpression;
-            this.RightExpression.Parent = this;
+            //this.RightExpression.Parent = this;
 
             if (selectedExpression is PropertyReferenceViewModel)
             {
-                model.RightExpression.Consumer = model;
+                //model.RightExpression.Consumer = model;
                 this.RightExpressionView = new PropertyReferenceView((PropertyReferenceViewModel)this.RightExpression);
             }
             else if (selectedExpression is ParameterReferenceViewModel)

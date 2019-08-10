@@ -22,7 +22,7 @@ namespace Zhichkin.Hermes.UI
                 this.OnPropertyChanged("View");
             }
         }
-        protected override void InitializeViewModel(object input)
+        protected override void InitializeViewModel()
         {
             IMetadataService metadata = new MetadataService();
 

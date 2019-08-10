@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Linq;
 using Zhichkin.Metadata.Model;
 using Zhichkin.ORM;
 
@@ -31,12 +30,31 @@ namespace Zhichkin.Hermes.Services
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
-            JObject json = JObject.Load(reader);
-            JProperty property = json.Properties().Where(p => p.Name == "identity").FirstOrDefault();
-            Guid identity = new Guid((string)property.Value);
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
 
-            IReferenceObjectFactory factory = MetadataPersistentContext.Current.Factory;
-            return factory.New<Entity>(identity);
+            Entity target = null;
+            string id = string.Empty;
+
+            JObject json = JObject.Load(reader);
+            foreach (JProperty property in json.Properties())
+            {
+                if (property.Name == "$ref")
+                {
+                    target = (Entity)serializer.Deserialize(json.CreateReader());
+                }
+                else if (property.Name == "$id")
+                {
+                    id = (string)property.Value;
+                }
+                else if (property.Name == "identity")
+                {
+                    Guid identity = new Guid((string)property.Value);
+                    IReferenceObjectFactory factory = MetadataPersistentContext.Current.Factory;
+                    target = factory.New<Entity>(identity);
+                    resolver.AddReference(null, id, target);
+                }
+            }
+            return target;
         }
     }
 }

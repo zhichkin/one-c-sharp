@@ -25,12 +25,12 @@
 
         <!-- Comparison Operator's panel of commands -->
         <Button Content="x" Command="{Binding RemoveComparisonOperatorCommand}"
-                ToolTip="Remove condition" Margin="5" Height="24" Width="24"/>
+                ToolTip="Remove condition" Margin="5,0,5,0" Height="24" Width="24"/>
 
         <!-- Left Expression's block of UI elements and commands -->
         <StackPanel Orientation="Horizontal">
             <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" CommandParameter="LEFT"
-                    ToolTip="Select left property" Margin="5" Height="24" Width="24"/>
+                    ToolTip="Select left property" Margin="5,0,0,0" Height="24" Width="24"/>
             <ContentControl Content="{Binding LeftExpressionView}"/>
         </StackPanel>
 
@@ -41,12 +41,12 @@
                   HorizontalContentAlignment="Center"
                   Width="50"
                   Height="24"
-                  Margin="5"/>
+                  Margin="5,0,5,0"/>
         
         <!-- Right Expression's block of UI elements and commands -->
         <StackPanel Orientation="Horizontal">
             <Button Content="..." Command="{Binding OpenPropertySelectionDialogCommand}" CommandParameter="RIGHT"
-                    ToolTip="Select right property" Margin="5" Height="24" Width="24"/>
+                    ToolTip="Select right property" Margin="5,0,0,0" Height="24" Width="24"/>
             <ContentControl Content="{Binding RightExpressionView}"/>
         </StackPanel>
 

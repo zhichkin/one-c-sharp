@@ -9,13 +9,14 @@ namespace Zhichkin.Hermes.UI
     public abstract class DialogViewModelBase : BindableBase, IInteractionRequestAware
     {
         private Confirmation _notification;
-
+        
         public DialogViewModelBase() : base()
         {
             this.SelectCommand = new DelegateCommand(this.Confirm);
             this.CancelCommand = new DelegateCommand(this.Cancel);
         }
-        protected abstract void InitializeViewModel(object input);
+        public HermesViewModel Caller { get; private set; }
+        protected abstract void InitializeViewModel();
         protected abstract object GetDialogResult();
         public INotification Notification
         {
@@ -26,7 +27,8 @@ namespace Zhichkin.Hermes.UI
             set
             {
                 _notification = value as Confirmation;
-                InitializeViewModel(_notification.Content);
+                this.Caller = (HermesViewModel)_notification.Content;
+                InitializeViewModel();
             }
         }
         public Action FinishInteraction { get; set; }

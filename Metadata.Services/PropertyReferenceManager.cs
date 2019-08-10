@@ -21,6 +21,10 @@ namespace Zhichkin.Metadata.Services
         }
         public void Prepare(ref int currentOrdinal) // start ordinal for the table fields in SELECT clause - move to constructor ?
         {
+            string propertyAlias = property.Name;
+            PropertyExpression consumer = property.Consumer as PropertyExpression;
+            if (consumer != null) { propertyAlias = consumer.Alias; }
+
             bool isMultiValued = (property.Property.Fields.Count > 1);
 
             foreach (Field field in property.Property.Fields)
@@ -31,11 +35,11 @@ namespace Zhichkin.Metadata.Services
                 name += $"[{property.Table.Alias}].[{field.Name}] AS ";
                 if (isMultiValued)
                 {
-                    name += $"[{property.Name}_{GetFieldPurposeSuffix(field)}]";
+                    name += $"[{propertyAlias}_{GetFieldPurposeSuffix(field)}]";
                 }
                 else
                 {
-                    name += $"[{property.Name}]";
+                    name += $"[{propertyAlias}]";
                 }
                 ordinals.Add(currentOrdinal, name);
                 purposes.Add(field.Purpose, currentOrdinal);

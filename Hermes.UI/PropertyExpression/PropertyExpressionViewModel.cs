@@ -34,11 +34,8 @@ namespace Zhichkin.Hermes.UI
                 {
                     PropertyReference property = (PropertyReference)model.Expression;
                     TableExpressionViewModel tableVM = parent.Tables.Where(t => t.Alias == property.Table.Alias).FirstOrDefault();
-                    PropertyReferenceViewModel propertyVM = tableVM.Properties.Where(p => p.Name == property.Name).FirstOrDefault();
-                    if (propertyVM != null)
-                    {
-                        this.OnExpressionSelected(propertyVM);
-                    }
+                    PropertyReferenceViewModel propertyVM = new PropertyReferenceViewModel(this, tableVM, (PropertyReference)model.Expression);
+                    this.OnExpressionSelected(propertyVM);
                 }
             }
         }
@@ -104,11 +101,11 @@ namespace Zhichkin.Hermes.UI
 
             model.Expression = selectedExpression.Model;
             this.Expression = selectedExpression;
-            this.Expression.Parent = this;
+            //this.Expression.Parent = this;
 
             if (selectedExpression is PropertyReferenceViewModel)
             {
-                model.Expression.Consumer = model;
+                //model.Expression.Consumer = model;
                 if (string.IsNullOrEmpty(this.Alias))
                 {
                     this.Alias = ((PropertyReferenceViewModel)this.Expression).Name; // this sets model's property Alias as well

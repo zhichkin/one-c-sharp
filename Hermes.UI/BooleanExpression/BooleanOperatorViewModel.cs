@@ -11,11 +11,31 @@ namespace Zhichkin.Hermes.UI
     {
         public BooleanOperatorViewModel(HermesViewModel parent, BooleanOperator model) : base(parent, model)
         {
+            this.IntitializeViewModel(model);
+
             this.AddComparisonOperatorCommand = new DelegateCommand(this.AddComparisonOperator);
             this.AddInnerBooleanOperatorCommand = new DelegateCommand(this.AddInnerBooleanOperator);
             this.AddOuterBooleanOperatorCommand = new DelegateCommand(this.AddOuterBooleanOperator);
             this.RemoveBooleanOperatorCommand = new DelegateCommand(this.RemoveBooleanOperator);
         }
+        private void IntitializeViewModel(BooleanOperator model)
+        {
+            if (model == null) return;
+            if (this.Operands == null) { this.Operands = new ObservableCollection<BooleanFunctionViewModel>(); }
+
+            foreach (BooleanFunction operand in model.Operands)
+            {
+                if (operand is BooleanOperator)
+                {
+                    this.Operands.Add(new BooleanOperatorViewModel(this, (BooleanOperator)operand));
+                }
+                else if (operand is ComparisonOperator)
+                {
+                    this.Operands.Add(new ComparisonOperatorViewModel(this, (ComparisonOperator)operand));
+                }
+            }
+        }
+
         public ICommand AddComparisonOperatorCommand { get; private set; }
         public ICommand AddInnerBooleanOperatorCommand { get; private set; }
         public ICommand AddOuterBooleanOperatorCommand { get; private set; }

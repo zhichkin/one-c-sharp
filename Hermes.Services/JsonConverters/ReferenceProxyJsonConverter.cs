@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Linq;
 using Zhichkin.Metadata.Model;
 
 namespace Zhichkin.Hermes.Services
@@ -34,15 +33,35 @@ namespace Zhichkin.Hermes.Services
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
+            IReferenceResolver resolver = serializer.Context.Context as IReferenceResolver;
+
+            ReferenceProxy target = null;
+            string id = string.Empty;
+            Entity entity = null;
+
             JObject json = JObject.Load(reader);
-
-            JProperty property = json.Properties().Where(p => p.Name == "identity").FirstOrDefault();
-            Guid identity = new Guid((string)property.Value);
-
-            property = json.Properties().Where(p => p.Name == "type").FirstOrDefault();
-            Entity entity = serializer.Deserialize<Entity>(property.Value.CreateReader());
-
-            return new ReferenceProxy(entity, identity);
+            foreach (JProperty property in json.Properties())
+            {
+                if (property.Name == "$ref")
+                {
+                    target = (ReferenceProxy)serializer.Deserialize(json.CreateReader());
+                }
+                else if (property.Name == "$id")
+                {
+                    id = (string)property.Value;
+                }
+                else if (property.Name == "type")
+                {
+                   entity = serializer.Deserialize<Entity>(property.Value.CreateReader());
+                }
+                else if (property.Name == "identity")
+                {
+                    Guid identity = new Guid((string)property.Value);
+                    target = new ReferenceProxy(entity, identity);
+                    resolver.AddReference(null, id, target);
+                }
+            }
+            return target;
         }
     }
 }
