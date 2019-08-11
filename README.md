@@ -38,9 +38,9 @@
 Перед этим необходимо создать базу данных на Microsoft SQL Server для хранения метаданных. Подробности в папке docs.
 
 Для запуска Kestrel используется команда: **dotnet Zhichkin.Metadata.Server.dll**
-Перед запуском этой команды необходимо перейти в каталог: **\Metadata.Server\bin\Debug\netcoreapp2.2\**
+Перед запуском этой команды необходимо перейти в каталог: **\\Metadata.Server\bin\Debug\netcoreapp2.2\\**
 Адрес web сервера задаётся в файле настроек сервера: **Zhichkin.Metadata.Server.dll.config**
-Ключ настройки называется "ServerURL".
+Ключ настройки называется **ServerURL**.
 
 Конфигурационный файл приложения графичский оболочки 1C# App.config находится в папке debug, там же где и z.exe.
 
