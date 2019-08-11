@@ -37,9 +37,9 @@
 Актуальный билд проекта находится в папке debug. Для установки и запуска проекта достаточно просто скопировать этот какталог к себе и запустить файл z.exe.
 Перед этим необходимо создать базу данных на Microsoft SQL Server для хранения метаданных. Подробности в папке docs.
 
-Для запуска Kestrel используется команда: dotnet Zhichkin.Metadata.Server.dll
-Перед запуском этой команды необходимо перейти в каталог: \Metadata.Server\bin\Debug\netcoreapp2.2\
-Адрес web сервера задаётся в файле настроек сервера: Zhichkin.Metadata.Server.dll.config
+Для запуска Kestrel используется команда: **dotnet Zhichkin.Metadata.Server.dll**
+Перед запуском этой команды необходимо перейти в каталог: **\Metadata.Server\bin\Debug\netcoreapp2.2\**
+Адрес web сервера задаётся в файле настроек сервера: **Zhichkin.Metadata.Server.dll.config**
 Ключ настройки называется "ServerURL".
 
 Конфигурационный файл приложения графичский оболочки 1C# App.config находится в папке debug, там же где и z.exe.
@@ -49,10 +49,9 @@
 <a href="https://youtu.be/mxLNecqwZ4E" target="_blank"><img src="https://img.youtube.com/vi/mxLNecqwZ4E/0.jpg" 
 alt="ALT-OneCSharp in 10 minutes" width="240" height="180" border="10" /></a>
 
-# Установка
+# Передача парметров web сервису 1C#
 
 Передача параметров web функции 1C#, созданной при помощи конфигуратора платформы, выполняется в виде JSON объекта следующего вида:
-
 ```json
 {
    "Булево" : true,
