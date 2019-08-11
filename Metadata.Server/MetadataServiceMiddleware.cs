@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Zhichkin.Hermes.Model;
 using Zhichkin.Hermes.Services;
@@ -34,7 +37,7 @@ namespace Zhichkin.Metadata.Server
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Method == "POST")
+            if (context.Request.Method == "GET" || context.Request.Method == "POST")
             {
                 if (routes.Count == 0)
                 {
@@ -48,8 +51,14 @@ namespace Zhichkin.Metadata.Server
                 {
                     json = request.ParseTree;
                     QueryExpression query = Serializer.FromJson(json);
-                    QueryExecutor executor = new QueryExecutor(query);
 
+                    JObject parameters = this.ReadParameters(context);
+                    if (parameters != null && query.Parameters != null && query.Parameters.Count > 0)
+                    {
+                        this.SetParameters(parameters, query);
+                    }
+
+                    QueryExecutor executor = new QueryExecutor(query);
                     try
                     {
                         var result = executor.Build().ExecuteAsRowData();
@@ -60,32 +69,54 @@ namespace Zhichkin.Metadata.Server
                         json = Program.GetErrorText(ex);
                     }
                 }
+                //context.Response.StatusCode = 500;
 
-                //string json = string.Empty;
-                //QueryExpression query = null;
-
-                //Request request = Hermes.GetTestRequest();
-                //json = request.ParseTree;
-
-                //query = Serializer.FromJson(json);
-                //QueryExecutor executor = new QueryExecutor(query);
-                
-                //try
-                //{
-                //    var result = executor.Build().ExecuteAsRowData();
-
-                //    json = JsonConvert.SerializeObject(result);
-                //}
-                //catch (Exception ex)
-                //{
-                //    json = Program.GetErrorText(ex);
-                //    //context.Response.StatusCode = 500;
-                //}
-
+                context.Response.StatusCode = 200;
+                context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(json);
             }
             //context.Response.StatusCode = 200;
             await _next(context);
+        }
+
+        private JObject ReadParameters(HttpContext context)
+        {
+            JObject parameters = null;
+
+            using (var reader = new StreamReader(context.Request.Body))
+            {
+                string body = reader.ReadToEnd();
+
+                if (!string.IsNullOrWhiteSpace(body))
+                {
+                    parameters = JsonConvert.DeserializeObject<JObject>(body);
+                }
+            }
+            return parameters;
+        }
+        private void SetParameters(JObject parameters, QueryExpression query)
+        {
+            //Dictionary<string, object> bag = new Dictionary<string, object>();
+            //{
+            //	"Булево":true,
+            //  "Строка":"Тест",
+            //	"ЦелоеЧисло":123,
+            //	"ДробноеЧисло":123.45,
+            //	"Дата":"2019-08-01T19:15:00",
+            //	"Неопределено":null
+            //}
+
+            JsonSerializer serializer = JsonSerializer.Create();
+            foreach (JProperty property in parameters.Properties())
+            {
+                //bag.Add(property.Name, serializer.Deserialize(property.Value.CreateReader()));
+
+                ParameterExpression parameter = query.Parameters.Where(p => p.Name == property.Name).FirstOrDefault();
+                if (parameter != null)
+                {
+                    parameter.Value = serializer.Deserialize(property.Value.CreateReader());
+                }
+            }
         }
     }
 }
