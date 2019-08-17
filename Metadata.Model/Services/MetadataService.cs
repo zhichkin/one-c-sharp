@@ -516,7 +516,16 @@ namespace Zhichkin.Metadata.Services
                 }
                 else
                 {
-                    routes.Add($"/{request.Namespace.InfoBase.Database}/{request.Namespace.Name}/{request.Name}", request);
+                    StringBuilder route = new StringBuilder();
+                    route.Append($"/{request.Namespace.InfoBase.Database}");
+                    Namespace ns = request.Namespace;
+                    while (ns != null)
+                    {
+                        route.Append($"/{ns.Name}");
+                        ns = ns.Owner as Namespace;
+                    }
+                    route.Append($"/{request.Name}");
+                    routes.Add(route.ToString(), request);
                 }
             }
 

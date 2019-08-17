@@ -45,6 +45,8 @@ namespace Zhichkin.ORM
         {
             if (obj == null) { return false; }
 
+            if (this.GetType() != obj.GetType()) { return false; }
+
             ReferenceObject test = obj as ReferenceObject;
 
             if (test == null) { return false; }

@@ -39,10 +39,10 @@ namespace Zhichkin.Metadata.Server
         {
             if (context.Request.Method == "GET" || context.Request.Method == "POST")
             {
-                if (routes.Count == 0)
-                {
-                    routes = Metadata.GetRequests();
-                }
+                //if (routes.Count == 0)
+                //{
+                routes = Metadata.GetRequests();
+                //}
 
                 Request request = null;
                 string json = string.Empty;
