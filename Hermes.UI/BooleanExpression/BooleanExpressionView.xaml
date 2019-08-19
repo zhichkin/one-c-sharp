@@ -17,7 +17,7 @@
         <Expander.Header>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Clause}" FontWeight="Bold" VerticalAlignment="Center"/>
-                <Border BorderThickness="1" Cursor="Hand" Margin="5,0,0,0"
+                <!--<Border BorderThickness="1" Cursor="Hand" Margin="5,0,0,0"
                         Visibility="{Binding IsCommandPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Border.BorderBrush>
                         <VisualBrush>
@@ -28,11 +28,19 @@
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Border.BorderBrush>
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <Button Content="+" ToolTip="Add new condition" Command="{Binding AddNewConditionCommand}" Height="24" Width="24"/>
-                        <Label Content="Click to add new condition" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Margin="5">-->
+                <Button Content="+" ToolTip="Add new condition" Command="{Binding AddNewConditionCommand}" Height="18" Width="18" Margin="5,0,0,0"
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        Visibility="{Binding IsCommandPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <!--<Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>-->
+                </Button>
+                <!--<Label Content="Click to add new condition" HorizontalAlignment="Center"/>
                     </StackPanel>
-                </Border>
+                </Border>-->
             </StackPanel>
         </Expander.Header>
         <ContentControl Content="{Binding View}" Margin="30,0,0,0"/>

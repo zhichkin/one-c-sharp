@@ -18,25 +18,35 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1">
-                <StackPanel Orientation="Vertical">
-                    <ComboBox ItemsSource="{Binding BooleanOperators}"
-                              SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                              Width="55"/>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="[+" Command="{Binding AddOuterBooleanOperatorCommand}"
-                                ToolTip="Add new conditions group"
-                                Margin="5" Height="20" Width="20"/>
-                        <Button Content="+" Command="{Binding AddComparisonOperatorCommand}"
-                                ToolTip="Add new condition"
-                                Margin="5" Height="20" Width="20"/>
-                        <Button Content="x" Command="{Binding RemoveBooleanOperatorCommand}"
-                                ToolTip="Remove conditions group"
-                                Margin="5" Height="20" Width="20"/>
-                        <Button Content="+]" Command="{Binding AddInnerBooleanOperatorCommand}"
-                                ToolTip="Add new conditions group"
-                                Margin="5" Height="20" Width="20"/>
-                    </StackPanel>
-                </StackPanel>
+                <ComboBox ItemsSource="{Binding BooleanOperators}"
+                          SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                          Height="24" Width="55" Margin="2" VerticalAlignment="Top">
+                    <ComboBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Добавить новое условие" Command="{Binding AddComparisonOperatorCommand}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="+" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Добавить новую группу условий" Command="{Binding AddInnerBooleanOperatorCommand}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="[+]" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="Удалить эту группу условий" Command="{Binding RemoveBooleanOperatorCommand}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="x" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Добавить внешнюю группу условий" Command="{Binding AddOuterBooleanOperatorCommand}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&lt;&lt;" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </ComboBox.ContextMenu>
+                </ComboBox>
             </Border>
 
             <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1">
