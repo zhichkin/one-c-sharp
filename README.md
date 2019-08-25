@@ -1,3 +1,4 @@
+[![Join the chat at https://gitter.im/one-c-sharp](https://badges.gitter.im/one-c-sharp.svg)](https://gitter.im/one-c-sharp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 # 1C# (OneCSharp)
 1C# - это платформа для разработки серверных приложений, доступных через web.
 
@@ -73,6 +74,7 @@ alt="ALT-OneCSharp in 10 minutes" width="240" height="180" border="10" /></a>
 }
 ```
 
-# Контакты # [![Join the chat at https://gitter.im/one-c-sharp](https://badges.gitter.im/one-c-sharp.svg)](https://gitter.im/one-c-sharp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Контакты
+[![Join the chat at https://gitter.im/one-c-sharp](https://badges.gitter.im/one-c-sharp.svg)](https://gitter.im/one-c-sharp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 dima_zhichkin@mail.ru
