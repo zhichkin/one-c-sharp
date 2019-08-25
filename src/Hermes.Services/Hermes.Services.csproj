@@ -11,6 +11,10 @@
     <OutputPath>..\..\bin\wpf-ui\</OutputPath>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy &quot;$(TargetDir)Zhichkin.Hermes.Services.dll&quot; &quot;$(SolutionDir)Shell\bin\$(ConfigurationName)\&quot; /Y" />
   </Target>
