@@ -54,7 +54,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>32_bot_icon.ico</ApplicationIcon>
+    <ApplicationIcon>one-c-sharp.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>EE51EB4A1F7B70B9F4BFDAC6ADF30AFF757619D1</ManifestCertificateThumbprint>
@@ -250,7 +250,7 @@
     <Resource Include="Images\32 Bot.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="32_bot_icon.ico" />
+    <Resource Include="one-c-sharp.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

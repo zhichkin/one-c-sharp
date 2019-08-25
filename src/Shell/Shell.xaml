@@ -5,8 +5,8 @@
         xmlns:wi="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:ir="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
         xmlns:pi="clr-namespace:Microsoft.Practices.Prism.Interactivity;assembly=Microsoft.Practices.Prism.Interactivity"
-        Title="Z © 2016" Height="600" Width="800"
-        Icon="32_bot_icon.ico">
+        Title="1C# © 2016" Height="600" Width="800"
+        Icon="one-c-sharp.ico">
 
     <wi:Interaction.Triggers>
         <ir:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
