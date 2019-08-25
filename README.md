@@ -32,18 +32,18 @@ Web сервер 1C# обслуживает клиентские запросы 
 
 * utilities - обработки для выгрузки метаданных 1С в формате XML для загрузки в 1C#
 * web-server - сервер 1C#, доступный по протоколу http
+  - run-server.bat - запуск сервера 1C#
+  - show-server-settings.bat - просмотр и редактирование настроек сервера 1C# в notepad
+    - appSettings\ServerURL - адрес и порт сервера
+    - connectionStrings\Zhichkin.Metadata - строка подключения к служебной базе данных 1C#
 * wpf-ui - конфигуратор 1C#
-
-* run-server.bat - запуск сервера 1C#
-* show-server-settings.bat - просмотр и редактирование настроек сервера 1C# в notepad
-  - appSettings\ServerURL - адрес и порт сервера
-  - connectionStrings\Zhichkin.Metadata - строка подключения к служебной базе данных 1C#
-* run-wpf-ui.bat - запуск конфигуратора 1C#
-* show-wpf-ui-settings.bat - просмотр и редактирование настроек конфигуратора 1C# в notepad
-  - connectionStrings\Zhichkin.Metadata - строка подключения к служебной базе данных 1C#
+  - run-wpf-ui.bat - запуск конфигуратора 1C#
+  - show-wpf-ui-settings.bat - просмотр и редактирование настроек конфигуратора 1C# в notepad
+    - connectionStrings\Zhichkin.Metadata - строка подключения к служебной базе данных 1C#
 
 Достаточно просто скопировать соотвествующие каталоги по месту установки.
-Перед этим необходимо создать базу данных на Microsoft SQL Server для хранения метаданных. Подробности в папке **doc**.
+
+Перед этим необходимо создать базу данных на Microsoft SQL Server для хранения метаданных. Подробности по установке базы данных 1C# находятся в папке **doc**.
 
 # Краткое описание идеи проекта на YouTube
 
