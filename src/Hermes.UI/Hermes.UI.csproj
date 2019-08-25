@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{45C80CED-A3E9-4A66-9978-C1731AF40D49}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>Zhichkin.Hermes.UI</RootNamespace>
+    <AssemblyName>Zhichkin.Hermes.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\wpf-ui\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.Prism.Composition">
+      <HintPath>..\packages\Prism.Composition.5.0.0\lib\NET45\Microsoft.Practices.Prism.Composition.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\packages\Prism.Interactivity.5.0.0\lib\NET45\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Mvvm">
+      <HintPath>..\packages\Prism.Mvvm.1.0.0\lib\net45\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Mvvm.Desktop">
+      <HintPath>..\packages\Prism.Mvvm.1.0.0\lib\net45\Microsoft.Practices.Prism.Mvvm.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.PubSubEvents">
+      <HintPath>..\packages\Prism.PubSubEvents.1.0.0\lib\portable-sl4+wp7+windows8+net40\Microsoft.Practices.Prism.PubSubEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces">
+      <HintPath>..\packages\Prism.Composition.5.0.0\lib\NET45\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.4.5.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Data.SqlClient, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.6.0\lib\net461\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.4.5.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BooleanExpression\BooleanExpressionViewBuilder.cs" />
+    <Compile Include="BooleanExpression\BooleanFunctionViewModel.cs" />
+    <Compile Include="BooleanExpression\BooleanOperatorView.xaml.cs">
+      <DependentUpon>BooleanOperatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BooleanExpression\BooleanOperatorViewModel.cs" />
+    <Compile Include="BooleanExpression\ComparisonOperatorView.xaml.cs">
+      <DependentUpon>ComparisonOperatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BooleanExpression\ComparisonOperatorViewModel.cs" />
+    <Compile Include="CaseWhenThen\CaseWhenThenView.xaml.cs">
+      <DependentUpon>CaseWhenThenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CaseWhenThen\CaseWhenThenViewModel.cs" />
+    <Compile Include="CaseWhenThen\FunctionTemplateSelector.cs" />
+    <Compile Include="BooleanExpression\BooleanExpressionView.xaml.cs">
+      <DependentUpon>BooleanExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BooleanExpression\BooleanExpressionViewModel.cs" />
+    <Compile Include="CompositeCollectionConverter.cs" />
+    <Compile Include="Dialogs\DialogViewModelBase.cs" />
+    <Compile Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml.cs">
+      <DependentUpon>PropertySelectionDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogViewModel.cs" />
+    <Compile Include="Dialogs\TypeSelectionDialog\TypeSelectionDialogView.xaml.cs">
+      <DependentUpon>TypeSelectionDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TypeSelectionDialog\TypeSelectionDialogViewModel.cs" />
+    <Compile Include="HermesViewModel.cs" />
+    <Compile Include="Join\JoinExpressionView.xaml.cs">
+      <DependentUpon>JoinExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Join\JoinExpressionViewModel.cs" />
+    <Compile Include="MetadataNode\MetadataNodeView.xaml.cs">
+      <DependentUpon>MetadataNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MetadataNode\MetadataNodeViewModel.cs" />
+    <Compile Include="MetadataTree\MetadataTreeView.xaml.cs">
+      <DependentUpon>MetadataTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MetadataTree\MetadataTreeViewModel.cs" />
+    <Compile Include="OrientationEnumConverter.cs" />
+    <Compile Include="ParameterExpression\ParameterExpressionView.xaml.cs">
+      <DependentUpon>ParameterExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ParameterExpression\ParameterExpressionViewModel.cs" />
+    <Compile Include="ParameterExpression\ParameterReferenceView.xaml.cs">
+      <DependentUpon>ParameterReferenceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ParameterExpression\ParameterReferenceViewModel.cs" />
+    <Compile Include="PropertyExpression\PropertyExpressionViewModel.cs" />
+    <Compile Include="PropertyExpression\PropertyExpressionView.xaml.cs">
+      <DependentUpon>PropertyExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyReference\PropertyReferenceView.xaml.cs">
+      <DependentUpon>PropertyReferenceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyReference\PropertyReferenceViewModel.cs" />
+    <Compile Include="QueryExpression\QueryExpressionView.xaml.cs">
+      <DependentUpon>QueryExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="QueryExpression\QueryExpressionViewModel.cs" />
+    <Compile Include="SelectStatement\SelectStatementView.xaml.cs">
+      <DependentUpon>SelectStatementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectStatement\SelectStatementViewModel.cs" />
+    <Compile Include="TableExpression\TableExpressionView.xaml.cs">
+      <DependentUpon>TableExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TableExpression\TableExpressionViewModel.cs" />
+    <Page Include="BooleanExpression\BooleanOperatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BooleanExpression\ComparisonOperatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CaseWhenThen\CaseWhenThenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BooleanExpression\BooleanExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\PropertySelectionDialog\PropertySelectionDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\TypeSelectionDialog\TypeSelectionDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Join\JoinExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainMenu\MainMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="MainMenu\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="MetadataNode\MetadataNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MetadataTree\MetadataTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParameterExpression\ParameterExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParameterExpression\ParameterReferenceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertyExpression\PropertyExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertyReference\PropertyReferenceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="QueryExpression\QueryExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectStatement\SelectStatementView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TableExpression\TableExpressionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainMenu\MainMenuViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hermes.Model\Hermes.Model.csproj">
+      <Project>{6a86e382-f7ed-43ff-be21-e2127eb8199a}</Project>
+      <Name>Hermes.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hermes.Services\Hermes.Services.csproj">
+      <Project>{ca3fdd8a-695c-4a87-b09e-c63e5aafb5b1}</Project>
+      <Name>Hermes.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj">
+      <Project>{810EE1AA-BDDE-4657-9029-EB00A061D3F2}</Project>
+      <Name>Metadata.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metadata.UI\Metadata.UI.csproj">
+      <Project>{4fcf0512-bb1b-48ac-b335-aa903edc770a}</Project>
+      <Name>Metadata.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\orm\ORM.csproj">
+      <Project>{431d3f9f-2134-4e49-bfa3-66a629492389}</Project>
+      <Name>ORM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shell\Shell.csproj">
+      <Project>{eaba3f61-1655-4431-912e-1380fdc7cbd8}</Project>
+      <Name>Shell</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Документ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ВложеннаяТаблица.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Измерение.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Константа.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Перечисление.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПланВидовХарактеристик.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегистрБухгалтерии.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегистрНакопления.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\РегистрСведений.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Реквизит.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Ресурс.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Справочник.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\СтандартныйРеквизит.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\УстановитьИнтервал.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ПланСчетов.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.Hermes.UI.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>
+  </PropertyGroup>
+</Project>

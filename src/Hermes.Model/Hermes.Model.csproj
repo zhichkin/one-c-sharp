@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Zhichkin.Hermes.Model</AssemblyName>
+    <RootNamespace>Zhichkin.Hermes.Model</RootNamespace>
+    <Copyright>Copyright © 2019</Copyright>
+    <Company>Zhichkin</Company>
+    <Authors>Zhichkin</Authors>
+    <Description>Infrastructure library with basic types and interfaces to be referenced by all Hermes projects</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\wpf-ui\</OutputPath>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)Zhichkin.Hermes.Model.dll&quot; &quot;$(SolutionDir)Shell\bin\$(ConfigurationName)\&quot; /Y" />
+  </Target>
+
+  <ItemGroup>
+    <None Remove="SQL\00 - schema_hermes.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SQL\00 - schema_hermes.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Metadata.Model\Metadata.Model.csproj" />
+    <ProjectReference Include="..\orm\ORM.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+  </ItemGroup>
+
+</Project>

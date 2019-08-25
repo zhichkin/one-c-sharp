@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{810EE1AA-BDDE-4657-9029-EB00A061D3F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Zhichkin.Metadata.Model</RootNamespace>
+    <AssemblyName>Zhichkin.Metadata.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\wpf-ui\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.Prism.PubSubEvents">
+      <HintPath>..\packages\Prism.PubSubEvents.1.0.0\lib\portable-sl4+wp7+windows8+net40\Microsoft.Practices.Prism.PubSubEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context\FilterOperator.cs" />
+    <Compile Include="Context\FilterParameter.cs" />
+    <Compile Include="Context\SqlCommandBuilder.cs" />
+    <Compile Include="Difference\DifferenceObject.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="FieldPurpose.cs" />
+    <Compile Include="Request.cs" />
+    <Compile Include="Request.DataMapper.cs" />
+    <Compile Include="Services\DifferenceService.cs" />
+    <Compile Include="Difference\DifferenceType.cs" />
+    <Compile Include="Difference\IDifferenceObject.cs" />
+    <Compile Include="Services\IBinaryFormatter.cs" />
+    <Compile Include="Services\IDataTranslator.cs" />
+    <Compile Include="Services\IDifferenceService.cs" />
+    <Compile Include="Entity.DataMapper.cs" />
+    <Compile Include="Context\Entity.SystemTypes.cs" />
+    <Compile Include="EntityBase.cs" />
+    <Compile Include="Services\IMetadataService.cs" />
+    <Compile Include="Services\CustomSetting.cs" />
+    <Compile Include="InfoBase.cs" />
+    <Compile Include="InfoBase.DataMapper.cs" />
+    <Compile Include="Context\InfoBase.Metadata.cs" />
+    <Compile Include="Services\MetadataService.cs" />
+    <Compile Include="Namespace.cs" />
+    <Compile Include="Services\CustomSetting.DataMapper.cs" />
+    <Compile Include="Namespace.DataMapper.cs" />
+    <Compile Include="Context\Namespace.TypeSystem.cs" />
+    <Compile Include="Context\PersistentContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Property.cs" />
+    <Compile Include="Property.DataMapper.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Relation.cs" />
+    <Compile Include="Relation.DataMapper.cs" />
+    <Compile Include="Events\MetadataPubSubEvents.cs" />
+    <Compile Include="Context\ReferenceProxy.cs" />
+    <Compile Include="Context\ReferenceProxy.DataMapper.cs" />
+    <Compile Include="Table.cs" />
+    <Compile Include="Field.DataMapper.cs" />
+    <Compile Include="Table.DataMapper.cs" />
+    <Compile Include="PropertyPurpose.cs" />
+    <Compile Include="TablePurpose.cs" />
+    <Compile Include="Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\orm\ORM.csproj">
+      <Project>{431d3f9f-2134-4e49-bfa3-66a629492389}</Project>
+      <Name>ORM</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="SQL\00 - create_database.sql" />
+    <Content Include="SQL\11 - alter table.sql" />
+    <Content Include="SQL\10 - requests.sql" />
+    <Content Include="SQL\09 - settings.sql" />
+    <Content Include="SQL\01 - schema_metadata.sql" />
+    <Content Include="SQL\04 - entities.sql" />
+    <Content Include="SQL\08 - fields.sql" />
+    <Content Include="SQL\02 - infobases.sql" />
+    <Content Include="SQL\03 - namespaces.sql" />
+    <Content Include="SQL\05 - properties.sql" />
+    <Content Include="SQL\06 - relations.sql" />
+    <Content Include="SQL\07 - tables.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)Zhichkin.Metadata.Model.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
