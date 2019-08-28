@@ -97,7 +97,17 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="database setup scripts\0001 - schema metadata.sql" />
+    <Content Include="database setup scripts\0002 - table infobases.sql" />
+    <Content Include="database setup scripts\0003 - table namespaces.sql" />
+    <Content Include="database setup scripts\0004 - table entities.sql" />
+    <Content Include="database setup scripts\0005 - table properties.sql" />
+    <Content Include="database setup scripts\0006 - table relations.sql" />
+    <Content Include="database setup scripts\0007 - table tables.sql" />
+    <Content Include="database setup scripts\0008 - table fields.sql" />
+    <Content Include="database setup scripts\0009 - table requests.sql" />
     <Content Include="SQL\00 - create_database.sql" />
+    <Content Include="database setup scripts\0000 - create database.sql" />
     <Content Include="SQL\11 - alter table.sql" />
     <Content Include="SQL\10 - requests.sql" />
     <Content Include="SQL\09 - settings.sql" />

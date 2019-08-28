@@ -1,4 +1,4 @@
-USE [Z];
+USE [one-c-sharp];
 GO
 
 -- ALTER SCHEMA metadata TRANSFER hermes.requests;

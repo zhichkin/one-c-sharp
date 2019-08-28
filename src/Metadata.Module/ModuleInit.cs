@@ -6,11 +6,20 @@ using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Views;
 using Zhichkin.Metadata.Services;
 using Zhichkin.Metadata.Controllers;
+using System.Configuration;
+using System.Data.SqlClient;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System.Data;
+using System;
+using Zhichkin.Metadata.UI;
 
 namespace Zhichkin.Metadata
 {
     public class ModuleInit : IModule
     {
+        private const string CONST_ModuleDialogsTitle = "Z-Metadata";
+        private readonly string moduleName = MetadataPersistentContext.Current.Name;
+
         private readonly IUnityContainer unity;
         private readonly IRegionViewRegistry regions;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
@@ -26,8 +35,17 @@ namespace Zhichkin.Metadata
             unity.RegisterType<IMetadataService, MetadataService>();
             mainMenuController = unity.Resolve<MetadataMainMenuController>();
 
-            regions.RegisterViewWithRegion(RegionNames.TopRegion, ()=> this.unity.Resolve<MetadataMainMenu>());
-            regions.RegisterViewWithRegion(RegionNames.LeftRegion, () => this.unity.Resolve<MetadataTreeView>());
+            MetadataPersistentContext context = (MetadataPersistentContext)MetadataPersistentContext.Current;
+
+            if (context.CheckDatabaseConnection())
+            {
+                regions.RegisterViewWithRegion(RegionNames.TopRegion, () => this.unity.Resolve<MetadataMainMenu>());
+                regions.RegisterViewWithRegion(RegionNames.LeftRegion, () => this.unity.Resolve<MetadataTreeView>());
+            }
+            else
+            {
+                regions.RegisterViewWithRegion(RegionNames.RightRegion, () => this.unity.Resolve<SetupWizardView>());
+            }
         }
     }
 }

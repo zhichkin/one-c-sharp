@@ -83,6 +83,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="SetupWizard\SetupWizardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MetadataMainMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,8 +121,12 @@
     </Compile>
     <Compile Include="Property\PropertyViewModel.cs" />
     <Compile Include="Services\IMetadataAdapter.cs" />
+    <Compile Include="SetupWizard\SetupWizardView.xaml.cs">
+      <DependentUpon>SetupWizardView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\SQLMetadataAdapter.cs" />
     <Compile Include="Services\XMLMetadataAdapter.cs" />
+    <Compile Include="SetupWizard\SetupWizardViewModel.cs" />
     <Compile Include="ViewModels\MetadataSettingsViewModel.cs" />
     <Compile Include="ViewModels\SQLConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MetadataTreeViewModel.cs" />
