@@ -57,8 +57,8 @@ Web сервер 1C# обслуживает клиентские запросы 
 
 # Краткое описание идеи проекта на YouTube
 
-<a href="https://youtu.be/mxLNecqwZ4E" target="_blank"><img src="https://img.youtube.com/vi/mxLNecqwZ4E/0.jpg" 
-alt="ALT-OneCSharp in 10 minutes" width="240" height="180" border="10" /></a>
+<a href="https://youtu.be/OsW-2OeAA00" target="_blank"><img src="https://img.youtube.com/vi/OsW-2OeAA00/mqdefault.jpg" 
+alt="ALT-OneCSharp in 3 minutes" width="240" height="180" border="10" /></a>
 
 # Передача парметров web сервису 1C#
 
