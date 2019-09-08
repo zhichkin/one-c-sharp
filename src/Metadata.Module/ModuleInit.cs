@@ -37,7 +37,7 @@ namespace Zhichkin.Metadata
 
             MetadataPersistentContext context = (MetadataPersistentContext)MetadataPersistentContext.Current;
 
-            if (context.CheckDatabaseConnection())
+            if (context.CheckDatabaseConnection() && context.CheckTables())
             {
                 regions.RegisterViewWithRegion(RegionNames.TopRegion, () => this.unity.Resolve<MetadataMainMenu>());
                 regions.RegisterViewWithRegion(RegionNames.LeftRegion, () => this.unity.Resolve<MetadataTreeView>());

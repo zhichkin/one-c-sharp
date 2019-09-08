@@ -1,11 +1,8 @@
-﻿using Microsoft.Practices.Prism.Mvvm;
+﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System.Windows.Input;
-using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
 using System.Threading.Tasks;
-using Squirrel;
-using System.Reflection;
-using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Zhichkin.Shell
 {
@@ -39,6 +36,7 @@ namespace Zhichkin.Shell
             //{
             //    await manager.UpdateApp();
             //}
+            Z.Notify(new Notification() { Title = "1C# © 2016", Content = "Update option is not available yet ..." });
         }
     }
 }

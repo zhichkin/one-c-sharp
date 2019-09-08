@@ -14,6 +14,7 @@ namespace Zhichkin.Metadata.Model
         private static readonly IPersistentContext singelton;
 
         private const string SQL_FILES_FILTER = "*.sql";
+        private const string SQL_SCHEMA_NAME = "metadata";
 
         private const string name = "Zhichkin.Metadata";
         private static string connectionString = string.Empty;
@@ -70,10 +71,49 @@ namespace Zhichkin.Metadata.Model
         public BiDictionary<int, Type> TypeCodes { get { return typeCodes; } }
         public IReferenceObjectFactory Factory { get { return factory; } }
 
+        public bool CheckServerConnection()
+        {
+            string connectionString = Current.ConnectionString;
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                return false;
+            }
+
+            SqlConnectionStringBuilder helper = new SqlConnectionStringBuilder(connectionString);
+            if (!string.IsNullOrWhiteSpace(helper.InitialCatalog))
+            {
+                helper.InitialCatalog = string.Empty;
+            }
+
+            bool result = false;
+            {
+                SqlConnection connection = new SqlConnection(helper.ToString());
+                try
+                {
+                    connection.Open();
+                    result = (connection.State == ConnectionState.Open);
+                }
+                catch
+                {
+                    // TODO: handle or log the error
+                }
+                finally
+                {
+                    if (connection != null) connection.Dispose();
+                }
+            }
+            return result;
+        }
         public bool CheckDatabaseConnection()
         {
             string connectionString = Current.ConnectionString;
             if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                return false;
+            }
+
+            SqlConnectionStringBuilder helper = new SqlConnectionStringBuilder(connectionString);
+            if (string.IsNullOrWhiteSpace(helper.InitialCatalog))
             {
                 return false;
             }
@@ -92,6 +132,52 @@ namespace Zhichkin.Metadata.Model
                 }
                 finally
                 {
+                    if (connection != null) connection.Dispose();
+                }
+            }
+            return result;
+        }
+        private List<string> GetMetadataTableNames()
+        {
+            return new List<string>()
+            {
+                "infobases", "namespaces", "entities", "properties", "relations", "tables", "fields", "requests"
+            };
+        }
+        private string SQLScript_CheckTableExists(string tableName)
+        {
+            return $"SELECT 1 FROM sys.tables AS t INNER JOIN sys.schemas AS s ON t.schema_id = s.schema_id AND s.name = '{SQL_SCHEMA_NAME}' AND t.name = '{tableName}'";
+        }
+        public bool CheckTables()
+        {
+            bool result = false;
+
+            {
+                SqlConnection connection = new SqlConnection(Current.ConnectionString);
+                SqlCommand command = connection.CreateCommand();
+                command.CommandType = CommandType.Text;
+                try
+                {
+                    connection.Open();
+
+                    int exists = 0;
+                    object value = null;
+                    foreach (string tableName in GetMetadataTableNames())
+                    {
+                        command.CommandText = SQLScript_CheckTableExists(tableName);
+                        value = command.ExecuteScalar();
+                        exists = (value == null) ? 0 : (int)value;
+                        if (exists == 0) break;
+                    }
+                    result = (exists == 1);
+                }
+                catch
+                {
+                    // TODO: handle or log the error
+                }
+                finally
+                {
+                    if (command != null) command.Dispose();
                     if (connection != null) connection.Dispose();
                 }
             }

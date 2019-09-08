@@ -5,8 +5,6 @@ using Microsoft.Practices.Unity;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Zhichkin.Metadata.Model;
 using Zhichkin.Metadata.Views;
 using Zhichkin.Shell;
@@ -61,24 +59,29 @@ namespace Zhichkin.Metadata.UI
             SaveConnectionStringSettings(password);
             dataContext.RefreshConnectionString();
 
-            if (dataContext.CheckDatabaseConnection())
+            if (!dataContext.CheckServerConnection())
             {
-                try
-                {
-                    dataContext.SetupDatabase();
-                    SetDefaultDatabaseName(password);
-                    dataContext.RefreshConnectionString();
-                    GoToStartupView();
-                    Z.Notify(new Notification() { Title = CONST_ViewModelDialogsTitle, Content = "1C# database has been setup successfully =)" });
-                }
-                catch (Exception ex)
-                {
-                    Z.Notify(new Notification() { Title = CONST_ViewModelDialogsTitle, Content = Z.GetErrorText(ex) });
-                }
+                Z.Notify(new Notification() { Title = CONST_ViewModelDialogsTitle, Content = "Error connecting server. Try again, please." });
+                return;
             }
-            else
+
+            if (dataContext.CheckDatabaseConnection() && dataContext.CheckTables())
             {
-                Z.Notify(new Notification() { Title = CONST_ViewModelDialogsTitle, Content = "Error connecting database. Try again, please." });
+                GoToStartupView();
+                return;
+            }
+
+            try
+            {
+                dataContext.SetupDatabase();
+                SetDefaultDatabaseName(password);
+                dataContext.RefreshConnectionString();
+                Z.Notify(new Notification() { Title = CONST_ViewModelDialogsTitle, Content = "1C# database has been setup successfully =)" });
+                GoToStartupView();
+            }
+            catch (Exception ex)
+            {
+                Z.Notify(new Notification() { Title = CONST_ViewModelDialogsTitle, Content = Z.GetErrorText(ex) });
             }
         }
         private void GoToStartupView()
