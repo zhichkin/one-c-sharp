@@ -29,7 +29,7 @@ Web сервер 1C# обслуживает клиентские запросы 
 
 Требуется установка [.NET Framework 4.7.2](https://dotnet.microsoft.com/download/dotnet-framework/net472) + [.NET Core 2.2](https://dotnet.microsoft.com/download/dotnet-core)
 
-Версия для ознакомления находится в папке **install** данного репозитория:
+Демо-версия программы [v0.1.0](https://github.com/zhichkin/one-c-sharp/releases/download/v0.1.0/one-c-sharp-demo-version.zip):
 
 * **utilities** - скрипты SQL и обработки для выгрузки метаданных 1С в формате XML для загрузки в 1C#
   - **SQL** - каталог скриптов для создания базы данных 1C# на SQL Server
