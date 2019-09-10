@@ -56,8 +56,11 @@ Web сервер 1C# обслуживает клиентские запросы 
 
 # Канал проекта на YouTube
 
-<a href="https://youtu.be/OsW-2OeAA00" target="_blank"><img src="https://img.youtube.com/vi/OsW-2OeAA00/mqdefault.jpg" 
-alt="ALT-OneCSharp in 3 minutes" width="300" height="180" border="10" /></a>
+| 1C# - идея проекта за 3 минуты | 1C# - быстрый старт |
+|---|---|
+|<a href="https://youtu.be/OsW-2OeAA00" target="_blank"><img src="https://img.youtube.com/vi/OsW-2OeAA00/mqdefault.jpg" 
+alt="ALT-OneCSharp in 3 minutes" width="300" height="180" border="10" /></a>|<a href="https://youtu.be/TUu8-dQHwiA" target="_blank"><img src="https://img.youtube.com/vi/TUu8-dQHwiA/mqdefault.jpg" 
+alt="ALT-OneCSharp - quick start" width="300" height="180" border="10" /></a>|
 
 # Передача парметров web сервису 1C#
 
