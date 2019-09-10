@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Zhichkin.Metadata.Server
 {
@@ -16,6 +17,11 @@ namespace Zhichkin.Metadata.Server
                 .UseKestrel()
                 .UseUrls(url)
                 .UseStartup<Startup>()
+                .ConfigureLogging(logging =>
+                    {
+                        logging.ClearProviders();
+                        logging.AddConsole();
+                    })
                 .Build();
             host.Run();
         }

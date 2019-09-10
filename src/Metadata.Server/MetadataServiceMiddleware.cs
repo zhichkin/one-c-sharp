@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -24,15 +25,17 @@ namespace Zhichkin.Metadata.Server
 
     public sealed class MetadataServiceMiddleware
     {
+        private readonly ILogger<MetadataServiceMiddleware> _logger;
         private Dictionary<string, Request> routes = new Dictionary<string, Request>();
         private readonly IHermesService Hermes = new HermesService();
         private readonly IMetadataService Metadata = new MetadataService();
         private readonly SerializationService Serializer = new SerializationService();
 
         private readonly RequestDelegate _next;
-        public MetadataServiceMiddleware(RequestDelegate next)
+        public MetadataServiceMiddleware(RequestDelegate next, ILogger<MetadataServiceMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -46,6 +49,8 @@ namespace Zhichkin.Metadata.Server
 
                 Request request = null;
                 string json = string.Empty;
+
+                _logger.LogInformation("Request path: {0}", context.Request.Path);
 
                 if (routes.TryGetValue(context.Request.Path, out request))
                 {
@@ -69,14 +74,23 @@ namespace Zhichkin.Metadata.Server
                         json = Program.GetErrorText(ex);
                     }
                 }
-                //context.Response.StatusCode = 500;
+                else
+                {
+                    _logger.LogInformation("Requested path not found.");
+                    _logger.LogInformation("Available paths are:");
+                    foreach (string route in routes.Keys)
+                    {
+                        _logger.LogInformation(route);
+                    }
+                }
 
-                context.Response.StatusCode = 200;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(json);
             }
-            //context.Response.StatusCode = 200;
-            await _next(context);
+            else
+            {
+                await _next(context);
+            }
         }
 
         private JObject ReadParameters(HttpContext context)

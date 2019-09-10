@@ -519,10 +519,16 @@ namespace Zhichkin.Metadata.Services
                     StringBuilder route = new StringBuilder();
                     route.Append($"/{request.Namespace.InfoBase.Database}");
                     Namespace ns = request.Namespace;
+                    List<string> path = new List<string>();
                     while (ns != null)
                     {
-                        route.Append($"/{ns.Name}");
+                        path.Add($"{ns.Name}");
                         ns = ns.Owner as Namespace;
+                    }
+                    path.Reverse();
+                    foreach (string part in path)
+                    {
+                        route.Append($"/{part}");
                     }
                     route.Append($"/{request.Name}");
                     routes.Add(route.ToString(), request);
