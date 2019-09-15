@@ -76,6 +76,7 @@ namespace Zhichkin.Metadata.UI
                 dataContext.SetupDatabase();
                 SetDefaultDatabaseName(password);
                 dataContext.RefreshConnectionString();
+                dataContext.CreateMetaModel();
                 Z.Notify(new Notification() { Title = CONST_ViewModelDialogsTitle, Content = "1C# database has been setup successfully =)" });
                 GoToStartupView();
             }
