@@ -1,6 +1,11 @@
-﻿[![Join the chat at https://gitter.im/one-c-sharp](https://badges.gitter.im/one-c-sharp.svg)](https://gitter.im/one-c-sharp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 # 1C# (OneCSharp)
 1C# - это платформа для разработки серверных приложений, доступных через web.
+
+Развитие проекта: [Язык запросов 1C#](https://infostart.ru/public/1226230/)
+Примеры использования: [JSON в запросах 1C#](https://infostart.ru/public/1228025/)
+Во второй версии реализована поддержка полного синтаксиса SQL Server 2005-2016.
+Обращение к объектам СУБД также вполняется в терминах 1С аналогично EntitySQL.
+[Репозиторий новой версии 1C#](https://github.com/zhichkin/one-c-sharp-sql)
 
 1C# умеет работать с базами данных платформы 1С:Предприятие 7-ой и 8-ой версий напрямую.
 Возможно также создание своих или работа с уже существующими базами данных "не 1С".
@@ -75,8 +80,5 @@ Web сервер 1C# обслуживает клиентские запросы 
 ```
 
 # Контакты
-[![Join the chat at https://gitter.im/one-c-sharp](https://badges.gitter.im/one-c-sharp.svg)](https://gitter.im/one-c-sharp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 dima_zhichkin@mail.ru
-
 skype: dima.zhichkin
