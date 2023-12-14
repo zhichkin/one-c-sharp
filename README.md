@@ -1,6 +1,6 @@
-> Проект полностью переписан с нуля, изменил название и переехал.
+> ## Новое название проекта и репозиторий: [DaJet](https://github.com/zhichkin/dajet)
 > 
-> Новое название проекта: [DaJet](https://github.com/zhichkin/dajet)
+> ## Проект полностью переписан с нуля, изменил название и переехал!
 
 # 1C# (OneCSharp)
 1C# - это платформа для разработки серверных приложений, доступных через web.
@@ -62,12 +62,6 @@ Web сервер 1C# обслуживает клиентские запросы 
 6. Настроить адрес и порт web сервера 1C#, используя файл show-web-server-settings.bat.
 
 Дополнительные подробности по установке 1C# можно найти в папке **docs** данного репозитория.
-
-# Канал проекта на YouTube
-
-| 1C# - идея проекта за 3 минуты | 1C# - быстрый старт |
-|---|---|
-|<a href="https://youtu.be/OsW-2OeAA00" target="_blank"><img src="https://img.youtube.com/vi/OsW-2OeAA00/mqdefault.jpg" alt="ALT-OneCSharp in 3 minutes" width="300" height="180" border="10" /></a>|<a href="https://youtu.be/TUu8-dQHwiA" target="_blank"><img src="https://img.youtube.com/vi/TUu8-dQHwiA/mqdefault.jpg" alt="ALT-OneCSharp - quick start" width="300" height="180" border="10" /></a>|
 
 # Передача парметров web сервису 1C#
 
